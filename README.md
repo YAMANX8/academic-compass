@@ -1,1 +1,1 @@
-# roadmap-based-courses-platform
+# roadmap-driven-education-platform
