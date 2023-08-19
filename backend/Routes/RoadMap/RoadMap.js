@@ -1,15 +1,5 @@
-require("dotenv").config()
-const router = require("express").Router()
-const db = require("./db");
-// const product = require("product")
-const morgan = require("morgan");
-const cors = require("cors");
-const { Router } = require("express");
-
-
-const app = express();
-app.use(cors());
-app.use(express.json());
+const router = require("express").Router();
+const pool = require("../../Database/db");
 
 router.get("/RoadMap", async (req, res) => {
     try {
@@ -25,10 +15,4 @@ router.get("/RoadMap", async (req, res) => {
         console.log(err)
     }
 })
-
 module.exports = router;
-
-
-
-
-
