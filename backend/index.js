@@ -11,12 +11,20 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 //ROUTES//
-// Register and login routes
+// Register and login routes to Student
 
-app.use("/auth",require('./Routes/Students/jwtAuth'));
+app.use("/AcademicCompass/auth",require('./Routes/Students/jwtAuth'));
 
-// dashboard route
-app.use("/test",require('./Routes/Students/test'));
+// test route
+app.use("/AcademicCompass/test", require("./Routes/Students/test"));
+
+// Register routes to Lucturer
+app.use("/AcademicCompass/auth", require("./Routes/lecturer/register"));
+
+//test route to Register routes to Lucturer
+
+app.use("/AcademicCompass/test", require("./Routes/lecturer/test"));
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
