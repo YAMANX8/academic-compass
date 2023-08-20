@@ -18,6 +18,9 @@ app.use("/auth",require('./Routes/Students/jwtAuth'));
 // dashboard route
 app.use("/test",require('./Routes/Students/test'));
 
+// Roadmap
+app.use("AcademicCompass/Roadmap")
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`server is up ans listening on port ${port}`);
