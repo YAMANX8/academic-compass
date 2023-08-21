@@ -13,7 +13,7 @@ function Footer() {
   const social = "w-[25px] h-[25px] text-accent";
   return (
     <footer>
-      <div className="w-full px-[120px] py-[90px] flex items-center justify-between tracking-tight leading-6  bg-light  whitespace-nowrap">
+      <div className="w-full px-[120px] py-[90px] flex items-center justify-between tracking-tight leading-6  bg-secondary  whitespace-nowrap">
         <div className="flex flex-col items-center gap-[16px]">
           <img src={Logo} alt="logo" className="w-[203px]" />
           <div className="flex gap-8">
