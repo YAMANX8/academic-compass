@@ -12,7 +12,7 @@ const toggleDark = () => {};
 const Navbar = () => {
   const btnStyle =
     "px-[20px] py-[10px] rounded-[5px] font-semibold	gap-[10px] items-center text-[16px]";
-
+    
   return (
     <nav className=" px-[120px] py-[28px] flex justify-between bg-light dark:bg-dark text-dark dark:text-light shadow-[0_0_20px_rgba(0,0,0)]">
       <div>
