@@ -11,9 +11,7 @@ module.exports = function (req, res, next) {
     }
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
     req.student = {
-      studentId: payload.studentId,
-      studentName: payload.studentName,
-      studentLastName: payload.studentLastName,
+      studentId: payload.studentId
     };
   } catch (error) {
     console.error(error.message);
