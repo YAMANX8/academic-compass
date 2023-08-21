@@ -1,9 +1,9 @@
 const router = require("express").Router();
-const pool = require("../../Database/db");
+const pool = require("../../../Database/db");
 const bcrypt = require("bcrypt");
-const jwtGenerator = require("../../Utils/jwtGenerator");
-const validInfo = require("../../middleware/validInfo");
-const authorization = require("../../middleware/authorization.js");
+const jwtGenerator = require("../../../Utils/jwtGenerator");
+const validInfo = require("../../../middleware/validInfo");
+const authorization = require("../../../middleware/authorization.js");
 
 //register route
 
@@ -33,9 +33,7 @@ router.post("/student/register", validInfo, async (req, res) => {
 
     // 5.generating our jwt token
     const token = jwtGenerator(
-      newStudent.rows[0].student_id,
-      newStudent.rows[0].first_name,
-      newStudent.rows[0].last_name
+      newStudent.rows[0].student_id
     );
 
     res.json({ token });
@@ -63,7 +61,10 @@ router.post("/student/login", validInfo, async (req, res) => {
     }
     // 3. check if incoming password is the same the database password
 
-    const validPassword = await bcrypt.compare(password, student.rows[0].password); //true or false
+    const validPassword = await bcrypt.compare(
+      password,
+      student.rows[0].password
+    ); //true or false
     if (!validPassword) {
       return res.status(401).json("Password or Email is incorrect");
     }
@@ -71,9 +72,7 @@ router.post("/student/login", validInfo, async (req, res) => {
     // 4. give them the jwt token
     else if (validPassword) {
       const { token } = jwtGenerator(
-        student.rows[0].student_id,
-        student.rows[0].first_name,
-        student.rows[0].last_name
+        student.rows[0].student_id
       );
       return res.json({ token });
     }

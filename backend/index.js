@@ -4,7 +4,6 @@ const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
 
-
 //midleware
 app.use(cors());
 app.use(express.json());
@@ -13,22 +12,22 @@ app.use(morgan("dev"));
 //ROUTES//
 // Register and login routes to Student
 
-app.use("/AcademicCompass/auth",require('./Routes/Students/jwtAuth'));
+app.use("/AcademicCompass/auth", require("./Routes/Students/register/jwtAuth"));
 
 // test route
-app.use("/AcademicCompass/test", require("./Routes/Students/test"));
+app.use("/AcademicCompass/dashboard", require("./Routes/Students/dashboard/dashboard"));
 
 // Register routes to Lucturer
 app.use("/AcademicCompass/auth", require("./Routes/lecturer/register"));
 
 //test route to Register routes to Lucturer
-
 app.use("/AcademicCompass/test", require("./Routes/lecturer/test"));
 
-
 // Roadmap
-app.use("AcademicCompass/Roadmap")
+app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
 
+//Home 
+app.use("/AcademicCompass/home", require("./Routes/Students/home/home"));
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`server is up ans listening on port ${port}`);
