@@ -14,7 +14,7 @@ app.use(morgan("dev"));
 
 app.use("/AcademicCompass/auth", require("./Routes/Students/register/jwtAuth"));
 
-// test route
+// dashboard route
 app.use("/AcademicCompass/dashboard", require("./Routes/Students/dashboard/dashboard"));
 
 // Register routes to Lucturer
@@ -23,11 +23,15 @@ app.use("/AcademicCompass/auth", require("./Routes/lecturer/register"));
 //test route to Register routes to Lucturer
 app.use("/AcademicCompass/test", require("./Routes/lecturer/test"));
 
-// Roadmap
+// get all Roadmap
 app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
+
+// add roadmap
+ app.use("/AcademicCompass/addroadmap",require("./Routes/Roadmap/addRoadmap"));
 
 //Home 
 app.use("/AcademicCompass/home", require("./Routes/Students/home/home"));
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`server is up ans listening on port ${port}`);
