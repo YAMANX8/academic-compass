@@ -70,11 +70,7 @@ router.post(
       );
 
       // 6.generating our jwt token
-      const token = jwtGenerator(
-        newRegister_request.rows[0].register_id,
-        newRegister_request.rows[0].first_name,
-        newRegister_request.rows[0].last_name
-      );
+      const token = jwtGenerator(newRegister_request.rows[0].register_id);
 
       res.json({ token });
     } catch (error) {
