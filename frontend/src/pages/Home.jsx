@@ -2,13 +2,13 @@ import React from "react";
 import { FaRegMap as Map } from "react-icons/fa";
 import Hero from "../assets/images/hero.svg";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { RoadmapCard } from "../components/index.js";
 
+import  homeApi  from "../apis/homeApi.js";
 function Home() {
   // style variables
   const heading = "text-[3rem] font-semibold tracking-tight leading-[125%]";
-  const text = "";
   const status =
     "flex flex-col gap-4 items-center text-[32px] tracking-tight leading-[125%]";
   // states
@@ -16,19 +16,29 @@ function Home() {
   const [roadmaps, setRoadmaps] = useState(0);
   const [courses, setCourses] = useState(0);
   const [instructors, setInstructors] = useState(0);
-  const [roadCards, setRoadCards] = useState([
-    { id: 1, title: "frontend", description: "kjsifjoweifjowij" },
-    { id: 2, title: "backend", description: "kjsifjoweifjowij" },
-    {
-      id: 3,
-      title: "artificial intelligence",
-      description: "kjsifjoweifjowij",
-    },
-  ]);
-  console.log(roadCards);
+  const [roadCards, setRoadCards] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await homeApi.get("/home");
+        // setRestaurants(response.data.data.restaurants);
+        const count = response.data.count;
+        setCourses(count.course.count)
+        setInstructors(count.instructer.count)
+        setRoadmaps(count.roadmap.count)
+        setEnrollments(count.enrollment.count)
+        setRoadCards(response.data.roadmaps)
+        console.log(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchData();
+  }, []);
   return (
     <>
-      <section className="w-full bg-light mt-[100px] px-[120px] py-[48px] flex gap-4 justify-between items-center">
+      <section className="w-full bg-light  px-[120px] py-[48px] flex gap-4 justify-between items-center">
         {/* ************************************************************ */}
         <div className="flex flex-col gap-5 items-start">
           <h1 className={`${heading} w-[488px]`}>
@@ -77,15 +87,16 @@ function Home() {
 
       {/* popular roadmaps section */}
       <section className="py-[48px] px-[120px] bg-light">
-        <h2 className="text-[48px] font-semibold leading-[125%] tracking-tight">
+        <h2 className="text-[48px] font-semibold leading-[125%] tracking-tight mb-12">
           Popular Roadmaps
         </h2>
-        <div className="flex flex-col">
-          {roadCards.map((card) => (
+        <div className="flex flex-col gap-[60px]">
+          {roadCards.map((card, index) => (
             <RoadmapCard
-              key={card.id}
-              title={card.title}
-              description={card.description}
+              key={card.roadmap_id}
+              order={index}
+              title={card.roadmap_title}
+              description={card.roadmap_description}
             />
           ))}
         </div>
