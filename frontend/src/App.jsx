@@ -11,6 +11,7 @@ const App = () => {
   return (
     <div>
       <Navbar />
+      <div className="py-12 px-[7.5rem] bg-light dark:bg-dark">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login-student" element={<Login_Student />} />
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/register-instructor" element={<Sign_Up_Instructor />} />
         {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
       </Routes>
+      </div>
       <Footer />
     </div>
   );
