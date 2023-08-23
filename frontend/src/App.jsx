@@ -6,19 +6,23 @@ import {
   Roadmaps,
   Sign_Up_Instructor,
   Home,
+  Dashboard_Student,
 } from "./pages/index.js";
 const App = () => {
   return (
     <div>
       <Navbar />
+      <div className="py-12 px-[7.5rem] bg-light dark:bg-dark">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login-student" element={<Login_Student />} />
         <Route path="/register-student" element={<Sign_Up_Student />} />
         <Route path="/roadmaps" element={<Roadmaps />} />
         <Route path="/register-instructor" element={<Sign_Up_Instructor />} />
+        <Route path="/dashboard_student" element={<Dashboard_Student />} />
         {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
       </Routes>
+      </div>
       <Footer />
     </div>
   );
