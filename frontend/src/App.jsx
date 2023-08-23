@@ -6,7 +6,7 @@ import {
   Roadmaps,
   Sign_Up_Instructor,
   Home,
-  Dasboared_Student,
+  Dashboard_Student,
 } from "./pages/index.js";
 const App = () => {
   return (
@@ -18,7 +18,7 @@ const App = () => {
         <Route path="/register-student" element={<Sign_Up_Student />} />
         <Route path="/roadmaps" element={<Roadmaps />} />
         <Route path="/register-instructor" element={<Sign_Up_Instructor />} />
-        <Route path="/dasboared_Student" element={<Dasboared_Student />} />
+        <Route path="/dashboard_student" element={<Dashboard_Student />} />
         {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
       </Routes>
       <Footer />
