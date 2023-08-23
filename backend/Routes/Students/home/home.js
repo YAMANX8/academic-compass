@@ -24,7 +24,6 @@ router.get("/", async (req, res) => {
       roadmaps: allRoadmap.rows,
     });
 
-    // get Info about courses count
   } catch (err) {
     console.error(err.message);
     res.status(500).json("Server Error");
