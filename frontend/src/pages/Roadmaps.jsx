@@ -24,7 +24,7 @@ function Roadmaps() {
     <div>
 
    {/* popular roadmaps section */}
-   <section className="py-[48px] px-[120px] bg-light">
+   <section>
         <h2 className="text-[48px] font-semibold leading-[125%] tracking-tight mb-12">
           Popular Roadmaps
         </h2>
