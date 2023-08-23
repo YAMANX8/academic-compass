@@ -14,8 +14,8 @@ app.use(morgan("dev"));
 
 app.use("/AcademicCompass/auth", require("./Routes/Students/register/jwtAuth"));
 
-// dashboard route
-app.use("/AcademicCompass/dashboard", require("./Routes/Students/dashboard/dashboard"));
+// dashboard route to student
+app.use("/AcademicCompass/studentDashboard", require("./Routes/Students/dashboardStudent/dashboard"));
 
 // Register routes to Lucturer
 app.use("/AcademicCompass/auth", require("./Routes/lecturer/register"));
