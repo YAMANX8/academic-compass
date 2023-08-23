@@ -6,7 +6,7 @@ function Sign_Up_Student() {
   const inputStyle = "p-[10px] rounded-[2px] leading-[125%]";
 
   return (
-    <div className="flex justify-center py-[48px] px-[120px] ">
+    <div className="flex justify-center">
       <div className="flex flex-col justify-center gap-4 px-[100px] bg-primary rounded-tl-[20px] rounded-bl-[20px] text-light">
         <h1 className="text-[60px] font-semibold tracking-tight leading-[125%]">
           Sign Up
