@@ -8,7 +8,7 @@ function jwtGenerator(student_id) {
   };
 
   const token = jwt.sign(payload, process.env.jwtSecret, {
-    expiresIn: "1hr",
+    expiresIn: "48hr",
   });
 
   return { token};

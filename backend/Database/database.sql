@@ -356,7 +356,7 @@ LEFT JOIN
 WHERE
     (e.progress_state IS NULL OR e.progress_state <= i.item_no)
     AND e.student_id = 2; 
--- بدون 100
+-- النسبة بدون 100
 SELECT
     e.student_id,
     c.course_id,
@@ -404,6 +404,27 @@ LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
 LEFT JOIN "items" i ON c.course_id = i.course_id AND (e.progress_state IS NULL OR e.progress_state < i.item_no)
 WHERE e.student_id = 2 AND (e.progress_state IS NULL OR e.progress_state < i.item_no)
 ORDER BY c.course_title;
+
+--stars to in proger cpurse by Common Table Expressions (CTE)
+WITH IncompleteCourses AS (
+    SELECT c.course_id, c.course_title
+    FROM "course" c
+    JOIN "enrollment" e ON c.course_id = e.course_id
+    LEFT JOIN "items" i ON c.course_id = i.course_id
+    WHERE e.student_id = 1 AND e.progress_state < i.item_no
+)
+SELECT
+    ic.course_id,
+    ic.course_title,
+    AVG(r.stars_number) AS average_rating
+FROM IncompleteCourses ic
+LEFT JOIN "enrollment" e ON ic.course_id = e.course_id
+LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
+GROUP BY ic.course_id, ic.course_title
+ORDER BY ic.course_title;
+
+
+
 
 
 
