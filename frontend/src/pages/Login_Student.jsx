@@ -1,11 +1,16 @@
 import Logo from "/logo.svg";
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
+import { useLocation } from "react-router-dom";
+import { Alert } from "../components";
 function Login_Student() {
+  const location = useLocation();
   const labelStyle =
     "flex flex-col gap-2 text-[20px] tracking-tight  leading-[125%] text-dark";
   const inputStyle = "p-[10px] rounded-[2px] leading-[125%]";
 
   return (
+    <>
+    {location.state && <Alert state={location.state.success} text={location.state.text} />}
     <div className="flex justify-center">
       <div className="flex flex-col justify-center gap-4 px-[100px] bg-primary rounded-tl-[20px] rounded-bl-[20px] text-light">
         <h1 className="text-[60px] font-semibold tracking-tight leading-[125%]">
@@ -49,6 +54,7 @@ function Login_Student() {
         </form>
       </div>
     </div>
+    </>
   );
 }
 

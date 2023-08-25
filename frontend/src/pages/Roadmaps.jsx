@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from "react";
 import { RoadmapCard } from "../components/index.js";
-import  homeApi  from "../apis/homeApi.js";
+import  axios  from "../apis/axios.js";
 function Roadmaps() {
   const [roadCards, setRoadCards] = useState([]);
 
@@ -9,7 +9,7 @@ function Roadmaps() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await homeApi.get("/home");
+        const response = await axios.get("/home");
         setRoadCards(response.data.roadmaps)
        
       } catch (err) {
