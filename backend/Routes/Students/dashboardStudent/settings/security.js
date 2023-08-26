@@ -1,10 +1,13 @@
 const router = require("express").Router();
 const pool = require("../../../../Database/db");
+const authorization = require("../../../../middleware/authorization.js");
+
 
 // Change student password
-router.put('/:id', async (req, res) => {
+router.put('/', authorization , async (req, res) => {
     const { currentPassword, newPassword, verifyNewPassword } = req.body;
-    const student_id = req.params.id;
+    // const student_id = req.params.id;
+    const student_id  =req.student.studentId;
 
     try {
         const query = 'SELECT password FROM student WHERE student_id = $1';
