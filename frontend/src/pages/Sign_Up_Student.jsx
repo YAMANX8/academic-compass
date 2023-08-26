@@ -301,7 +301,7 @@ function Sign_Up_Student() {
           </div>
 
           <button
-            className="flex justify-center items-center  gap-[10px] mt-[32px] font-medium w-[353px] rounded-[5px] py-[10px]  text-light h-[44px] bg-primary disabled:bg-accent/50 disabled:text-dark/50"
+            className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px]  text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50"
             disabled={
               !validFirstName ||
               !validLastName ||

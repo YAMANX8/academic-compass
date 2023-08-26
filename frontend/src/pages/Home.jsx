@@ -24,11 +24,10 @@ function Home() {
         // setRestaurants(response.data.data.restaurants);
         const count = response.data.count;
         setCourses(count.course.count)
-        setInstructors(count.instructer.count)
+        setInstructors(count.instructor.count)
         setRoadmaps(count.roadmap.count)
         setEnrollments(count.enrollment.count)
-        setRoadCards(response.data.roadmaps)
-        console.log(response.data);
+        setRoadCards(count.popularRoadmap)
       } catch (err) {
         console.error(err);
       }
