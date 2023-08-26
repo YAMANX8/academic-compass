@@ -1,11 +1,17 @@
 -- All instructions executed on the database are written here
-
+-- UTF8
+SELECT datname, pg_encoding_to_char(encoding) FROM pg_database WHERE datname = 'maptow';
 -- change COLUMN password character in student from 50 to 100 
 ALTER TABLE student
-ALTER COLUMN password TYPE character varying(100);
+ALTER COLUMN image_path TYPE character varying(150);
 -- add new column to table
 ALTER TABLE table_name
 ADD COLUMN new_column_name data_type;
+
+ALTER TABLE student
+ADD COLUMN city character varying(255);
+
+
 -- example
 ALTER TABLE roadmap
 ADD COLUMN image_path VARCHAR(50);
@@ -356,7 +362,7 @@ LEFT JOIN
 WHERE
     (e.progress_state IS NULL OR e.progress_state <= i.item_no)
     AND e.student_id = 2; 
--- بدون 100
+-- النسبة بدون 100
 SELECT
     e.student_id,
     c.course_id,
@@ -404,6 +410,70 @@ LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
 LEFT JOIN "items" i ON c.course_id = i.course_id AND (e.progress_state IS NULL OR e.progress_state < i.item_no)
 WHERE e.student_id = 2 AND (e.progress_state IS NULL OR e.progress_state < i.item_no)
 ORDER BY c.course_title;
+
+--stars to in proger cpurse by Common Table Expressions (CTE)
+WITH IncompleteCourses AS (
+    SELECT c.course_id, c.course_title
+    FROM "course" c
+    JOIN "enrollment" e ON c.course_id = e.course_id
+    LEFT JOIN "items" i ON c.course_id = i.course_id
+    WHERE e.student_id = 1 AND e.progress_state < i.item_no
+)
+SELECT
+    ic.course_id,
+    ic.course_title,
+    AVG(r.stars_number) AS average_rating
+FROM IncompleteCourses ic
+LEFT JOIN "enrollment" e ON ic.course_id = e.course_id
+LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
+GROUP BY ic.course_id, ic.course_title
+ORDER BY ic.course_title;
+
+
+-- insert data to topic
+INSERT INTO Topic_Level_1 (topic_title, topic_description, topic_status, roadmap_id)
+VALUES
+    ('Introduction to Programming', 'An overview of programming concepts', 'Active', 1),
+    ('Data Structures and Algorithms', 'Exploring common data structures and algorithms', 'Inactive', 2),
+    ('Web Development Basics', 'Getting started with web development', 'Active', 3);
+
+    -- إدراج بيانات في جدول Topic_Level_N
+INSERT INTO Topic_Level_N (topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id)
+VALUES
+    ('Variables and Data Types', 'Understanding variables and different data types', 'Active', 1, NULL, 1),
+    ('Conditional Statements', 'Exploring if-else statements and switch cases', 'Active', 2, 19, 1),
+    ('Linked Lists', 'Understanding linked list data structure', 'Active', 3, 20, 2), 
+    ('Arrays and Matrices', 'Exploring arrays and matrix data structures', 'Active', 4, 21, 2), 
+    ('HTML Basics', 'Introduction to HTML markup', 'Active', 5, 22, 3), 
+    ('CSS Styling', 'Styling web pages using CSS', 'Active', 6, 23, 3); 
+
+ UPDATE items
+SET topic_id = 19
+WHERE item_id = 3;
+
+UPDATE items
+SET topic_id = 20
+WHERE item_id = 4;
+
+UPDATE items
+SET topic_id = 21
+WHERE item_id = 6;
+ 
+
+
+-- popular roadmap
+SELECT Roadmap.*, COUNT(Enrollment.enrollment_id) AS enrollment_count
+FROM Roadmap
+JOIN Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
+JOIN Topic_Level_N ON Topic_Level_1.topic_level1_id = Topic_Level_N.topic_level1_id
+JOIN Items ON Topic_Level_N.topic_id = Items.topic_id
+JOIN Course ON Items.course_id = Course.course_id
+JOIN Enrollment ON Course.course_id = Enrollment.course_id
+GROUP BY Roadmap.roadmap_id, Roadmap.roadmap_title, Roadmap.roadmap_description, Roadmap.image_path
+ORDER BY enrollment_count DESC
+LIMIT 3;
+
+
 
 
 

@@ -14,8 +14,14 @@ app.use(morgan("dev"));
 
 app.use("/AcademicCompass/auth", require("./Routes/Students/register/jwtAuth"));
 
-// dashboard route
-app.use("/AcademicCompass/dashboard", require("./Routes/Students/dashboard/dashboard"));
+// dashboard route to student
+app.use("/AcademicCompass/studentDashboard", require("./Routes/Students/dashboardStudent/dashboard"));
+
+// change password
+app.use("/AcademicCompass/studentDashboard/change-password", require("./Routes/Students/dashboardStudent/settings/security"));
+
+// Update Acount
+app.use("/AcademicCompass/studentDashboard/update-account", require("./Routes/Students/dashboardStudent/settings/account"));
 
 // Register routes to Lucturer
 app.use("/AcademicCompass/auth", require("./Routes/lecturer/register"));
@@ -31,6 +37,9 @@ app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
 
 //Home 
 app.use("/AcademicCompass/home", require("./Routes/Students/home/home"));
+
+// Setting
+app.use("/AcademicCompass/setting",require("./Routes/Students/dashboardStudent/settings/generalInfl"));
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
