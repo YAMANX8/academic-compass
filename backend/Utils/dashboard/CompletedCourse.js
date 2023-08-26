@@ -1,4 +1,4 @@
-const db = require("../Database/db");
+const db = require("../../Database/db");
 
 const GetCompletedCourse = async (student_id) => {
   try {

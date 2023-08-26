@@ -38,6 +38,9 @@ app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
 //Home 
 app.use("/AcademicCompass/home", require("./Routes/Students/home/home"));
 
+// Setting
+app.use("/AcademicCompass/setting",require("./Routes/Students/dashboardStudent/settings/generalInfl"));
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`server is up ans listening on port ${port}`);
