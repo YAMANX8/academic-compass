@@ -43,6 +43,7 @@ const GetTotalPoit = async (student_id) => {
   }
 };
 
+
 module.exports = {
   GetCoursesNumberInfo,
   GetTotalPoit,
