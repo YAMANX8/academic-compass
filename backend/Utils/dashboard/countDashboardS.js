@@ -1,4 +1,4 @@
-const db = require("../Database/db");
+const db = require("../../Database/db");
 
 const GetCoursesNumberInfo = async (student_id) => {
   try {
@@ -6,13 +6,13 @@ const GetCoursesNumberInfo = async (student_id) => {
       "SELECT e.student_id,  SUM(CASE WHEN e.progress_state >= i.item_no THEN 1 ELSE 0 END) AS completed_courses, SUM(CASE WHEN e.progress_state < i.item_no THEN 1 ELSE 0 END) AS incomplete_courses FROM Enrollment e JOIN Items i ON e.course_id = i.course_id WHERE e.student_id = $1 GROUP BY e.student_id";
     const values = [student_id];
     const result = await db.query(query, values);
-        return {
-          status: "success",
-          results: result.rows.length,
-          Data: {
-            data: result.rows,
-          },
-        };
+    return {
+      status: "success",
+      results: result.rows.length,
+      Data: {
+        data: result.rows,
+      },
+    };
   } catch (error) {
     console.error("Error Get all Courses in progress and Completed:", error);
     return {
@@ -27,19 +27,19 @@ const GetTotalPoit = async (student_id) => {
       "WITH PointsPerEnrollment AS (SELECT e.enrollment_id,SUM(CASE WHEN o.is_correct THEN 1 ELSE 0 END) AS points FROM   enrollment e INNER JOIN Student_Answers sa ON e.enrollment_id = sa.enrollment_id INNER JOIN Option o ON sa.option_no = o.option_no AND sa.question_no = o.question_id WHERE  e.student_id = $1 GROUP BY e.enrollment_id) SELECT SUM(points) AS total_points FROM PointsPerEnrollment";
     const values = [student_id];
     const result = await db.query(query, values);
-        return {
-          status: "success",
-          results: result.rows.length,
-          Data: {
-            data: result.rows,
-          },
-        };
+    return {
+      status: "success",
+      results: result.rows.length,
+      Data: {
+        data: result.rows,
+      },
+    };
   } catch (error) {
     console.error("Error Get TotalPoint", error);
-      return {
-        status: "error",
-        message: "Get Total Point is Filed",
-      };
+    return {
+      status: "error",
+      message: "Get Total Point is Filed",
+    };
   }
 };
 

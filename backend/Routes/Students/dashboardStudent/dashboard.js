@@ -1,19 +1,21 @@
 const router = require("express").Router();
 const pool = require("../../../Database/db");
-const authorization = require("../../../middleware/authorization.js");
-const count = require("../../../Utils/countDashboardS");
-const inprogresInfo=require("../../../Utils/coursesInprogresInfo");
-const completCourseInfo=require("../../../Utils/CompletedCourse");
-router.get("/:id", async (req, res,next) => {
+const authorization = require("../../../middleware/authorization");
+const count = require("../../../Utils/dashboard/countDashboardS");
+const inprogresInfo = require("../../../Utils/dashboard/coursesInprogresInfo");
+const completCourseInfo = require("../../../Utils/dashboard/CompletedCourse");
+const popularRoadmaps=require("../../../Utils/dashboard/popularRoadmaps");
+
+router.get("/",authorization, async (req, res, next) => {
   try {
-    // const Id = req.student.studentId;
-    const Id = req.params.id;
+    const Id = req.student.studentId;
+    // const Id = req.params.id;
     //get information to student
     const studentInfo = await pool.query(
       "SELECT * FROM student WHERE student_id = $1",
       [Id]
     );
-    // get Info about courses count
+    // get Info about courses count to student
     const countData = await count.GetCoursesNumberInfo(Id);
     // get TotalPint
     const TotalPoint = await count.GetTotalPoit(Id);
@@ -25,7 +27,8 @@ router.get("/:id", async (req, res,next) => {
     const strs = await inprogresInfo.starsNumber(Id);
     // get GetCompletedCourse
     const GetCompletedCourse = await completCourseInfo.GetCompletedCourse(Id);
-
+    // get popularRoadmaps(the first three maps)
+    const popularRoadmap = await popularRoadmaps.popularRoadmapsInfo();
     // Combine all data into a single object
     const responseData = {
       studentInfo: studentInfo.rows[0],
@@ -35,6 +38,7 @@ router.get("/:id", async (req, res,next) => {
       completionPercentageData: completionPercentage.Data.data,
       starsData: strs.Data.data,
       completedCourseData: GetCompletedCourse.Data.data,
+      popularRoadmaps: popularRoadmap.Data.data,
     };
 
     // Send the combined data in the response

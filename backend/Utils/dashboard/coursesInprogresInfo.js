@@ -1,4 +1,4 @@
-const db = require("../Database/db");
+const db = require("../../Database/db");
 
 const InProgresCourseInfo = async (student_id) => {
   try {
@@ -45,7 +45,7 @@ const completionPercentage = async (student_id) => {
 };
 const starsNumber = async (student_id) => {
   try {
-     const query = `
+    const query = `
       WITH IncompleteCourses AS (
         SELECT c.course_id, c.course_title
         FROM course c
