@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const pool = require("../../../../Database/db");
+const authorization = require("../../../../middleware/authorization.js");
 
 // Change student information
-router.put('/:id', async (req, res) => {
+router.put('/',  authorization ,async (req, res) => {
     try {
         const { first_name, last_name, email, education, birth_date, bio } = req.body;
-        const student_id = req.params.id;
-
+        // const student_id = req.params.id;
+        const student_id  =req.student.student_id;
         const query = `UPDATE student
         SET first_name = $1,
             last_name = $2,

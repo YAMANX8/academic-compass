@@ -17,6 +17,12 @@ app.use("/AcademicCompass/auth", require("./Routes/Students/register/jwtAuth"));
 // dashboard route to student
 app.use("/AcademicCompass/studentDashboard", require("./Routes/Students/dashboardStudent/dashboard"));
 
+// change password
+app.use("/AcademicCompass/studentDashboard/change-password", require("./Routes/Students/dashboardStudent/settings/security"));
+
+// Update Acount
+app.use("/AcademicCompass/studentDashboard/update-account", require("./Routes/Students/dashboardStudent/settings/account"));
+
 // Register routes to Lucturer
 app.use("/AcademicCompass/auth", require("./Routes/lecturer/register"));
 
