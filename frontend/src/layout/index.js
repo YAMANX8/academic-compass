@@ -1,3 +1,4 @@
 import DashboardWrapper from "./dashboardWrapper";
 import SectionWrapper from "./SectionWrapper";
-export { DashboardWrapper, SectionWrapper };
+import SignInUpWrapper from "./SignInUpWrapper";
+export { DashboardWrapper, SectionWrapper, SignInUpWrapper };
