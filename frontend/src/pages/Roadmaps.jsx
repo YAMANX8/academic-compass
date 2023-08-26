@@ -1,17 +1,16 @@
-import React from 'react'
+import React from "react";
 import { useState, useEffect } from "react";
 import { RoadmapCard } from "../components/index.js";
-import  axios  from "../apis/axios.js";
+import axios from "../apis/axios.js";
+
 function Roadmaps() {
   const [roadCards, setRoadCards] = useState([]);
-
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await axios.get("/home");
-        setRoadCards(response.data.roadmaps)
-       
+        setRoadCards(response.data.count.popularRoadmap);
       } catch (err) {
         console.error(err);
       }
@@ -20,11 +19,9 @@ function Roadmaps() {
   }, []);
 
   return (
-    
     <div>
-
-   {/* popular roadmaps section */}
-   <section>
+      {/* popular roadmaps section */}
+      <section>
         <h2 className="text-[48px] font-semibold leading-[125%] tracking-tight mb-12">
           Popular Roadmaps
         </h2>
@@ -40,7 +37,7 @@ function Roadmaps() {
         </div>
       </section>
     </div>
-  )
+  );
 }
 
 export default Roadmaps;
