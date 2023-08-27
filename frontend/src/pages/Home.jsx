@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { RoadmapCard } from "../components/index.js";
 
-import  homeApi  from "../apis/homeApi.js";
+import  axios  from "../apis/axios.js";
 function Home() {
   // style variables
   const heading = "text-[3rem] font-semibold tracking-tight leading-[125%]";
@@ -20,15 +20,14 @@ function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await homeApi.get("/home");
+        const response = await axios.get("/home");
         // setRestaurants(response.data.data.restaurants);
         const count = response.data.count;
         setCourses(count.course.count)
-        setInstructors(count.instructer.count)
+        setInstructors(count.instructor.count)
         setRoadmaps(count.roadmap.count)
         setEnrollments(count.enrollment.count)
-        setRoadCards(response.data.roadmaps)
-        console.log(response.data);
+        setRoadCards(count.popularRoadmap)
       } catch (err) {
         console.error(err);
       }
@@ -96,6 +95,7 @@ function Home() {
               order={index}
               title={card.roadmap_title}
               description={card.roadmap_description}
+              img={card.image_path}
             />
           ))}
         </div>

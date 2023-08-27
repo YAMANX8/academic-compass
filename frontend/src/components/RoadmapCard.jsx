@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 import Img from "../assets/images/frontend.svg";
 import { AiOutlineEnter as Enter } from "react-icons/ai";
 
-const RoadmapCard = ({ title, order, description }) => {
+const RoadmapCard = ({ title, order, description, img }) => {
   return (
     <div
       className={`flex justify-between w-full bg-secondary rounded-[10px] py-4 px-5 gap-5 ${
         order % 2 != 0 ? "flex-row-reverse" : "flex-row"
       }`}
     >
-      <img src={Img} className="block w-[345px]" />
+      <img src={`backend/${img}`} className="block w-[345px]" />
 
       <div className="flex flex-col items-start gap-4 justify-between">
         <h3 className="text-[48px] font-bold leading-[125%] tracking-tight text-accent mb-4">

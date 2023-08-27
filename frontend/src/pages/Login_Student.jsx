@@ -1,24 +1,21 @@
-import Logo from "/logo.svg";
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
+import {SignInUpWrapper } from "../layout";
+import { useRef, useState, useEffect } from "react";
+
+import toast, { Toaster } from "react-hot-toast";
+
+import axios from "../apis/axios";
+
 function Login_Student() {
   const labelStyle =
-    "flex flex-col gap-2 text-[20px] tracking-tight  leading-[125%] text-dark";
-  const inputStyle = "p-[10px] rounded-[2px] leading-[125%]";
+    "flex flex-col gap-2 text-[20px] tracking-tighter  leading-[125%] relative w-[340px]";
+  const inputStyle =
+    "p-[10px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark";
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col justify-center gap-4 px-[100px] bg-primary rounded-tl-[20px] rounded-bl-[20px] text-light">
-        <h1 className="text-[60px] font-semibold tracking-tight leading-[125%]">
-          Login
-        </h1>
-        <p className="w-[315px] text-[26px] leading-[150%]">
-          Chart Your Learning Journey with Interactive Educational Roadmaps
-        </p>
-      </div>
-
-      <div className="flex flex-col items-center justify-center gap-[74px] px-[100px] py-[48px] bg-secondary rounded-tr-[20px] rounded-br-[20px] text-light">
-        <img src={Logo} alt="logo" className="w-[203px]" />
-
+    <>
+   
+   <SignInUpWrapper title="Login">
         <form>
           <div className="flex flex-col gap-4">
             <label className={`${labelStyle}`}>
@@ -42,13 +39,13 @@ function Login_Student() {
             </label>
           </div>
 
-          <button className="flex justify-center items-center  gap-[10px] mt-[74px] font-medium w-[353px] rounded-[5px] py-[10px]  text-light h-[44px] bg-primary">
+          <button className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px]  text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50">
             LOGIN
             <ReturnLeft className="text-[24px]" />
           </button>
         </form>
-      </div>
-    </div>
+     </SignInUpWrapper>
+    </>
   );
 }
 
