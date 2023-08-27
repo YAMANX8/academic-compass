@@ -536,19 +536,6 @@ JOIN
 WHERE
     Roadmap.roadmap_id = 2;
 
--- third try
-SELECT
-    Roadmap.*,
-    Topic_Level_1.*
-FROM
-    Roadmap
-JOIN
-    Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
-WHERE
-    Roadmap.roadmap_id = 2;
-
-
-
 --insert into Progress_Status
 INSERT INTO Topic_States (state_id, state_name)
 VALUES
@@ -565,7 +552,7 @@ VALUES
     ('Introduction to Programming', 2, 3);
 
 
---roadmap+topic by ID wit sigin to student
+--roadmap+topic by ID with sigin to student
 
 SELECT
     Roadmap.*,
