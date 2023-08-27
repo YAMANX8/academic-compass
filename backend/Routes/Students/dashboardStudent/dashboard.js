@@ -5,6 +5,8 @@ const count = require("../../../Utils/dashboard/countDashboardS");
 const inprogresInfo = require("../../../Utils/dashboard/coursesInprogresInfo");
 const completCourseInfo = require("../../../Utils/dashboard/CompletedCourse");
 const popularRoadmaps=require("../../../Utils/dashboard/popularRoadmaps");
+const bringdataQuizETS =require("../../../Utils/dashboard/bringdataQuizETS");
+const bring_All_Courses_Number =require("../../../Utils/dashboard/bring_All_Courses_Number");
 
 router.get("/",authorization, async (req, res, next) => {
   try {
@@ -29,6 +31,10 @@ router.get("/",authorization, async (req, res, next) => {
     const GetCompletedCourse = await completCourseInfo.GetCompletedCourse(Id);
     // get popularRoadmaps(the first three maps)
     const popularRoadmap = await popularRoadmaps.popularRoadmapsInfo();
+    // get quiz video and artical
+    const Get_Quiz_Vedio_Artical = await bringdataQuizETS.qva(Id);
+    // get All Courses Number
+    const Get_All_Courses_Number = await bring_All_Courses_Number.Get_All_Courses_Number(Id);
     // Combine all data into a single object
     const responseData = {
       studentInfo: studentInfo.rows[0],
@@ -39,6 +45,8 @@ router.get("/",authorization, async (req, res, next) => {
       starsData: strs.Data.data,
       completedCourseData: GetCompletedCourse.Data.data,
       popularRoadmaps: popularRoadmap.Data.data,
+      Get_Quiz_Vedio_Artical : Get_Quiz_Vedio_Artical.Data.data,
+      Get_All_Courses_Number : Get_All_Courses_Number.Data.data
     };
 
     // Send the combined data in the response
