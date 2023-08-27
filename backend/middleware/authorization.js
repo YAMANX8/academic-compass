@@ -7,7 +7,7 @@ module.exports = function (req, res, next) {
   try {
     const jwtToken = req.header("token");
     if (!jwtToken) {
-      return res.status(403).json("Not Authoeize");
+      return res.status(403).json("Not Authorize");
     }
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
     req.student = {
@@ -15,7 +15,7 @@ module.exports = function (req, res, next) {
     };
   } catch (error) {
     console.error(error.message);
-    return res.status(403).json("Not Authoeize");
+    return res.status(403).json("Not Authorize");
   }
   next();
 };
