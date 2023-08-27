@@ -8,9 +8,11 @@ export default {
         primary: "#253AD4",
         light: "#EEEFFC",
         dark: "#070B27",
+        green: "#25D42C",
         secondary: {
           DEFAULT: "#E0E7F7",
           dark: "#0D1832",
+
         },
         accent: {
           DEFAULT: "#6A1EAD",
