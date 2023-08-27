@@ -95,6 +95,7 @@ function Home() {
               order={index}
               title={card.roadmap_title}
               description={card.roadmap_description}
+              img={card.image_path}
             />
           ))}
         </div>
