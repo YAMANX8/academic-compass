@@ -8,8 +8,8 @@ ALTER COLUMN image_path TYPE character varying(150);
 ALTER TABLE table_name
 ADD COLUMN new_column_name data_type;
 
-ALTER TABLE student
-ADD COLUMN city character varying(255);
+ALTER TABLE topic_level_1
+ADD COLUMN topic_order character varying(50);
 
 
 -- example
@@ -447,9 +447,9 @@ VALUES
     ('HTML Basics', 'Introduction to HTML markup', 'Active', 5, 22, 3), 
     ('CSS Styling', 'Styling web pages using CSS', 'Active', 6, 23, 3); 
 
- UPDATE items
-SET topic_id = 19
-WHERE item_id = 3;
+UPDATE topic_level_1
+SET topic_order = 3
+WHERE topic_level1_id = 3;
 
 UPDATE items
 SET topic_id = 20
@@ -473,8 +473,116 @@ GROUP BY Roadmap.roadmap_id, Roadmap.roadmap_title, Roadmap.roadmap_description,
 ORDER BY enrollment_count DESC
 LIMIT 3;
 
+-- تعليمة تحسب إشتراك طالب معين في كل كورس على حدا
+SELECT Course.*, COUNT(Enrollment.enrollment_id) AS enrollment_count
+FROM Course
+JOIN Enrollment ON Course.course_id = Enrollment.course_id
+WHERE Enrollment.student_id = 2
+GROUP BY Course.course_id, Course.course_title, Course.course_description, Course.course_duration, Course.items_count, Course.course_status, Course.instructor_id, Course.course_level, Course.course_type
+ORDER BY enrollment_count DESC;
+
+-- الإشتراك على كل الكورسات
+SELECT COUNT(DISTINCT Course.course_id) AS total_enrollments
+FROM Course
+JOIN Enrollment ON Course.course_id = Enrollment.course_id
+WHERE Enrollment.student_id = 2;
+
+--insert to 33 && 34
+INSERT INTO items_types(type_name) VALUES('article'),('video'),('quiz');
+
+Insert INTO completed_items(type_id,enrollment_id) VALUES(1,3),(1,4),(2,5),(3,3),(2,4);
+
+-- عدد المقالات وعدد الفيديو وعدد الكويز 
+SELECT
+    COUNT(CASE WHEN it.type_name = 'article' THEN 1 END) AS article_count,
+    COUNT(CASE WHEN it.type_name = 'video' THEN 1 END) AS video_count,
+    COUNT(CASE WHEN it.type_name = 'quiz' THEN 1 END) AS quiz_count
+FROM
+    enrollment e
+JOIN
+    completed_items ci ON e.enrollment_id = ci.enrollment_id
+JOIN
+    items_types it ON ci.type_id = it.type_id
+WHERE
+    e.student_id = 1;
+-- roadmap+topic by ID without sigin
+SELECT
+    r.*,
+    tl1.*,
+    COUNT(i.item_id) AS item_count
+FROM
+    Roadmap r
+JOIN
+    Topic_Level_1 tl1 ON r.roadmap_id = tl1.roadmap_id
+JOIN
+    Topic_Level_N n ON tl1.topic_level1_id = n.topic_level1_id
+LEFT JOIN
+    Items i ON n.topic_id = i.topic_id
+WHERE
+    r.roadmap_id = 2
+GROUP BY
+    r.roadmap_id, r.roadmap_title, r.roadmap_description,
+    tl1.topic_level1_id, tl1.topic_title, tl1.topic_description
+ORDER BY
+    tl1.topic_level1_id;
+-- secound try ** 
+SELECT
+    Roadmap.*,
+    Topic_Level_1.*
+FROM
+    Roadmap
+JOIN
+    Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
+WHERE
+    Roadmap.roadmap_id = 2;
+
+-- third try
+SELECT
+    Roadmap.*,
+    Topic_Level_1.*
+FROM
+    Roadmap
+JOIN
+    Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
+WHERE
+    Roadmap.roadmap_id = 2;
 
 
+
+--insert into Progress_Status
+INSERT INTO Topic_States (state_id, state_name)
+VALUES
+    (1, 'Not Started'),
+    (2, 'In Progress'),
+    (3, 'Completed');
+
+INSERT INTO Progress_Status (topic_title, student_id, state_id)
+VALUES
+    ('Introduction to Programming', 1, 1),
+    ('Data Structures and Algorithms', 1, 2),
+    ('Web Development Basics', 1, 2),
+    ('Introduction to Programming', 2, 1),
+    ('Introduction to Programming', 2, 3);
+
+
+--roadmap+topic by ID wit sigin to student
+
+SELECT
+    Roadmap.*,
+    Topic_Level_1.*,
+    Progress_Status.state_id AS topic_state_id,
+    Topic_States.state_name AS topic_state_name
+FROM
+    Roadmap
+JOIN
+    Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
+LEFT JOIN
+    Progress_Status ON Topic_Level_1.topic_level1_id = Progress_Status.topic_level1_id
+LEFT JOIN
+    Topic_States ON Progress_Status.state_id = Topic_States.state_id
+WHERE
+    Roadmap.roadmap_id = 2
+    AND Progress_Status.student_id = 2; 
 
 
 
