@@ -8,15 +8,15 @@ function Chart({ chartData }) {
         <Doughnut
           data={chartData}
           options={{
-            animation: true,
+            animation: {
+              duration: 2000,
+              easing: "easeInOutBack",
+            },
             plugins: {
-              legend: {
-                display: false
-              },
               tooltip: {
-                enabled: true
-              }
-            }
+                enabled: true,
+              },
+            },
           }}
         />
       </div>
