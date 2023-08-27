@@ -1,4 +1,4 @@
-import {DashboardWrapper} from "../components/index.js"
+import {DashboardWrapper} from "../layout/index.js"
 function Dashboard_Student() {
     const name = 'Yaman'
   return (
