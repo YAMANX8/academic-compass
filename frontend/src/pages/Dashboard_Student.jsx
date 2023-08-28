@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { ProfileCard, PerformanceChart } from "../components/index.js";
+import { ProfileCard, PerformanceChart ,PerformanceCard, CourseCard } from "../components/index.js";
 import Profile from "../assets/images/frontend.svg";
 import { DashboardWrapper } from "../layout/index.js";
 import { FaRegMap as Map } from "react-icons/fa";
-import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
+import { BsArrowReturnLeft as ReturnLeft   } from "react-icons/bs";
 
 import { performance } from "../performance.js";
 
@@ -42,10 +42,10 @@ function Dashboard_Student() {
 
   // My Performance
   const data1 = [
-    { title: "Courses Enrolls", count: 10 },
-    { title: "Article Read", count: 20 },
-    { title: "Quiz Completed", count: 30 },
-    { title: "Video Watched", count: 40 },
+    { title: "Courses Enrolls", color:"border-primary"       ,  count: 10 },
+    { title: "Article Read",   color:"border-green"       ,  count: 20 },
+    { title: "Quiz Completed",  color:"border-accent"     ,  count: 30 },
+    { title: "Video Watched",   color:"border-accent-dark"     ,  count: 40 },
   ];
 
   // In Progress Courses
@@ -55,8 +55,8 @@ function Dashboard_Student() {
       title: "Course title goes here Course title goes here Course title ...",
       subtitle:
         "Course subtitle goes here goes here goes here goes here ......",
-      progress: "60%",
-      completion: "60",
+      progress: "60",
+      
       stars: 4.5,
     },
     {
@@ -64,8 +64,8 @@ function Dashboard_Student() {
       title: "Course title goes here Course title goes here Course title ...",
       subtitle:
         "Course subtitle goes here goes here goes here goes here ......",
-      progress: "80%",
-      completion: "80",
+      progress: "80",
+      
       stars: 3.5,
     },
     {
@@ -73,18 +73,18 @@ function Dashboard_Student() {
       title: "Course title goes here Course title goes here Course title ...",
       subtitle:
         "Course subtitle goes here goes here goes here goes here ......",
-      progress: "40%",
-      completion: "40",
-      stars: 2.5,
+      progress: "40",
+      
+      stars: 2,
     },
     {
       image: Profile,
       title: "Course title goes here Course title goes here Course title ...",
       subtitle:
         "Course subtitle goes here goes here goes here goes here ......",
-      progress: "40%",
-      completion: "40",
-      stars: 5.5,
+      progress: "40",
+      
+      stars: 4.5,
     },
   ];
 
@@ -121,9 +121,9 @@ function Dashboard_Student() {
   const images = { Profile };
 
   return (
-    <section className=" grid grid-cols-12 gap-[20px]">
+    <section className=" grid grid-cols-12 gap-[20px] grid-rows-8">
       {/* My Profile */}
-      <div className=" col-span-8">
+      <div className=" col-span-8 row-start-1 row-span-2">
         <DashboardWrapper
           heading="My Profile"
           optionalText={`Welcome back, ${name}`}
@@ -163,96 +163,43 @@ function Dashboard_Student() {
       </div>
 
       {/*My Performance */}
-      <div className="col-span-4">
+      <div className="col-span-4 row-start-1 row-span-3">
         <DashboardWrapper heading={"My Performance"}>
           <div>
             <PerformanceChart chartData={data} />
           </div>
-          <div className="grid grid-cols-2 gap-[40px]">
+          <div className="grid grid-cols-2 grid-rows-2 gap-[20px]">
             {data1.map((item, index) => (
-              <div
-                key={index}
-                className={`w-[168px] h-[88px] rounded-[10px] bg-light p-[15px] border-t-[6px] ${
-                  index === 0
-                    ? "border-indigo-700"
-                    : index === 1
-                    ? "border-[#25D42C]"
-                    : index === 2
-                    ? "border-[#6A1EAD]"
-                    : index === 3
-                    ? "border-[#B67CE8]"
-                    : ""
-                }`}
-              >
-                <span className="text-black font-poppins text-3xl font-bold leading-10 tracking-tighter">
-                  {item.count}
-                </span>
-                <p className="text-customcolor font-poppins text-base font-normal leading-tight tracking-tighter">
-                  {item.title}
-                </p>
-              </div>
+              <PerformanceCard key={index}
+              title={item.title}
+              color={item.color}
+              count={item.count} />
             ))}
           </div>
         </DashboardWrapper>
       </div>
 
-      {/* "In Progress Courses */}
-      <div className="col-span-8 my-[-255px]">
-        <DashboardWrapper heading="In Progress Courses">
-          <div className="flex overflow-x-scroll gap-8 pb-4">
-            {courses.map((course, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0  bg-secondary w-[310px] h-[480px] border border-primary rounded-lg p-4"
-              >
-                <div>
-                  <img
-                    src={course.image}
-                    className="w-[336px] h-[189px]"
-                    alt="Course"
-                  />
-                </div>
-                <p className="text-xl font-bold">{course.title}</p>
-                <p className="text-gray-500">{course.subtitle}</p>
-                <div className="flex items-center">
-                  <div className="">
-                    <div className="bg-gray-300 h-2 w-[270px] rounded-lg">
-                      <div
-                        className="bg-blue-500 h-2 rounded-lg mt-[25px]"
-                        style={{ width: course.progress }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between my-[20px]">
-                  <p className="text-[20px] font-medium">
-                    {course.completion}% Complete
-                  </p>
-                  <div className="stars">
-                    {/* {[...Array(Math.floor(course.stars))].map((_, index) => (
-                    <FontAwesomeIcon key={index} icon={faStar} className="text-yellow-500" />
-                  ))}
-                  {course.stars % 1 !== 0 && ( 
-                    <FontAwesomeIcon icon={faStarHalfAlt} className="text-yellow-500" />
-                  )} */}
-                  </div>
-                  {/* رقم الذي يظهر بجانب نجمات */}
-                  <span className="star-rating text-black">{course.stars}</span>
-                </div>
-                <div className="px-[155px] py-[16px]">
-                  <button className="w-[112px] h-[44px] flex justify-center bg-gradient-to-r from-[#253AD4] to-[#6A1EAD] text-white rounded-[5px] items-center">
-                    Resume
-                    <ReturnLeft className="ml-[10px] text-[20px]" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </DashboardWrapper>
-      </div>
+     
+{/* "In Progress Courses" */}
+<div className="col-span-8 row-start-3 row-span-3">
+  <DashboardWrapper heading="In Progress Courses">
+    <div className="flex overflow-x-scroll gap-8">
+      {courses.map((course, index) => (
+           <CourseCard
+           key={index}
+           image={course.image}
+           title={course.title}
+           subtitle={course.subtitle}
+           progress={course.progress}
+           stars={course.stars}
+        />
+      ))}
+    </div>
+  </DashboardWrapper>
+</div>
 
       {/*  Popler Roadmaps */}
-      <div className="col-span-4">
+      <div className="col-span-4 row-start-4 row-span-2">
         <DashboardWrapper heading={"Popluar Roadmaps"}>
           <div className="grid grid-cols-2  space-x-[55px]  w-[355px] h-[60px]  bg-light rounded-[20px] items-center  flex-shrink-0 rounded-20 ">
             <span className="px-[16px] text-accent font-medium font-poppins text-20 leading-normal tracking[-0.6px]   ">
@@ -285,34 +232,17 @@ function Dashboard_Student() {
       </div>
 
       {/*  completed Course */}
-      <div className="col-span-12">
+      <div className="col-span-12 row-start-6 row-span-3">
         <DashboardWrapper heading={"Completed Courses"}>
           <div className="flex overflow-x-scroll gap-8 pb-4">
-            {completedCourses.map((course, index) => (
-              <div
+          {completedCourses.map((course, index) => (
+              <CourseCard
                 key={index}
-                className="flex-shrink-0 bg-secondary w-[310px] h-[427px] border border-primary rounded-lg p-4"
-              >
-                <div>
-                  <img
-                    src={course.image}
-                    className="w-[336px] h-[189px]"
-                    alt="Course"
-                  />
-                </div>
-                <p className="text-xl font-bold">{course.title}</p>
-                <p className="text-gray-500">{course.subtitle}</p>
-                <div className="flex items-center justify-between">
-                  <div></div>
-                </div>
-                <div className="px-[46px] py-[32px]">
-                  <button className="w-[237px] h-[44px] flex justify-center bg-gradient-to-r from-[#253AD4] to-[#6A1EAD] text-white rounded-[5px] items-center">
-                    Download Certificate
-                    <ReturnLeft className="ml-[10px] text-[20px]" />
-                  </button>
-                </div>
-              </div>
-            ))}
+                image={course.image}
+                title={course.title}
+                subtitle={course.subtitle}
+            />
+              ))}
           </div>
         </DashboardWrapper>
       </div>

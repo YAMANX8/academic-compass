@@ -3,8 +3,8 @@ import ChartJs from "chart.js/auto";
 
 function Chart({ chartData }) {
   return (
-    <div className="flex items-center justify-center ">
-      <div className="w-64 h-64">
+    
+      <div>
         <Doughnut
           data={chartData}
           options={{
@@ -20,7 +20,7 @@ function Chart({ chartData }) {
           }}
         />
       </div>
-    </div>
+    
   );
 }
 

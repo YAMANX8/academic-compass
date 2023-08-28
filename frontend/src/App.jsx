@@ -7,6 +7,7 @@ import {
   Sign_Up_Instructor,
   Home,
   Dashboard_Student,
+  Setting_Student,
 } from "./pages/index.js";
 import { SectionWrapper } from "./layout/index.js";
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/roadmaps" element={<Roadmaps />} />
           <Route path="/register-instructor" element={<Sign_Up_Instructor />} />
           <Route path="/dashboard_student" element={<Dashboard_Student />} />
+          <Route path="/setting_Student" element={<Setting_Student />} />
           {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
         </Routes>
       </SectionWrapper>
