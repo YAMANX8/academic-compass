@@ -9,6 +9,9 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
+// Serve uploaded images
+app.use("/image", express.static("Upload/Images"));
+
 // * Update arrangement for routes
 //ROUTES//
 
@@ -33,6 +36,7 @@ app.use("/AcademicCompass/setting",require("./Routes/Students/dashboardStudent/s
 
 // get Roadmap(all&&specific map)
 app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
+
 
 // add roadmap
  app.use("/AcademicCompass/addroadmap",require("./Routes/Roadmap/addRoadmap"));

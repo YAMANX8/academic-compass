@@ -10,7 +10,7 @@ const popularRoadmapsInfo = async () => {
       const decodedImagePath = decodeURIComponent(row.image_path);
       return {
         ...row,
-        image_path: decodedImagePath,
+        image_path: `http://localhost:5000/image/${decodedImagePath}`,
       };
     });
 
