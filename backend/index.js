@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// * Update arrangement fro routes
+// * Update arrangement for routes
 //ROUTES//
 
 //Home 

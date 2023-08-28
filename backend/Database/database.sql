@@ -571,7 +571,9 @@ WHERE
     Roadmap.roadmap_id = 2
     AND Progress_Status.student_id = 2; 
 
-
+--
+ALTER USER postgres PASSWORD '123';
+ALTER DATABASE maptow RENAME TO roadmap;
 
 
 

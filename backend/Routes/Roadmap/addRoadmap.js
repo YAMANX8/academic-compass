@@ -2,7 +2,6 @@ const router = require("express").Router();
 const pool = require("../../Database/db");
 const multer = require("multer");
 // * this api is not completed
-//add resume file to disk
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "Upload/Images");
