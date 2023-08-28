@@ -11,6 +11,10 @@ ADD COLUMN new_column_name data_type;
 ALTER TABLE topic_level_1
 ADD COLUMN topic_order character varying(50);
 
+ALTER TABLE roadmap
+ALTER COLUMN image_path TYPE character varying(150);
+
+
 
 -- example
 ALTER TABLE roadmap
@@ -571,7 +575,9 @@ WHERE
     Roadmap.roadmap_id = 2
     AND Progress_Status.student_id = 2; 
 
-
+--
+ALTER USER postgres PASSWORD '123';
+ALTER DATABASE maptow RENAME TO roadmap;
 
 
 
