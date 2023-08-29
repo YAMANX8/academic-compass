@@ -1,25 +1,31 @@
 const router = require("express").Router();
 const pool = require("../../Database/db");
 const jwt = require("jsonwebtoken");
+// Get all roadmaps
 router.get("/", async (req, res) => {
   try {
-    const queryreuslut = await pool.query("SELECT * FROM Roadmap");
-    const decodedData = queryreuslut.rows.map((row) => {
+    const queryResult = await pool.query("SELECT * FROM Roadmap");
+    const decodedData = queryResult.rows.map((row) => {
       const decodedImagePath = decodeURIComponent(row.image_path);
       return {
         ...row,
         image_path: `http://localhost:5000/image/${decodedImagePath}`,
       };
     });
+
     res.status(200).json({
       status: "success",
-      reuslut: queryreuslut.rows.length,
+      result: queryResult.rows.length,
       data: {
-        datareuslt: decodedData,
+        dataresult: decodedData,
       },
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "An error occurred",
+    });
   }
 });
 
@@ -138,3 +144,5 @@ router.get("/:id", async (req, res) => {
 
 
 module.exports = router;
+
+

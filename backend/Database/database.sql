@@ -1,6 +1,9 @@
 -- All instructions executed on the database are written here
 -- UTF8
 SELECT datname, pg_encoding_to_char(encoding) FROM pg_database WHERE datname = 'maptow';
+-- change pass && database name
+ALTER USER postgres PASSWORD '123';
+ALTER DATABASE maptow RENAME TO roadmap;
 -- change COLUMN password character in student from 50 to 100 
 ALTER TABLE student
 ALTER COLUMN image_path TYPE character varying(150);
@@ -13,9 +16,6 @@ ADD COLUMN topic_order character varying(50);
 
 ALTER TABLE roadmap
 ALTER COLUMN image_path TYPE character varying(150);
-
-
-
 
 -- example
 ALTER TABLE roadmap
@@ -45,86 +45,6 @@ VALUES
   ('Academic manager'),
   ('Academic supervisor'),
   ('lecturer');
-
--- SELECT to get course_title,progress_state,course_score,total_points
-SELECT
-    c.course_title,
-    e.progress_state,
-    e.course_score,
-    COALESCE(SUM(qs.question_points), 0) AS total_points
-FROM
-    "course" c
-JOIN
-    "enrollment" e ON c.course_id = e.course_id
-LEFT JOIN
-    "items" i ON c.course_id = i.course_id
-LEFT JOIN
-    "quiz" q ON q.item_id = i.item_id
-LEFT JOIN
-    "quistion" qs ON q.quiz_id = qs.quiz_id
-LEFT JOIN
-    "option" o ON qs.quistion_id = o.quistion_id
-WHERE
-    e.student_id = 2
-GROUP BY
-    c.course_title, e.progress_state, e.course_score
-ORDER BY
-    c.course_title;
-
--- SELECT to get course_title,progress_state,course_score,total_points with count
-SELECT
-    c.course_title,
-    e.progress_state,
-    e.course_score,
-    COALESCE(SUM(qs.question_points), 0) AS total_points,
-    COUNT(CASE WHEN e.progress_state = 'In Progress' THEN 1 END) AS courses_in_progress,
-    COUNT(CASE WHEN e.progress_state = 'Completed' THEN 1 END) AS courses_completed
-FROM
-    "course" c
-JOIN
-    "enrollment" e ON c.course_id = e.course_id
-LEFT JOIN
-    "items" i ON c.course_id = i.course_id
-LEFT JOIN
-    "quiz" q ON q.item_id = i.item_id
-LEFT JOIN
-    "quistion" qs ON q.quiz_id = qs.quiz_id
-LEFT JOIN
-    "option" o ON qs.quistion_id = o.quistion_id
-WHERE
-    e.student_id = 1
-GROUP BY
-    c.course_title, e.progress_state, e.course_score
-ORDER BY
-    c.course_title;
-
---دورات قيد التقدم 
-SELECT c.*
-FROM "course" c
-JOIN (
-    SELECT
-        c.course_title,
-        e.progress_state
-    FROM
-        "course" c
-    JOIN
-        "enrollment" e ON c.course_id = e.course_id
-    LEFT JOIN
-        "items" i ON c.course_id = i.course_id
-    LEFT JOIN
-        "quiz" q ON q.item_id = i.item_id
-    LEFT JOIN
-        "quistion" qs ON q.quiz_id = qs.quiz_id
-    LEFT JOIN
-        "option" o ON qs.quistion_id = o.quistion_id
-    WHERE
-        e.student_id = 2 AND e.progress_state = 'In Progress'
-    GROUP BY
-        c.course_title, e.progress_state
-) AS filtered_courses ON c.course_title = filtered_courses.course_title
-ORDER BY
-    c.course_title;
-
 
 
 --insert data
@@ -195,39 +115,8 @@ VALUES
     (2, 1), 
     (3, 2); 
 
---
-ALTER TABLE enrollment
-ALTER COLUMN progress_state TYPE INT
-USING progress_state::integer;
---
-SELECT
-    c.course_title,
-    e.progress_state,
-    e.course_score,
-    COALESCE(SUM(qs.question_points), 0) AS total_points,
-    COUNT(CASE WHEN e.progress_state = 'In Progress' THEN 1 END) AS courses_in_progress,
-    COUNT(CASE WHEN e.progress_state = 'Completed' THEN 1 END) AS courses_completed
-FROM
-    "course" c
-JOIN
-    "enrollment" e ON c.course_id = e.course_id
-LEFT JOIN
-    "items" i ON c.course_id = i.course_id
-LEFT JOIN
-    "quiz" q ON q.item_id = i.item_id
-LEFT JOIN
-    "quistion" qs ON q.quiz_id = qs.quiz_id
-LEFT JOIN
-    "option" o ON qs.quistion_id = o.quistion_id
-WHERE
-    e.student_id = 1
-GROUP BY
-    c.course_title, e.progress_state, e.course_score
-ORDER BY
-    c.course_title;
-
-
--- التعليمة بعد تعديل insert :
+--completed_courses number
+--incomplete_courses number
 SELECT
     e.student_id,
     SUM(CASE WHEN e.progress_state >= i.item_no THEN 1 ELSE 0 END) AS completed_courses,
@@ -252,14 +141,7 @@ GROUP BY
              3 |      0
              4 |      1
 (2 rows)
-SELECT enrollment_id, SUM(CASE WHEN o.is_correct THEN 1 ELSE 0 END) AS total_points
-FROM Student_Answers sa
-INNER JOIN Option o ON sa.option_no = o.option_no AND sa.question_no = o.question_id 
-GROUP BY enrollment_id
-HAVING SUM(CASE WHEN o.is_correct THEN 1 ELSE 0 END) = 1;
 
-
-maptow=#
 
 -- completed course
 SELECT c.course_id, c.course_title, c.course_description
@@ -301,66 +183,6 @@ FROM
     PointsPerEnrollment;
 
 -- النسبة المئوية
-SELECT
-    e.student_id,
-    e.course_id,
-    ROUND(
-        CASE
-            WHEN e.progress_state = i.item_no THEN 100
-            ELSE (e.progress_state::float / i.item_no) * 100
-        END
-    ) AS completion_percentage
-FROM
-    Enrollment e
-JOIN
-    Items i ON e.course_id = i.course_id
-WHERE
-    e.student_id = 2
-    AND e.progress_state IS NOT NULL
-    AND (e.progress_state::float / i.item_no) * 100 < 100;
-
--- 
-
-SELECT
-    e.student_id,
-    MIN(e.course_id) AS course_id,  
-    ROUND(
-        AVG(
-            CASE
-                WHEN i.item_no = e.progress_state THEN 100
-                ELSE (e.progress_state::float / i.item_no) * 100
-            END
-        )
-    ) AS completion_percentage
-FROM
-    enrollment e
-JOIN
-    items i ON e.course_id = i.course_id
-WHERE
-    e.student_id = 2
-    AND e.progress_state IS NOT NULL
-    AND (i.item_no = e.progress_state OR i.item_no > e.progress_state)
-GROUP BY
-    e.student_id;
--- كل تقدم الطلاب سواء مكتمل أو غير مكتمل
-SELECT
-    e.student_id,
-    c.course_id,
-    ROUND(
-        CASE
-            WHEN i.item_no = e.progress_state THEN 100
-            ELSE (e.progress_state::float / i.item_no) * 100
-        END
-    ) AS completion_percentage
-FROM
-    Course c
-JOIN
-    Items i ON c.course_id = i.course_id
-LEFT JOIN
-    Enrollment e ON c.course_id = e.course_id
-WHERE
-    (e.progress_state IS NULL OR e.progress_state <= i.item_no);
-
 -- لطالب معين مع 100
 SELECT
     e.student_id,
@@ -398,7 +220,7 @@ LEFT JOIN
     Enrollment e ON c.course_id = e.course_id
 WHERE
     (e.progress_state IS NULL OR e.progress_state <= i.item_no)
-    AND e.student_id = 1
+    AND e.student_id = 2
     AND (e.progress_state != i.item_no OR e.progress_state IS NULL);
 
 -- Get The Rating لكل الكورسات 
@@ -413,8 +235,6 @@ WHERE
     LEFT JOIN "items" i ON c.course_id = i.course_id AND (e.progress_state IS NULL OR e.progress_state < i.item_no)
     WHERE e.student_id = 2
     ORDER BY c.course_title;
-
-
 
 -- الكود المكتمل لإرجاع عدد النجوم للكورسات غير المكتملة 
 SELECT
@@ -525,26 +345,6 @@ WHERE
     e.student_id = 1;
 -- roadmap+topic by ID without sigin
 SELECT
-    r.*,
-    tl1.*,
-    COUNT(i.item_id) AS item_count
-FROM
-    Roadmap r
-JOIN
-    Topic_Level_1 tl1 ON r.roadmap_id = tl1.roadmap_id
-JOIN
-    Topic_Level_N n ON tl1.topic_level1_id = n.topic_level1_id
-LEFT JOIN
-    Items i ON n.topic_id = i.topic_id
-WHERE
-    r.roadmap_id = 2
-GROUP BY
-    r.roadmap_id, r.roadmap_title, r.roadmap_description,
-    tl1.topic_level1_id, tl1.topic_title, tl1.topic_description
-ORDER BY
-    tl1.topic_level1_id;
--- secound try ** 
-SELECT
     Roadmap.*,
     Topic_Level_1.*
 FROM
@@ -608,10 +408,6 @@ WHERE
     AND ps.student_id = 1;
    
 
---
-ALTER USER postgres PASSWORD '123';
-ALTER DATABASE maptow RENAME TO roadmap;
-
 -- بدون تكرار roadmap_id
 SELECT
     r.roadmap_id,
@@ -670,7 +466,7 @@ ORDER BY
 
 
 
--- جلب كل الخرائط التي اشترك بها الطالب
+-- جلب كل الخرائط التي اشترك بها الطالب(my roadmap)
 SELECT DISTINCT
     R.roadmap_title
 FROM
@@ -687,6 +483,8 @@ JOIN
     Enrollment E ON C.course_id = E.course_id
 WHERE
     E.student_id = 1;
+
+    
 
 
 

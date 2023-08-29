@@ -1,7 +1,7 @@
 const router = require("express").Router();
-const pool = require("../../../../Database/db");
+const pool = require("../../../Database/db");
 const multer = require("multer");
-const authorization = require("../../../../middleware/authorization");
+const authorization = require("../../../middleware/authorization");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "Upload/Images");
@@ -28,9 +28,10 @@ router.put("/addGeneralInfo",authorization, upload.single("image"), async (req, 
       [country, city, imageFilePath,Id]
     );
 
-    res.json(newStudentInfo.rows[0]);
+    res.status(201).json(newStudentInfo.rows[0]);
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).send("Server Error");
   }
 });
 
@@ -49,7 +50,7 @@ router.get("/getInfo",authorization, async (req, res) => {
              image_path: decodedImagePath,
            };
          });
-    res.status(200).json({
+    res.status(201).json({
       status: "success",
       reuslut: result.rows.length,
       Data: {
@@ -57,7 +58,8 @@ router.get("/getInfo",authorization, async (req, res) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).send("Server Error");
   }
 });
 module.exports = router;
