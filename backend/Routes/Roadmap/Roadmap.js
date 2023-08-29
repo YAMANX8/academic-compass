@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const pool = require("../../Database/db");
+const jwt = require("jsonwebtoken");
 router.get("/", async (req, res) => {
   try {
     const queryreuslut = await pool.query("SELECT * FROM Roadmap");
@@ -23,18 +24,61 @@ router.get("/", async (req, res) => {
 });
 
 //* with login
-router.get("/student", async (req, res) => {
+router.get("/student/:id", async (req, res) => {
   try {
+    const roadmapId = req.params.id;
     const jwtToken = req.header("token");
     if (!jwtToken) {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
-      return res.redirect("http://localhost:5000/AcademicCompass/roadmap/:id");
+      return res.redirect(
+        `http://localhost:5000/AcademicCompass/roadmap/${roadmapId}`
+      );
     } else {
       // Extract student ID from the token and proceed with your logic
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
       const studentId = payload.studentId;
-      // todo write query with login
+       const query =
+         "SELECT DISTINCT ON (r.roadmap_id) r.roadmap_id, r.roadmap_title, r.roadmap_description, t1.topic_level1_id, t1.topic_title, t1.topic_description, t1.topic_status, t1.topic_order, ps.progress_id, ps.student_id,  ps.state_id AS progress_state_id, ps.topic_id, ps.topic_level,  ts.state_name FROM Roadmap r JOIN Topic_Level_1 t1 ON r.roadmap_id = t1.roadmap_id LEFT JOIN Progress_Status ps ON t1.topic_level1_id = ps.topic_id AND ps.student_id = $1 LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id WHERE r.roadmap_id = $2 ORDER BY r.roadmap_id, t1.topic_level1_id, ps.progress_id";
+       const values = [studentId, roadmapId];
+       const result = await pool.query(query, values);
+       if (result.rows.length === 0) {
+         res.status(404).json({
+           status: "error",
+           message: "Roadmap not found",
+         });
+         return;
+       }
+       
+      const roadmapData = {
+        roadmap_id: result.rows[0].roadmap_id,
+        roadmap_title: result.rows[0].roadmap_title,
+        roadmap_description: result.rows[0].roadmap_description,
+      };
+
+      const topics = result.rows.map((row) => ({
+        topic_level1_id: row.topic_level1_id,
+        topic_title: row.topic_title,
+        topic_description: row.topic_description,
+        topic_status: row.topic_status,
+        topic_order: row.topic_order,
+      }));
+
+      const progressData = result.rows.map((row) => ({
+        progress_id: row.progress_id,
+        student_id: row.student_id,
+        progress_state_id: row.progress_state_id,
+        topic_id: row.topic_id,
+        state_name: row.state_name,
+      }));
+      
+      res.status(200).json({
+        status: "success",
+        roadmap: roadmapData,
+        topics: topics,
+        progress: progressData,
+      });
+
     }
   } catch (err) {
     console.log(err);
@@ -70,7 +114,6 @@ router.get("/:id", async (req, res) => {
     };
 
     const topics = result.rows
-      .filter((row) => row.topic_level1_id !== null) // Filter out rows with null topic IDs
       .map((row) => ({
         topic_level1_id: row.topic_level1_id,
         topic_title: row.topic_title,
