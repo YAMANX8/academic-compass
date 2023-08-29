@@ -26,13 +26,13 @@ app.use("/AcademicCompass/auth", require("./Routes/Students/register/jwtAuth"));
 app.use("/AcademicCompass/studentDashboard", require("./Routes/Students/dashboardStudent/dashboard"));
 
 // change password to student
-app.use("/AcademicCompass/studentDashboard/change-password", require("./Routes/Students/dashboardStudent/settings/security"));
+app.use("/AcademicCompass/studentDashboard/change-password", require("./Routes/Students/settings/security"));
 
 // Update Acount to student
-app.use("/AcademicCompass/studentDashboard/update-account", require("./Routes/Students/dashboardStudent/settings/account"));
+app.use("/AcademicCompass/studentDashboard/update-account", require("./Routes/Students/settings/account"));
 
 //  General Setting to student
-app.use("/AcademicCompass/setting",require("./Routes/Students/dashboardStudent/settings/generalInfl"));
+app.use("/AcademicCompass/setting",require("./Routes/Students/settings/generalInfl"));
 
 // get Roadmap(all&&specific map)
 app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));

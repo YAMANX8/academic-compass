@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
           popularRoadmap: popularRoadmap.Data.data,
         },
       };
-       res.json(responseData);
+       res.status(200).json(responseData);
   } catch (err) {
     console.error(err.message);
     res.status(500).json("Server Error");

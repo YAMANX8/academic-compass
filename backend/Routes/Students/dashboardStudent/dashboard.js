@@ -50,7 +50,7 @@ router.get("/", authorization, async (req, res, next) => {
     };
 
     // Send the combined data in the response
-    res.json(responseData);
+    res.status(200).json(responseData);
   } catch (err) {
     console.error(err.message);
     res.status(500).json("Server Error");

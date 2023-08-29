@@ -36,7 +36,7 @@ router.post("/student/register", validInfo, async (req, res) => {
       newStudent.rows[0].student_id
     );
 
-    res.json({ token });
+    res.status(200).json({ token });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
@@ -74,7 +74,7 @@ router.post("/student/login", validInfo, async (req, res) => {
       const { token } = jwtGenerator(
         student.rows[0].student_id
       );
-      return res.json({ token });
+      return res.status(200).json({ token });
     }
   } catch (error) {
     console.error(error);
