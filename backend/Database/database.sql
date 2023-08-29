@@ -16,9 +16,23 @@ ALTER COLUMN image_path TYPE character varying(150);
 
 
 
+
 -- example
 ALTER TABLE roadmap
 ADD COLUMN image_path VARCHAR(50);
+
+ALTER TABLE Progress_Status
+ADD COLUMN topic_id INT NOT NULL;
+
+ALTER TABLE Progress_Status
+ADD COLUMN topic_level INT NOT NULL DEFAULT 0;
+
+UPDATE Progress_Status
+SET topic_id =2 WHERE progress_id=10;
+
+-- drop column
+ALTER TABLE Progress_Status
+DROP COLUMN topic_level;
 
 -- change COLUMN password character in register_request from 50 to 100 
 ALTER TABLE register_request
@@ -538,8 +552,24 @@ FROM
 JOIN
     Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
 WHERE
-    Roadmap.roadmap_id = 2;
-
+    Roadmap.roadmap_id = 1;
+--بدون تكرار id
+SELECT
+    Roadmap.roadmap_id,
+    Roadmap.roadmap_title,
+    Roadmap.roadmap_description,
+    Roadmap.image_path,
+    Topic_Level_1.topic_level1_id,
+    Topic_Level_1.topic_title,
+    Topic_Level_1.topic_description,
+    Topic_Level_1.topic_status,
+    Topic_Level_1.topic_order
+FROM
+    Roadmap
+JOIN
+    Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
+WHERE
+    Roadmap.roadmap_id = 1;
 --insert into Progress_Status
 INSERT INTO Topic_States (state_id, state_name)
 VALUES
@@ -559,25 +589,124 @@ VALUES
 --roadmap+topic by ID with sigin to student
 
 SELECT
-    Roadmap.*,
-    Topic_Level_1.*,
-    Progress_Status.state_id AS topic_state_id,
-    Topic_States.state_name AS topic_state_name
+    r.*,
+    t1.*,
+    ps.progress_id,
+    ps.student_id,
+    ps.state_id AS progress_state_id,
+    ts.state_name
 FROM
-    Roadmap
+    Roadmap r
 JOIN
-    Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
+    Topic_Level_1 t1 ON r.roadmap_id = t1.roadmap_id
 LEFT JOIN
-    Progress_Status ON Topic_Level_1.topic_level1_id = Progress_Status.topic_level1_id
+    Progress_Status ps ON t1.topic_level1_id = ps.topic_id
 LEFT JOIN
-    Topic_States ON Progress_Status.state_id = Topic_States.state_id
+    Topic_States ts ON ps.state_id = ts.state_id
 WHERE
-    Roadmap.roadmap_id = 2
-    AND Progress_Status.student_id = 2; 
+    r.roadmap_id = 1
+    AND ps.student_id = 1;
+   
 
 --
 ALTER USER postgres PASSWORD '123';
 ALTER DATABASE maptow RENAME TO roadmap;
+
+-- بدون تكرار roadmap_id
+SELECT
+    r.roadmap_id,
+    r.roadmap_title,
+    r.roadmap_description,
+    r.image_path,
+    t1.topic_level1_id,
+    t1.topic_title,
+    t1.topic_description,
+    t1.topic_status,
+    t1.topic_order,
+    ps.progress_id,
+    ps.student_id,
+    ps.state_id AS progress_state_id,
+    ts.state_name
+FROM
+    Roadmap r
+JOIN
+    Topic_Level_1 t1 ON r.roadmap_id = t1.roadmap_id
+LEFT JOIN
+    Progress_Status ps ON t1.topic_level1_id = ps.topic_id
+LEFT JOIN
+    Topic_States ts ON ps.state_id = ts.state_id
+WHERE
+    r.roadmap_id = 5
+    AND ps.student_id = 1;
+-- بدون تكرار و جود شروط للعرض
+
+SELECT DISTINCT ON (r.roadmap_id)
+    r.roadmap_id,
+    r.roadmap_title,
+    r.roadmap_description,
+    t1.topic_level1_id,
+    t1.topic_title,
+    t1.topic_description,
+    t1.topic_status,
+    t1.topic_order,
+    ps.progress_id,
+    ps.student_id,
+    ps.state_id AS progress_state_id,
+    ps.topic_id,
+    ps.topic_level,
+    ts.state_name
+FROM
+    Roadmap r
+JOIN
+    Topic_Level_1 t1 ON r.roadmap_id = t1.roadmap_id
+LEFT JOIN
+    Progress_Status ps ON t1.topic_level1_id = ps.topic_id AND ps.student_id = 5
+LEFT JOIN
+    Topic_States ts ON ps.state_id = ts.state_id
+WHERE
+    r.roadmap_id = 1
+ORDER BY
+    r.roadmap_id, t1.topic_level1_id, ps.progress_id;
+
+
+
+-- جلب كل الخرائط التي اشترك بها الطالب
+SELECT DISTINCT
+    R.roadmap_title
+FROM
+    Roadmap R
+JOIN
+    Topic_Level_1 TL1 ON R.roadmap_id = TL1.roadmap_id
+JOIN
+    Topic_Level_N TLN ON TL1.topic_level1_id = TLN.topic_level1_id
+JOIN
+    Items I ON TLN.topic_id = I.topic_id
+JOIN
+    Course C ON I.course_id = C.course_id
+JOIN
+    Enrollment E ON C.course_id = E.course_id
+WHERE
+    E.student_id = 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
