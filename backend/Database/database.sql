@@ -30,6 +30,9 @@ ADD COLUMN topic_level INT NOT NULL DEFAULT 0;
 UPDATE Progress_Status
 SET topic_id =2 WHERE progress_id=10;
 
+UPDATE topic_level_1
+SET roadmap_id =19 WHERE topic_level1_id=3;
+
 -- drop column
 ALTER TABLE Progress_Status
 DROP COLUMN topic_level;
@@ -100,6 +103,7 @@ VALUES
     (3, 1, 1,5);
     -- (3, 1, 2, 3);
      DELETE FROM Student_Answers WHERE enrollment_id=3;
+     DELETE FROM roadmap;
 
 -- إضافة بيانات لجدول Roadmap
 INSERT INTO Roadmap (roadmap_title, roadmap_description)
@@ -161,7 +165,9 @@ LEFT JOIN
     "items" i ON c.course_id = i.course_id
 WHERE e.student_id = 2 AND e.progress_state < i.item_no
 ORDER BY c.course_title;
---- total point to one student
+--- total point to one student 
+--quize
+-- المسار
 WITH PointsPerEnrollment AS (
     SELECT
         e.enrollment_id,
@@ -268,10 +274,10 @@ GROUP BY ic.course_id, ic.course_title
 ORDER BY ic.course_title;
 
 
--- insert data to topic
+-- insert data to topic(ther is topic_order +++)
 INSERT INTO Topic_Level_1 (topic_title, topic_description, topic_status, roadmap_id)
 VALUES
-    ('Introduction to Programming', 'An overview of programming concepts', 'Active', 1),
+    (' Programming', 'An overview of programming concepts', 'Active', 3),
     ('Data Structures and Algorithms', 'Exploring common data structures and algorithms', 'Inactive', 2),
     ('Web Development Basics', 'Getting started with web development', 'Active', 3);
 
@@ -283,7 +289,8 @@ VALUES
     ('Linked Lists', 'Understanding linked list data structure', 'Active', 3, 20, 2), 
     ('Arrays and Matrices', 'Exploring arrays and matrix data structures', 'Active', 4, 21, 2), 
     ('HTML Basics', 'Introduction to HTML markup', 'Active', 5, 22, 3), 
-    ('CSS Styling', 'Styling web pages using CSS', 'Active', 6, 23, 3); 
+    ('CSS Styling', 'Styling web pages using CSS', 'Active', 6, 23, 3),
+    ('Java script', 'Styling web pages using CSS', 'Active', 7, 24, 4); 
 
 UPDATE topic_level_1
 SET topic_order = 3
@@ -484,7 +491,183 @@ JOIN
 WHERE
     E.student_id = 1;
 
-    
+    -- search
+---
+SELECT DISTINCT
+    c.course_id,
+    c.course_title,
+    c.course_description,
+    l.level_name,
+    rt.rating_stars,
+    string_agg(tl1.topic_title, ', ') AS topics_covered,
+    string_agg(tln.topic_title, ', ') AS additional_topics_covered
+FROM
+    Course c
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+JOIN
+    Course_Lists cl ON c.course_id = cl.course_id
+JOIN
+    List_Type lt ON cl.list_type = lt.type_id
+JOIN
+    Topic_Level_1 tl1 ON cl.item_body = tl1.topic_title
+LEFT JOIN (
+    SELECT DISTINCT
+        tln.topic_title,
+        tln.topic_level1_id
+    FROM
+        Topic_Level_N tln
+    JOIN
+        Topic_Level_1 tl1 ON tln.topic_level1_id = tl1.topic_level1_id
+) tln ON tln.topic_level1_id = tl1.topic_level1_id
+WHERE
+    tl1.topic_title IN ('Introduction to Programming', 'Data Structures and Algorithms', 'Web Development Basics')
+    AND l.level_name IN ('Beginner', 'Intermediate', 'Advanced')
+    AND rt.rating_stars >= 4.5
+GROUP BY
+    c.course_id, c.course_title, c.course_description, l.level_name, rt.rating_stars;
+
+---
+SELECT DISTINCT
+    c.course_id,
+    c.course_title,
+    c.course_description,
+    l.level_name,
+    rt.rating_stars,
+    string_agg(tl1.topic_title, ', ') AS topics_covered,
+    string_agg(tln.topic_title, ', ') AS additional_topics_covered
+FROM
+    Course c
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+JOIN
+    Course_Lists cl ON c.course_id = cl.course_id
+JOIN
+    List_Type lt ON cl.list_type = lt.type_id
+JOIN
+    Topic_Level_1 tl1 ON cl.item_body = tl1.topic_title
+LEFT JOIN (
+    SELECT DISTINCT
+        tln.topic_title,
+        tln.topic_level1_id
+    FROM
+        Topic_Level_N tln
+    JOIN
+        Topic_Level_1 tl1 ON tln.topic_level1_id = tl1.topic_level1_id
+) tln ON tln.topic_level1_id = tl1.topic_level1_id
+WHERE
+    tl1.topic_title IN ('Variables and Data Types')
+    AND l.level_name IN ('Beginner')
+    AND rt.rating_stars >= 4.5
+    AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%'
+GROUP BY
+    c.course_id, c.course_title, c.course_description, l.level_name, rt.rating_stars;
+    --
+    SELECT DISTINCT
+    c.course_id,
+    c.course_title,
+    c.course_description,
+    l.level_name,
+    rt.rating_stars,
+    string_agg(tl1.topic_title, ', ') AS topics_covered,
+    string_agg(tln.topic_title, ', ') AS additional_topics_covered
+FROM
+    Course c
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+JOIN
+    Course_Lists cl ON c.course_id = cl.course_id
+JOIN
+    List_Type lt ON cl.list_type = lt.type_id
+JOIN
+    Topic_Level_1 tl1 ON cl.item_body = tl1.topic_title
+LEFT JOIN (
+    SELECT DISTINCT
+        tln.topic_title,
+        tln.topic_level1_id,
+        i.course_id
+    FROM
+        Topic_Level_N tln
+    JOIN
+        Topic_Level_1 tl1 ON tln.topic_level1_id = tl1.topic_level1_id
+    JOIN
+        Items i ON tln.topic_id = i.topic_id
+) tln ON tln.topic_level1_id = tl1.topic_level1_id
+WHERE
+    tl1.topic_title IN ('Variables and Data Types')
+    AND l.level_name IN ('Beginner')
+    AND rt.rating_stars >= 4.5
+    AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%'
+GROUP BY
+    c.course_id, c.course_title, c.course_description, l.level_name, rt.rating_stars;
+---جلب معلومات كورس بدون النوع
+SELECT DISTINCT
+    c.course_id,
+    c.course_title,
+    c.course_description,
+    l.level_name,
+    rt.rating_stars
+FROM
+    Course c
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+WHERE
+    l.level_name IN ('Beginner')
+    AND rt.rating_stars >= 4.5
+    AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%';
+
 
 
 
