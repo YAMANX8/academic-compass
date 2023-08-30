@@ -10,7 +10,7 @@ const RoadmapCard = ({ title, order, description, img }) => {
         order % 2 != 0 ? "flex-row-reverse" : "flex-row"
       }`}
     >
-      <img src={`backend/${img}`} className="block w-[345px]" />
+      <img src={img} className="block w-[345px]" />
 
       <div className="flex flex-col items-start gap-4 justify-between">
         <h3 className="text-[48px] font-bold leading-[125%] tracking-tight text-accent mb-4">
