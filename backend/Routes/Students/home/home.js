@@ -13,17 +13,17 @@ router.get("/", async (req, res) => {
     const instructor = await pool.query(
       "SELECT COUNT(*) FROM users WHERE role_id=1"
     );
-    const popularRoadmap=popularRoadmaps.popularRoadmapsInfo();
+    const popularRoadmap = await popularRoadmaps.popularRoadmapsInfo();
       const responseData = {
         count: {
           enrollment: enrollment.rows[0],
           roadmap: roadmap.rows[0],
           course: course.rows[0],
           instructor: instructor.rows[0],
-          popularRoadmap: (await popularRoadmap).Data.data,
+          popularRoadmap: popularRoadmap.Data.data,
         },
       };
-       res.json(responseData);
+       res.status(200).json(responseData);
   } catch (err) {
     console.error(err.message);
     res.status(500).json("Server Error");

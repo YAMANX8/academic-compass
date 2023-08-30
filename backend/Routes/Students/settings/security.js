@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const pool = require("../../../../Database/db");
-const authorization = require("../../../../middleware/authorization.js");
+const pool = require("../../../Database/db");
+const authorization = require("../../../middleware/authorization");
 const bcrypt = require("bcrypt");
 
 // Change student password
@@ -40,7 +40,7 @@ router.put('/', authorization , async (req, res) => {
         const updateQuery = 'UPDATE student SET password = $1 WHERE student_id = $2';
         await pool.query(updateQuery, [newBcryptPassword, student_id]);
 
-        return res.status(200).json({ message: 'Password updated successfully' });
+        return res.status(201).json({ message: 'Password updated successfully' });
     } catch (error) {
         console.error('Error:', error);
         return res.status(500).json({ message: 'Internal server error' });
