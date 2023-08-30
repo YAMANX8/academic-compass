@@ -33,7 +33,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       image_path: `http://localhost:5000/image/${newRodmapInfo.rows[0].image_path}`,
     };
 
-    res.status(201).json({ status: "success", data: newRoadmapInfo });
+    res.status(200).json({ status: "success", data: newRoadmapInfo });
   } catch (err) {
     console.error(err);
     res.status(500).json({ status: "error", message: "An error occurred" });
