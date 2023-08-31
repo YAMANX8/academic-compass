@@ -11,6 +11,9 @@ ALTER COLUMN image_path TYPE character varying(150);
 ALTER TABLE table_name
 ADD COLUMN new_column_name data_type;
 
+ALTER TABLE course
+ADD COLUMN course_thumnail VARCHAR(150);
+
 ALTER TABLE topic_level_1
 ADD COLUMN topic_order character varying(50);
 
@@ -19,7 +22,7 @@ ALTER COLUMN image_path TYPE character varying(150);
 
 -- example
 ALTER TABLE roadmap
-ADD COLUMN image_path VARCHAR(50);
+ADD COLUMN image_path VARCHAR(150);
 
 ALTER TABLE Progress_Status
 ADD COLUMN topic_id INT NOT NULL;
@@ -129,6 +132,15 @@ FROM Enrollment e
 JOIN Items i ON e.course_id = i.course_id
 WHERE e.student_id = 1
 GROUP BY e.student_id;
+--update
+SELECT
+    e.student_id,
+    SUM(CASE WHEN e.progress_state >= c.items_count THEN 1 ELSE 0 END) AS completed_courses,
+    SUM(CASE WHEN e.progress_state < c.items_count THEN 1 ELSE 0 END) AS incomplete_courses
+FROM Enrollment e
+JOIN course c ON e.course_id = c.course_id
+WHERE e.student_id = 2
+GROUP BY e.student_id;
 -- التعليمة ل total point=> after that we need to Sum points
 SELECT
     sa.enrollment_id,
@@ -155,6 +167,12 @@ LEFT JOIN
     "items" i ON c.course_id = i.course_id
 WHERE e.student_id = 1 AND e.progress_state >= i.item_no
 ORDER BY c.course_title;
+-- update
+SELECT c.course_id, c.course_title, c.course_description
+FROM "course" c 
+JOIN "enrollment" e ON c.course_id = e.course_id
+WHERE e.student_id = 1 AND e.progress_state >= c.items_count
+ORDER BY c.course_title;
 
 
 -- inprogres course note=> we don't have a image
@@ -165,28 +183,43 @@ LEFT JOIN
     "items" i ON c.course_id = i.course_id
 WHERE e.student_id = 2 AND e.progress_state < i.item_no
 ORDER BY c.course_title;
+--update
+SELECT c.course_id, c.course_title, c.course_description,c.course_thumnail
+FROM "course" c 
+JOIN "enrollment" e ON c.course_id = e.course_id
+WHERE e.student_id = 2 AND e.progress_state < c.items_count
+ORDER BY c.course_title;
 --- total point to one student 
 --quize
 -- المسار
+-- صح 1100000 على 100 لا تغيير
 WITH PointsPerEnrollment AS (
-    SELECT
+SELECT
         e.enrollment_id,
         SUM(CASE WHEN o.is_correct THEN 1 ELSE 0 END) AS points
     FROM
         enrollment e
     INNER JOIN
         Student_Answers sa ON e.enrollment_id = sa.enrollment_id
+    LEFT JOIN
+        course c ON   e.course_id = c.course_id
+    LEFT JOIN
+        items i ON   c.course_id = i.item_id
+    LEFT JOIN
+        quiz q ON   i.item_id = q.quiz_id
     INNER JOIN
-        Option o ON sa.option_no = o.option_no AND sa.question_no = o.question_id 
+        Option o ON sa.option_no = o.option_no AND sa.question_no = o.question_id
     WHERE
-        e.student_id = 2
+        e.student_id = 1
     GROUP BY
         e.enrollment_id
 )
-SELECT
-    SUM(points) AS total_points
-FROM
-    PointsPerEnrollment;
+ SELECT
+     SUM(points) AS total_points
+ FROM
+     PointsPerEnrollment;
+--
+
 
 -- النسبة المئوية
 -- لطالب معين مع 100
@@ -208,41 +241,39 @@ LEFT JOIN
 WHERE
     (e.progress_state IS NULL OR e.progress_state <= i.item_no)
     AND e.student_id = 2; 
--- النسبة بدون 100
+-- النسبة بدون 100 update
 SELECT
     e.student_id,
     c.course_id,
     ROUND(
         CASE
-            WHEN i.item_no = e.progress_state THEN 100
-            ELSE (e.progress_state::float / i.item_no) * 100
+            WHEN c.items_count = e.progress_state THEN 100
+            ELSE (e.progress_state::float / c.items_count) * 100
         END
     ) AS completion_percentage
 FROM
     Course c
-JOIN
-    Items i ON c.course_id = i.course_id
 LEFT JOIN
     Enrollment e ON c.course_id = e.course_id
 WHERE
-    (e.progress_state IS NULL OR e.progress_state <= i.item_no)
+    (e.progress_state IS NULL OR e.progress_state <= c.items_count)
     AND e.student_id = 2
-    AND (e.progress_state != i.item_no OR e.progress_state IS NULL);
+    AND (e.progress_state != c.items_count OR e.progress_state IS NULL);
 
--- Get The Rating لكل الكورسات 
+-- Get The Rating لكل الكورسات الصحيح المعدل
     SELECT
         c.course_id,
-        c.course_title,
-        c.course_description,
         r.stars_number
     FROM "course" c
     JOIN "enrollment" e ON c.course_id = e.course_id
     LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
-    LEFT JOIN "items" i ON c.course_id = i.course_id AND (e.progress_state IS NULL OR e.progress_state < i.item_no)
-    WHERE e.student_id = 2
+    WHERE
+    (e.progress_state IS NULL OR e.progress_state <= c.items_count)
+    AND e.student_id = 1
+    AND (e.progress_state != c.items_count OR e.progress_state IS NULL)
     ORDER BY c.course_title;
 
--- الكود المكتمل لإرجاع عدد النجوم للكورسات غير المكتملة 
+-- الكود المكتمل لإرجاع عدد النجوم للكورسات غير المكتملة **
 SELECT
     c.course_id,
     c.course_title,
@@ -303,6 +334,10 @@ WHERE item_id = 4;
 UPDATE items
 SET topic_id = 21
 WHERE item_id = 6;
+
+UPDATE Option
+SET option_no = 1
+WHERE option_id = 2;
  
 
 
