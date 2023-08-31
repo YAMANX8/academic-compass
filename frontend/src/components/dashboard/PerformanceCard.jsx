@@ -1,16 +1,12 @@
-import React from 'react';
+import React from "react";
 
 const PerformanceCard = ({ title, color, count }) => {
   return (
     <div
-      className={`rounded-[10px] bg-light px-4 py-2 border-t-[6px] leading-[125%] tracking-tighter ${color}`}
+      className={`rounded-[10px] bg-light px-4 py-3 border-t-[6px] leading-l tracking-tight ${color}`}
     >
-      <span className="text-dark text-[32px] font-bold mb-1">
-        {count}
-      </span>
-      <p>
-        {title}
-      </p>
+      <span className="text-[32px] font-bold mb-1">{count}</span>
+      <p>{title}</p>
     </div>
   );
 };

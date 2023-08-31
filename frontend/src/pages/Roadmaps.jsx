@@ -19,24 +19,22 @@ function Roadmaps() {
   }, []);
 
   return (
-    <div>
-      <section>
-        <h2 className="text-[48px] font-semibold leading-[125%] tracking-tight mb-12">
-          Our Roadmaps
-        </h2>
-        <div className="flex flex-col gap-[60px]">
-          {roadCards.map((card, index) => (
-            <RoadmapCard
-              key={card.roadmap_id}
-              order={index}
-              title={card.roadmap_title}
-              description={card.roadmap_description}
-              img={card.image_path}
-            />
-          ))}
-        </div>
-      </section>
-    </div>
+    <section>
+      <h2 className="mb-12 w-[1200px] text-[48px] font-semibold leading-l tracking-tight ">
+        Our Roadmaps
+      </h2>
+      <div className="flex flex-col gap-12">
+        {roadCards.map((card, index) => (
+          <RoadmapCard
+            key={card.roadmap_id}
+            order={index}
+            title={card.roadmap_title}
+            description={card.roadmap_description}
+            img={card.image_path}
+          />
+        ))}
+      </div>
+    </section>
   );
 }
 

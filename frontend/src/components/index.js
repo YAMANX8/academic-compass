@@ -5,6 +5,7 @@ import ProfileCard from "./dashboard/ProfileCard";
 import PerformanceChart from "./dashboard/PerformanceChart";
 import CourseCard from "./dashboard/CourseCard";
 import PerformanceCard from "./dashboard/PerformanceCard";
+import Button from "./Button";
 export {
   Navbar,
   Footer,
@@ -13,4 +14,5 @@ export {
   PerformanceChart,
   CourseCard,
   PerformanceCard,
+  Button,
 };

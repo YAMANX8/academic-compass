@@ -8,7 +8,7 @@ const RoadmapCard = ({ title, order, description, img }) => {
     <div
       className={`flex justify-between w-full bg-secondary rounded-[10px] py-4 px-5 gap-5 ${
         order % 2 != 0 ? "flex-row-reverse" : "flex-row"
-      }`}
+      }  shadow-[0_5px_15px] shadow-dark/50`}
     >
       <img src={img} className="block w-[345px]" />
 
