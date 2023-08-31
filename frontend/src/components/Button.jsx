@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-const Button = ({ children, page }) => {
+const Button = ({ children, page='/' }) => {
   return (
     <Link
       to={page}

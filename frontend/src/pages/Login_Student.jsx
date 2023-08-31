@@ -1,68 +1,60 @@
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
 import { SignInUpWrapper } from "../layout";
 import { useRef, useState, useEffect, useContext } from "react";
-import AuthContext from "./context/AuthProvider";
+import AuthContext from "../context/AuthProvider";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "../apis/axios";
 
-const LOGIN_URL = '/auth';
+const LOGIN_URL = '/auth/student/login';
 
 function Login_Student() {
   const { setAuth } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
-  const [errMsg, setErrMsg] = useState('');
-  const [success, setSuccess] = useState(false);
   
   const emailRef = useRef();
 
-  const labelStyle = "flex flex-col gap-2 text-[20px] tracking-tighter  leading-[125%] relative w-[340px]";
+  const labelStyle = "flex flex-col gap-2 text-[20px] tracking-tight leading-l relative w-[340px]";
   const inputStyle = "p-[10px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark";
 
   useEffect(() => {
     emailRef.current.focus();
   }, []);
 
-  useEffect(() => {
-    setErrMsg('');
-  }, [email, pwd]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(LOGIN_URL, JSON.stringify({ email, pwd }), {
+      const response = await axios.post(LOGIN_URL, JSON.stringify({ email: email, password: pwd }), {
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
       });
-      const accessToken = response?.data?.accessToken;
-      const roles = response?.data?.roles;
-      setAuth({ email, pwd, roles, accessToken });
+      const accessToken = response?.data?.token;
+      // const roles = response?.data?.roles;
+      setAuth({ email, pwd, accessToken });
+      console.log();
+      toast.success("Login successfuly");
       setEmail('');
       setPwd('');
-      setSuccess(true);
     } catch (err) {
-      // Handling errors similarly to the second code
-      // You can modify these based on your backend responses
       if (!err?.response) {
-        setErrMsg('No Server Response');
-      } else if (err.response?.status === 400) {
-        setErrMsg('Missing Email or Password');
+        toast.error('No Server Response');
       } else if (err.response?.status === 401) {
-        setErrMsg('Unauthorized');
+        toast.error('Missing Email or Password');
+      } else if (err.response?.status === 402) {
+        toast.error('Unauthorized');
       } else {
-        setErrMsg('Login Failed');
+        toast.error('Login Failed');
       }
     }
   }
 
   return (
     <>
-      {success ? (
-        // You can modify the success UI as per your requirements
-        <h1>You are logged in!</h1>
-      ) : (
+        <div>
+          <Toaster />
+        </div>
         <SignInUpWrapper title="Login">
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
@@ -71,7 +63,7 @@ function Login_Student() {
                 <input
                   className={`${inputStyle}`}
                   type="email"
-                  placeholder="example@ahmedg.com"
+                  placeholder="example@something.com"
                   ref={emailRef}
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
@@ -84,7 +76,7 @@ function Login_Student() {
                 <input
                   className={`${inputStyle}`}
                   type="Password"
-                  placeholder="************"
+                  placeholder="********"
                   onChange={(e) => setPwd(e.target.value)}
                   value={pwd}
                   required
@@ -97,10 +89,8 @@ function Login_Student() {
               <ReturnLeft className="text-[24px]" />
             </button>
 
-            {errMsg && <p className="errmsg">{errMsg}</p>}
           </form>
         </SignInUpWrapper>
-      )}
     </>
   );
 }

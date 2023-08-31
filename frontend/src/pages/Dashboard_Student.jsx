@@ -261,7 +261,7 @@ function Dashboard_Student() {
                   <span className="text-accent dark:text-accent-dark font-medium">
                     {roadmap.title}
                   </span>
-                  <Button>
+                  <Button page="/roadmaps">
                     View
                     <ReturnLeft className="text-[20px]" />
                   </Button>
