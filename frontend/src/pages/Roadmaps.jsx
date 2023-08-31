@@ -10,7 +10,7 @@ function Roadmaps() {
     async function fetchData() {
       try {
         const response = await axios.get("/roadmap");
-        setRoadCards(response.data.data.dataresult);
+        setRoadCards(response.data.data.datareuslt);
       } catch (err) {
         console.error(err);
       }
