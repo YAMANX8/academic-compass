@@ -12,7 +12,7 @@ import {
 import { SectionWrapper } from "./layout/index.js";
 const App = () => {
   return (
-    <div>
+    <main className=" bg-light dark:bg-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back">
       <Navbar />
       <SectionWrapper>
         <Routes>
@@ -27,7 +27,7 @@ const App = () => {
         </Routes>
       </SectionWrapper>
       <Footer />
-    </div>
+    </main>
   );
 };
 

@@ -35,7 +35,7 @@ function Home() {
     fetchData();
   }, []);
   return (
-    <main>
+    <main className="w-[1200px]">
       <section className="w-full flex gap-4 justify-between items-center">
         {/* ************************************************************ */}
         <div className="flex flex-col gap-5 items-start">
@@ -64,7 +64,7 @@ function Home() {
       </section>
 
       {/* status section */}
-      <section className="dark py-[27px] flex justify-between w-full bg-dark text-light shadow-[1000px_0_0_0,-1000px_0_0_0] dark:shadow-secondary-dark shadow-dark">
+      <section className="dark py-[27px] flex justify-between w-full bg-dark dark:bg-secondary-dark text-light shadow-[1000px_0_0_0,-1000px_0_0_0] dark:shadow-secondary-dark shadow-dark transition-all duration-1000 ease-in-out-back">
         <div className={`${status}`}>
           <span>{enrollments}</span>
           <p>Enrollments</p>

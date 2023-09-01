@@ -163,7 +163,10 @@ function Dashboard_Student() {
   const location = "Damascus, Syria";
   const images = { Profile };
 
+  //styles
   const emptyRows = "font-thin text-[20px] text-dark/70 dark:text-light/70";
+  const transition = "transition-colors duration-1000 ease-in-out-back";
+
   return (
     <section className="max-w-[1200px] grid grid-cols-12 gap-[20px] grid-rows-8">
       {/* My Profile */}
@@ -257,8 +260,13 @@ function Dashboard_Student() {
           <div className="flex flex-col gap-4 overflow-y-auto h-[285px] pr-4">
             {myRoadmaps.length !== 0 ? (
               myRoadmaps.map((roadmap) => (
-                <div key={roadmap.id} className="flex justify-between items-center rounded-[20px] p-4 bg-light">
-                  <span className="text-accent dark:text-accent-dark font-medium">
+                <div
+                  key={roadmap.id}
+                  className={`${transition} flex justify-between items-center rounded-[20px] p-4 bg-light dark:bg-dark`}
+                >
+                  <span
+                    className={`${transition} text-accent dark:text-accent-dark font-medium`}
+                  >
                     {roadmap.title}
                   </span>
                   <Button page="/roadmaps">

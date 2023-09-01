@@ -11,7 +11,7 @@ const SignInUpWrapper = ({ title, children }) => {
             Chart Your Learning Journey with Interactive Educational Roadmaps
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center gap-4 py-8 px-4 bg-secondary dark:bg-secondary-dark rounded-tr-[20px] rounded-br-[20px] text-dark dark:text-light">
+        <div className="flex flex-col items-center justify-center gap-4 py-8 px-4 bg-secondary dark:bg-secondary-dark rounded-tr-[20px] rounded-br-[20px] text-dark dark:text-light transition-colors duration-1000 ease-in-out-back">
           <img src={Logo} alt="logo" className="w-[203px]" />
           {children}
         </div>

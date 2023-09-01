@@ -19,8 +19,8 @@ function Roadmaps() {
   }, []);
 
   return (
-    <section>
-      <h2 className="mb-12 w-[1200px] text-[48px] font-semibold leading-l tracking-tight ">
+    <section className="w-[1200px]">
+      <h2 className="mb-12 text-[48px] font-semibold leading-l tracking-tight">
         Our Roadmaps
       </h2>
       <div className="flex flex-col gap-12">

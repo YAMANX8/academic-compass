@@ -125,9 +125,9 @@ function Sign_Up_Student() {
   };
 
   const labelStyle =
-    "flex flex-col gap-2 text-[20px] tracking-tighter  leading-[125%] relative w-[340px]";
+    "flex flex-col gap-2 text-[20px] tracking-tighter  leading-l relative w-[340px]";
   const inputStyle =
-    "p-[10px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark";
+    "p-[10px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark transition-all duration-1000 ease-in-out-back";
   const notes =
     "p-4 bg-accent rounded-2xl text-light absolute z-10 w-[300px] right-0";
 
@@ -143,7 +143,9 @@ function Sign_Up_Student() {
               First Name:
               <input
                 className={`${inputStyle} ${
-                  validFirstName && "text-accent dark:text-accent-dark"
+                  validFirstName
+                    ? "text-accent dark:text-accent-dark"
+                    : "text-dark dark:text-light"
                 }`}
                 type="text"
                 placeholder="Ex: Jon"
@@ -178,7 +180,9 @@ function Sign_Up_Student() {
               Last Name:
               <input
                 className={`${inputStyle} ${
-                  validLastName && "text-accent dark:text-accent-dark"
+                  validLastName
+                    ? "text-accent dark:text-accent-dark"
+                    : "text-dark dark:text-light"
                 }`}
                 type="text"
                 placeholder="Ex: Doe"
@@ -212,7 +216,9 @@ function Sign_Up_Student() {
               Email:
               <input
                 className={`${inputStyle} ${
-                  validEmail && "text-accent dark:text-accent-dark"
+                  validEmail
+                    ? "text-accent dark:text-accent-dark"
+                    : "text-dark dark:text-light"
                 }`}
                 type="email"
                 placeholder="example@something.com"
@@ -240,7 +246,9 @@ function Sign_Up_Student() {
               Password:
               <input
                 className={`${inputStyle} ${
-                  validPwd && "text-accent dark:text-accent-dark"
+                  validPwd
+                    ? "text-accent dark:text-accent-dark"
+                    : "text-dark dark:text-light"
                 }`}
                 type="Password"
                 placeholder="********"
@@ -276,7 +284,9 @@ function Sign_Up_Student() {
               Confirm Password:
               <input
                 className={`${inputStyle} ${
-                  validMatchPwd && "text-accent dark:text-accent-dark"
+                  validMatchPwd
+                    ? "text-accent dark:text-accent-dark"
+                    : "text-dark dark:text-light"
                 }`}
                 type="Password"
                 placeholder="********"
@@ -317,7 +327,7 @@ function Sign_Up_Student() {
           </button>
         </form>
         <Link
-          className="text-[14px] underline text-primary"
+          className="text-[14px] underline text-primary dark:text-accent-dark"
           to="/login-student"
           style={{ alignSelf: "flex-start" }}
         >

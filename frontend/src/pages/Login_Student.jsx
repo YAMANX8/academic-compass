@@ -19,7 +19,7 @@ function Login_Student() {
   const labelStyle =
     "flex flex-col gap-2 text-[20px] tracking-tight leading-l relative w-[340px]";
   const inputStyle =
-    "p-[10px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark";
+    "p-[10px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back";
 
   useEffect(() => {
     emailRef.current.focus();
@@ -96,7 +96,7 @@ function Login_Student() {
           </button>
         </form>
         <Link
-          className="text-[14px] underline text-primary"
+          className="text-[14px] underline text-primary dark:text-accent-dark"
           to="/register-student"
           style={{ alignSelf: "flex-start" }}
         >
