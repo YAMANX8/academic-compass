@@ -21,6 +21,9 @@ body::-webkit-scrollbar-track {
   background: #e0e7f7;
   border-radius: 0;
 }
+.dark body::-webkit-scrollbar-track {
+  background: #0D1832;
+}
 
 /* Handle */
 ::-webkit-scrollbar-thumb {

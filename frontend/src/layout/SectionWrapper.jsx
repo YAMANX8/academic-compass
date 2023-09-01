@@ -1,6 +1,6 @@
 const SectionWrapper = ({ children }) => {
   return (
-    <div className="flex justify-center py-12 bg-light dark:bg-dark">
+    <div className="flex justify-center py-12 bg-light dark:bg-dark text-dark dark:text-light transition-colors ease-in-out-back duration-1000">
       {children}
     </div>
   );

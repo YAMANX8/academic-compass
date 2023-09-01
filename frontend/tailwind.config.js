@@ -24,6 +24,11 @@ export default {
       gridTemplateRows: {
         8: "repeat(8, minmax(0, auto))",
       },
+      transitionTimingFunction: {
+        "in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",
+        "out-expo": "cubic-bezier(0.19, 1, 0.22, 1)",
+        "in-out-back": "cubic-bezier(0.780, -0.375, 0.260, 1.320)",
+      },
     },
     fontFamily: {
       poppins: ["Poppins", "sans-serif"],
