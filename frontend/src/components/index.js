@@ -1,4 +1,24 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import RoadmapCard from "./RoadmapCard";
-export { Navbar, Footer, RoadmapCard };
+import ProfileCard from "./dashboard/ProfileCard";
+import PerformanceChart from "./dashboard/PerformanceChart";
+import CourseCard from "./dashboard/CourseCard";
+import PerformanceCard from "./dashboard/PerformanceCard";
+import Button from "./Button";
+import General from "./setting/General";
+import Security from "./setting/Security";
+import Account from "./setting/Account";
+export {
+  Navbar,
+  Footer,
+  RoadmapCard,
+  ProfileCard,
+  PerformanceChart,
+  CourseCard,
+  PerformanceCard,
+  Button,
+  General,
+  Security,
+  Account,
+};

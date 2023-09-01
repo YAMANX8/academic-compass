@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { RoadmapCard } from "../components/index.js";
 
-import  axios  from "../apis/axios.js";
+import axios from "../apis/axios.js";
 function Home() {
   // style variables
   const heading = "text-[3rem] font-semibold tracking-tight leading-[125%]";
@@ -23,11 +23,11 @@ function Home() {
         const response = await axios.get("/home");
         // setRestaurants(response.data.data.restaurants);
         const count = response.data.count;
-        setCourses(count.course.count)
-        setInstructors(count.instructor.count)
-        setRoadmaps(count.roadmap.count)
-        setEnrollments(count.enrollment.count)
-        setRoadCards(count.popularRoadmap)
+        setCourses(count.course.count);
+        setInstructors(count.instructor.count);
+        setRoadmaps(count.roadmap.count);
+        setEnrollments(count.enrollment.count);
+        setRoadCards(count.popularRoadmap);
       } catch (err) {
         console.error(err);
       }
@@ -35,8 +35,8 @@ function Home() {
     fetchData();
   }, []);
   return (
-    <>
-      <section className="w-full bg-light   flex gap-4 justify-between items-center">
+    <main className="w-[1200px]">
+      <section className="w-full flex gap-4 justify-between items-center">
         {/* ************************************************************ */}
         <div className="flex flex-col gap-5 items-start">
           <h1 className={`${heading} w-[488px]`}>
@@ -64,7 +64,7 @@ function Home() {
       </section>
 
       {/* status section */}
-      <section className="dark py-[27px] flex justify-between w-full bg-dark text-light shadow-[1000px_0_0_0,-1000px_0_0_0] dark:shadow-secondary-dark shadow-dark">
+      <section className="dark py-[27px] flex justify-between w-full bg-dark dark:bg-secondary-dark text-light shadow-[1000px_0_0_0,-1000px_0_0_0] dark:shadow-secondary-dark shadow-dark transition-all duration-1000 ease-in-out-back">
         <div className={`${status}`}>
           <span>{enrollments}</span>
           <p>Enrollments</p>
@@ -84,7 +84,7 @@ function Home() {
       </section>
 
       {/* popular roadmaps section */}
-      <section className="py-[48px] bg-light">
+      <section className="py-[48px]">
         <h2 className="text-[48px] font-semibold leading-[125%] tracking-tight mb-12">
           Popular Roadmaps
         </h2>
@@ -100,7 +100,7 @@ function Home() {
           ))}
         </div>
       </section>
-    </>
+    </main>
   );
 }
 

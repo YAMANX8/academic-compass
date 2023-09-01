@@ -2,29 +2,34 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Img from "../assets/images/frontend.svg";
 import { AiOutlineEnter as Enter } from "react-icons/ai";
+import { Button } from "./index";
 
 const RoadmapCard = ({ title, order, description, img }) => {
   return (
     <div
-      className={`flex justify-between w-full bg-secondary rounded-[10px] py-4 px-5 gap-5 ${
+      className={`flex justify-between aspect-[200/63] bg-secondary dark:bg-secondary-dark transition-all duration-1000 ease-in-out-back text-dark dark:text-light rounded-[10px] py-4 px-5 gap-5 overflow-hidden ${
         order % 2 != 0 ? "flex-row-reverse" : "flex-row"
-      }`}
+      }  shadow-[0_5px_15px] shadow-black/50`}
     >
-      <img src={`backend/${img}`} className="block w-[345px]" />
+      <div className=" min-w-[380px] flex justify-center">
+        <img src={img} className="" />
+      </div>
 
-      <div className="flex flex-col items-start gap-4 justify-between">
-        <h3 className="text-[48px] font-bold leading-[125%] tracking-tight text-accent mb-4">
+      <div className="flex flex-col gap-4 flex-1 ">
+        <h3 className="text-[48px] font-bold leading-l tracking-tight text-accent dark:text-accent-dark transition-all duration-1000 ease-in-out-back">
           {title}
         </h3>
-        <p className="text-[28px] leading-[125%] tracking-tight">
-          {description}
+        <p className="text-[28px] leading-l tracking-tight overflow-auto">
+          {description} Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Corporis tempore aspernatur assumenda, distinctio vitae ipsam at
+          ducimus voluptatem voluptatum tenetur eligendi, quae possimus
+          quibusdam eaque. Labore adipisci exercitationem officia iure?
         </p>
-        <Link
-          to="/roadmaps"
-          className="flex items-center self-center bg-primary text-light py-[10px] px-[20px] rounded-[5px] font-semibold gap-[10px]"
-        >
-          Discover <Enter />
-        </Link>
+        <div className="mt-auto">
+          <Button page="/roadmaps">
+            Discover <Enter />
+          </Button>
+        </div>
       </div>
     </div>
   );
