@@ -7,6 +7,8 @@ import {
   BsMoon as Moon,
   BsSun as Sun,
 } from "react-icons/bs";
+import Switcher from "../components/Switcher";
+
 const toggleDark = () => {};
 
 const Navbar = () => {
@@ -48,7 +50,7 @@ const Navbar = () => {
           <Person className="text-[24px]" />
           Sign up
         </Link>
-        <Sun className="text-[24px] cursor-pointer" onClick={toggleDark} />
+        <Switcher/>
       </div>
     </nav>
   );
