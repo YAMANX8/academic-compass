@@ -1,66 +1,70 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { IoIosInformationCircleOutline as InformationIcon } from 'react-icons/io';
-import { MdOutlineSecurity as Security } from 'react-icons/md';
-import { BsPerson as Person } from 'react-icons/bs';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { IoIosInformationCircleOutline as InformationIcon } from "react-icons/io";
+import { MdOutlineSecurity as SecurityIcon } from "react-icons/md";
+import { BsPerson as Person } from "react-icons/bs";
 
-import {General} from '../components/index';
+import { General, Security, Account } from "../components/index";
 
 function Setting_Student() {
-  const [selectedLink, setSelectedLink] = useState('general'); 
-
+  const [selectedLink, setSelectedLink] = useState("general");
+  const tabStyle =
+    "p-[16px] w-[305px] gap-2 flex items-center rounded-[10px] tracking-tight hover:bg-blue-500 hover:text-light active:bg-accent";
   return (
-    <div>
-      <h2 className=' py-[16px] font-semibold text-[48px] leading-[125.5%] tracking-tight text-[var(--text, #070B27)]'>
-        Setting  </h2>
-      
-      <div className='bg-secondary flex'>
-      <ul>
-            <li className='p-[32px] whitespace-nowrap'>
-                <Link 
-                    className={`p-[16px] w-[305px] space-x-2 flex rounded-[10px] ${selectedLink === 'general' ? 'bg-[var(--primary,#253AD4)] text-white' : 'hover:bg-blue-500 active:bg-blue-700 text-black'}`}
-                    onClick={() => setSelectedLink('general')}
-                >
-                    <InformationIcon className='text-3xl transform scale-125' />
-                    <span className='text-[24px] font-medium'>General Information</span>
-                </Link>
-            </li>
+    <div className="w-[1200px]">
+      <h2 className="pb-[16px] font-semibold text-[48px] leading-l tracking-tight text-dark dark:text-light">
+        Setting
+      </h2>
 
-            <li className='p-[32px]'>
-                <Link 
-                    className={`p-[16px] w-[305px] space-x-2 flex rounded-[10px] ${selectedLink === 'security' ? 'bg-[var(--primary,#253AD4)] text-white' : 'hover:bg-blue-500 active:bg-blue-700 text-black'}`}
-                    onClick={() => setSelectedLink('security')}
-                >
-                    <Security className='text-3xl transform scale-125' />
-                    <span className='text-[24px] font-medium'>Security</span>
-                </Link>
-            </li>
+      <div className="bg-secondary flex">
+        <ul className="p-8 flex flex-col gap-8">
+          <li>
+            <Link
+              className={`${tabStyle} ${
+                selectedLink === "general" &&
+                "bg-primary text-white hover:bg-primary"
+              }`}
+              onClick={() => setSelectedLink("general")}
+            >
+              <InformationIcon className="text-3xl" />
+              <span className="text-[24px]">General Information</span>
+            </Link>
+          </li>
 
-            <li className='p-[32px]'>
-                <Link 
-                    className={`p-[16px] w-[305px] space-x-2 flex rounded-[10px] ${selectedLink === 'account' ? 'bg-[var(--primary,#253AD4)] text-white' : 'hover:bg-blue-500 active:bg-blue-700 text-black'}`}
-                    onClick={() => setSelectedLink('account')}
-                >
-                    <Person className='text-3xl transform scale-125' />
-                    <span className='text-[24px] font-medium'>Account</span>
-                </Link>
-            </li>
+          <li>
+            <Link
+              className={`${tabStyle} ${
+                selectedLink === "security" &&
+                "bg-primary text-white hover:bg-primary"
+              }`}
+              onClick={() => setSelectedLink("security")}
+            >
+              <SecurityIcon className="text-3xl" />
+              <span className="text-[24px]">Security</span>
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              className={`${tabStyle} ${
+                selectedLink === "account" &&
+                "bg-primary text-white hover:bg-primary"
+              }`}
+              onClick={() => setSelectedLink("account")}
+            >
+              <Person className="text-3xl" />
+              <span className="text-[24px]">Account</span>
+            </Link>
+          </li>
         </ul>
 
         {/* line */}
-          <div className='border-l border-r border-gray-300 mx-4 my-[50px]'></div>
-            
+        <div className="border-l border-r border-dark/10 dark:border-light/10 my-8"></div>
 
-         <General/>
-
-      
-       
-          
+        {selectedLink === "general" && <General />}
+        {selectedLink === "security" && <Security />}
+        {selectedLink === "account" && <Account />}
       </div>
-
-       
- 
-
     </div>
   );
 }

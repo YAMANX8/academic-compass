@@ -7,6 +7,8 @@ import CourseCard from "./dashboard/CourseCard";
 import PerformanceCard from "./dashboard/PerformanceCard";
 import Button from "./Button";
 import General from "./setting/General";
+import Security from "./setting/Security";
+import Account from "./setting/Account";
 export {
   Navbar,
   Footer,
@@ -17,4 +19,6 @@ export {
   PerformanceCard,
   Button,
   General,
+  Security,
+  Account,
 };
