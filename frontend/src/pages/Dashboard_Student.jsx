@@ -149,11 +149,11 @@ function Dashboard_Student() {
       title: "AI",
     },
     {
-      id: 3,
+      id: 4,
       title: "Full Stack",
     },
     {
-      id: 3,
+      id: 5,
       title: "Android Development",
     },
   ];
@@ -257,7 +257,7 @@ function Dashboard_Student() {
           <div className="flex flex-col gap-4 overflow-y-auto h-[285px] pr-4">
             {myRoadmaps.length !== 0 ? (
               myRoadmaps.map((roadmap) => (
-                <div className="flex justify-between items-center rounded-[20px] p-4 bg-light">
+                <div key={roadmap.id} className="flex justify-between items-center rounded-[20px] p-4 bg-light">
                   <span className="text-accent dark:text-accent-dark font-medium">
                     {roadmap.title}
                   </span>
