@@ -2,7 +2,7 @@ import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 
 import { SignInUpWrapper } from "../layout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 // import { Alert } from "../components/index";
 import toast, { Toaster } from "react-hot-toast";
@@ -316,6 +316,13 @@ function Sign_Up_Student() {
             <ReturnLeft className="text-[24px]" />
           </button>
         </form>
+        <Link
+          className="text-[14px] underline text-primary"
+          to="/login-student"
+          style={{ alignSelf: "flex-start" }}
+        >
+          Already have an Account
+        </Link>
       </SignInUpWrapper>
     </>
   );
