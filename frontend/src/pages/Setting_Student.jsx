@@ -1,26 +1,20 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoIosInformationCircleOutline as InformationIcon } from 'react-icons/io';
 import { MdOutlineSecurity as Security } from 'react-icons/md';
 import { BsPerson as Person } from 'react-icons/bs';
 
-import General from '../components/index';
-
-
+import {General} from '../components/index';
 
 function Setting_Student() {
   const [selectedLink, setSelectedLink] = useState('general'); 
 
-  
   return (
-    <div  >
-       
+    <div>
       <h2 className=' py-[16px] font-semibold text-[48px] leading-[125.5%] tracking-tight text-[var(--text, #070B27)]'>
         Setting  </h2>
       
-
-        
-      <div className=' bg-secondary flex '>
+      <div className='bg-secondary flex'>
       <ul>
             <li className='p-[32px] whitespace-nowrap'>
                 <Link 
