@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoIosInformationCircleOutline as InformationIcon } from 'react-icons/io';
 import { MdOutlineSecurity as Security } from 'react-icons/md';
 import { BsPerson as Person } from 'react-icons/bs';
 
+import General from '../components/index';
+
+
+
 function Setting_Student() {
+  const [selectedLink, setSelectedLink] = useState('general'); 
+
+  
   return (
     <div  >
        
@@ -13,38 +20,51 @@ function Setting_Student() {
       
 
         
-      <div className='w-[1200px] h-[593px] bg-secondary flex'>
-          <ul className=''>
-          <li className=' py-[36px] px-[40px]  whitespace-nowrap    text-light '>
-         <Link className='px-[60px] py-[16px] w-[305px]    space-x-2 flex rounded-[10px]  rounded-10 bg-[var(--primary,#253AD4)]'>
-          <InformationIcon className=' text-3xl transform scale-125  ' />
-           <span className='font-medium '>General Information</span>
-             </Link>
-             </li>
+      <div className=' bg-secondary flex '>
+      <ul>
+            <li className='p-[32px] whitespace-nowrap'>
+                <Link 
+                    className={`p-[16px] w-[305px] space-x-2 flex rounded-[10px] ${selectedLink === 'general' ? 'bg-[var(--primary,#253AD4)] text-white' : 'hover:bg-blue-500 active:bg-blue-700 text-black'}`}
+                    onClick={() => setSelectedLink('general')}
+                >
+                    <InformationIcon className='text-3xl transform scale-125' />
+                    <span className='text-[24px] font-medium'>General Information</span>
+                </Link>
+            </li>
 
-             <li className='  py-[50px] px-[40px] text-[var(--text,#070B27)]  '>
-         <Link className=' space-x-2 flex rounded-[10px] px-[60px] py-[16px] w-[305px] rounded-10'>
-          <Security className=' text-3xl transform scale-125 ' />
-           <span className=' text-[24px]  font-medium  leading-normal tracking-[0.72px] '>Security</span>
-             </Link>
-             </li>
+            <li className='p-[32px]'>
+                <Link 
+                    className={`p-[16px] w-[305px] space-x-2 flex rounded-[10px] ${selectedLink === 'security' ? 'bg-[var(--primary,#253AD4)] text-white' : 'hover:bg-blue-500 active:bg-blue-700 text-black'}`}
+                    onClick={() => setSelectedLink('security')}
+                >
+                    <Security className='text-3xl transform scale-125' />
+                    <span className='text-[24px] font-medium'>Security</span>
+                </Link>
+            </li>
 
-             <li className=' px-[40px] text-[var(--text,#070B27)'>
-         <Link className=' space-x-2 flex rounded-[10px] px-[60px] py-[16px] w-[305px] rounded-10 '>
-          <Person className=' text-3xl transform scale-125 ' />
-           <span className=' ] text-[24px]   font-medium  leading-normal tracking-[0.72px]'>Account</span>
-             </Link>
-             </li>
-          </ul>
-   
-          <div className='border-l border-r border-gray-300 mx-4 my-[50px]'></div> 
+            <li className='p-[32px]'>
+                <Link 
+                    className={`p-[16px] w-[305px] space-x-2 flex rounded-[10px] ${selectedLink === 'account' ? 'bg-[var(--primary,#253AD4)] text-white' : 'hover:bg-blue-500 active:bg-blue-700 text-black'}`}
+                    onClick={() => setSelectedLink('account')}
+                >
+                    <Person className='text-3xl transform scale-125' />
+                    <span className='text-[24px] font-medium'>Account</span>
+                </Link>
+            </li>
+        </ul>
 
-<div className=''>   </div>
-   
+        {/* line */}
+          <div className='border-l border-r border-gray-300 mx-4 my-[50px]'></div>
+            
+
+         <General/>
+
+      
+       
+          
       </div>
 
-   
-      
+       
  
 
     </div>
