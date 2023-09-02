@@ -8,6 +8,7 @@ import {
   Dashboard_Student,
   Settings_Student,
   NotFound,
+  CourseView,
 } from "./pages";
 import { Layout } from "./layout";
 import { RequireAuth } from "./components";
@@ -23,7 +24,8 @@ const App = () => {
           <Route path="login" element={<Login_Student />} />
           <Route path="register" element={<Sign_Up_Student />} />
           <Route path="roadmaps" element={<Roadmaps />} />
-
+          <Route path="courseview" element={<CourseView />} />
+            
           {/* protected to students only */}
           <Route element={<RequireAuth />}>
             <Route path="dashboard" element={<Dashboard_Student />} />

@@ -42,3 +42,13 @@ body::-webkit-scrollbar-thumb:vertical {
 body::-webkit-scrollbar-thumb:hover {
   background: #6a1ead;
 }
+
+/* إخفاء الأيقونة المثلثة الافتراضية */
+details > summary::before {
+  display: none;
+}
+
+/* تجنب إظهار نقطة قبل العنوان في بعض المتصفحات */
+details > summary {
+  list-style: none;
+}

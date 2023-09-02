@@ -6,4 +6,5 @@ import Home from "./Home";
 import Dashboard_Student from "./Dashboard_Student"
 import Settings_Student from "./Settings_Student";
 import NotFound from "./NotFound"
-export { Login_Student, Sign_Up_Instructor, Sign_Up_Student, Roadmaps, Home ,Dashboard_Student ,Settings_Student,NotFound };
+import CourseView from "./CourseView"
+export { Login_Student, Sign_Up_Instructor, Sign_Up_Student, Roadmaps, Home ,Dashboard_Student ,Settings_Student,NotFound ,CourseView};
