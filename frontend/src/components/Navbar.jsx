@@ -30,21 +30,21 @@ const Navbar = () => {
           />
           <Search className="font-semibold absolute right-[10px] top-[10px] text-[24px]" />
         </div>
-        <Link to="/roadmaps" className="font-semibold">
+        <Link to="/student/roadmaps" className="font-semibold">
           Roadmaps{" "}
         </Link>
-        <Link to="/register-instructor " className="font-semibold">
+        <Link to="/instructor/register" className="font-semibold">
           Teach on Academic compass
         </Link>
         <Link
-          to="/login-student"
+          to="/student/login"
           className={`flex bg-light text-primary border-primary border-[1px] border-solid ${btnStyle}`}
         >
           <Login className="text-[24px]" />
           Log in
         </Link>
         <Link
-          to="/register-student"
+          to="/student/register"
           className={`flex bg-primary text-light ${btnStyle}`}
         >
           <Person className="text-[24px]" />

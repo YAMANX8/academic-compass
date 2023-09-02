@@ -4,5 +4,6 @@ import Sign_Up_Student from "./Sign_Up_Student";
 import Roadmaps from "./Roadmaps";
 import Home from "./Home";
 import Dashboard_Student from "./Dashboard_Student"
-import Setting_Student from "./Setting_Student";
-export { Login_Student, Sign_Up_Instructor, Sign_Up_Student, Roadmaps, Home ,Dashboard_Student ,Setting_Student };
+import Settings_Student from "./Settings_Student";
+import NotFound from "./NotFound"
+export { Login_Student, Sign_Up_Instructor, Sign_Up_Student, Roadmaps, Home ,Dashboard_Student ,Settings_Student,NotFound };

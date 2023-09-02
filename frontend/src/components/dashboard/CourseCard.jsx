@@ -54,7 +54,7 @@ const CourseCard = ({ image, title, subtitle, progress = -1, stars = -1 }) => {
             </div>
           </div>
         </div>
-        <Button page={"/roadmaps"}>
+        <Button page={"/student/roadmaps"}>
           Resume
           <ReturnLeft className="text-[20px]" />
         </Button>

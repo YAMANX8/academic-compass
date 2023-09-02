@@ -328,7 +328,7 @@ function Sign_Up_Student() {
         </form>
         <Link
           className="text-[14px] underline text-primary dark:text-accent-dark"
-          to="/login-student"
+          to="/student/login"
           style={{ alignSelf: "flex-start" }}
         >
           Already have an Account

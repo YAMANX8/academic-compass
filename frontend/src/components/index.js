@@ -9,6 +9,7 @@ import Button from "./Button";
 import General from "./setting/General";
 import Security from "./setting/Security";
 import Account from "./setting/Account";
+import RequireAuth from "./RequireAuth";
 export {
   Navbar,
   Footer,
@@ -21,4 +22,5 @@ export {
   General,
   Security,
   Account,
+  RequireAuth,
 };

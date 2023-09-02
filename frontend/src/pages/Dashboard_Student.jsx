@@ -203,7 +203,7 @@ function Dashboard_Student() {
                 ))}
               </div>
 
-              <Button page={"/roadmaps"}>
+              <Button page={"/student/roadmaps"}>
                 <Map className="text-[25px]" /> Explore Our Roadmap
               </Button>
             </div>
@@ -269,7 +269,7 @@ function Dashboard_Student() {
                   >
                     {roadmap.title}
                   </span>
-                  <Button page="/roadmaps">
+                  <Button page="/student/roadmaps">
                     View
                     <ReturnLeft className="text-[20px]" />
                   </Button>

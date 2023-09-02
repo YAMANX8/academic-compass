@@ -49,7 +49,7 @@ function Home() {
           </p>
           {/* w-[262px] h-[44px]  bg-primary text-2xl ml-[120px] p-[6px] mr-[256px] mb-[207px] mt-[1px] font-medium items-center */}
           <Link
-            to="/roadmaps"
+            to="/student/roadmaps"
             className="flex gap-[10px] items-center font-semibold px-[20px] py-[10px] bg-primary text-light rounded-[5px]"
           >
             <Map className="text-[25px]" />

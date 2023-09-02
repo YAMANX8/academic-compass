@@ -10,7 +10,8 @@ import { PiLinkedinLogo as Inloggn } from "react-icons/pi";
 import { Link } from "react-router-dom";
 
 function Footer() {
-  const social = "w-[25px] h-[25px] text-accent dark:text-accent-dark transition-all duration-1000 ease-in-out-back";
+  const social =
+    "w-[25px] h-[25px] text-accent dark:text-accent-dark transition-all duration-1000 ease-in-out-back";
   return (
     <footer>
       <div className="w-full px-[120px] py-[90px] flex items-center justify-between tracking-tight leading-6  bg-secondary dark:bg-secondary-dark transition-all duration-1000 ease-in-out-back whitespace-nowrap">
@@ -25,10 +26,10 @@ function Footer() {
         </div>
 
         <div className="font-medium  text-[20px] flex flex-col gap-4 transition-all duration-1000 ease-in-out-back text-dark dark:text-light">
-          <Link to="/register-instructor" className="hover:underline">
+          <Link to="/instructor/register" className="hover:underline">
             Teach on Academic Compass
           </Link>
-          <Link to="/roadmaps" className=" hover:underline">
+          <Link to="/student/roadmaps" className=" hover:underline">
             Roadmaps
           </Link>
           <Link to="/about" className=" hover:underline">
