@@ -3,7 +3,7 @@ const db = require("../../Database/db");
 const GetCoursesNumberInfo = async (student_id) => {
   try {
     const query =
-      "SELECT e.student_id,  SUM(CASE WHEN e.progress_state >= i.item_no THEN 1 ELSE 0 END) AS completed_courses, SUM(CASE WHEN e.progress_state < i.item_no THEN 1 ELSE 0 END) AS incomplete_courses FROM Enrollment e JOIN Items i ON e.course_id = i.course_id WHERE e.student_id = $1 GROUP BY e.student_id";
+      "SELECT e.student_id, SUM(CASE WHEN e.progress_state >= c.items_count THEN 1 ELSE 0 END) AS completed_courses, SUM(CASE WHEN e.progress_state < c.items_count THEN 1 ELSE 0 END) AS incomplete_courses FROM Enrollment e JOIN course c ON e.course_id = c.course_id WHERE e.student_id = $1 GROUP BY e.student_id";
     const values = [student_id];
     const result = await db.query(query, values);
     return {
@@ -24,7 +24,7 @@ const GetCoursesNumberInfo = async (student_id) => {
 const GetTotalPoit = async (student_id) => {
   try {
     const query =
-      "WITH PointsPerEnrollment AS (SELECT e.enrollment_id,SUM(CASE WHEN o.is_correct THEN 1 ELSE 0 END) AS points FROM   enrollment e INNER JOIN Student_Answers sa ON e.enrollment_id = sa.enrollment_id INNER JOIN Option o ON sa.option_no = o.option_no AND sa.question_no = o.question_id WHERE  e.student_id = $1 GROUP BY e.enrollment_id) SELECT SUM(points) AS total_points FROM PointsPerEnrollment";
+      "WITH PointsPerEnrollment AS (SELECT e.enrollment_id, SUM(CASE WHEN o.is_correct THEN 1 ELSE 0 END) AS points FROM enrollment e INNER JOIN Student_Answers sa ON e.enrollment_id = sa.enrollment_id LEFT JOIN  course c ON   e.course_id = c.course_id LEFT JOIN items i ON   c.course_id = i.item_id LEFT JOIN quiz q ON   i.item_id = q.quiz_id INNER JOIN Option o ON sa.option_no = o.option_no AND sa.question_no = o.question_id WHERE e.student_id = $1  GROUP BY  e.enrollment_id) SELECT SUM(points) AS total_points FROM PointsPerEnrollment";
     const values = [student_id];
     const result = await db.query(query, values);
     return {

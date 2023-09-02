@@ -45,7 +45,7 @@ router.get("/student/:id", async (req, res) => {
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
       const studentId = payload.studentId;
        const query =
-         "SELECT DISTINCT ON (r.roadmap_id) r.roadmap_id, r.roadmap_title, r.roadmap_description, t1.topic_level1_id, t1.topic_title, t1.topic_description, t1.topic_status, t1.topic_order, ps.progress_id, ps.student_id,  ps.state_id AS progress_state_id, ps.topic_id, ps.topic_level,  ts.state_name FROM Roadmap r JOIN Topic_Level_1 t1 ON r.roadmap_id = t1.roadmap_id LEFT JOIN Progress_Status ps ON t1.topic_level1_id = ps.topic_id AND ps.student_id = $1 LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id WHERE r.roadmap_id = $2 ORDER BY r.roadmap_id, t1.topic_level1_id, ps.progress_id";
+         "SELECT DISTINCT ON (r.roadmap_id) r.roadmap_id, r.roadmap_title, r.roadmap_description,TL1.topic_level1_id, TL1.topic_title, TL1.topic_description, TL1.topic_status, TL1.topic_order, ps.progress_id, ps.student_id, ps.state_id AS progress_state_id, ps.topic_id, ps.topic_level, ts.state_name FROM Roadmap r JOIN Topic_Level_1 TL1 ON r.roadmap_id = TL1.roadmap_id JOIN Topic_Level_N TLN ON TL1.topic_level1_id = TLN.topic_level1_id JOIN Items I ON TLN.topic_id = I.topic_id JOIN Course C ON I.course_id = C.course_id JOIN Enrollment E ON C.course_id = E.course_id JOIN Student S ON E.student_id = S.student_id LEFT JOIN Progress_Status ps ON TL1.topic_level1_id = ps.topic_id AND ps.student_id = $1 LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id WHERE r.roadmap_id = $2 ORDER BY r.roadmap_id, TL1.topic_level1_id, ps.progress_id";
        const values = [studentId, roadmapId];
        const result = await pool.query(query, values);
        if (result.rows.length === 0) {
