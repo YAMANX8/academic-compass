@@ -39,6 +39,22 @@ SET topic_id =2 WHERE progress_id=10;
 UPDATE topic_level_1
 SET roadmap_id =19 WHERE topic_level1_id=3;
 
+UPDATE topic_level_N
+SET topic_level1_id =1 WHERE topic_id=19;
+UPDATE topic_level_N
+SET topic_level1_id =NULL WHERE topic_id=20;
+UPDATE topic_level_N
+SET topic_level1_id =2 WHERE topic_id=21;
+UPDATE topic_level_N
+SET topic_level1_id =NULL WHERE topic_id=22;
+UPDATE topic_level_N
+SET topic_level1_id =3 WHERE topic_id=23;
+UPDATE topic_level_N
+SET topic_level1_id =NULL WHERE topic_id=24;
+
+UPDATE items
+SET topic_id =25 WHERE item_id=6;
+
 UPDATE rating
 SET review = 'keep going sir' 
 WHERE rating_id = 5;
@@ -125,6 +141,10 @@ VALUES
     (3, 1, 1,5);
     -- (3, 1, 2, 3);
      DELETE FROM Student_Answers WHERE enrollment_id=3;
+     DELETE FROM topic_level_N WHERE topic_id=25;
+     DELETE FROM topic_level_N WHERE topic_id=26;
+     DELETE FROM topic_level_N WHERE topic_id=27;
+     DELETE FROM items WHERE item_id=6;
      DELETE FROM roadmap;
 
 -- اضافة بيانات الى جدول List_Type 
@@ -1032,6 +1052,7 @@ ORDER BY
     RC.roadmap_id,
     RC.course_rank;
 --معالجة الحالات الخاصة
+-------------------
 WITH RankedCourses AS (
     SELECT
         r.roadmap_id,
@@ -1065,12 +1086,12 @@ WITH RankedCourses AS (
     JOIN
         roadmap r ON TL1.roadmap_id = r.roadmap_id
     WHERE
-        (
-            (l.level_name IS NULL OR l.level_name IN (''))
+            (
+            (l.level_name IS NULL OR l.level_name IN ('') OR l.level_name IN ('') OR l.level_name IN (''))
             OR
             (rt.rating_stars IS NOT NULL OR rt.rating_stars >= 4.5)
             OR
-            (ct.type_name IS NULL OR ct.type_name IN (''))
+            (ct.type_name IS NULL OR ct.type_name IN ('') OR ct.type_name IN ('') OR ct.type_name IN (''))
             AND
             (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%')
         )
@@ -1122,7 +1143,7 @@ JOIN
 JOIN
     Topic_level_N TLN ON i.topic_id = TLN.topic_id
 WHERE
-    RC.course_rank > ((1 - 1) * 4)
+    RC.course_rank > ((1= - 1) * 4)
     AND RC.course_rank <= (1 * 4)
 ORDER BY
     RC.roadmap_id,
