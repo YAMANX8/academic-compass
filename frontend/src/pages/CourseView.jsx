@@ -10,12 +10,92 @@ import {
   BsChevronUp as ChevronUp,
   BsChevronDown as ChevronDown,
 } from "react-icons/bs";
+
 import Card from "../assets/images/Rectangle 63.png";
-import Profile from "../assets/images/Ellipse 6 (1).png"
+import Profile from "../assets/images/Ellipse 6 (1).png";
+
 function CourseView() {
   const firstName = "Ahmad";
   const lastName = "omer";
   const images = { Profile };
+  
+const [isUp , setIsUp] =useState(true);
+const [isUp2, setIsUp2] = useState(true)
+const [isUp3, setIsUp3] = useState(true)
+const [isUp4, setIsUp4] = useState(true)
+const [isUp5, setIsUp5] = useState(true)
+const [isUp6, setIsUp6] = useState(true)
+
+
+  const [expandedStates, setExpandedStates] = useState({});
+
+  const toggleReviewExpanded = (index) => {
+    setExpandedStates(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+  
+  const [isExpanded, setIsExpanded] = useState(false);
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const reviews = [
+    {
+      fname: "ahmad",
+      lname: "omer",
+      images: Profile,
+      stars: 4.5,
+      descripationReviews: `The course contains a lot of useful information, and if you are
+    just starting out in the world of programming, I would
+     recommend this course. The only criticism is that it has
+      become quite outdated, and many things have changed, so 
+      recommend this course. The only criticism is that it has
+      recommend this course. The only criticism is that it has`,
+      data: "12/12/2023",
+    },
+    {
+      fname: "yaman",
+      lname: "doe",
+      image: Card,
+      stars: 4.5,
+      descripationReviews: `The course contains a lot of useful information, and if you are
+    just starting out in the world of programming, I would
+     recommend this course. The only criticism is that it has
+      become quite outdated, and many things have changed, so 
+      recommend this course. The only criticism is that it has
+      recommend this course. The only criticism is that it has`,
+      data: "12/12/2023",
+    },
+    {
+      fname: "jone",
+      lname: "emsl",
+      image: Card,
+      stars: 4.5,
+      descripationReviews: `The course contains a lot of useful information, and if you are
+    just starting out in the world of programming, I would
+     recommend this course. The only criticism is that it has
+      become quite outdated, and many things have changed, so 
+      recommend this course. The only criticism is that it has
+      recommend this course. The only criticism is that it has`,
+      data: "12/12/2023",
+    },
+    {
+      fname: "zana",
+      lname: "omer",
+      image: Card,
+      stars: 4.5,
+      descripationReviews: 
+      `The course contains a lot of useful information, and if you are
+      just starting out in the world of programming, I would
+     recommend this course. The only criticism is that it has
+      become quite outdated, and many things have changed, so 
+    
+      `,
+      data: "12/12/2023",
+    },
+  ];
 
   const [course, setCourse] = useState({
     image: Card,
@@ -32,11 +112,10 @@ function CourseView() {
     quizCount: 25,
     articleCount: 25,
     data: "12/12/2023",
-    descripationReviews: `The course contains a lot of useful information, and if you are
-     just starting out in the world of programming, I would
-      recommend this course. The only criticism is that it has
-       become quite outdated, and many things have changed, so ...`,
-
+    articles: 25,
+    topic1: "Topic level 1",
+    topic2: "Topic level 2",
+    topic3: "Topic level 3",
     descripation: `60%+ of people who try to learn how to program end up quitting.
       <br> <br>
         Why?
@@ -111,7 +190,8 @@ function CourseView() {
             </div>
             <div className="text-accent-dark flex justify-between  ">
               <span>
-                duration {course.duration} hr • {course.itemsCount} items • for {course.level}
+                duration {course.duration} hr • {course.itemsCount} items • for{" "}
+                {course.level}
               </span>
               <label>Created By: {course.instructor}</label>
             </div>
@@ -135,7 +215,7 @@ function CourseView() {
             </div>
             <div className=" flex items-center gap-4">
               <Articles />
-              {course.Articles} Articles
+              {course.articles} Articles
             </div>
           </div>
           <Link className=" flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">
@@ -144,8 +224,8 @@ function CourseView() {
           </Link>
         </div>
       </div>
-      
-            {/* In this course you will learn the following */}
+
+      {/* In this course you will learn the following */}
       <div className="py-8 ">
         <h1 className="py-4  font-bold text-[32px] tracking-tight">
           In this course you will learn the following
@@ -190,7 +270,7 @@ function CourseView() {
           ))}
         </ul>
       </div>
-          
+
       {/* Requirements */}
       <div className="py-8 ">
         <h1 className="py-4  font-bold text-[32px] tracking-tight">
@@ -217,206 +297,136 @@ function CourseView() {
         </h1>
 
         <div className=" border-gray-50  ">
-          <details className="border  border-gray-500 text-light text-[20px] tracking-tight   ">
-            <summary className="px-[16px] py-[13px] flex justify-between items-center bg-primary">
+          <details className="border  border-gray-500  text-light text-[20px] tracking-tight   ">
+            <summary className="px-[16px] py-[13px] flex justify-between font-medium items-center bg-primary">
               {" "}
-              Topic level 1
-              <span className="text-3xl toggle-icon cursor-pointer ">
-                <ChevronUp />
+              {course.topic1}
+              <span onClick={() => setIsUp2(!isUp)} className="text-3xl toggle-icon cursor-pointer ">
+              {isUp ?  <ChevronUp/> : <ChevronDown /> }
               </span>
             </summary>
-            <p className="text-dark"> <details className="border  border-gray-500 text-dark text-[20px] tracking-tight">
-            <summary className="px-[16px] py-[13px] flex justify-between items-center bg-secondary  ">
-              Topic level n
-              <span className="text-3xl cursor-pointer">
-                <ChevronUp />
-              </span>
-            </summary>
-            <p><ul className="border-l-2 border-r-2 border-gray-500 text-accent">
-            <li className="flex items-center gap-4 p-[16px] ">
-              <Video />
-              {course.videoCount} Videos
-            </li>
-            <li className="flex items-center gap-4 p-[16px]">
-              <Quiz />
-              {course.quizCount} Quiz
-            </li>
-            <li className="flex items-center gap-4 p-[16px]">
-              <Articles />
-              {course.Articles} Articles
-            </li>
-          </ul> </p>
-          </details></p>
+            <p className="text-dark">
+              <details className="border   border-gray-500  text-dark text-[20px] tracking-tight">
+                <summary className="px-[16px] py-[13px] flex justify-between font-medium items-center bg-secondary  ">
+                  {course.topic2}
+                  <span onClick={() => setIsUp2(!isUp2)} className="text-3xl cursor-pointer">
+                    {isUp2 ?  <ChevronUp/> : <ChevronDown /> }
+                  </span>
+                </summary>
+                <p>
+                  <ul className="border-l-2 border-r-2 border-gray-500 text-accent">
+                    <li className="flex items-center gap-4 p-[16px] ">
+                      <Video />
+                      {course.videoCount} Videos
+                    </li>
+                    <li className="flex items-center gap-4 p-[16px]">
+                      <Quiz />
+                      {course.quizCount} Quiz
+                    </li>
+                    <li className="flex items-center gap-4 p-[16px]">
+                      <Articles />
+                      {course.articles} Articles
+                    </li>
+                  </ul>{" "}
+                </p>
+              </details>
+            </p>
           </details>
 
-          
-
-          
-
-          <details className="border border-gray-500 text-dark text-[20px] tracking-tight">
+          <details className="border border-gray-500 font-medium text-dark text-[20px] tracking-tight">
             <summary className="px-[16px] py-[13px] flex justify-between items-center bg-secondary  ">
-              Topic level n
-              <span className="text-3xl cursor-pointer">
-                <ChevronDown />
+              {course.topic3}
+              <span onClick={() => setIsUp3(!isUp3)}  className="text-3xl cursor-pointer">
+              {isUp3 ?  <ChevronUp/> : <ChevronDown /> }
               </span>
             </summary>
           </details>
 
-          <details className="border border-gray-500 text-dark text-[20px] tracking-tight">
+          <details className="border border-gray-500 font-medium text-dark text-[20px] tracking-tight">
             <summary className="px-[16px] py-[13px] flex justify-between items-center bg-secondary ">
-              Topic level n
-              <span className="text-3xl cursor-pointer">
-                <ChevronDown />
+              {course.topic2}
+              <span onClick={()=> setIsUp4(!isUp4)} className="text-3xl cursor-pointer">
+              {isUp4 ?  <ChevronUp/> : <ChevronDown /> }
               </span>
             </summary>
           </details>
 
-          <details className="border border-gray-500 text-light text-[20px] tracking-tight">
+          <details className="border border-gray-500 font-medium text-light text-[20px] tracking-tight">
             <summary className="px-[16px] py-[13px] flex justify-between items-center bg-primary  ">
-              Topic level 1
-              <span className="text-3xl cursor-pointer">
-                <ChevronDown />
+              {course.topic1}
+              <span  onClick={()=> setIsUp5(!isUp5)}  className="text-3xl cursor-pointer">
+              {isUp5 ?  <ChevronUp/> : <ChevronDown /> }
               </span>
             </summary>
           </details>
 
-          <details className="border border-gray-500 text-light text-[20px] tracking-tight">
+          <details className="border border-gray-500 font-medium text-light text-[20px] tracking-tight">
             <summary className="px-[16px] py-[13px] flex justify-between items-center bg-primary  ">
-              Topic level 1
-              <span className="text-3xl cursor-pointer">
-                <ChevronDown />
+              {course.topic1}
+              <span onClick={()=> setIsUp6(!isUp6)} className="text-3xl cursor-pointer">
+              {isUp6 ?  <ChevronUp/> : <ChevronDown /> }
               </span>
             </summary>
           </details>
         </div>
       </div>
-         
 
-      {/* Reviews */} 
-      <div> 
-       <h1 className="py-8  font-bold text-[32px] tracking-tight ">
-         Reviews
-        </h1>
-         <div  className="grid grid-cols-2 gap-4" >
-        
-        <div className="  p-[16px]  border-gray-500 shadow-lg"> 
-        <div className="flex gap-4  ">
-          <img src={Profile} />  </div>
-          <div>
-            <span className=" tracking-tight  "> {firstName} {lastName} </span>
-            <div className="flex gap-[5px] items-center ">
-              {[...Array(Math.floor(course.stars))].map((_, starIndex) => (
-                <Full key={starIndex} className="text-yellow-500 " />
-              ))}
-              {course.stars % 1 !== 0 && (
-                <Half className="text-yellow-500 " />
-              )}
-              {[...Array(5 - Math.ceil(course.stars))].map((_, starIndex) => (
-                <Star key={starIndex} className="text-yellow-500 " />
-              ))}
-              <span className="ml-[10px] text-accent-dark ">{course.stars}</span>
-              <span className="text-accent-dark"> {course.data}</span>
+      {/* Reviews */}
+      <div>
+      <h1 className="py-8 font-bold text-[32px] tracking-tight">Reviews</h1>
+      <div className="grid grid-cols-2 gap-4">
+        {reviews.map((review, index) => (
+          <div key={index} className="p-[16px] border-gray-500 shadow-lg">
+            <div className="flex gap-4">
+              <img src={Profile} alt="Profile" />
+              <div>
+                <span className="tracking-tight">
+                  {review.fname} {review.lname}
+                </span>
+                <div className="flex gap-[5px] items-center">
+                  {[...Array(Math.floor(review.stars))].map((_, starIndex) => (
+                    <Full key={starIndex} className="text-yellow-500" />
+                  ))}
+                  {review.stars % 1 !== 0 && (
+                    <Half className="text-yellow-500" />
+                  )}
+                  {[...Array(5 - Math.ceil(review.stars))].map((_, starIndex) => (
+                    <Star key={starIndex} className="text-yellow-500" />
+                  ))}
+                  <span className="ml-[10px] text-accent-dark">
+                    {review.stars}
+                  </span>
+                  <span className="ml-[10px] text-accent-dark">
+                    {review.data}
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
-       
-        
-        <div><p className="w-[460px] py-8">{course.descripationReviews}</p> </div>
-        <div> 
-        <button className=" px-[20px] py-[10px] rounded-[5px] tracking-tight text-primary font-semibold  border  border-accent ">show more</button>
-        </div>
-         </div>
-
-
-         <div className=" p-[16px]  border-gray-500 shadow-lg"> 
-        <div className="flex gap-4  ">
-          <img src={Profile} />  </div>
-          <div>
-            <span className=" tracking-tight  "> {firstName} {lastName} </span>
-            <div className="flex gap-[5px] items-center ">
-              {[...Array(Math.floor(course.stars))].map((_, starIndex) => (
-                <Full key={starIndex} className="text-yellow-500 " />
-              ))}
-              {course.stars % 1 !== 0 && (
-                <Half className="text-yellow-500 " />
+            <div className={`relative ${expandedStates[index] ? "" : "line-clamp-4"}`}>
+              <p className="w-[460px] py-[30px]">
+                {review.descripationReviews}
+              </p>
+              {review.descripationReviews.length > 300 && !expandedStates[index] && (
+                 <div className="absolute bottom-2 right-2 mx-[90px]  px-2">. . . . .</div>
               )}
-              {[...Array(5 - Math.ceil(course.stars))].map((_, starIndex) => (
-                <Star key={starIndex} className="text-yellow-500 " />
-              ))}
-              <span className="ml-[10px] text-accent-dark ">{course.stars}</span>
-              <span className="text-accent-dark"> {course.data}</span>
             </div>
+            {review.descripationReviews.length > 300 ? (
+              <div className="py-8">
+                <button
+                  onClick={() => toggleReviewExpanded(index)}
+                  className="px-[20px] py-[10px] rounded-[5px] tracking-tight text-primary font-semibold border border-accent"
+                >
+                  {expandedStates[index] ? "show less" : "show more"}
+                </button>
+              </div>
+            ) : null}
           </div>
-       
-        
-        <div><p className="w-[460px] py-8">{course.descripationReviews}</p> </div>
-        <div> 
-        <button className=" px-[20px] py-[10px] rounded-[5px] tracking-tight text-primary font-semibold  border  border-accent ">show more</button>
+        ))}
         </div>
-         </div>
-
-         <div className=" p-[16px]  border-gray-500 shadow-lg"> 
-        <div className="flex gap-4  ">
-          <img src={Profile} />  </div>
-          <div>
-            <span className=" tracking-tight  "> {firstName} {lastName} </span>
-            <div className="flex gap-[5px] items-center ">
-              {[...Array(Math.floor(course.stars))].map((_, starIndex) => (
-                <Full key={starIndex} className="text-yellow-500 " />
-              ))}
-              {course.stars % 1 !== 0 && (
-                <Half className="text-yellow-500 " />
-              )}
-              {[...Array(5 - Math.ceil(course.stars))].map((_, starIndex) => (
-                <Star key={starIndex} className="text-yellow-500 " />
-              ))}
-              <span className="ml-[10px] text-accent-dark ">{course.stars}</span>
-              <span className="text-accent-dark"> {course.data}</span>
-            </div>
-          </div>
-       
-        
-        <div><p className="w-[460px] py-8">{course.descripationReviews}</p> </div>
-        <div> 
-        <button className=" px-[20px] py-[10px] rounded-[5px] tracking-tight text-primary font-semibold  border  border-accent ">show more</button>
+        <div className="flex justify-center items-center mt-[16px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">
+          <button>Load more reviews</button>
         </div>
-         </div>
-
-
-         <div className=" p-[16px]  border-gray-500 shadow-lg"> 
-        <div className="flex gap-4  ">
-          <img src={Profile} />  </div>
-          <div>
-            <span className=" tracking-tight  "> {firstName} {lastName} </span>
-            <div className="flex gap-[5px] items-center ">
-              {[...Array(Math.floor(course.stars))].map((_, starIndex) => (
-                <Full key={starIndex} className="text-yellow-500 " />
-              ))}
-              {course.stars % 1 !== 0 && (
-                <Half className="text-yellow-500 " />
-              )}
-              {[...Array(5 - Math.ceil(course.stars))].map((_, starIndex) => (
-                <Star key={starIndex} className="text-yellow-500 " />
-              ))}
-              <span className="ml-[10px] text-accent-dark ">{course.stars}</span>
-              <span className="text-accent-dark"> {course.data}</span>
-            </div>
-          </div>
-       
-        
-        <div><p className="w-[460px] py-8">{course.descripationReviews}</p> </div>
-        <div> 
-        <button className="  px-[20px] py-[10px] rounded-[5px] tracking-tight text-primary font-semibold  border  border-accent ">show more</button>
-        </div>
-         </div>           
-         </div>
-
-         <div className=" flex justify-center items-center mt-[16px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"> 
-         <button className=" " >Load more reviews</button> 
-         </div>
-         
-         </div>
-
-
+      </div>
     </section>
   );
 }
