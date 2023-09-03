@@ -10,6 +10,8 @@ import General from "./setting/General";
 import Security from "./setting/Security";
 import Account from "./setting/Account";
 import RequireAuth from "./RequireAuth";
+import PersistLogin from "./PersistLogin";
+import Preloader from "./Preloader";
 export {
   Navbar,
   Footer,
@@ -23,4 +25,6 @@ export {
   Security,
   Account,
   RequireAuth,
+  PersistLogin,
+  Preloader,
 };

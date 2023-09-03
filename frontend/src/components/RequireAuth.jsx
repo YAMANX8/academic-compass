@@ -1,9 +1,9 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 const RequireAuth = () => {
-  const { auth } = useAuth();
+  const { isAuth } = useAuth();
   const location = useLocation();
-  return auth?.email ? (
+  return isAuth ? (
     <Outlet />
   ) : (
     <Navigate to="/student/login" state={{ from: location }} replace />

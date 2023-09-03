@@ -9,12 +9,11 @@ import useAuth from "../hooks/useAuth";
 const LOGIN_URL = "/auth/student/login";
 
 function Login_Student() {
-  const { setAuth } = useAuth();
+  const { setAuth, setIsAuth } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/student/dashboard";
-  console.log(from);
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
 
@@ -42,8 +41,10 @@ function Login_Student() {
       );
       const accessToken = response?.data?.token;
       // const roles = response?.data?.roles;
+      localStorage.setItem("token", accessToken);
       setAuth({ email, pwd, accessToken });
-      console.log();
+      setIsAuth(true);
+      console.log(accessToken);
       toast.success("Login successfuly");
       setEmail("");
       setPwd("");

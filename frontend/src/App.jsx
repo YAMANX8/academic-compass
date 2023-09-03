@@ -11,7 +11,7 @@ import {
   CourseView,
 } from "./pages";
 import { Layout } from "./layout";
-import { RequireAuth } from "./components";
+import { RequireAuth, PersistLogin } from "./components";
 const App = () => {
   return (
     <Routes>
@@ -25,12 +25,14 @@ const App = () => {
           <Route path="register" element={<Sign_Up_Student />} />
           <Route path="roadmaps" element={<Roadmaps />} />
           <Route path="courseview" element={<CourseView />} />
-            
+
           {/* protected to students only */}
-          <Route element={<RequireAuth />}>
-            <Route path="dashboard" element={<Dashboard_Student />} />
-            <Route path="settings" element={<Settings_Student />} />
-            {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
+          <Route element={<PersistLogin />}>
+            <Route element={<RequireAuth />}>
+              <Route path="dashboard" element={<Dashboard_Student />} />
+              <Route path="settings" element={<Settings_Student />} />
+              {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
+            </Route>
           </Route>
         </Route>
 
