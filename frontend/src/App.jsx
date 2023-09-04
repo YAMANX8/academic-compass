@@ -9,6 +9,7 @@ import {
   Settings_Student,
   NotFound,
   CourseView,
+  Search,
 } from "./pages";
 import { Layout } from "./layout";
 import { RequireAuth, PersistLogin } from "./components";
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="register" element={<Sign_Up_Student />} />
           <Route path="roadmaps" element={<Roadmaps />} />
           <Route path="courseview" element={<CourseView />} />
+          <Route path="search" element={<Search />} />
 
           {/* protected to students only */}
           <Route element={<PersistLogin />}>
