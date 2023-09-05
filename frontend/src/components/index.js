@@ -12,6 +12,9 @@ import Account from "./setting/Account";
 import RequireAuth from "./RequireAuth";
 import PersistLogin from "./PersistLogin";
 import Preloader from "./Preloader";
+import CourseContent from "./CourseContent";
+import ReviewCards from "./ReviewCards";
+import Modal from "./Modal";
 export {
   Navbar,
   Footer,
@@ -27,4 +30,7 @@ export {
   RequireAuth,
   PersistLogin,
   Preloader,
+  CourseContent,
+  ReviewCards,
+  Modal,
 };

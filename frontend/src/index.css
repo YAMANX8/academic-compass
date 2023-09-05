@@ -52,3 +52,12 @@ details > summary::before {
 details > summary {
   list-style: none;
 }
+
+/* for hiding the review text if overflow */
+.comment-overflow {
+  --max-lines: 4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--max-lines);
+}
