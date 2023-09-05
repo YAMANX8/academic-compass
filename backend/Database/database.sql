@@ -12,7 +12,7 @@ ALTER TABLE table_name
 ADD COLUMN new_column_name data_type;
 
 ALTER TABLE course
-ADD COLUMN course_thumnail VARCHAR(150);
+ADD COLUMN subtitle VARCHAR(150);
 
 ALTER TABLE topic_level_1
 ADD COLUMN topic_order character varying(50);
@@ -30,11 +30,35 @@ ADD COLUMN topic_id INT NOT NULL;
 ALTER TABLE Progress_Status
 ADD COLUMN topic_level INT NOT NULL DEFAULT 0;
 
+ALTER TABLE rating
+ADD COLUMN review TEXT;
+
 UPDATE Progress_Status
 SET topic_id =2 WHERE progress_id=10;
 
 UPDATE topic_level_1
 SET roadmap_id =19 WHERE topic_level1_id=3;
+
+UPDATE topic_level_N
+SET topic_level1_id =1 WHERE topic_id=19;
+UPDATE topic_level_N
+SET topic_level1_id =NULL WHERE topic_id=20;
+UPDATE topic_level_N
+SET topic_level1_id =2 WHERE topic_id=21;
+UPDATE topic_level_N
+SET topic_level1_id =NULL WHERE topic_id=22;
+UPDATE topic_level_N
+SET topic_level1_id =3 WHERE topic_id=23;
+
+UPDATE course
+SET course_level=2 WHERE course_id=11;
+
+UPDATE items
+SET topic_id =25 WHERE item_id=6;
+
+UPDATE rating
+SET review = 'keep going sir' 
+WHERE rating_id = 5;
 
 -- drop column
 ALTER TABLE Progress_Status
@@ -76,17 +100,29 @@ VALUES ('Ahmed', 'Hassan', 'ahmed@example.com', 'password123', 'Computer Science
        ('Sarah', 'Smith', 'sarah@example.com', 'pass456', 'Engineering', '1990-08-22', 'sarah.jpg', NULL, 2);
 --
 INSERT INTO Course (course_title, course_description, course_duration, items_count, course_status, instructor_id, course_level, course_type)
-VALUES ('Introduction', 'A beginner-friendly programming course', 30, 10, 'In Progress', 1, 1, 1),
+VALUES ('Introduction to Programming', 'A beginner-friendly programming course', 30, 10, 'In Progress', 1, 1, 1),
        ('Advanced Programming', 'An advanced programming course', 45, 15, 'Completed', 1, 2, 1);
 --
 INSERT INTO Enrollment (strting_date, progress_state, ending_date, course_score, student_id, course_id)
-VALUES ('2023-08-01', 3, NULL, NULL, 2, 3),
+VALUES ('2023-08-01', 3, NULL, NULL, 3, 6),
+ ('2023-08-01', 3, NULL, NULL, 2, 7),
+ ('2023-08-01', 3, NULL, NULL, 1, 8),
+ ('2023-08-01', 3, NULL, NULL, 2, 9),
+ ('2023-08-01', 3, NULL, NULL, 1, 10),
+ ('2023-08-01', 3, NULL, NULL, 2, 11),
        ('2023-07-15', 10, '2023-08-15', 90, 2, 2);
 --
 -- إضافة بيانات تجريبية لجدول Items
 INSERT INTO Items (item_title, item_description, item_no, course_id, topic_id)
-VALUES ('Introduction to Loops', 'Understanding the concept of loops in programming', 7, 3, NULL),
+VALUES ('Introduction to Loops', 'Understanding the concept of loops in programming', 7, 3, 26),
+       ('Object-Oriented Programming Concepts', 'Understanding the concept of loops in programming', 7, 3, 27),
+       ('Introduction to Loops', 'Understanding the concept of loops in programming', 7, 8,19 ),
+       ('Object-Oriented Programming Concepts', 'Understanding the concept of loops in programming', 7, 9, 21),
+       ('Introduction to Loops', 'Understanding the concept of loops in programming', 7, 10, 19),
+       ('Object-Oriented Programming Concepts', 'Understanding the concept of loops in programming', 7, 11, 21),
        ('Object-Oriented Programming Concepts', 'Exploring the fundamentals of OOP', 10, 2, NULL);
+--
+INSERT INTO rating(stars_number,enrollment_id) VALUES(4.5,11),(5,12),(5,13),(5,14),(5,15);
 --
 INSERT INTO Quiz (quiz_points, item_id)
 VALUES (20, 3), (30, 4);
@@ -106,7 +142,21 @@ VALUES
     (3, 1, 1,5);
     -- (3, 1, 2, 3);
      DELETE FROM Student_Answers WHERE enrollment_id=3;
+     DELETE FROM topic_level_N WHERE topic_id=25;
+     DELETE FROM topic_level_N WHERE topic_id=26;
+     DELETE FROM topic_level_N WHERE topic_id=27;
+     DELETE FROM items WHERE item_id=6;
      DELETE FROM roadmap;
+
+-- اضافة بيانات الى جدول List_Type 
+INSERT INTO List_Type (type_name) VALUES ('In this course you will learn the following');
+
+-- اضافة بيانات الى جدول Course_Lists
+INSERT INTO Course_Lists (item_body, item_order, list_type, course_id)
+VALUES
+  ('Work with one of the most in-demand web development programming languages', 1, 1, 1), 
+  ('& Beginner or advanced web developers who want to dive into backend (server-side) development with NodeJS', 2, 2, 1), 
+  ('General knowledge of how the web works is recommended but not a must-have', 3, 3, 1); 
 
 -- إضافة بيانات لجدول Roadmap
 INSERT INTO Roadmap (roadmap_title, roadmap_description)
@@ -315,7 +365,7 @@ VALUES
     -- إدراج بيانات في جدول Topic_Level_N
 INSERT INTO Topic_Level_N (topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id)
 VALUES
-    ('Variables and Data Types', 'Understanding variables and different data types', 'Active', 1, NULL, 1),
+    ('c++', 'Understanding variables and different data types', 'Active',9,26, 4),
     ('Conditional Statements', 'Exploring if-else statements and switch cases', 'Active', 2, 19, 1),
     ('Linked Lists', 'Understanding linked list data structure', 'Active', 3, 20, 2), 
     ('Arrays and Matrices', 'Exploring arrays and matrix data structures', 'Active', 4, 21, 2), 
@@ -543,7 +593,7 @@ JOIN
 WHERE
     E.student_id = 1;
 
-    -- search
+-- search
 ---
 SELECT DISTINCT
     c.course_id,
@@ -692,18 +742,29 @@ WHERE
 GROUP BY
     c.course_id, c.course_title, c.course_description, l.level_name, rt.rating_stars;
 ---جلب معلومات كورس بدون النوع
-SELECT DISTINCT
+
+SELECT DISTINCT 
+    r.roadmap_id,
+    r.roadmap_title,
     c.course_id,
     c.course_title,
     c.course_description,
+    c.course_duration,
     l.level_name,
-    rt.rating_stars
+    u.first_name,
+    u.last_name,
+    rt.rating_stars,
+    ct.type_name,
+    i.item_no,
+    TLN.topic_title
 FROM
     Course c
 JOIN
     Levels l ON c.course_level = l.level_id
 JOIN
     Courses_Type ct ON c.course_type = ct.type_id
+JOIN
+    Users u ON c.instructor_id = u.user_id
 LEFT JOIN (
     SELECT
         e.course_id,
@@ -715,31 +776,419 @@ LEFT JOIN (
     GROUP BY
         e.course_id
 ) rt ON c.course_id = rt.course_id
+JOIN
+    items i ON c.course_id = i.course_id
+JOIN
+    Topic_level_N TLN ON i.topic_id = TLN.topic_id
+JOIN
+    Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
+JOIN
+    roadmap r ON TL1.roadmap_id = r.roadmap_id
 WHERE
     l.level_name IN ('Beginner')
     AND rt.rating_stars >= 4.5
+    AND ct.type_name IN ('Programming')
     AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%';
+-- أول أربع نتائج
+WITH RankedCourses AS (
+    SELECT
+        r.roadmap_id,
+        c.course_id,
+        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
+    FROM
+        Course c
+    JOIN
+        Levels l ON c.course_level = l.level_id
+    JOIN
+        Courses_Type ct ON c.course_type = ct.type_id
+    JOIN
+        Users u ON c.instructor_id = u.user_id
+    LEFT JOIN (
+        SELECT
+            e.course_id,
+            AVG(r.stars_number) AS rating_stars
+        FROM
+            Enrollment e
+        JOIN
+            Rating r ON e.enrollment_id = r.enrollment_id
+        GROUP BY
+            e.course_id
+    ) rt ON c.course_id = rt.course_id
+    JOIN
+        items i ON c.course_id = i.course_id
+    JOIN
+        Topic_level_N TLN ON i.topic_id = TLN.topic_id
+    JOIN
+        Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
+    JOIN
+        roadmap r ON TL1.roadmap_id = r.roadmap_id
+    WHERE
+        l.level_name IN ('Beginner')
+        AND rt.rating_stars >= 4.5
+        AND ct.type_name IN ('Programming')
+        AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%'
+)
+SELECT
+    RC.roadmap_id,
+    r.roadmap_title,
+    RC.course_id,
+    c.course_title,
+    c.course_description,
+    c.course_duration,
+    l.level_name,
+    u.first_name,
+    u.last_name,
+    rt.rating_stars,
+    ct.type_name,
+    i.item_no,
+    TLN.topic_title
+FROM
+    RankedCourses RC
+JOIN
+    Course c ON RC.course_id = c.course_id
+JOIN
+    roadmap r ON RC.roadmap_id = r.roadmap_id
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+JOIN
+    Users u ON c.instructor_id = u.user_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+JOIN
+    items i ON c.course_id = i.course_id
+JOIN
+    Topic_level_N TLN ON i.topic_id = TLN.topic_id
+WHERE
+    RC.course_rank <= 4
+ORDER BY
+    RC.roadmap_id,
+    RC.course_rank;
+---- تم تصنيف النتائج على حسب كل خريطة أولاً ثم تم عرض النتائج المطلوبة بنائاً على شرط     RC.course_rank > ((1 - 1) * 4) --AND RC.course_rank <= (1 * 4)
+WITH RankedCourses AS (
+    SELECT
+        r.roadmap_id,
+        c.course_id,
+        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
+    FROM
+        Course c
+    JOIN
+        Levels l ON c.course_level = l.level_id
+    JOIN
+        Courses_Type ct ON c.course_type = ct.type_id
+    JOIN
+        Users u ON c.instructor_id = u.user_id
+    LEFT JOIN (
+        SELECT
+            e.course_id,
+            AVG(r.stars_number) AS rating_stars
+        FROM
+            Enrollment e
+        JOIN
+            Rating r ON e.enrollment_id = r.enrollment_id
+        GROUP BY
+            e.course_id
+    ) rt ON c.course_id = rt.course_id
+    JOIN
+        items i ON c.course_id = i.course_id
+    JOIN
+        Topic_level_N TLN ON i.topic_id = TLN.topic_id
+    JOIN
+        Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
+    JOIN
+        roadmap r ON TL1.roadmap_id = r.roadmap_id
+    WHERE
+        l.level_name IN ('Beginner')
+        AND rt.rating_stars >= 4.5
+        AND ct.type_name IN ('Programming')
+        AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%'
+)
+SELECT
+    RC.roadmap_id,
+    r.roadmap_title,
+    RC.course_id,
+    c.course_title,
+    c.course_description,
+    c.course_duration,
+    l.level_name,
+    u.first_name,
+    u.last_name,
+    rt.rating_stars,
+    ct.type_name,
+    i.item_no,
+    TLN.topic_title
+FROM
+    RankedCourses RC
+JOIN
+    Course c ON RC.course_id = c.course_id
+JOIN
+    roadmap r ON RC.roadmap_id = r.roadmap_id
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+JOIN
+    Users u ON c.instructor_id = u.user_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+JOIN
+    items i ON c.course_id = i.course_id
+JOIN
+    Topic_level_N TLN ON i.topic_id = TLN.topic_id
+WHERE
+    RC.course_rank > ((1 - 1) * 4) 
+    AND RC.course_rank <= (1 * 4)
+ORDER BY
+    RC.roadmap_id,
+    RC.course_rank;
+
+    --- مع total count
+    WITH RankedCourses AS (
+    SELECT
+        r.roadmap_id,
+        c.course_id,
+        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
+    FROM
+        Course c
+    JOIN
+        Levels l ON c.course_level = l.level_id
+    JOIN
+        Courses_Type ct ON c.course_type = ct.type_id
+    JOIN
+        Users u ON c.instructor_id = u.user_id
+    LEFT JOIN (
+        SELECT
+            e.course_id,
+            AVG(r.stars_number) AS rating_stars
+        FROM
+            Enrollment e
+        JOIN
+            Rating r ON e.enrollment_id = r.enrollment_id
+        GROUP BY
+            e.course_id
+    ) rt ON c.course_id = rt.course_id
+    JOIN
+        items i ON c.course_id = i.course_id
+    JOIN
+        Topic_level_N TLN ON i.topic_id = TLN.topic_id
+    JOIN
+        Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
+    JOIN
+        roadmap r ON TL1.roadmap_id = r.roadmap_id
+    WHERE
+        l.level_name IN ('Beginner')
+        AND rt.rating_stars >= 4.5
+        AND ct.type_name IN ('Programming')
+        AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%'
+)
+, TotalCourseCount AS (
+    SELECT COUNT(*) AS total_courses 
+    FROM RankedCourses
+)
+SELECT
+    RC.roadmap_id,
+    r.roadmap_title,
+    RC.course_id,
+    c.course_title,
+    c.course_description,
+    c.course_duration,
+    l.level_name,
+    u.first_name,
+    u.last_name,
+    rt.rating_stars,
+    ct.type_name,
+    i.item_no,
+    TLN.topic_title,
+    (SELECT total_courses FROM TotalCourseCount) AS total_courses
+FROM
+    RankedCourses RC
+JOIN
+    Course c ON RC.course_id = c.course_id
+JOIN
+    roadmap r ON RC.roadmap_id = r.roadmap_id
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+JOIN
+    Users u ON c.instructor_id = u.user_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+JOIN
+    items i ON c.course_id = i.course_id
+JOIN
+    Topic_level_N TLN ON i.topic_id = TLN.topic_id
+WHERE
+    RC.course_rank > ((1 - 1) * 4)
+    AND RC.course_rank <= (1 * 4)
+ORDER BY
+    RC.roadmap_id,
+    RC.course_rank;
+--معالجة الحالات الخاصة
+-------------------
+WITH RankedCourses AS (
+    SELECT
+        r.roadmap_id,
+        c.course_id,
+        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
+    FROM
+        Course c
+    JOIN
+        Levels l ON c.course_level = l.level_id
+    JOIN
+        Courses_Type ct ON c.course_type = ct.type_id
+    JOIN
+        Users u ON c.instructor_id = u.user_id
+    LEFT JOIN (
+        SELECT
+            e.course_id,
+            AVG(r.stars_number) AS rating_stars
+        FROM
+            Enrollment e
+        JOIN
+            Rating r ON e.enrollment_id = r.enrollment_id
+        GROUP BY
+            e.course_id
+    ) rt ON c.course_id = rt.course_id
+    JOIN
+        items i ON c.course_id = i.course_id
+    JOIN
+        Topic_level_N TLN ON i.topic_id = TLN.topic_id
+    JOIN
+        Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
+    JOIN
+        roadmap r ON TL1.roadmap_id = r.roadmap_id
+WHERE
+    (
+        (l.level_name IS NOT NULL AND l.level_name IN ('') OR l.level_name IN ('') OR l.level_name IN (''))
+        OR
+        (ct.type_name IS NOT NULL AND ct.type_name IN ('') OR ct.type_name IN ('') OR ct.type_name IN (''))
+    )
+    OR
+    (
+        (rt.rating_stars IS NOT NULL AND rt.rating_stars >=4.5 )
+        AND
+        (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%')
+    )
 
 
+)
+, TotalCourseCount AS (
+    SELECT COUNT(*) AS total_courses 
+    FROM RankedCourses
+)
+SELECT
+    RC.roadmap_id,
+    r.roadmap_title,
+    RC.course_id,
+    c.course_title,
+    c.course_description,
+    c.course_duration,
+    l.level_name,
+    u.first_name,
+    u.last_name,
+    rt.rating_stars,
+    ct.type_name,
+    i.item_no,
+    TLN.topic_title,
+    (SELECT total_courses FROM TotalCourseCount) AS total_courses
+FROM
+    RankedCourses RC
+JOIN
+    Course c ON RC.course_id = c.course_id
+JOIN
+    roadmap r ON RC.roadmap_id = r.roadmap_id
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+JOIN
+    Users u ON c.instructor_id = u.user_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+JOIN
+    items i ON c.course_id = i.course_id
+JOIN
+    Topic_level_N TLN ON i.topic_id = TLN.topic_id
+WHERE
+    RC.course_rank > ((1 - 1) * 4)
+    AND RC.course_rank <= (1 * 4)
+ORDER BY
+    RC.roadmap_id,
+    RC.course_rank;
+    ---------
 
 
+-- course show
+-- course content
+SELECT DISTINCT ON (t1.topic_level1_id)
+  t1.topic_title AS topic_level_1_title,
+  tln.topic_title AS topic_level_n_title,
+  q.quiz_id,
+  a.article_id,
+  v.video_id
+FROM
+  Course c
+  JOIN Items i ON c.course_id = i.course_id
+  LEFT JOIN Topic_Level_N tln ON i.topic_id = tln.topic_id
+  LEFT JOIN Topic_Level_1 t1 ON tln.topic_level1_id = t1.topic_level1_id
+  LEFT JOIN Quiz q ON i.item_id = q.item_id
+  LEFT JOIN Article a ON i.item_id = a.item_id
+  LEFT JOIN Video v ON i.item_id = v.item_id
+WHERE
+  c.course_id = 3
+ORDER BY
+  t1.topic_level1_id,
+  tln.topic_id DESC;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--Course_Lists
+SELECT
+  c.course_id,
+  l.type_name,
+  cl.item_body AS course_description,
+  cl.item_order
+FROM Course c
+JOIN Course_Lists cl ON c.course_id = cl.course_id
+JOIN List_Type l ON cl.list_type = l.type_id
+WHERE c.course_id = 1
+ORDER BY cl.item_order;
 
 
 

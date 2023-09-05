@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const app = express();
 
 //midleware
-app.use(cors());
+app.use(cors({origin: "http://localhost:5173",credentials:true}));
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -41,12 +41,17 @@ app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
 // add roadmap
  app.use("/AcademicCompass/addroadmap",require("./Routes/Roadmap/addRoadmap"));
 
+//search
+app.use("/AcademicCompass/search",require("./Routes/Students/search/search"));
+
 // Register routes to Lucturer
 app.use("/AcademicCompass/auth", require("./Routes/lecturer/register"));
 
 
 //test route to Register routes to Lucturer
 app.use("/AcademicCompass/test", require("./Routes/lecturer/test"));
+
+
 
 
 
