@@ -12,7 +12,7 @@ ALTER TABLE table_name
 ADD COLUMN new_column_name data_type;
 
 ALTER TABLE course
-ADD COLUMN course_thumnail VARCHAR(150);
+ADD COLUMN subtitle VARCHAR(150);
 
 ALTER TABLE topic_level_1
 ADD COLUMN topic_order character varying(50);
@@ -49,8 +49,9 @@ UPDATE topic_level_N
 SET topic_level1_id =NULL WHERE topic_id=22;
 UPDATE topic_level_N
 SET topic_level1_id =3 WHERE topic_id=23;
-UPDATE topic_level_N
-SET topic_level1_id =NULL WHERE topic_id=24;
+
+UPDATE course
+SET course_level=2 WHERE course_id=11;
 
 UPDATE items
 SET topic_id =25 WHERE item_id=6;
@@ -1085,16 +1086,20 @@ WITH RankedCourses AS (
         Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
     JOIN
         roadmap r ON TL1.roadmap_id = r.roadmap_id
-    WHERE
-            (
-            (l.level_name IS NULL OR l.level_name IN ('') OR l.level_name IN ('') OR l.level_name IN (''))
-            OR
-            (rt.rating_stars IS NOT NULL OR rt.rating_stars >= 4.5)
-            OR
-            (ct.type_name IS NULL OR ct.type_name IN ('') OR ct.type_name IN ('') OR ct.type_name IN (''))
-            AND
-            (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%')
-        )
+WHERE
+    (
+        (l.level_name IS NOT NULL AND l.level_name IN ('') OR l.level_name IN ('') OR l.level_name IN (''))
+        OR
+        (ct.type_name IS NOT NULL AND ct.type_name IN ('') OR ct.type_name IN ('') OR ct.type_name IN (''))
+    )
+    OR
+    (
+        (rt.rating_stars IS NOT NULL AND rt.rating_stars >=4.5 )
+        AND
+        (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%')
+    )
+
+
 )
 , TotalCourseCount AS (
     SELECT COUNT(*) AS total_courses 
@@ -1143,11 +1148,14 @@ JOIN
 JOIN
     Topic_level_N TLN ON i.topic_id = TLN.topic_id
 WHERE
-    RC.course_rank > ((1= - 1) * 4)
+    RC.course_rank > ((1 - 1) * 4)
     AND RC.course_rank <= (1 * 4)
 ORDER BY
     RC.roadmap_id,
     RC.course_rank;
+    ---------
+
+
 -- course show
 -- course content
 SELECT DISTINCT ON (t1.topic_level1_id)
