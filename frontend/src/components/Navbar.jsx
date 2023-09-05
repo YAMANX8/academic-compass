@@ -7,9 +7,8 @@ import {
   BsMoon as Moon,
   BsSun as Sun,
 } from "react-icons/bs";
-import Switcher from "../components/Switcher";
+import { Switcher } from "./index";
 
-const toggleDark = () => {};
 
 const Navbar = () => {
   const btnStyle =

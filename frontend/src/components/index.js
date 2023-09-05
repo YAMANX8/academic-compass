@@ -1,20 +1,21 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import RoadmapCard from "./RoadmapCard";
+import RoadmapCard from "./roadmap/RoadmapCard";
 import ProfileCard from "./dashboard/ProfileCard";
 import PerformanceChart from "./dashboard/PerformanceChart";
 import CourseCard from "./dashboard/CourseCard";
 import PerformanceCard from "./dashboard/PerformanceCard";
-import Button from "./Button";
+import Button from "./interface/Button";
 import General from "./setting/General";
 import Security from "./setting/Security";
 import Account from "./setting/Account";
-import RequireAuth from "./RequireAuth";
-import PersistLogin from "./PersistLogin";
-import Preloader from "./Preloader";
-import CourseContent from "./CourseContent";
-import ReviewCards from "./ReviewCards";
-import Modal from "./Modal";
+import RequireAuth from "./logic/RequireAuth";
+import PersistLogin from "./logic/PersistLogin";
+import Preloader from "./interface/Preloader";
+import CourseContent from "./course view/CourseContent";
+import ReviewCards from "./course view/ReviewCards";
+import Modal from "./interface/Modal";
+import Switcher from "./interface/Switcher";
 export {
   Navbar,
   Footer,
@@ -33,4 +34,5 @@ export {
   CourseContent,
   ReviewCards,
   Modal,
+  Switcher,
 };

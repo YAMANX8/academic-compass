@@ -4,7 +4,7 @@ import {
   BsFillStarFill as Full,
   BsStar as Star,
 } from "react-icons/bs";
-import Modal from "./Modal";
+import { Modal } from "../index";
 
 const ReviewCards = ({ reviews }) => {
   //this block of code is for knowing if the comment is overflowing or not
@@ -14,7 +14,7 @@ const ReviewCards = ({ reviews }) => {
     const newOverflowStatus = [];
     containerRefs.current.forEach((container, index) => {
       if (container) {
-        // Check if the paragraph overflows horizontally
+        // Check if the paragraph overflows verticaly
         newOverflowStatus[index] =
           container.scrollHeight > container.clientHeight;
       } else {

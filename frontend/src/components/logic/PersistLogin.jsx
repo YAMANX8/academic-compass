@@ -1,8 +1,8 @@
-import useAuth from "../hooks/useAuth";
-import axios from "../apis/axios";
+import useAuth from "../../hooks/useAuth";
+import axios from "../../apis/axios";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import {Preloader} from "./index"
+import {Preloader} from "../index"
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { auth, setIsAuth } = useAuth();
