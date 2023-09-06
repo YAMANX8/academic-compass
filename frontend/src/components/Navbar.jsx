@@ -7,11 +7,18 @@ import {
   BsMoon as Moon,
   BsSun as Sun,
 } from "react-icons/bs";
-import Switcher from "../components/Switcher";
-
-const toggleDark = () => {};
+import { BiChevronDown } from "react-icons/bi";
+import { Switcher } from "./index";
+import useAuth from "../hooks/useAuth";
+import Img from "../assets/images/profile.png";
 
 const Navbar = () => {
+  const { isAuth } = useAuth();
+  const userInfo = {
+    firstName: "Yaman",
+    lastName: "Al-Jazzar",
+    imagePath: Img,
+  };
   const btnStyle =
     "px-[20px] py-[10px] rounded-[5px] font-semibold	gap-[10px] items-center text-[16px]";
 
@@ -36,20 +43,39 @@ const Navbar = () => {
         <Link to="/instructor/register" className="font-semibold">
           Teach on Academic compass
         </Link>
-        <Link
-          to="/student/login"
-          className={`flex bg-light text-primary border-primary border-[1px] border-solid ${btnStyle}`}
-        >
-          <Login className="text-[24px]" />
-          Log in
-        </Link>
-        <Link
-          to="/student/register"
-          className={`flex bg-primary text-light ${btnStyle}`}
-        >
-          <Person className="text-[24px]" />
-          Sign up
-        </Link>
+        {!isAuth ? (
+          <>
+            <Link
+              to="/student/login"
+              className={`flex bg-light text-primary border-primary border-[1px] border-solid ${btnStyle}`}
+            >
+              <Login className="text-[24px]" />
+              Log in
+            </Link>
+            <Link
+              to="/student/register"
+              className={`flex bg-primary text-light ${btnStyle}`}
+            >
+              <Person className="text-[24px]" />
+              Sign up
+            </Link>
+          </>
+        ) : (
+          <div className="flex justify-between gap-4 items-center">
+            <div className="w-[1px] bg-dark dark:bg-light self-stretch transition-all duration-1000 ease-in-out-back rounded-full"></div>
+            <Link to='/student/dashboard' className="flex justify-center items-center w-[45px] overflow-clip aspect-square rounded-full bg-primary text-light">
+              {userInfo.imagePath  ? (
+                <img src={userInfo.imagePath} className="object-cover" alt="profile picture" />
+              ) : (
+                <span>{userInfo.firstName.charAt(0)} {userInfo.lastName.charAt(0)}</span>
+              )}
+            </Link>
+            <p className="font-semibold tracking-tight text-primary dark:text-accent-dark transition-all duration-1000 ease-in-out-back">
+              {userInfo.firstName} {userInfo.lastName}
+            </p>
+            <BiChevronDown className="text-[24px]"/>
+          </div>
+        )}
         <Switcher />
       </div>
     </nav>

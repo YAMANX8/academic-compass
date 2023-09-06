@@ -17,31 +17,31 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {/* public path */}
-        <Route path="/" element={<Home />} />
+        <Route element={<PersistLogin />}>
+          {/* public path */}
+          <Route path="/" element={<Home />} />
 
-        {/* student pages path */}
-        <Route path="student">
-          <Route path="login" element={<Login_Student />} />
-          <Route path="register" element={<Sign_Up_Student />} />
-          <Route path="roadmaps" element={<Roadmaps />} />
-          <Route path="courseview" element={<CourseView />} />
-          <Route path="search" element={<Search />} />
+          {/* student pages path */}
+          <Route path="student">
+            <Route path="login" element={<Login_Student />} />
+            <Route path="register" element={<Sign_Up_Student />} />
+            <Route path="roadmaps" element={<Roadmaps />} />
+            <Route path="courseview" element={<CourseView />} />
+            <Route path="search" element={<Search />} />
 
-          {/* protected to students only */}
-          <Route element={<PersistLogin />}>
+            {/* protected to students only */}
             <Route element={<RequireAuth />}>
               <Route path="dashboard" element={<Dashboard_Student />} />
               <Route path="settings" element={<Settings_Student />} />
               {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
             </Route>
           </Route>
-        </Route>
 
         <Route path="instructor">
           <Route path="register" element={<Sign_Up_Instructor />} />
         </Route>
 
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
