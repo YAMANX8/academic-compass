@@ -1,10 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "../../apis/axios";
+import toast, { Toaster } from "react-hot-toast";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
+
 //styles
-const inputStyle =
-"p-[10px] rounded-[5px] bg-secondary border border-dark/50 dark:border-light/50 text-[20px]";
+const inputStyle = "p-[10px] rounded-[5px] bg-secondary border border-dark/50 dark:border-light/50 text-[20px]";
+
+const GET_INFO_URL = "/studentDashboard/update-account";
 
 const Account = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [education, setEducation] = useState('');
+  const [email, setEmail] = useState('');
+  const [bio, setBio] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+
+  useEffect(() => {
+    const fetchStudentInfo = async () => {
+      try {
+        const response = await axios.get(
+          GET_INFO_URL ,
+          JSON.stringify(
+            { first_name : firstName, last_name:lastName, email, education, birth_date :birthDate, bio }),
+        {
+          headers: {
+            token: localStorage.token,
+            "Content-Type": "application/json",
+          },
+        });
+        console.log(response.data);
+
+        if (response.data && response.data.Data && response.data.Data.data && response.data.Data.data.length) {
+          const studentData = response.data.Data.data[0];
+          setFirstName(studentData.first_name);
+          setLastName(studentData.last_name);
+          setEmail(studentData.email);
+          setEducation(studentData.education);
+          setBio(studentData.bio);
+          setBirthDate(studentData.birth_date);  console.log(response.data);
+        }
+      } catch (error) {
+        toast.error("Failed to fetch student information.");
+      }
+    };
+
+    fetchStudentInfo();
+  }, []);
+
+
   return <form className="p-8 flex flex-col gap-8 flex-1">
   <h3 className="text-[32px] tracking-tight font-semibold">
      Account 
@@ -17,91 +61,103 @@ const Account = () => {
 
           <div className="grid gap-2">
               <label
-                htmlFor="country"
+                htmlFor="firstName"
                 className="font-medium text-[22px] leading-l"
               >
                 First name
               </label>
               <input
-                id="country"
+                id="firstName"
                 className={`${inputStyle}`}
-                type="password"
+                type="text"
                 placeholder="Ahmad"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
               />
           </div>
 
           <div className="grid gap-2">
               <label 
-                htmlFor="newPassword" 
+                htmlFor="lastName" 
                 className="font-medium text-[22px] leading-l"
               >
                 Last Name
               </label>
               <input
-                id="newPassword"
+                id="lastName"
                 className={`${inputStyle}`}
-                type="password"
+                type="text"
                 placeholder="omer"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
           </div>
 
           <div className="grid gap-2 col-span-1 ">
               <label 
-                htmlFor="verifyNewPassword" 
+                htmlFor="education" 
                 className="font-medium text-[22px] leading-l"
               >
                 Education
               </label>
               <input
-                id="verifyNewPassword"
+                id="education"
                 className={`${inputStyle}`}
-                type="password"
+                type="text"
                 placeholder="BC in software engineering"
+                value={education}
+                onChange={(e) => setEducation(e.target.value)}
               />
           </div>
 
           <div className="grid gap-2 col-span-1 ">
               <label 
-                htmlFor="verifyNewPassword" 
+                htmlFor="email" 
                 className="font-medium text-[22px] leading-l"
               >
                 Email
               </label>
               <input
-                id="verifyNewPassword"
+                id="email"
                 className={`${inputStyle}`}
-                type="password"
+                type="email"
                 placeholder="something@anything.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
           </div>
 
           <div className="grid gap-2 col-span-1 ">
               <label 
-                htmlFor="verifyNewPassword" 
+                htmlFor="bio" 
                 className="font-medium text-[22px] leading-l"
               >
                 Bio
               </label>
               <input
-                id="verifyNewPassword"
+                id="bio"
                 className={`${inputStyle}`}
-                type="password"
+                type="text"
                 placeholder="A patinate software engineer stude....."
-              />
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+            />
           </div>
 
           <div className="grid gap-2 col-span-1 ">
               <label 
-                htmlFor="verifyNewPassword" 
+                htmlFor="birthDate" 
                 className="font-medium text-[22px] leading-l"
               >
                 Birth of Date
               </label>
               <input
-                id="verifyNewPassword"
+                id="birthDate"
                 className={`${inputStyle}`}
-                type="password"
+                type="date"
                 placeholder="22-8-2023"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
               />
           </div>
 
