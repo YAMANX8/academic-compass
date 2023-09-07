@@ -30,6 +30,96 @@ const cardData = [
     number: 100,
   },
 ];
+const profileData2 = {
+  firstName: "Jone",
+  lastName: "doe",
+  country: "syria",
+  city: "damascus",
+  counts: [
+    {
+      id: 1,
+      count: 5       //in progress courses count
+    },
+    {
+      id: 2,
+      count: 10      //completed courses count
+    },
+    {
+      id: 3,
+      count: 30       //total point
+    },
+  ]
+}
+
+const performance2 = [
+  {
+    id: 1,
+    count: 10,     //enrolls count
+  },
+  {
+    id: 2,
+    count: 20,     //article read
+  },
+  {
+    id: 3,
+    count: 30,    //quiz completed
+  },
+  {
+    id: 4,
+    count: 40,    //videos completed
+  },
+]
+
+const progressCourses2 = [
+  {
+    id: 1,
+    title: "course title",
+    subtitle: "course subtitle",
+    progress: 15, //15%
+    rating: 4.5,   //total rating
+    image: "image_path"
+  },
+  {
+    id: 2,
+    title: "course title",
+    subtitle: "course subtitle",
+    progress: 15, //15%
+    rating: 4.5,   //total rating
+    image: "image_path"
+  },
+  {
+    id: 3,
+    title: "course title",
+    subtitle: "course subtitle",
+    progress: 15, //15%
+    rating: 4.5,   //total rating
+    image: "image_path"
+  },
+]
+
+const completedCourses2 = [
+  {
+    id: 1,
+    title: "course title",
+    subtitle: "course subtitle",
+    image: "image_path"
+  },
+]
+
+const myRoadmaps2 = [
+  {
+    id: 1,
+    title: "roadmap title",
+  },
+  {
+    id: 2,
+    title: "roadmap title",
+  },
+  {
+    id: 3,
+    title: "roadmap title",
+  },
+]
 
 const cardColor = ["bg-primary", "bg-accent", "bg-green"];
 
@@ -203,7 +293,7 @@ function Dashboard_Student() {
                 ))}
               </div>
 
-              <Button page={"/roadmaps"}>
+              <Button page={"/student/roadmaps"}>
                 <Map className="text-[25px]" /> Explore Our Roadmap
               </Button>
             </div>
@@ -269,7 +359,7 @@ function Dashboard_Student() {
                   >
                     {roadmap.title}
                   </span>
-                  <Button page="/roadmaps">
+                  <Button page="/student/roadmaps">
                     View
                     <ReturnLeft className="text-[20px]" />
                   </Button>

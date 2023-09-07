@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { Navbar, Footer } from "./components/index.js";
 import {
   Login_Student,
   Sign_Up_Student,
@@ -7,27 +6,60 @@ import {
   Sign_Up_Instructor,
   Home,
   Dashboard_Student,
-  Setting_Student,
-} from "./pages/index.js";
-import { SectionWrapper } from "./layout/index.js";
+  Settings_Student,
+  NotFound,
+  CourseView,
+  Search,
+  LevelZero,
+  LevelOne,
+  LevelN,
+} from "./pages";
+import { Layout, RoadmapLayout } from "./layout";
+import { RequireAuth, PersistLogin } from "./components";
 const App = () => {
   return (
-    <main className=" bg-light dark:bg-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back">
-      <Navbar />
-      <SectionWrapper>
-        <Routes>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route element={<PersistLogin />}>
+          {/* public path */}
           <Route path="/" element={<Home />} />
-          <Route path="/login-student" element={<Login_Student />} />
-          <Route path="/register-student" element={<Sign_Up_Student />} />
-          <Route path="/roadmaps" element={<Roadmaps />} />
-          <Route path="/register-instructor" element={<Sign_Up_Instructor />} />
-          <Route path="/dashboard_student" element={<Dashboard_Student />} />
-          <Route path="/setting_Student" element={<Setting_Student />} />
-          {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
-        </Routes>
-      </SectionWrapper>
-      <Footer />
-    </main>
+
+          {/* student pages path */}
+          <Route path="student">
+            <Route path="login" element={<Login_Student />} />
+            <Route path="register" element={<Sign_Up_Student />} />
+
+            <Route path="roadmaps">
+              <Route index element={<Roadmaps />} />
+              <Route path=":roadmaptitle" element={<RoadmapLayout />}>
+                <Route>
+                  <Route index element={<LevelZero />} />
+                  <Route path=":topicl1">
+                    <Route index element={<LevelOne />} />
+                    <Route path=":topicln" element={<LevelN />} />
+                  </Route>
+                </Route>
+              </Route>
+            </Route>
+
+            <Route path="courseview" element={<CourseView />} />
+            <Route path="search" element={<Search />} />
+
+            {/* protected to students only */}
+            <Route element={<RequireAuth />}>
+              <Route path="dashboard" element={<Dashboard_Student />} />
+              <Route path="settings" element={<Settings_Student />} />
+              {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
+            </Route>
+          </Route>
+
+          <Route path="instructor">
+            <Route path="register" element={<Sign_Up_Instructor />} />
+          </Route>
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 };
 

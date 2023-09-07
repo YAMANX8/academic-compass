@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Img from "../assets/images/frontend.svg";
+import Img from "../../assets/images/frontend.svg";
 import { AiOutlineEnter as Enter } from "react-icons/ai";
-import { Button } from "./index";
+import { Button } from "../index";
 
 const RoadmapCard = ({ title, order, description, img }) => {
   return (
@@ -26,7 +26,7 @@ const RoadmapCard = ({ title, order, description, img }) => {
           quibusdam eaque. Labore adipisci exercitationem officia iure?
         </p>
         <div className="mt-auto">
-          <Button page="/roadmaps">
+          <Button page={`${title}`}>
             Discover <Enter />
           </Button>
         </div>

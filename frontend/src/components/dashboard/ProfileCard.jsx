@@ -6,7 +6,7 @@ const ProfileCard = ({ title, number, bgColor }) => {
       <h3 className="text-[12px] font-medium tracking-tight">{title}</h3>
       <p className="text-[48px] font-semibold  tracking-tight">
         {number}
-        <div className={`h-[3px]  rounded ${bgColor} w-[61px]`}></div>
+        <span className={`block h-[3px]  rounded ${bgColor} w-[61px]`}></span>
       </p>
     </div>
   );

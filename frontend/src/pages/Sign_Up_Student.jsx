@@ -102,7 +102,7 @@ function Sign_Up_Student() {
         JSON.stringify({
           first_name: firstName,
           last_name: lastName,
-          email: email,
+          email,
           password: pwd,
         }),
         {
@@ -114,7 +114,7 @@ function Sign_Up_Student() {
       if (!error?.response) {
         toast.error("No Server Response");
       } else if (error.response?.status === 401) {
-        toast.error("User Taken");
+        toast.error("User already exists");
       } else {
         toast.error("Registration Failed");
       }
@@ -328,7 +328,7 @@ function Sign_Up_Student() {
         </form>
         <Link
           className="text-[14px] underline text-primary dark:text-accent-dark"
-          to="/login-student"
+          to="/student/login"
           style={{ alignSelf: "flex-start" }}
         >
           Already have an Account

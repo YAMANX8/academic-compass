@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+
+import React, { useState } from "react";
 import Logo from "/logo.svg";
 import { CiLogin as Login } from "react-icons/ci";
 import { AiOutlineSearch as Search } from "react-icons/ai";
@@ -7,11 +9,28 @@ import {
   BsMoon as Moon,
   BsSun as Sun,
 } from "react-icons/bs";
-import Switcher from "../components/Switcher";
-
-const toggleDark = () => {};
+import { BiChevronDown, BiChevronUp } from "react-icons/bi";
+import { Switcher } from "./index";
+import useAuth from "../hooks/useAuth";
+import Img from "../assets/images/profile.png";
 
 const Navbar = () => {
+  const [confirmLogout, setConfirmLogout] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const { isAuth, setIsAuth } = useAuth();
+
+  const handleLogout = () => {
+    // إزالة الرمز من المتصفح
+    localStorage.removeItem("token");
+    // إعادة تعيين حالة المصادقة
+    setIsAuth(false);
+    setConfirmLogout(false); // لإغلاق النافذة
+  };
+  const userInfo = {
+    firstName: "Ahmad",
+    lastName: "Omar",
+    imagePath: Img,
+  };
   const btnStyle =
     "px-[20px] py-[10px] rounded-[5px] font-semibold	gap-[10px] items-center text-[16px]";
 
@@ -30,26 +49,110 @@ const Navbar = () => {
           />
           <Search className="font-semibold absolute right-[10px] top-[10px] text-[24px]" />
         </div>
-        <Link to="/roadmaps" className="font-semibold">
+        <Link to="/student/roadmaps" className="font-semibold">
           Roadmaps{" "}
         </Link>
-        <Link to="/register-instructor " className="font-semibold">
+        <Link to="/instructor/register" className="font-semibold">
           Teach on Academic compass
         </Link>
-        <Link
-          to="/login-student"
-          className={`flex bg-light text-primary border-primary border-[1px] border-solid ${btnStyle}`}
-        >
-          <Login className="text-[24px]" />
-          Log in
-        </Link>
-        <Link
-          to="/register-student"
-          className={`flex bg-primary text-light ${btnStyle}`}
-        >
-          <Person className="text-[24px]" />
-          Sign up
-        </Link>
+        {!isAuth ? (
+          <>
+            <Link
+              to="/student/login"
+              className={`flex bg-light text-primary border-primary border-[1px] border-solid ${btnStyle}`}
+            >
+              <Login className="text-[24px]" />
+              Log in
+            </Link>
+            <Link
+              to="/student/register"
+              className={`flex bg-primary text-light ${btnStyle}`}
+            >
+              <Person className="text-[24px]" />
+              Sign up
+            </Link>
+          </>
+        ) : (
+          <div className="flex justify-between gap-4 items-center">
+            <div className="w-[1px] bg-dark dark:bg-light self-stretch transition-all duration-1000 ease-in-out-back rounded-full"></div>
+            <Link
+              to="/student/dashboard"
+              className="flex justify-center items-center w-[45px] overflow-clip aspect-square rounded-full bg-primary text-light"
+            >
+              {userInfo.imagePath ? (
+                <img
+                  src={userInfo.imagePath}
+                  className="object-cover"
+                  alt="profile picture"
+                />
+              ) : (
+                <span>
+                  {userInfo.firstName.charAt(0)} {userInfo.lastName.charAt(0)}
+                </span>
+              )}
+            </Link>
+            <p className="font-semibold tracking-tight text-primary dark:text-accent-dark transition-all duration-1000 ease-in-out-back">
+              {userInfo.firstName} {userInfo.lastName}
+            </p>
+
+            {/*  */}
+            <div className="relative inline-block text-left">
+              <div>
+                <button
+                  type="button"
+                  className="inline-flex justify-center w-full rounded-[10px] px-4 py-2  text-sm font-medium  hover:bg-[#fff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  {isOpen ? (
+                    <BiChevronUp className="text-[24px]" />
+                  ) : (
+                    <BiChevronDown className="text-[24px]" />
+                  )}
+                </button>
+              </div>
+
+              {isOpen && (
+                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg  bg-secondary ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="py-1">
+                    <NavLink
+                      to="/student/settings"
+                      className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900"
+                      activeClassName="bg-blue-500 text-white"
+                      exact
+                    >
+                      Settings
+                    </NavLink>
+
+                    <button
+                      className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900"
+                      onClick={() => setConfirmLogout(true)}
+                    >
+                      Log Out
+                    </button>
+
+                    {confirmLogout && (
+                      <div className="flex flex-col border-t mt-2">
+                        <button
+                          className="text-red-500 block px-4 py-2 text-sm"
+                          onClick={handleLogout}
+                        >
+                          Yes, Log Out
+                        </button>
+
+                        <button
+                          className="text-gray-700 block px-4 py-2 text-sm"
+                          onClick={() => setConfirmLogout(false)}
+                        >
+                          No, Stay Logged In
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         <Switcher />
       </div>
     </nav>

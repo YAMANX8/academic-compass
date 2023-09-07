@@ -9,6 +9,7 @@ export default {
         light: "#EEEFFC",
         dark: "#070B27",
         green: "#25D42C",
+        advance: "#D42525",
         secondary: {
           DEFAULT: "#E0E7F7",
           dark: "#0D1832",

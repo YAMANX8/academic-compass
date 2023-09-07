@@ -1,16 +1,19 @@
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
 import { SignInUpWrapper } from "../layout";
-import { useRef, useState, useEffect, useContext } from "react";
-import AuthContext from "../context/AuthProvider";
+import { useRef, useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "../apis/axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const LOGIN_URL = "/auth/student/login";
 
 function Login_Student() {
-  const { setAuth } = useContext(AuthContext);
+  const { setAuth, setIsAuth } = useAuth();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/student/dashboard";
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
 
@@ -38,11 +41,14 @@ function Login_Student() {
       );
       const accessToken = response?.data?.token;
       // const roles = response?.data?.roles;
+      localStorage.setItem("token", accessToken);
       setAuth({ email, pwd, accessToken });
-      console.log();
+      setIsAuth(true);
+      console.log(accessToken);
       toast.success("Login successfuly");
       setEmail("");
       setPwd("");
+      navigate(from, { replace: true, state: { from: location } });
     } catch (err) {
       if (!err?.response) {
         toast.error("No Server Response");
@@ -97,7 +103,7 @@ function Login_Student() {
         </form>
         <Link
           className="text-[14px] underline text-primary dark:text-accent-dark"
-          to="/register-student"
+          to="/student/register"
           style={{ alignSelf: "flex-start" }}
         >
           Register new Account
