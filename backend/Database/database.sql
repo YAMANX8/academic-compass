@@ -1154,6 +1154,108 @@ ORDER BY
     RC.roadmap_id,
     RC.course_rank;
     ---------
+-- searsh by topic
+WITH RankedCourses AS (
+    SELECT
+        r.roadmap_id,
+        c.course_id,
+        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
+    FROM
+        Course c
+    JOIN
+        Levels l ON c.course_level = l.level_id
+    JOIN
+        Courses_Type ct ON c.course_type = ct.type_id
+    JOIN
+        Users u ON c.instructor_id = u.user_id
+    LEFT JOIN (
+        SELECT
+            e.course_id,
+            AVG(r.stars_number) AS rating_stars
+        FROM
+            Enrollment e
+        JOIN
+            Rating r ON e.enrollment_id = r.enrollment_id
+        GROUP BY
+            e.course_id
+    ) rt ON c.course_id = rt.course_id
+    JOIN
+        items i ON c.course_id = i.course_id
+    JOIN
+        Topic_level_N TLN ON i.topic_id = TLN.topic_id
+    JOIN
+        Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
+    JOIN
+        roadmap r ON TL1.roadmap_id = r.roadmap_id
+WHERE
+    (
+        (l.level_name IS NOT NULL AND l.level_name IN ('Intermediate') OR l.level_name IN ('') OR l.level_name IN (''))
+        OR
+        (ct.type_name IS NOT NULL AND ct.type_name IN ('') OR ct.type_name IN ('') OR ct.type_name IN (''))
+    )
+    AND
+    (
+        (rt.rating_stars IS NOT NULL AND rt.rating_stars >=4.5 )
+        AND
+        ( TLN.topic_id NOT NULL AND TLN.topic_id = 21) 
+    )
+)
+, TotalCourseCount AS (
+    SELECT COUNT(*) AS total_courses 
+    FROM RankedCourses
+)
+SELECT
+    RC.roadmap_id,
+    r.roadmap_title,
+    RC.course_id,
+    c.course_title,
+    c.course_description,
+    c.course_duration,
+    l.level_name,
+    u.first_name,
+    u.last_name,
+    rt.rating_stars,
+    ct.type_name,
+    i.item_no,
+    TLN.topic_title,
+    TL1.topic_title,
+    
+    (SELECT total_courses FROM TotalCourseCount) AS total_courses
+FROM
+    RankedCourses RC
+JOIN
+    Course c ON RC.course_id = c.course_id
+JOIN
+    roadmap r ON RC.roadmap_id = r.roadmap_id
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+JOIN
+    Users u ON c.instructor_id = u.user_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+JOIN
+    items i ON c.course_id = i.course_id
+JOIN
+    Topic_level_N TLN ON i.topic_id = TLN.topic_id
+JOIN
+    Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
+WHERE
+    RC.course_rank > ((1 - 1) * 4)
+    AND RC.course_rank <= (1 * 4)
+ORDER BY
+    RC.roadmap_id,
+    RC.course_rank;
 
 
 -- course show

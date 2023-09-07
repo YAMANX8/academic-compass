@@ -23,9 +23,9 @@ router.put("/addGeneralInfo",authorization, upload.single("image"), async (req, 
     const imageFilePath = encodeURIComponent(req.file.path);
     console.log(imageFilePath);
     const newStudentInfo = await pool.query(
-      "UPDATE student SET country = $1, city=$2, image_path=$3 WHERE student_id = $4",
+      "UPDATE student SET country = $1, city=$2, picture=$3 WHERE student_id = $4",
 
-      [country, city, imageFilePath,Id]
+      [country, city, imageFilePath, Id]
     );
 
     res.status(201).json(newStudentInfo.rows[0]);

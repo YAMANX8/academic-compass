@@ -20,7 +20,7 @@ router.post("/student/register", validInfo, async (req, res) => {
     if (student.rows.length !== 0) {
       return res.status(401).json("student already exist");
     }
-    // 3. Bcrypt thr students password
+    // 3. Bcrypt the students password
 
     const saltRound = 10;
     const salt = await bcrypt.genSalt(saltRound);
