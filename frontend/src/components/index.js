@@ -16,6 +16,12 @@ import CourseContent from "./course view/CourseContent";
 import ReviewCards from "./course view/ReviewCards";
 import Modal from "./interface/Modal";
 import Switcher from "./interface/Switcher";
+import RightLine from "./roadmap/RightLine";
+import LeftLine from "./roadmap/LeftLine";
+import StartLine from "./roadmap/StartLine";
+import EndLineRight from "./roadmap/EndLineRight";
+import EndLineLeft from "./roadmap/EndLineLeft"
+import StartLineLeft from "./roadmap/StartLineLeft";
 export {
   Navbar,
   Footer,
@@ -35,4 +41,10 @@ export {
   ReviewCards,
   Modal,
   Switcher,
+  RightLine,
+  LeftLine,
+  StartLine,
+  EndLineRight,
+  EndLineLeft,
+  StartLineLeft,
 };

@@ -26,7 +26,7 @@ const RoadmapCard = ({ title, order, description, img }) => {
           quibusdam eaque. Labore adipisci exercitationem officia iure?
         </p>
         <div className="mt-auto">
-          <Button page="/student/roadmaps">
+          <Button page={`${title}`}>
             Discover <Enter />
           </Button>
         </div>
