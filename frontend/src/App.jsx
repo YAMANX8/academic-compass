@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import {
   Login_Student,
   Sign_Up_Student,
@@ -20,12 +20,12 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        <Route index element={<Navigate to="/student" />} />
         <Route element={<PersistLogin />}>
-          {/* public path */}
-          <Route path="/" element={<Home />} />
 
           {/* student pages path */}
           <Route path="student">
+            <Route index element={<Home />} />
             <Route path="login" element={<Login_Student />} />
             <Route path="register" element={<Sign_Up_Student />} />
 
