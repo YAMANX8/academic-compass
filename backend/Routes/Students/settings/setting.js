@@ -20,9 +20,9 @@ const upload = multer({ storage: storage });
 //todo // فك ترميز اسم الملف قبل استخدامه لتجنب مشاكل تحويل اللغة
 //* const decodedImagePath = decodeURIComponent(result.rows[0].image_path);
 // Change student information
-router.put('/',authorization,  upload.single("image"), async (req, res) => {
+router.put("/", authorization, upload.single("image"), async (req, res) => {
   try {
-     const {
+    const {
       first_name,
       last_name,
       email,
@@ -34,7 +34,7 @@ router.put('/',authorization,  upload.single("image"), async (req, res) => {
       currentPassword,
       newPassword,
       verifyNewPassword,
-      } = req.body;
+    } = req.body;
     const student_id = req.student.studentId;
     //password
     const pass_query = "SELECT password FROM student WHERE student_id = $1";
@@ -45,12 +45,19 @@ router.put('/',authorization,  upload.single("image"), async (req, res) => {
     // todo here we need to compare bcrypt password
     const storedPassword = rows[0].password;
 
-    const validPassword = await bcrypt.compare(currentPassword, storedPassword);
+    if (currentPassword) {
+      const validPassword = await bcrypt.compare(
+        currentPassword,
+        storedPassword
+      );
 
-    if (!validPassword) {
-      return res.status(401).json({ message: "Invalid current password" });
+      if (!validPassword) {
+        return res.status(401).json({ message: "Invalid current password" });
+      }
+    } else {
+      newPassword = "";
+      verifyNewPassword = "";
     }
-
     if (newPassword !== verifyNewPassword) {
       return res.status(400).json({ message: "New passwords do not match" });
     }
@@ -94,9 +101,8 @@ router.put('/',authorization,  upload.single("image"), async (req, res) => {
   }
 });
 
-
 // get student data
-router.get("/",authorization, async (req, res) => {
+router.get("/", authorization, async (req, res) => {
   try {
     const Id = req.student.studentId;
     const query = "SELECT * FROM student WHERE student_id=$1";
@@ -112,7 +118,7 @@ router.get("/",authorization, async (req, res) => {
       birthDate: row.birth_date,
       country: row.country,
       city: row.city,
-      image: `http://localhost:5000/image/${row.picture}`
+      image: `http://localhost:5000/image/${row.picture}`,
     };
     res.status(200).json({
       reuslut: data,

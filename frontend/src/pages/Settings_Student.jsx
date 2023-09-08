@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IoIosInformationCircleOutline as InformationIcon } from "react-icons/io";
 import { MdOutlineSecurity as SecurityIcon } from "react-icons/md";
@@ -6,11 +6,16 @@ import { BsPerson as Person } from "react-icons/bs";
 
 import { General, Security, Account } from "../components/index";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
+import axios from "../apis/axios";
+import useAuth from "../hooks/useAuth";
+const SETTINGS_URL = "/student/setting";
 
 function Setting_Student() {
+  const { auth } = useAuth();
+  console.log(auth);
   const [formData, setFormData] = useState({
-    firstName: "Yaman",
-    lastName: "Jazzar",
+    firstName: "",
+    lastName: "",
     education: "",
     email: "",
     bio: "",
@@ -22,12 +27,33 @@ function Setting_Student() {
     newPassword: "",
     verifyPassword: "",
   });
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      firstName: auth.firstName == null ? "" : auth.firstName,
+      lastName: auth.lastName == null ? "" : auth.lastName,
+      education: auth.education == null ? "" : auth.education,
+      email: auth.email == null ? "" : auth.email,
+      bio: auth.bio == null ? "" : auth.bio,
+      birthDate: auth.birthDate == null ? "" : auth.birthDate,
+      country: auth.country == null ? "" : auth.country,
+      city: auth.city == null ? "" : auth.city,
+      image: auth.image == "http://localhost:5000/image/null" ? "" : auth.image,
+    }));
+  }, []);
+
   const handleChange = (event) => {
     const { name, value, type, files } = event.target;
     setFormData((prevFormData) => {
       return {
         ...prevFormData,
-        [name]: type == "file" ? (files[0] ? URL.createObjectURL(files[0]) : formData.image) : value,
+        [name]:
+          type == "file"
+            ? files[0]
+              ? URL.createObjectURL(files[0])
+              : formData.image
+            : value,
       };
     });
     console.log([name], value);

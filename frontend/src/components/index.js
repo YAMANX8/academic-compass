@@ -22,6 +22,7 @@ import StartLine from "./roadmap/StartLine";
 import EndLineRight from "./roadmap/EndLineRight";
 import EndLineLeft from "./roadmap/EndLineLeft"
 import StartLineLeft from "./roadmap/StartLineLeft";
+import DataRetrieval from "./logic/DataRetrieval";
 export {
   Navbar,
   Footer,
@@ -47,4 +48,5 @@ export {
   EndLineRight,
   EndLineLeft,
   StartLineLeft,
+  DataRetrieval,
 };
