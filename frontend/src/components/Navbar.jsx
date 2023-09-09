@@ -12,12 +12,11 @@ import {
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { Switcher } from "./index";
 import useAuth from "../hooks/useAuth";
-import Img from "../assets/images/profile.png";
 
 const Navbar = () => {
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { setAuth, isAuth, setIsAuth } = useAuth();
+  const { auth, setAuth, isAuth, setIsAuth } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -31,9 +30,10 @@ const Navbar = () => {
     navigate("/");
   };
   const userInfo = {
-    firstName: "Ahmad",
-    lastName: "Omar",
-    imagePath: Img,
+    firstName: auth.firstName == null ? "" : auth.firstName,
+    lastName: auth.lastName == null ? "" : auth.lastName,
+    imagePath:
+      auth.image == "http://localhost:5000/image/null" ? "" : auth.image,
   };
   const btnStyle =
     "px-[20px] py-[10px] rounded-[5px] font-semibold	gap-[10px] items-center text-[16px]";

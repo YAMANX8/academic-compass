@@ -21,14 +21,14 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Navigate to="/student" />} />
+        <Route path="student/login" element={<Login_Student />} />
+        <Route path="student/register" element={<Sign_Up_Student />} />
 
         {/* student pages path */}
         <Route element={<PersistLogin />}>
           <Route element={<DataRetrieval />}>
             <Route path="student">
               <Route index element={<Home />} />
-              <Route path="login" element={<Login_Student />} />
-              <Route path="register" element={<Sign_Up_Student />} />
 
               <Route path="roadmaps">
                 <Route index element={<Roadmaps />} />
@@ -53,13 +53,13 @@ const App = () => {
                 {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
               </Route>
             </Route>
-          </Route>
-          <Route path="instructor">
-            <Route path="register" element={<Sign_Up_Instructor />} />
+            <Route path="instructor">
+              <Route path="register" element={<Sign_Up_Instructor />} />
+            </Route>
           </Route>
         </Route>
-        <Route path="*" element={<NotFound />} />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
