@@ -6,43 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 const inputStyle =
   "p-[10px] rounded-[5px] bg-light dark:bg-dark text-dark dark:text-light border border-dark/50 dark:border-light/50 text-[20px] transition-all duration-1000 ease-in-out-back";
 
-// const SECURITY_URL = "/studentDashboard/change-password";
-
 const Security = ({ password, newPassword, verifyPassword, handleChange }) => {
-  // const [currentPassword, setCurrentPassword] = useState("");
-  // const [newPassword, setNewPassword] = useState("");
-  // const [verifyNewPassword, setVerifyNewPassword] = useState("");
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const res = await axios.put(
-  //       SECURITY_URL,
-  //       JSON.stringify({ currentPassword, newPassword, verifyNewPassword }),
-  //       {
-  //         headers: {
-  //           token: localStorage.token,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     toast.success(res.data.message);
-  //   } catch (err) {
-  //     if (!err?.response) {
-  //       toast.error("No Server Response");
-  //     } else if (err.response?.status === 401) {
-  //       toast.error(err.response.data.message);
-  //     } else if (err.response?.status === 400) {
-  //       toast.error(err.response.data.message);
-  //     } else if (err.response?.status === 404) {
-  //       toast.error(err.response.data.message);
-  //     } else {
-  //       toast.error("Login Failed");
-  //     }
-  //   }
-  // };
-  // console.log(currentPassword);
   return (
     <>
       <div>
@@ -63,10 +27,10 @@ const Security = ({ password, newPassword, verifyPassword, handleChange }) => {
             </label>
             <input
               id="country"
-              name="password"
+              name="currentPassword"
               className={`${inputStyle}`}
               type="password"
-              placeholder="**********"
+              placeholder="********"
               value={password}
               onChange={handleChange}
             />
@@ -97,7 +61,7 @@ const Security = ({ password, newPassword, verifyPassword, handleChange }) => {
             </label>
             <input
               id="verifyNewPassword"
-              name="verifyPassword"
+              name="verifyNewPassword"
               className={`${inputStyle}`}
               type="password"
               placeholder="********"
