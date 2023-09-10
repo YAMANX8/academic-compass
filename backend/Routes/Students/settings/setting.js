@@ -21,6 +21,7 @@ const PWD_REGEX =
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
 //todo // فك ترميز اسم الملف قبل استخدامه لتجنب مشاكل تحويل اللغة
 //* const decodedImagePath = decodeURIComponent(result.rows[0].image_path);
@@ -43,7 +44,6 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
     const student_id = req.student.studentId;
     let query = "";
     let imageFilePath = null;
-    let result = false;
 
     //handling the password
     if (currentPassword) {
@@ -85,28 +85,28 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
 
     //the rest of data
     //first checking the email is important
-    result = EMAIL_REGEX.test(email);
-    if (!result) {
+    if (!EMAIL_REGEX.test(email)) {
       return res.status(405).json({ message: "Email is not valid" });
     }
     //second checking the first name
-    result = NAME_REGEX.test(first_name);
-    if (!result) {
+    if (!NAME_REGEX.test(first_name)) {
       return res.status(405).json({ message: "first name is not valid" });
     }
     //lastly checking the last name
-    result = NAME_REGEX.test(last_name);
-    if (!result) {
+    if (!NAME_REGEX.test(last_name)) {
       return res.status(405).json({ message: "last name is not valid" });
     }
+    //we need to check date input because of an error
+    if (DATE_REGEX.test(birth_date))
+      query = `${query} birth_date = '${birth_date}',`;
 
+    //continue with the rest of inputs
     query = `UPDATE student
         SET ${query}
           first_name = '${first_name}', 
           last_name = '${last_name}',
           email = '${email}',
           education = '${education}',
-          birth_date = '${birth_date}',
           bio = '${bio}',
           country = '${country}', 
           city = '${city}'
@@ -116,7 +116,7 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
 
     return res
       .status(201)
-      .json({ message: "Your information is updated successfuly" });
+      .json({ message: "Your information is updated successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).send(err.message);
