@@ -1,7 +1,7 @@
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
 import { SignInUpWrapper } from "../layout";
 import { useRef, useState, useEffect } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { toast } from "react-toastify";
 import axios from "../apis/axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
@@ -45,7 +45,7 @@ function Login_Student() {
       // setAuth({ email, pwd, accessToken });
       setIsAuth(true);
       console.log(accessToken);
-      toast.success("Login successfuly");
+      toast.success("Login successfully");
       setEmail("");
       setPwd("");
       navigate(from, { replace: true, state: { from: location } });
@@ -63,53 +63,48 @@ function Login_Student() {
   };
 
   return (
-    <>
-      <div>
-        <Toaster />
-      </div>
-      <SignInUpWrapper title="Login">
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-4">
-            <label className={`${labelStyle}`}>
-              Email:
-              <input
-                className={`${inputStyle}`}
-                type="email"
-                placeholder="example@something.com"
-                ref={emailRef}
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                required
-              />
-            </label>
+    <SignInUpWrapper title="Login">
+      <form onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-4">
+          <label className={`${labelStyle}`}>
+            Email:
+            <input
+              className={`${inputStyle}`}
+              type="email"
+              placeholder="example@something.com"
+              ref={emailRef}
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              required
+            />
+          </label>
 
-            <label className={`${labelStyle}`}>
-              Password:
-              <input
-                className={`${inputStyle}`}
-                type="Password"
-                placeholder="********"
-                onChange={(e) => setPwd(e.target.value)}
-                value={pwd}
-                required
-              />
-            </label>
-          </div>
+          <label className={`${labelStyle}`}>
+            Password:
+            <input
+              className={`${inputStyle}`}
+              type="Password"
+              placeholder="********"
+              onChange={(e) => setPwd(e.target.value)}
+              value={pwd}
+              required
+            />
+          </label>
+        </div>
 
-          <button className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px] text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50">
-            LOGIN
-            <ReturnLeft className="text-[24px]" />
-          </button>
-        </form>
-        <Link
-          className="text-[14px] underline text-primary dark:text-accent-dark"
-          to="/student/register"
-          style={{ alignSelf: "flex-start" }}
-        >
-          Register new Account
-        </Link>
-      </SignInUpWrapper>
-    </>
+        <button className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px] text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50">
+          LOGIN
+          <ReturnLeft className="text-[24px]" />
+        </button>
+      </form>
+      <Link
+        className="text-[14px] underline text-primary dark:text-accent-dark"
+        to="/student/register"
+        style={{ alignSelf: "flex-start" }}
+      >
+        Register new Account
+      </Link>
+    </SignInUpWrapper>
   );
 }
 

@@ -12,6 +12,7 @@ import {
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { Switcher } from "./index";
 import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -27,6 +28,7 @@ const Navbar = () => {
     setAuth({});
     setConfirmLogout(false); // لإغلاق النافذة
     setIsOpen(false);
+    toast("Logout Successfully")
     navigate("/");
   };
   const userInfo = {
