@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   ProfileCard,
   PerformanceChart,
@@ -10,248 +10,68 @@ import Profile from "../assets/images/frontend.svg";
 import { DashboardWrapper } from "../layout/index.js";
 import { FaRegMap as Map } from "react-icons/fa";
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
-
+import axios from "../apis/axios";
 import { performance } from "../performance.js";
 
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
+const DASHBOARD_URL = "/studentDashboard";
 
-const cardData = [
-  {
-    title: "Courses in Progress",
-    number: 10,
-  },
-  {
-    title: "Courses Completed",
-    number: 5,
-  },
-  {
-    title: "Total Points",
-    number: 100,
-  },
-];
-const profileData2 = {
-  firstName: "Jone",
-  lastName: "doe",
-  country: "syria",
-  city: "damascus",
-  counts: [
-    {
-      id: 1,
-      count: 5       //in progress courses count
-    },
-    {
-      id: 2,
-      count: 10      //completed courses count
-    },
-    {
-      id: 3,
-      count: 30       //total point
-    },
-  ]
-}
 
-const performance2 = [
-  {
-    id: 1,
-    count: 10,     //enrolls count
-  },
-  {
-    id: 2,
-    count: 20,     //article read
-  },
-  {
-    id: 3,
-    count: 30,    //quiz completed
-  },
-  {
-    id: 4,
-    count: 40,    //videos completed
-  },
-]
 
-const progressCourses2 = [
-  {
-    id: 1,
-    title: "course title",
-    subtitle: "course subtitle",
-    progress: 15, //15%
-    rating: 4.5,   //total rating
-    image: "image_path"
-  },
-  {
-    id: 2,
-    title: "course title",
-    subtitle: "course subtitle",
-    progress: 15, //15%
-    rating: 4.5,   //total rating
-    image: "image_path"
-  },
-  {
-    id: 3,
-    title: "course title",
-    subtitle: "course subtitle",
-    progress: 15, //15%
-    rating: 4.5,   //total rating
-    image: "image_path"
-  },
-]
-
-const completedCourses2 = [
-  {
-    id: 1,
-    title: "course title",
-    subtitle: "course subtitle",
-    image: "image_path"
-  },
-]
-
-const myRoadmaps2 = [
-  {
-    id: 1,
-    title: "roadmap title",
-  },
-  {
-    id: 2,
-    title: "roadmap title",
-  },
-  {
-    id: 3,
-    title: "roadmap title",
-  },
-]
 
 const cardColor = ["bg-primary", "bg-accent", "bg-green"];
 
 function Dashboard_Student() {
-  const [data, useData] = useState({
-    labaels: performance.map((item) => item.title),
+  const [profileData, setProfileData] = useState({
+    firstName: "",
+    lastName: "",
+    country: "",
+    city: "",
+    counts: []
+  });
+  
+  const [performanceData, setPerformanceData] = useState([]);
+  const [progressCourses, setProgressCourses] = useState([]);
+  const [completedCourses, setCompletedCourses] = useState([]);
+  const [myRoadmaps, setMyRoadmaps] = useState([]);
+  
+  useEffect(() => {
+    axios.get(DASHBOARD_URL,{headers:{token:localStorage.token}})
+      .then(response => {
+        console.log(response.data);  
+        setProfileData(response.data.profileData);
+        setPerformanceData(response.data.performanceData);
+        setProgressCourses(response.data.progressCourses);
+        setCompletedCourses(response.data.completedCourses);
+        setMyRoadmaps(response.data.myRoadmaps);
+      })
+      .catch(error => {
+        console.error("Errer fetching date:", error);
+      });
+  }, []);
+
+
+  const [data, setData] = useState({
+       labels: performance.map((item) => item.title),  
     datasets: [
       {
         label: "performance",
         data: performance.map((item) => item.count),
-        backgroundColor: performance.map((item) => item.Color),
+        backgroundColor: performance.map((item) => item.color),
         borderColor: "#EEEFFC",
       },
     ],
-  });
+});
 
-  // My Performance
-  const data1 = [
-    {
-      title: "Courses Enrolls",
-      color: "border-primary",
-      count: performance[0].count,
-    },
-    {
-      title: "Article Read",
-      color: "border-green",
-      count: performance[1].count,
-    },
-    {
-      title: "Quiz Completed",
-      color: "border-accent",
-      count: performance[2].count,
-    },
-    {
-      title: "Video Watched",
-      color: "border-accent-dark",
-      count: performance[3].count,
-    },
-  ];
 
-  // In Progress Courses
-  const courses = [
-    {
-      image: Profile,
-      title: "Course title goes here Course title goes here Course title ...",
-      subtitle:
-        "Course subtitle goes here goes here goes here goes here ......",
-      progress: "60",
-      stars: 4.5,
-    },
-    {
-      image: Profile,
-      title: "Course title goes here Course title goes here Course title ...",
-      subtitle:
-        "Course subtitle goes here goes here goes here goes here ......",
-      progress: "80",
-      stars: 3.5,
-    },
-    {
-      image: Profile,
-      title: "Course title goes here Course title goes here Course title ...",
-      subtitle:
-        "Course subtitle goes here goes here goes here goes here ......",
-      progress: "40",
-      stars: 2,
-    },
-    {
-      image: Profile,
-      title: "Course title goes here Course title goes here Course title ...",
-      subtitle:
-        "Course subtitle goes here goes here goes here goes here ......",
-      progress: "40",
-      stars: 4.5,
-    },
-  ];
 
-  //  completedCourses
-  const completedCourses = [
-    {
-      image: Profile,
-      title: "Course title goes here Course title goes here Course title ...",
-      subtitle:
-        "Course subtitle goes here goes here goes here goes here ......",
-    },
-    {
-      image: Profile,
-      title: "Course title goes here Course title goes here Course title ...",
-      subtitle:
-        "Course subtitle goes here goes here goes here goes here ......",
-    },
-    {
-      image: Profile,
-      title: "Course title goes here Course title goes here Course title ...",
-      subtitle:
-        "Course subtitle goes here goes here goes here goes here ......",
-    },
-    {
-      image: Profile,
-      title: "Course title goes here Course title goes here Course title ...",
-      subtitle:
-        "Course subtitle goes here goes here goes here goes here ......",
-    },
-  ];
+ 
 
-  //  My Roadmaps
-  const myRoadmaps = [
-    {
-      id: 1,
-      title: "Frontend",
-    },
-    {
-      id: 2,
-      title: "Backend",
-    },
-    {
-      id: 3,
-      title: "AI",
-    },
-    {
-      id: 4,
-      title: "Full Stack",
-    },
-    {
-      id: 5,
-      title: "Android Development",
-    },
-  ];
 
-  const firstName = "Jone";
-  const lastName = "Doe";
-  const location = "Damascus, Syria";
+  const firstName = profileData.firstName;
+  const lastName = profileData.lastName;
+  const location = `${profileData.city}, ${profileData.country}`;
   const images = { Profile };
+  const cardData = profileData.counts;//للصورة
 
   //styles
   const emptyRows = "font-thin text-[20px] text-dark/70 dark:text-light/70";
@@ -308,7 +128,7 @@ function Dashboard_Student() {
             <PerformanceChart chartData={data} />
           </div>
           <div className="grid grid-cols-2 grid-rows-2 gap-[19px]">
-            {data1.map((item, index) => (
+            {performance.map((item, index) => (
               <PerformanceCard
                 key={index}
                 title={item.title}
@@ -324,8 +144,8 @@ function Dashboard_Student() {
       <div className="col-span-8 row-start-3 row-span-3">
         <DashboardWrapper heading="In Progress Courses">
           <div className="flex overflow-x-auto gap-8 p-4">
-            {courses.length !== 0 ? (
-              courses.map((course, index) => (
+          {progressCourses && progressCourses.length !== 0 ? (
+              progressCourses.map((course, index) => (
                 <CourseCard
                   key={index}
                   image={course.image}
