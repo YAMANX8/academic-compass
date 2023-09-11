@@ -80,7 +80,7 @@ function Setting_Student() {
   return (
     <form className="w-[1200px]" onSubmit={handleSubmit}>
       <h2 className="pb-[16px] font-semibold text-[48px] leading-l tracking-tight text-dark dark:text-light">
-        Setting
+        Settings
       </h2>
 
       <div className="bg-secondary rounded-[10px] dark:bg-secondary-dark text-dark dark:text-light flex transition-all duration-1000 ease-in-out-back">
