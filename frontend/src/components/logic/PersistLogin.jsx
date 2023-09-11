@@ -16,7 +16,6 @@ const PersistLogin = () => {
         });
         response?.data == true ? setIsAuth(true) : setIsAuth(false);
 
-        console.log(response.data);
       } catch (err) {
         console.log(err);
       } finally {

@@ -16,7 +16,7 @@ import {
 } from "./pages";
 import { Layout, RoadmapLayout } from "./layout";
 import { RequireAuth, PersistLogin, DataRetrieval } from "./components";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
@@ -36,19 +36,22 @@ const App = () => {
 
                 <Route path="roadmaps">
                   <Route index element={<Roadmaps />} />
-                  <Route path=":roadmaptitle" element={<RoadmapLayout />}>
+                  <Route path=":roadmapId" element={<RoadmapLayout />}>
                     <Route>
                       <Route index element={<LevelZero />} />
-                      <Route path=":topicl1">
+                      <Route path=":topicL1Id">
                         <Route index element={<LevelOne />} />
-                        <Route path=":topicln" element={<LevelN />} />
+                        <Route path=":topicLnId" element={<LevelN />} />
                       </Route>
                     </Route>
                   </Route>
                 </Route>
 
                 <Route path="courseview" element={<CourseView />} />
-                <Route path="search" element={<Search />} />
+                <Route path="search">
+                  <Route path="by-topic/:id" element={<Search />} />
+                  <Route path="by-text/:text" element={<Search />} />
+                </Route>
 
                 {/* protected to students only */}
                 <Route element={<RequireAuth />}>
@@ -62,8 +65,8 @@ const App = () => {
               </Route>
             </Route>
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
       </Routes>
       <ToastContainer
         position="top-center"
