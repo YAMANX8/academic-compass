@@ -50,7 +50,7 @@ function Dashboard_Student() {
     datasets: [
       {
         label: "performance",
-        data: performanceData.map((item) => item.count),
+        data: performanceData.map((item) => item.count + 0.1),
         backgroundColor: performance.map((item) => item.color),
         borderColor: "#EEEFFC",
       },
