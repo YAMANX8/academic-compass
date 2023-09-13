@@ -2,12 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
 import { BsCloudUpload as Upload } from "react-icons/bs";
 import axios from "../../apis/axios";
-import toast, { Toaster } from "react-hot-toast";
 import Profile from "../../assets/images/frontend.svg";
 import { Button } from "../index";
-
-// const GENERAL_URL = "/setting/getInfo";
-// const UPDATE_GENERAL_URL = "/setting/addGeneralInfo";
 
 const General = ({
   firstName,
@@ -16,52 +12,9 @@ const General = ({
   city,
   image,
   handleChange,
+  setImage,
 }) => {
   const photo = useRef();
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(GENERAL_URL, {
-  //         headers: {
-  //           token: localStorage.token,
-  //           "Content-Type": "application/json",
-  //         },
-  //       });
-  //       const studentData = response.data.Data.data[0];
-
-  //       setCountry(studentData.country ? studentData.country : "");
-  //       setCity(studentData.city ? studentData.city : "");
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const res = await axios.put(
-  //       UPDATE_GENERAL_URL,
-  //       JSON.stringify({ country, city }),
-  //       {
-  //         headers: {
-  //           token: localStorage.token,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     toast.success(res.data.message);
-  //   } catch (err) {
-  //     if (!err?.response) {
-  //       toast.error("No Server Response");
-  //     } else {
-  //       toast.error("Login Failed");
-  //     }
-  //   }
-  // };
 
   //styles
   const inputStyle =
@@ -80,7 +33,13 @@ const General = ({
         <div className="flex gap-8">
           <div className=" w-[162px] aspect-square flex justify-center items-center overflow-hidden rounded-full bg-primary text-light text-[36px] font-semibold">
             {image ? (
-              <img className="object-cover" src={image} alt="Profile" />
+              <img
+                className="object-cover"
+                src={
+                  typeof image == "string" ? image : URL.createObjectURL(image)
+                }
+                alt="Profile"
+              />
             ) : (
               <p>
                 {firstName.charAt(0)} {lastName.charAt(0)}
@@ -102,7 +61,7 @@ const General = ({
               <input
                 type="file"
                 name="image"
-                onChange={handleChange}
+                onChange={(e) => setImage(e.target.files[0])}
                 hidden
                 ref={photo}
               />

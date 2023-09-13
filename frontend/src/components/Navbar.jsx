@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import React, { useState } from "react";
 import Logo from "/logo.svg";
@@ -12,28 +12,40 @@ import {
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { Switcher } from "./index";
 import useAuth from "../hooks/useAuth";
-import Img from "../assets/images/profile.png";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuth, setIsAuth } = useAuth();
+  const { auth, setAuth, isAuth, setIsAuth } = useAuth();
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/student/search/by-text/${search}`)
+  };
   const handleLogout = () => {
     // إزالة الرمز من المتصفح
     localStorage.removeItem("token");
     // إعادة تعيين حالة المصادقة
     setIsAuth(false);
+    setAuth({});
     setConfirmLogout(false); // لإغلاق النافذة
+    setIsOpen(false);
+    toast("Logout Successfully");
+    navigate("/");
   };
   const userInfo = {
-    firstName: "Ahmad",
-    lastName: "Omar",
-    imagePath: Img,
+    firstName: auth.firstName == null ? "" : auth.firstName,
+    lastName: auth.lastName == null ? "" : auth.lastName,
+    imagePath:
+      auth.image == "http://localhost:5000/image/null" ? "" : auth.image,
   };
   const btnStyle =
     "px-[20px] py-[10px] rounded-[5px] font-semibold	gap-[10px] items-center text-[16px]";
-
+  const meunItemStyle =
+    "cursor-pointer px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900 active:bg-accent active:text-light";
   return (
     <nav className=" px-[120px] py-[28px] flex justify-between transition-colors duration-1000 ease-in-out-back text-dark  dark:text-light bg-light dark:bg-dark shadow-[0_0_20px_rgba(0,0,0)] sticky w-full top-0 z-50">
       <div>
@@ -42,13 +54,20 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex gap-[16px] items-center">
-        <div className="flex relative">
+        <form
+          onSubmit={handleSubmit}
+          className="flex relative rounded-full w-11 focus-within:w-[250px] focus-within:bg-secondary dark:focus-within:bg-secondary-dark transition-all duration-1000 ease-in-out-back text-dark dark:text-light"
+        >
           <input
-            type=""
-            className="w-[150px] py-[10px] rounded-full bg-transparent z-10 cursor-pointer"
+            type="search"
+            value={search}
+            onChange={(e) => {setSearch(e.target.value)}}
+            className="w-full py-[10px] pl-9 pr-[10px] rounded-full bg-transparent outline-none"
           />
-          <Search className="font-semibold absolute right-[10px] top-[10px] text-[24px]" />
-        </div>
+          <button type="submit">
+            <Search className="font-semibold absolute left-[10px] top-[10px] text-[24px] cursor-pointer" />
+          </button>
+        </form>
         <Link to="/student/roadmaps" className="font-semibold">
           Roadmaps{" "}
         </Link>
@@ -95,12 +114,12 @@ const Navbar = () => {
               {userInfo.firstName} {userInfo.lastName}
             </p>
 
-            {/*  */}
-            <div className="relative inline-block text-left">
+            {/* menu */}
+            <div className="relative text-center">
               <div>
                 <button
                   type="button"
-                  className="inline-flex justify-center w-full rounded-[10px] px-4 py-2  text-sm font-medium  hover:bg-[#fff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100"
+                  className="w-full rounded-[10px] px-4 py-2  text-sm font-medium  hover:bg-secondary dark:hover:bg-secondary-dark focus:outline-none"
                   onClick={() => setIsOpen(!isOpen)}
                 >
                   {isOpen ? (
@@ -112,42 +131,45 @@ const Navbar = () => {
               </div>
 
               {isOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg  bg-secondary ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="py-1">
-                    <NavLink
-                      to="/student/settings"
-                      className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900"
-                      activeClassName="bg-blue-500 text-white"
-                      exact
+                <div
+                  className={`absolute right-0 mt-2 w-56 rounded-md shadow-lg text-dark dark:text-light bg-secondary dark:bg-secondary-dark ring-1 ring-dark/20 dark:ring-light/20  focus:outline-none transition-all duration-1000 ease-in-out-back`}
+                >
+                  <ul className="py-1">
+                    <li
+                      className={`${meunItemStyle}`}
+                      onClick={() => {
+                        navigate("/student/settings");
+                        setIsOpen(false);
+                      }}
                     >
                       Settings
-                    </NavLink>
+                    </li>
 
-                    <button
-                      className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900"
+                    <li
+                      className={`${meunItemStyle}`}
                       onClick={() => setConfirmLogout(true)}
                     >
                       Log Out
-                    </button>
+                    </li>
 
                     {confirmLogout && (
-                      <div className="flex flex-col border-t mt-2">
-                        <button
-                          className="text-red-500 block px-4 py-2 text-sm"
+                      <ul className="border-t border-dark/20 dark:border-light/20 mt-2 pt-2">
+                        <li
+                          className={`${meunItemStyle} text-red-500`}
                           onClick={handleLogout}
                         >
                           Yes, Log Out
-                        </button>
+                        </li>
 
-                        <button
-                          className="text-gray-700 block px-4 py-2 text-sm"
+                        <li
+                          className={`${meunItemStyle}`}
                           onClick={() => setConfirmLogout(false)}
                         >
                           No, Stay Logged In
-                        </button>
-                      </div>
+                        </li>
+                      </ul>
                     )}
-                  </div>
+                  </ul>
                 </div>
               )}
             </div>

@@ -1,10 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Img from "../../assets/images/frontend.svg";
 import { AiOutlineEnter as Enter } from "react-icons/ai";
 import { Button } from "../index";
 
-const RoadmapCard = ({ title, order, description, img }) => {
+const RoadmapCard = ({ id, title, order, description, img }) => {
   return (
     <div
       className={`flex justify-between aspect-[200/63] bg-secondary dark:bg-secondary-dark transition-all duration-1000 ease-in-out-back text-dark dark:text-light rounded-[10px] py-4 px-5 gap-5 overflow-hidden ${
@@ -26,7 +23,7 @@ const RoadmapCard = ({ title, order, description, img }) => {
           quibusdam eaque. Labore adipisci exercitationem officia iure?
         </p>
         <div className="mt-auto">
-          <Button page={`${title}`}>
+          <Button page={`${id}`}>
             Discover <Enter />
           </Button>
         </div>

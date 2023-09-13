@@ -3,24 +3,25 @@ import ChartJs from "chart.js/auto";
 
 function Chart({ chartData }) {
   return (
-    
-      <div>
-        <Doughnut
-          data={chartData}
-          options={{
-            animation: {
-              duration: 2000,
-              easing: "easeInOutBack",
+    <div>
+      <Doughnut
+        data={chartData}
+        options={{
+          animation: {
+            duration: 2000,
+            easing: "easeInOutBack",
+          },
+          plugins: {
+            legend: {
+              display: false,
             },
-            plugins: {
-              tooltip: {
-                enabled: true,
-              },
+            tooltip: {
+              enabled: true,
             },
-          }}
-        />
-      </div>
-    
+          },
+        }}
+      />
+    </div>
   );
 }
 

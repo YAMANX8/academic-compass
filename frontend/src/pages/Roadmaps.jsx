@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import { RoadmapCard } from "../components/index.js";
 import axios from "../apis/axios.js";
@@ -27,6 +26,7 @@ function Roadmaps() {
         {roadCards.map((card, index) => (
           <RoadmapCard
             key={card.roadmap_id}
+            id={card.roadmap_id}
             order={index}
             title={card.roadmap_title}
             description={card.roadmap_description}
