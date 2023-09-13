@@ -5,9 +5,11 @@ import { SignInUpWrapper } from "../layout";
 import { useNavigate, Link } from "react-router-dom";
 
 // import { Alert } from "../components/index";
-import toast, { Toaster } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 import axios from "../apis/axios";
+
+import useAuth from "../hooks/useAuth";
 
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
@@ -109,7 +111,11 @@ function Sign_Up_Student() {
           headers: { "Content-Type": "application/json" },
         }
       );
+      const accessToken = response?.data?.token;
+
+      localStorage.setItem("token", accessToken);
       toast.success("Registration Completed Successfully");
+      navigate("/student/dashboard");
     } catch (error) {
       if (!error?.response) {
         toast.error("No Server Response");
@@ -132,209 +138,204 @@ function Sign_Up_Student() {
     "p-4 bg-accent rounded-2xl text-light absolute z-10 w-[300px] right-0";
 
   return (
-    <>
-      <div>
-        <Toaster />
-      </div>
-      <SignInUpWrapper title="Register">
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-4">
-            <label className={`${labelStyle}`}>
-              First Name:
-              <input
-                className={`${inputStyle} ${
-                  validFirstName
-                    ? "text-accent dark:text-accent-dark"
-                    : "text-dark dark:text-light"
-                }`}
-                type="text"
-                placeholder="Ex: Jon"
-                ref={nameRef}
-                autoComplete="off"
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-                onFocus={() => setFirstNameFocus(true)}
-                onBlur={() => setFirstNameFocus(false)}
-                aria-invalid={validFirstName ? "false" : "true"}
-                aria-describedby="fndnote"
-              />
-              <p
-                id="fndnote"
-                className={`${notes} ${
-                  firstName && firstNameFocus && !validFirstName
-                    ? " top-[86px]"
-                    : "-top-[2000px]"
-                }`}
-              >
-                Four characters at least!
-                <br />
-                24 characters at most!
-                <br />
-                Must begin with a letter!
-                <br />
-                Letters, Numbers, Underscores, Hyphens are allowed!
-              </p>
-            </label>
+    <SignInUpWrapper title="Register">
+      <form onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-4">
+          <label className={`${labelStyle}`}>
+            First Name:
+            <input
+              className={`${inputStyle} ${
+                validFirstName
+                  ? "text-accent dark:text-accent-dark"
+                  : "text-dark dark:text-light"
+              }`}
+              type="text"
+              placeholder="Ex: Jon"
+              ref={nameRef}
+              autoComplete="off"
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+              onFocus={() => setFirstNameFocus(true)}
+              onBlur={() => setFirstNameFocus(false)}
+              aria-invalid={validFirstName ? "false" : "true"}
+              aria-describedby="fndnote"
+            />
+            <p
+              id="fndnote"
+              className={`${notes} ${
+                firstName && firstNameFocus && !validFirstName
+                  ? " top-[86px]"
+                  : "-top-[2000px]"
+              }`}
+            >
+              Four characters at least!
+              <br />
+              24 characters at most!
+              <br />
+              Must begin with a letter!
+              <br />
+              Letters, Numbers, Underscores, Hyphens are allowed!
+            </p>
+          </label>
 
-            <label className={`${labelStyle}`}>
-              Last Name:
-              <input
-                className={`${inputStyle} ${
-                  validLastName
-                    ? "text-accent dark:text-accent-dark"
-                    : "text-dark dark:text-light"
-                }`}
-                type="text"
-                placeholder="Ex: Doe"
-                autoComplete="off"
-                onChange={(e) => setLastName(e.target.value)}
-                required
-                onFocus={() => setLastNameFocus(true)}
-                onBlur={() => setLastNameFocus(false)}
-                aria-invalid={validLastName ? "false" : "true"}
-                aria-describedby="lndnote"
-              />
-              <p
-                id="lndnote"
-                className={`${notes} ${
-                  lastName && lastNameFocus && !validLastName
-                    ? "top-[86px]"
-                    : "-top-[2000px]"
-                }`}
-              >
-                Four characters at least!
-                <br />
-                24 characters at most!
-                <br />
-                Must begin with a letter!
-                <br />
-                Letters, Numbers, Underscores, Hyphens are allowed!
-              </p>
-            </label>
+          <label className={`${labelStyle}`}>
+            Last Name:
+            <input
+              className={`${inputStyle} ${
+                validLastName
+                  ? "text-accent dark:text-accent-dark"
+                  : "text-dark dark:text-light"
+              }`}
+              type="text"
+              placeholder="Ex: Doe"
+              autoComplete="off"
+              onChange={(e) => setLastName(e.target.value)}
+              required
+              onFocus={() => setLastNameFocus(true)}
+              onBlur={() => setLastNameFocus(false)}
+              aria-invalid={validLastName ? "false" : "true"}
+              aria-describedby="lndnote"
+            />
+            <p
+              id="lndnote"
+              className={`${notes} ${
+                lastName && lastNameFocus && !validLastName
+                  ? "top-[86px]"
+                  : "-top-[2000px]"
+              }`}
+            >
+              Four characters at least!
+              <br />
+              24 characters at most!
+              <br />
+              Must begin with a letter!
+              <br />
+              Letters, Numbers, Underscores, Hyphens are allowed!
+            </p>
+          </label>
 
-            <label className={`${labelStyle}`}>
-              Email:
-              <input
-                className={`${inputStyle} ${
-                  validEmail
-                    ? "text-accent dark:text-accent-dark"
-                    : "text-dark dark:text-light"
-                }`}
-                type="email"
-                placeholder="example@something.com"
-                autoComplete="off"
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                onFocus={() => setEmailFocus(true)}
-                onBlur={() => setEmailFocus(false)}
-                aria-invalid={validEmail ? "false" : "true"}
-                aria-describedby="ednote"
-              />
-              <p
-                id="ednote"
-                className={`${notes} ${
-                  email && emailFocus && !validEmail
-                    ? "top-[86px]"
-                    : "-top-[2000px]"
-                }`}
-              >
-                Must be a valid email address
-              </p>
-            </label>
+          <label className={`${labelStyle}`}>
+            Email:
+            <input
+              className={`${inputStyle} ${
+                validEmail
+                  ? "text-accent dark:text-accent-dark"
+                  : "text-dark dark:text-light"
+              }`}
+              type="email"
+              placeholder="example@something.com"
+              autoComplete="off"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              onFocus={() => setEmailFocus(true)}
+              onBlur={() => setEmailFocus(false)}
+              aria-invalid={validEmail ? "false" : "true"}
+              aria-describedby="ednote"
+            />
+            <p
+              id="ednote"
+              className={`${notes} ${
+                email && emailFocus && !validEmail
+                  ? "top-[86px]"
+                  : "-top-[2000px]"
+              }`}
+            >
+              Must be a valid email address
+            </p>
+          </label>
 
-            <label className={`${labelStyle}`}>
-              Password:
-              <input
-                className={`${inputStyle} ${
-                  validPwd
-                    ? "text-accent dark:text-accent-dark"
-                    : "text-dark dark:text-light"
-                }`}
-                type="Password"
-                placeholder="********"
-                onChange={(e) => setPwd(e.target.value)}
-                required
-                onFocus={() => setPwdFocus(true)}
-                onBlur={() => setPwdFocus(false)}
-                aria-invalid={validPwd ? "false" : "true"}
-                aria-describedby="pwdnote"
-              />
-              <p
-                id="pwdnote"
-                className={`${notes} ${
-                  pwd && pwdFocus && !validPwd ? "top-[86px]" : "-top-[2000px]"
-                }`}
-              >
-                Eight characters at least!
-                <br />
-                24 characters at most!
-                <br />
-                Must include uppercase and lowercase letters, a number and a
-                special character!
-                <br />
-                Only <span aria-label="exclamation mark">!</span>{" "}
-                <span aria-label="at symbol">@</span>{" "}
-                <span aria-label="hashtag">#</span>{" "}
-                <span aria-label="dollar sign">$</span>{" "}
-                <span aria-label="percent">%</span> are allowed!
-              </p>
-            </label>
+          <label className={`${labelStyle}`}>
+            Password:
+            <input
+              className={`${inputStyle} ${
+                validPwd
+                  ? "text-accent dark:text-accent-dark"
+                  : "text-dark dark:text-light"
+              }`}
+              type="Password"
+              placeholder="********"
+              onChange={(e) => setPwd(e.target.value)}
+              required
+              onFocus={() => setPwdFocus(true)}
+              onBlur={() => setPwdFocus(false)}
+              aria-invalid={validPwd ? "false" : "true"}
+              aria-describedby="pwdnote"
+            />
+            <p
+              id="pwdnote"
+              className={`${notes} ${
+                pwd && pwdFocus && !validPwd ? "top-[86px]" : "-top-[2000px]"
+              }`}
+            >
+              Eight characters at least!
+              <br />
+              24 characters at most!
+              <br />
+              Must include uppercase and lowercase letters, a number and a
+              special character!
+              <br />
+              Only <span aria-label="exclamation mark">!</span>{" "}
+              <span aria-label="at symbol">@</span>{" "}
+              <span aria-label="hashtag">#</span>{" "}
+              <span aria-label="dollar sign">$</span>{" "}
+              <span aria-label="percent">%</span> are allowed!
+            </p>
+          </label>
 
-            <label className={`${labelStyle}`}>
-              Confirm Password:
-              <input
-                className={`${inputStyle} ${
-                  validMatchPwd
-                    ? "text-accent dark:text-accent-dark"
-                    : "text-dark dark:text-light"
-                }`}
-                type="Password"
-                placeholder="********"
-                onChange={(e) => setMatchPwd(e.target.value)}
-                required
-                onFocus={() => setMatchPwdFocus(true)}
-                onBlur={() => setMatchPwdFocus(false)}
-                aria-invalid={validMatchPwd ? "false" : "true"}
-                aria-describedby="confirmnote"
-              />
-              <p
-                id="confirmnote"
-                className={`${notes} ${
-                  matchPwd && matchPwdFocus && !validMatchPwd
-                    ? "top-[86px]"
-                    : "-top-[2000px]"
-                }`}
-              >
-                Must match the password
-              </p>
-            </label>
-          </div>
+          <label className={`${labelStyle}`}>
+            Confirm Password:
+            <input
+              className={`${inputStyle} ${
+                validMatchPwd
+                  ? "text-accent dark:text-accent-dark"
+                  : "text-dark dark:text-light"
+              }`}
+              type="Password"
+              placeholder="********"
+              onChange={(e) => setMatchPwd(e.target.value)}
+              required
+              onFocus={() => setMatchPwdFocus(true)}
+              onBlur={() => setMatchPwdFocus(false)}
+              aria-invalid={validMatchPwd ? "false" : "true"}
+              aria-describedby="confirmnote"
+            />
+            <p
+              id="confirmnote"
+              className={`${notes} ${
+                matchPwd && matchPwdFocus && !validMatchPwd
+                  ? "top-[86px]"
+                  : "-top-[2000px]"
+              }`}
+            >
+              Must match the password
+            </p>
+          </label>
+        </div>
 
-          <button
-            className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px]  text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50"
-            disabled={
-              !validFirstName ||
-              !validLastName ||
-              !validEmail ||
-              !validPwd ||
-              !validMatchPwd
-                ? true
-                : false
-            }
-          >
-            SIGN UP
-            <ReturnLeft className="text-[24px]" />
-          </button>
-        </form>
-        <Link
-          className="text-[14px] underline text-primary dark:text-accent-dark"
-          to="/student/login"
-          style={{ alignSelf: "flex-start" }}
+        <button
+          className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px]  text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50"
+          disabled={
+            !validFirstName ||
+            !validLastName ||
+            !validEmail ||
+            !validPwd ||
+            !validMatchPwd
+              ? true
+              : false
+          }
         >
-          Already have an Account
-        </Link>
-      </SignInUpWrapper>
-    </>
+          SIGN UP
+          <ReturnLeft className="text-[24px]" />
+        </button>
+      </form>
+      <Link
+        className="text-[14px] underline text-primary dark:text-accent-dark"
+        to="/student/login"
+        style={{ alignSelf: "flex-start" }}
+      >
+        Already have an Account
+      </Link>
+    </SignInUpWrapper>
   );
 }
 

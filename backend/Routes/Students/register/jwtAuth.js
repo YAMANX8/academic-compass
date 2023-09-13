@@ -32,7 +32,7 @@ router.post("/student/register", validInfo, async (req, res) => {
     );
 
     // 5.generating our jwt token
-    const token = jwtGenerator(
+    const { token } = jwtGenerator(
       newStudent.rows[0].student_id
     );
 

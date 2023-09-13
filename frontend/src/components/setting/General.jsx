@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
 import { BsCloudUpload as Upload } from "react-icons/bs";
 import axios from "../../apis/axios";
-import toast, { Toaster } from "react-hot-toast";
 import Profile from "../../assets/images/frontend.svg";
 import { Button } from "../index";
 

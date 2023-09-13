@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../apis/axios";
-import toast, { Toaster } from "react-hot-toast";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
 
 //styles

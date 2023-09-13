@@ -12,13 +12,19 @@ import {
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { Switcher } from "./index";
 import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { auth, setAuth, isAuth, setIsAuth } = useAuth();
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/student/search/by-text/${search}`)
+  };
   const handleLogout = () => {
     // إزالة الرمز من المتصفح
     localStorage.removeItem("token");
@@ -27,6 +33,7 @@ const Navbar = () => {
     setAuth({});
     setConfirmLogout(false); // لإغلاق النافذة
     setIsOpen(false);
+    toast("Logout Successfully");
     navigate("/");
   };
   const userInfo = {
@@ -47,13 +54,20 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex gap-[16px] items-center">
-        <div className="flex relative">
+        <form
+          onSubmit={handleSubmit}
+          className="flex relative rounded-full w-11 focus-within:w-[250px] focus-within:bg-secondary dark:focus-within:bg-secondary-dark transition-all duration-1000 ease-in-out-back text-dark dark:text-light"
+        >
           <input
-            type=""
-            className="w-[150px] py-[10px] rounded-full bg-transparent z-10 cursor-pointer"
+            type="search"
+            value={search}
+            onChange={(e) => {setSearch(e.target.value)}}
+            className="w-full py-[10px] pl-9 pr-[10px] rounded-full bg-transparent outline-none"
           />
-          <Search className="font-semibold absolute right-[10px] top-[10px] text-[24px]" />
-        </div>
+          <button type="submit">
+            <Search className="font-semibold absolute left-[10px] top-[10px] text-[24px] cursor-pointer" />
+          </button>
+        </form>
         <Link to="/student/roadmaps" className="font-semibold">
           Roadmaps{" "}
         </Link>

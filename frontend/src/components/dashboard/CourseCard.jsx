@@ -13,9 +13,9 @@ const CourseCard = ({ image, title, subtitle, progress = -1, stars = -1 }) => {
       className={`${transition} min-w-[340px] max-w-[340px] rounded-[15px] shadow-[0_0_10px] shadow-black/25`}
     >
       <div
-        className={`${transition} bg-secondary dark:bg-secondary-dark rounded-tl-[15px] rounded-tr-[15px]`}
+        className={`${transition} bg-secondary dark:bg-secondary-dark rounded-tl-[15px] rounded-tr-[15px] w-full overflow-hidden aspect-video`}
       >
-        <img src={image} className="aspect-video " alt="Course" />
+        <img src={image} alt="Course" />
       </div>
       <div
         className={`${transition} text-dark dark:text-light bg-light dark:bg-dark rounded-bl-[15px] rounded-br-[15px] p-4 text-[20px] pb-8`}

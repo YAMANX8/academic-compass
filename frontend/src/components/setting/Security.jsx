@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
 import axios from "../../apis/axios";
-import toast, { Toaster } from "react-hot-toast";
 //styles
 const inputStyle =
   "p-[10px] rounded-[5px] bg-light dark:bg-dark text-dark dark:text-light border border-dark/50 dark:border-light/50 text-[20px] transition-all duration-1000 ease-in-out-back";
@@ -9,9 +8,6 @@ const inputStyle =
 const Security = ({ password, newPassword, verifyPassword, handleChange }) => {
   return (
     <>
-      <div>
-        <Toaster />
-      </div>
       <h3 className="text-[32px] tracking-tight font-semibold">Security</h3>
       <div>
         <h4 className="text-[22px] tracking-tight font-semibold mb-4">
