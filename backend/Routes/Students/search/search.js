@@ -42,11 +42,38 @@ router.get("/course", authorization, async (req, res) => {
       condition4 = `((l.level_name IS NOT NULL AND l.level_name IN ($1, $2, $3)) OR (ct.type_name IS NOT NULL AND ct.type_name IN ($4, $5, $6)))`;
     }
 
-    // بناء الشرط الثاني حسب الحالات الثلاث`
-    let condition5 = `(rt.rating_stars IS NOT NULL AND rt.rating_stars >= $7) AND (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || $8 || '%')`;
-
-    console.log(condition4);
-    console.log(condition5);
+    // بناء الشرط الثاني حسب الحالات الثلاث`**
+    let condition5;
+    let condition6;
+    let values = [];
+    if (Rating == "") {
+      condition5 = `(c.course_title IS NOT NULL AND c.course_title ILIKE '%' || $7 || '%')`;
+      condition6 = ` RC.course_rank > (($8 - 1) * 4) AND RC.course_rank <= ($8 * 4)`;
+      values = [
+        Beginner,
+        Intermediate,
+        Expert,
+        typeName1,
+        typeName2,
+        typeName3,
+        courseTitle,
+        courseRank,
+      ];
+    } else {
+      condition5 = `(rt.rating_stars IS NOT NULL AND rt.rating_stars >= $7) AND (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || $8 || '%')`;
+      condition6 = ` RC.course_rank > (($9 - 1) * 4) AND RC.course_rank <= ($9 * 4)`;
+      values = [
+        Beginner,
+        Intermediate,
+        Expert,
+        typeName1,
+        typeName2,
+        typeName3,
+        Rating,
+        courseTitle,
+        courseRank,
+      ];
+    }
 
     // دمج الشروط الثلاث حسب الحالة
     let finalCondition = "";
@@ -163,28 +190,17 @@ JOIN
 JOIN
     Topic_level_N TLN ON i.topic_id = TLN.topic_id
 WHERE
-    RC.course_rank > (($9 - 1) * 4)
-    AND RC.course_rank <= ($9 * 4)
+   ${condition6}
 ORDER BY
     RC.roadmap_id,
     RC.course_rank;
 `;
     console.log(query);
-    const values = [
-      Beginner,
-      Intermediate,
-      Expert,
-      typeName1,
-      typeName2,
-      typeName3,
-      Rating,
-      courseTitle,
-      courseRank,
-    ];
+
     const result = await pool.query(query, values);
 
     const courses = [];
-    let total_courses=0;
+    let total_courses = 0;
     // تحويل البيانات من قاعدة البيانات إلى التنسيق المطلوب
     result.rows.forEach((row) => {
       const roadmapId = row.roadmap_id;
@@ -193,7 +209,7 @@ ORDER BY
       const courseTitle = row.course_title;
       const subtitle = row.subtitle;
       const courseDuration = row.course_duration;
-      const courseThumnail=row.course_thumnail;
+      const courseThumnail = row.course_thumnail;
       const levelName = row.level_name;
       const instructorName = `${row.first_name} ${row.last_name}`;
       const ratingStars = parseFloat(row.rating_stars);
@@ -238,14 +254,11 @@ ORDER BY
       total_courses: total_courses,
       data: courses,
     });
-    
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");
   }
 });
-
-
 
 //* serch by topc_id
 router.get("/topic", authorization, async (req, res) => {
@@ -289,17 +302,15 @@ router.get("/topic", authorization, async (req, res) => {
     }
 
     // بناء الشرط الثاني حسب الحالات الثلاث`
-    let condition5="";
-    let topicId=0;
-    if(topiclevel_N !== ""){
+    let condition5 = "";
+    let topicId = 0;
+    if (topiclevel_N !== "") {
       topicId = topiclevel_N;
-       condition5 = `(rt.rating_stars IS NOT NULL AND rt.rating_stars >= $7) AND (TLN.topic_id IS NOT NULL AND TLN.topic_id = $8)`;
-    }
-    else if (topiclevel_1 !== "") {
-      topicId=topiclevel_1;
+      condition5 = `(rt.rating_stars IS NOT NULL AND rt.rating_stars >= $7) AND (TLN.topic_id IS NOT NULL AND TLN.topic_id = $8)`;
+    } else if (topiclevel_1 !== "") {
+      topicId = topiclevel_1;
       condition5 = `(rt.rating_stars IS NOT NULL AND rt.rating_stars >= $7) AND (TL1.topic_level1_id IS NOT NULL AND TL1.topic_level1_id = $8)`;
     }
-
 
     // دمج الشروط الثلاث حسب الحالة
     let finalCondition = "";
@@ -441,7 +452,7 @@ ORDER BY
     const result = await pool.query(query, values);
 
     const courses = [];
-    let total_courses=0;
+    let total_courses = 0;
     // تحويل البيانات من قاعدة البيانات إلى التنسيق المطلوب
     result.rows.forEach((row) => {
       const roadmapId = row.roadmap_id;
@@ -450,7 +461,7 @@ ORDER BY
       const courseTitle = row.course_title;
       const subtitle = row.subtitle;
       const courseDuration = row.course_duration;
-      const courseThumnail=row.course_thumnail;
+      const courseThumnail = row.course_thumnail;
       const levelName = row.level_name;
       const instructorName = `${row.first_name} ${row.last_name}`;
       const ratingStars = parseFloat(row.rating_stars);
@@ -497,7 +508,6 @@ ORDER BY
       total_courses: total_courses,
       data: courses,
     });
-    
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");
@@ -572,5 +582,3 @@ module.exports = router;
 ]
 }
 `;
-
-
