@@ -20,6 +20,8 @@ ADD COLUMN topic_order character varying(50);
 ALTER TABLE roadmap
 ALTER COLUMN image_path TYPE character varying(150);
 
+ALTER TABLE student RENAME COLUMN image_path TO picture;
+
 -- example
 ALTER TABLE roadmap
 ADD COLUMN image_path VARCHAR(150);
@@ -39,6 +41,13 @@ SET topic_id =2 WHERE progress_id=10;
 UPDATE topic_level_1
 SET roadmap_id =19 WHERE topic_level1_id=3;
 
+UPDATE roadmap
+SET roadmap_description ='Backend is the foundation of web systems, handling data, logic, and server operations hidden from users. It employs languages like Python, Java, or PHP to manage databases, process requests, and ensure seamless functionality, enabling frontend interaction and powering the entire application.' WHERE roadmap_id=19;
+
+UPDATE topic_level_1
+SET topic_title ='',topic_description='The Internet is a global network of computers connected to each other which communicate through a standardized set of protocols..'   WHERE  topic_level1_id=2;
+UPDATE topic_level_1
+SET topic_order=1   WHERE  topic_level1_id=2;
 UPDATE topic_level_N
 SET topic_level1_id =1 WHERE topic_id=19;
 UPDATE topic_level_N
@@ -63,6 +72,9 @@ WHERE rating_id = 5;
 -- drop column
 ALTER TABLE Progress_Status
 DROP COLUMN topic_level;
+
+ALTER TABLE student
+DROP COLUMN picture;
 
 -- change COLUMN password character in register_request from 50 to 100 
 ALTER TABLE register_request
@@ -145,6 +157,7 @@ VALUES
      DELETE FROM topic_level_N WHERE topic_id=25;
      DELETE FROM topic_level_N WHERE topic_id=26;
      DELETE FROM topic_level_N WHERE topic_id=27;
+     DELETE FROM topic_level_1 WHERE topic_level1_id=9;
      DELETE FROM items WHERE item_id=6;
      DELETE FROM roadmap;
 
@@ -356,16 +369,15 @@ ORDER BY ic.course_title;
 
 
 -- insert data to topic(ther is topic_order +++)
-INSERT INTO Topic_Level_1 (topic_title, topic_description, topic_status, roadmap_id)
+INSERT INTO Topic_Level_1 (topic_title, topic_description, topic_status, roadmap_id, topic_order,category_id)
 VALUES
-    (' Programming', 'An overview of programming concepts', 'Active', 3),
-    ('Data Structures and Algorithms', 'Exploring common data structures and algorithms', 'Inactive', 2),
-    ('Web Development Basics', 'Getting started with web development', 'Active', 3);
+    ('Mobile applications','A while back, developing a mobile app using JavaScript was impossible. But now JavaScript developers can create mobile applications using their knowledge for web development. Here is the list of options to create mobile applications in JavaScript.', 'Active', 18,11,3);
+
 
     -- إدراج بيانات في جدول Topic_Level_N
 INSERT INTO Topic_Level_N (topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id)
 VALUES
-    ('c++', 'Understanding variables and different data types', 'Active',9,26, 4),
+    ('vite', 'Understanding variables and different data types', 'Active',3,19, ),
     ('Conditional Statements', 'Exploring if-else statements and switch cases', 'Active', 2, 19, 1),
     ('Linked Lists', 'Understanding linked list data structure', 'Active', 3, 20, 2), 
     ('Arrays and Matrices', 'Exploring arrays and matrix data structures', 'Active', 4, 21, 2), 
@@ -527,10 +539,11 @@ FROM
 JOIN
     Topic_Level_1 t1 ON r.roadmap_id = t1.roadmap_id
 LEFT JOIN
-    Progress_Status ps ON t1.topic_level1_id = ps.topic_id AND ps.student_id = 5
+    Progress_Status ps ON t1.topic_level1_id = ps. AND ps.student_id = 5
 LEFT JOIN
     Topic_States ts ON ps.state_id = ts.state_id
 WHERE
+
     r.roadmap_id = 17
 ORDER BY
     r.roadmap_id, t1.topic_level1_id, ps.progress_id;
@@ -553,24 +566,90 @@ SELECT DISTINCT ON (r.roadmap_id)
     ts.state_name
 FROM
     Roadmap r
-JOIN
+ JOIN
     Topic_Level_1 TL1 ON r.roadmap_id = TL1.roadmap_id
-JOIN
+ JOIN
     Topic_Level_N TLN ON TL1.topic_level1_id = TLN.topic_level1_id
-JOIN
+ JOIN
     Items I ON TLN.topic_id = I.topic_id
-JOIN
+ JOIN
     Course C ON I.course_id = C.course_id
-JOIN
+ JOIN
     Enrollment E ON C.course_id = E.course_id
-JOIN
+ JOIN
     Student S ON E.student_id = S.student_id
-LEFT JOIN
-    Progress_Status ps ON TL1.topic_level1_id = ps.topic_id AND ps.student_id = 5
+ JOIN
+    -- Progress_Status ps ON TLN.topic_level = ps.topic_level   AND ps.student_id = 2
+    --Progress_Status ps ON TL1.topic_level1_id = ps.topic_id   AND ps.student_id = 2 + delete this line(    TLN.topic_id = ps.topic_id AND)
+    Progress_Status ps ON TL1.topic_level1_id = ps.topic_id AND ps.topic_level=1  AND ps.student_id = 1
 LEFT JOIN
     Topic_States ts ON ps.state_id = ts.state_id
 WHERE
-    r.roadmap_id = $1
+    r.roadmap_id = 18
+ORDER BY
+    r.roadmap_id, TL1.topic_level1_id, ps.progress_id;
+
+---- إرجاع كافة topic_level_1 لخريطة معينة مع التعديلات سابقا يتم إرجاع topic واحد الذي يساوي  ps.topic_id (هاي الي زبطت بالنهاية)
+SELECT DISTINCT ON (r.roadmap_id, TL1.topic_level1_id)
+    r.roadmap_id,
+    r.roadmap_title,
+    r.roadmap_description,
+    TL1.topic_level1_id,
+    TL1.topic_title,
+    TL1.topic_description,
+    TL1.topic_status,
+    TL1.topic_order,
+    ps.progress_id,
+    ps.student_id,
+    ps.state_id AS progress_state_id,
+    ps.topic_id,
+    ps.topic_level,
+    ts.state_name
+FROM
+    Roadmap r
+JOIN
+    Topic_Level_1 TL1 ON r.roadmap_id = TL1.roadmap_id
+LEFT JOIN Progress_Status ps ON TL1.topic_level1_id = ps.topic_id AND ps.topic_level = 1 AND ps.student_id = 1
+LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
+WHERE
+    r.roadmap_id = 18 
+ORDER BY
+    r.roadmap_id, TL1.topic_level1_id, ps.progress_id;
+---- is last in topic level 1 
+SELECT DISTINCT ON (r.roadmap_id, TL1.topic_level1_id)
+    r.roadmap_id,
+    r.roadmap_title,
+    r.roadmap_description,
+    TL1.topic_level1_id,
+    TL1.topic_title,
+    TL1.topic_description,
+    TL1.topic_status,
+    TL1.topic_order,
+    TC.category_name, 
+    ps.progress_id,
+    ps.student_id,
+    ps.state_id AS progress_state_id,
+    ps.topic_id,
+    ps.topic_level,
+    ts.state_name,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM topic_level_N TLN
+            WHERE TLN.topic_level1_id = TL1.topic_level1_id
+        ) THEN FALSE
+        ELSE TRUE
+    END AS is_last
+FROM
+    Roadmap r
+JOIN
+    Topic_Level_1 TL1 ON r.roadmap_id = TL1.roadmap_id
+LEFT JOIN Topic_Category TC ON TL1.category_id = TC.category_id
+LEFT JOIN Progress_Status ps ON TL1.topic_level1_id = ps.topic_id AND ps.topic_level = 1 AND ps.student_id = 1
+LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
+
+WHERE
+    r.roadmap_id = 18 
 ORDER BY
     r.roadmap_id, TL1.topic_level1_id, ps.progress_id;
 
@@ -1094,8 +1173,7 @@ WHERE
     )
     OR
     (
-        (rt.rating_stars IS NOT NULL AND rt.rating_stars >=4.5 )
-        AND
+        
         (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%')
     )
 
@@ -1292,5 +1370,234 @@ JOIN List_Type l ON cl.list_type = l.type_id
 WHERE c.course_id = 1
 ORDER BY cl.item_order;
 
+-- إرجاع قيم topic عن طريق id الخاص ب topic معين
+WITH RECURSIVE topic_hierarchy AS (
+  SELECT topic_id, topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id
+  FROM topic_level_N
+  WHERE topic_level1_id = 1 AND topic_level=2
+  UNION ALL
+  SELECT tn.topic_id, tn.topic_title, tn.topic_description, tn.topic_status, tn.topic_level, tn.top_level_topic_id, tn.topic_level1_id
+  FROM topic_level_N tn
+  INNER JOIN topic_hierarchy th ON tn.top_level_topic_id = th.topic_id
+)
+SELECT * FROM topic_hierarchy;
+-- معدل islast
 
+  SELECT topic_id, topic_title, topic_description, topic_status, topic_level,topic_order,
+   CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM topic_level_N TLN
+            WHERE TLN.top_level_topic_id = topic_level_N.topic_id
+        ) THEN FALSE
+        ELSE TRUE
+    END AS is_last
+  FROM topic_level_N
+  WHERE topic_level1_id = 1 AND topic_level=2;
+  --topic level 2 with login
+SELECT
+   TLN.topic_id AS topic_id_lN,
+   TLN.topic_title,
+   TLN.topic_description,
+   TLN.topic_status,
+   TLN.topic_level AS topic_level_lN,
+   TLN.topic_order,
+   ps.progress_id,
+   ps.student_id,
+   ps.state_id AS progress_state_id,
+   ps.topic_id,
+   ps.topic_level,
+   ts.state_name,
+   CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM topic_level_N 
+            WHERE   TLN.topic_id=topic_level_N.top_level_topic_id
+        ) THEN FALSE
+        ELSE TRUE
+    END AS is_last
+  FROM topic_level_N TLN
+  LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id AND ps.topic_level = 2 AND ps.student_id = 5
+  LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
+  WHERE TLN.topic_level1_id = 1 AND TLN.topic_level=2;
 
+-- topic_level_N
+WITH RECURSIVE topic_hierarchy AS (
+  SELECT topic_id, topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id
+  FROM topic_level_N
+  WHERE  topic_id = 19
+  UNION ALL
+  SELECT tn.topic_id, tn.topic_title, tn.topic_description, tn.topic_status, tn.topic_level, tn.top_level_topic_id, tn.topic_level1_id
+  FROM topic_level_N tn
+  INNER JOIN topic_hierarchy th ON tn.top_level_topic_id = th.topic_id
+)
+SELECT * FROM topic_hierarchy;
+--بدون أول قيمة
+WITH RECURSIVE topic_hierarchy AS (
+  SELECT 
+    tn.topic_id, 
+    tn.topic_title, 
+    tn.topic_description, 
+    tn.topic_status, 
+    tn.topic_level, 
+    tn.top_level_topic_id, 
+    tn.topic_level1_id
+  FROM 
+    topic_level_N tn
+  WHERE  
+    tn.top_level_topic_id = 21 -- قم بتغيير هذه القيمة إلى القيمة المحددة
+  UNION ALL
+  SELECT 
+    tn.topic_id, 
+    tn.topic_title, 
+    tn.topic_description, 
+    tn.topic_status, 
+    tn.topic_level, 
+    tn.top_level_topic_id, 
+    tn.topic_level1_id
+  FROM 
+    topic_level_N tn
+  INNER JOIN 
+    topic_hierarchy th 
+  ON 
+    tn.top_level_topic_id = th.topic_id
+)
+SELECT * FROM topic_hierarchy WHERE topic_id <> 21; -- استبعد القيمة المحددة نفسها
+--
+
+WITH RECURSIVE topic_hierarchy AS (
+  SELECT 
+    tn.topic_id, 
+    tn.topic_title, 
+    tn.topic_description, 
+    tn.topic_status, 
+    tn.topic_level, 
+    tn.top_level_topic_id, 
+    tn.topic_level1_id
+  FROM 
+    topic_level_N tn
+  WHERE  
+    tn.top_level_topic_id = 19 -- قم بتغيير هذه القيمة إلى القيمة المحددة
+  UNION ALL
+  SELECT 
+    tn.topic_id, 
+    tn.topic_title, 
+    tn.topic_description, 
+    tn.topic_status, 
+    tn.topic_level, 
+    tn.top_level_topic_id, 
+    tn.topic_level1_id
+  FROM 
+    topic_level_N tn
+  INNER JOIN 
+    topic_hierarchy th 
+  ON 
+    tn.top_level_topic_id = th.topic_id
+)
+SELECT 
+  *,
+  CASE WHEN LEAD(top_level_topic_id) OVER (ORDER BY topic_id) IS NULL THEN true ELSE false END AS isItLast
+FROM 
+  topic_hierarchy
+WHERE 
+  topic_id <> 19;
+--
+--database
+ALTER TABLE course
+DROP COLUMN course_score;
+
+UPDATE course
+SET items_count =1 WHERE course_id=1;
+UPDATE course
+SET items_count =1 WHERE course_id=2;
+UPDATE course
+SET items_count =0 WHERE course_id=3;
+UPDATE course
+SET items_count =1 WHERE course_id=4;
+UPDATE course
+SET items_count =1 WHERE course_id=5;
+UPDATE course
+SET items_count =1 WHERE course_id=6;
+UPDATE course
+SET items_count =1 WHERE course_id=7;
+UPDATE course
+SET items_count =1 WHERE course_id=8;
+UPDATE course
+SET items_count =1 WHERE course_id=9;
+UPDATE course
+SET items_count =1 WHERE course_id=10;
+UPDATE course
+SET items_count =1 WHERE course_id=10;
+UPDATE course
+SET items_count =1 WHERE course_id=11;
+
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=3;
+UPDATE enrollment
+SET progress_state =1 WHERE enrollment_id=4;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=5;
+UPDATE enrollment
+SET progress_state =1 WHERE enrollment_id=6;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=7;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=8;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=9;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=10;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=11;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=12;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=13;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=14;
+UPDATE enrollment
+SET progress_state =0 WHERE enrollment_id=15;
+
+UPDATE levels
+SET level_name='Expert' WHERE level_id=3;
+
+UPDATE Completed_Items
+SET enrollment_id=6 WHERE completed_item_id=3;
+
+DELETE FROM Completed_Items WHERE completed_item_id=4;
+DELETE FROM Completed_Items WHERE completed_item_id=5;
+DELETE FROM Completed_Items WHERE completed_item_id=3;
+
+INSERT INTO Topic_Level_N (topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id,topic_order)
+VALUES
+('Conditional Statements', 'Exploring if-else statements and switch cases', 'Active', 2, 19, 1),
+    ('Linked Lists', 'Understanding linked list data structure', 'Active', 3, 20, 2), 
+    ('Arrays and Matrices', 'Exploring arrays and matrix data structures', 'Active', 4, 21, 2), 
+    ('HTML Basics', 'Introduction to HTML markup', 'Active', 5, 22, 3), 
+    ('CSS Styling', 'Styling web pages using CSS', 'Active', 6, 23, 3),
+    ('Java script', 'Styling web pages using CSS', 'Active', 7, 24, 4);
+------------
+    ('Module Bundlers', 'A module bundler is a tool that takes pieces of JavaScript and their dependencies and bundles them into a single file, usually for use in the browser. You may have used tools such as Browserify, Webpack, Rollup or one of many others.It usually starts with an entry file, and from there it bundles up all of the code needed for that entry file.', 'Stable',2,Null, 15,1),
+    ('Task Runners', 'Task Runner are tools to simplify certain tedious tasks of development, like automating sass/scss compilation, bundling assets, linting source code, and hot reloading local server.', 'Stable',2,Null, 15,2),
+    ('Linters formatters', 'A linter is a tool used to analyze code and discover bugs, syntax errors, stylistic inconsistencies, and suspicious constructs. Popular linters for JavaScript include ESLint, JSLint, and JSHint.', 'Stable',2,Null, 15,3),
+
+    ('Vite', 'Vite is a build tool that aims to provide a faster and leaner development experience for modern web projects.', 'Stable',3,57, NULL,1),
+    ('esbuild', 'Our current build tools for the web are 10-100x slower than they could be. The main goal of the esbuild bundler project is to bring about a new era of build tool performance, and create an easy-to-use modern bundler along the way.', 'Stable',3,57, NULL,2),
+    ('Webpack', 'Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.', 'Stable',3,57, NULL,3),
+    ('Rollup', 'Rollup is a module bundler for JavaScript which compiles small pieces of code into something larger and more complex, such as a library or application.', 'Stable',3,57, NULL,4),
+    ('Parcel', 'Parcel is a web application bundler, differentiated by its developer experience. It offers blazing-fast performance utilizing multicore processing and requires zero configuration.', 'Cutting Edge',3,57, NULL,5),
+    --------
+    ('How dose the internet work', 'The Internet is a global network of computers connected to each other which communicate through a standardized set of protocols.', 'Stable',2,Null, 2,1),
+
+    -------
+    --api roadmap by id
+    --api topic_1=> topic_N
+    --api topic_N=>topic_N
+    UPDATE Progress_Status
+SET topic_level =1 WHERE progress_id=6;
+    UPDATE Progress_Status
+SET topic_level =1 WHERE progress_id=7;
+    UPDATE Progress_Status
+SET topic_level =2 WHERE progress_id=8;
+    UPDATE Progress_Status
+SET topic_id =21 WHERE progress_id=8;

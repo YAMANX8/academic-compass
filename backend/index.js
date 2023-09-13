@@ -28,7 +28,7 @@ app.use("/AcademicCompass/studentDashboard", require("./Routes/Students/dashboar
 //setting
 app.use("/AcademicCompass/student/setting", require("./Routes/Students/settings/setting"));
 // change password to student
-app.use("/AcademicCompass/studentDashboard/change-password", require("./Routes/Students/settings/security"));
+// app.use("/AcademicCompass/studentDashboard/change-password", require("./Routes/Students/settings/security"));
 // Update Acount to student
 // app.use("/AcademicCompass/studentDashboard/update-account", require("./Routes/Students/settings/account"));
 //  General Setting to student
