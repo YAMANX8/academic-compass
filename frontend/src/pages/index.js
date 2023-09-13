@@ -11,6 +11,7 @@ import Search from "./Search";
 import LevelZero from "./student interfaces/LevelZero";
 import LevelOne from "./student interfaces/LevelOne";
 import LevelN from "./student interfaces/LevelN";
+import Video from "./Video";
 export {
   Login_Student,
   Sign_Up_Instructor,
@@ -25,4 +26,5 @@ export {
   LevelZero,
   LevelOne,
   LevelN,
+  Video,
 };

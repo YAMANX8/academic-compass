@@ -13,6 +13,7 @@ import {
   LevelZero,
   LevelOne,
   LevelN,
+  Video,
 } from "./pages";
 import { Layout, RoadmapLayout } from "./layout";
 import { RequireAuth, PersistLogin, DataRetrieval } from "./components";
@@ -48,6 +49,8 @@ const App = () => {
                 </Route>
 
                 <Route path="courseview" element={<CourseView />} />
+                
+                <Route path="video" element={<Video />} />
                 <Route path="search">
                   <Route path="by-topic/:id" element={<Search />} />
                   <Route path="by-text/:text" element={<Search />} />
