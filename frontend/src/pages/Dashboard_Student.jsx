@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   ProfileCard,
   PerformanceChart,
@@ -6,72 +6,56 @@ import {
   CourseCard,
   Button,
 } from "../components/index.js";
-import Profile from "../assets/images/frontend.svg";
 import { DashboardWrapper } from "../layout/index.js";
 import { FaRegMap as Map } from "react-icons/fa";
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
 import axios from "../apis/axios";
 import { performance } from "../performance.js";
+import useAuth from "../hooks/useAuth.jsx";
 
 const DASHBOARD_URL = "/studentDashboard";
 
-
-
-
 const cardColor = ["bg-primary", "bg-accent", "bg-green"];
+const cardTitle = ["Completed Courses", "In Progress Courses", "Total Points"];
 
 function Dashboard_Student() {
-  const [profileData, setProfileData] = useState({
-    firstName: "",
-    lastName: "",
-    country: "",
-    city: "",
-    counts: []
-  });
-  
+  const { auth } = useAuth();
+  const [profileData, setProfileData] = useState([]);
+
   const [performanceData, setPerformanceData] = useState([]);
   const [progressCourses, setProgressCourses] = useState([]);
   const [completedCourses, setCompletedCourses] = useState([]);
   const [myRoadmaps, setMyRoadmaps] = useState([]);
-  
-  useEffect(() => {
-    axios.get(DASHBOARD_URL,{headers:{token:localStorage.token}})
-      .then(response => {
-        console.log(response.data);  
-        setProfileData(response.data.profileData);
-        setPerformanceData(response.data.performanceData);
-        setProgressCourses(response.data.progressCourses);
-        setCompletedCourses(response.data.completedCourses);
-        setMyRoadmaps(response.data.myRoadmaps);
-      })
-      .catch(error => {
-        console.error("Errer fetching date:", error);
+  const getData = async () => {
+    try {
+      const response = await axios.get(DASHBOARD_URL, {
+        headers: { token: localStorage.token },
       });
+      const data = await response.data;
+      setProfileData(data.profileData.counts);
+      setPerformanceData(data.performance);
+      setProgressCourses(data.progressCourses);
+      setCompletedCourses(data.completedCourses);
+      setMyRoadmaps(data.myRoadmaps);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getData();
   }, []);
 
-
-  const [data, setData] = useState({
-       labels: performance.map((item) => item.title),  
+  let data = {
+    labels: performance.map((item) => item.title),
     datasets: [
       {
         label: "performance",
-        data: performance.map((item) => item.count),
+        data: performanceData.map((item) => item.count),
         backgroundColor: performance.map((item) => item.color),
         borderColor: "#EEEFFC",
       },
     ],
-});
-
-
-
- 
-
-
-  const firstName = profileData.firstName;
-  const lastName = profileData.lastName;
-  const location = `${profileData.city}, ${profileData.country}`;
-  const images = { Profile };
-  const cardData = profileData.counts;//للصورة
+  };
 
   //styles
   const emptyRows = "font-thin text-[20px] text-dark/70 dark:text-light/70";
@@ -83,31 +67,32 @@ function Dashboard_Student() {
       <div className=" col-span-8 row-start-1 row-span-2">
         <DashboardWrapper
           heading="My Profile"
-          optionalText={`Welcome back, ${firstName}`}
+          optionalText={`Welcome back, ${auth.firstName}`}
         >
           <div className="flex justify-start gap-12">
             <div className="flex flex-col gap-4 text-center justify-center">
-              <img
-                src={images.Profile}
-                className="h-[167px] w-[167px] rounded-full"
-                alt="Profile"
-              />
+              <div className="w-[167px] aspect-square overflow-hidden rounded-full">
+                <img
+                  src={auth.image}
+                  alt="Profile"
+                />
+              </div>
 
               <div className="font-semibold leading-l tracking-tight flex flex-col gap-2">
                 <p>
-                  {firstName} {lastName}
+                  {auth.firstName} {auth.lastName}
                 </p>
-                <p className="text-primary">{location}</p>
+                <p className="text-primary">{`${auth.city}, ${auth.country}`}</p>
               </div>
             </div>
 
             <div className="flex flex-col justify-between flex-1">
               <div className="flex justify-between">
-                {cardData.map((card, index) => (
+                {profileData.map((card, index) => (
                   <ProfileCard
-                    key={index}
-                    title={card.title}
-                    number={card.number}
+                    key={card.id.toString()}
+                    title={cardTitle[index]}
+                    number={card.count}
                     bgColor={cardColor[index % cardColor.length]}
                   />
                 ))}
@@ -128,11 +113,11 @@ function Dashboard_Student() {
             <PerformanceChart chartData={data} />
           </div>
           <div className="grid grid-cols-2 grid-rows-2 gap-[19px]">
-            {performance.map((item, index) => (
+            {performanceData.map((item, index) => (
               <PerformanceCard
-                key={index}
-                title={item.title}
-                color={item.color}
+                key={item.id}
+                title={performance[index].title}
+                color={performance[index].color}
                 count={item.count}
               />
             ))}
@@ -144,15 +129,15 @@ function Dashboard_Student() {
       <div className="col-span-8 row-start-3 row-span-3">
         <DashboardWrapper heading="In Progress Courses">
           <div className="flex overflow-x-auto gap-8 p-4">
-          {progressCourses && progressCourses.length !== 0 ? (
+            {progressCourses.length !== 0 ? (
               progressCourses.map((course, index) => (
                 <CourseCard
                   key={index}
                   image={course.image}
                   title={course.title}
                   subtitle={course.subtitle}
-                  progress={course.progress}
-                  stars={course.stars}
+                  progress={course.progress[index].completion_percentage}
+                  stars={course.rating[index].stars_number}
                 />
               ))
             ) : (
@@ -169,9 +154,9 @@ function Dashboard_Student() {
         <DashboardWrapper heading={"My Roadmaps"}>
           <div className="flex flex-col gap-4 overflow-y-auto h-[285px] pr-4">
             {myRoadmaps.length !== 0 ? (
-              myRoadmaps.map((roadmap) => (
+              myRoadmaps.map((roadmap, index) => (
                 <div
-                  key={roadmap.id}
+                  key={index}
                   className={`${transition} flex justify-between items-center rounded-[20px] p-4 bg-light dark:bg-dark`}
                 >
                   <span
