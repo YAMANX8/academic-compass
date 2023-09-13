@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   BsStarHalf as Half,
   BsFillStarFill as Full,
@@ -9,6 +9,7 @@ import {
 } from "react-icons/bs";
 import Card from "../assets/images/Rectangle 63.png";
 const SearchStudent = () => {
+  const {text} = useParams();
   const [results, setResults] = useState([
     {
       id: 1,
@@ -140,7 +141,7 @@ const SearchStudent = () => {
   return (
     <section className=" w-[1200px]">
       <h1 className=" font-semibold text-[48px] tracking-tight p-[16px]">
-        1,000 Result for “API basics”
+        1,000 Result for “{text}”
       </h1>
       <div className="flex">
         <div className="p-4 min-w-[282px] bg-secondary dark:bg-secondary-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back min-h-screen">
