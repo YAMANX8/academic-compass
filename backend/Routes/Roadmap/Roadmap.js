@@ -323,6 +323,154 @@ router.get("/topic/:id", async (req, res) => {
     });
   }
 });
+// * Returns topics from the N level with login
+router.get("/student/topicN/:id", async (req, res) => {
+  try {
+    const jwtToken = req.header("token");
+    const  topic_levelN_id  = req.params.id;
+    if (!jwtToken) {
+      // If there is no valid authentication (student is not authenticated)
+      // Redirect the request to another API endpoint
+      return res.redirect(
+          `http://localhost:5000/AcademicCompass/roadmap/topicN/${topic_levelN_id}`
+        );
+      } else {
+        // Extract student ID from the token and proceed with your logic
+      const payload = jwt.verify(jwtToken, process.env.jwtSecret);
+      const studentId = payload.studentId;
+      const query = `
+  SELECT
+   TLN.topic_id AS topic_id_lN,
+   TLN.topic_title,
+   TLN.topic_description,
+   TLN.topic_status,
+   TLN.topic_level AS topic_level_lN,
+   TLN.topic_order,
+   ps.progress_id,
+   ps.student_id,
+   ps.state_id AS progress_state_id,
+   ps.topic_id,
+   ps.topic_level,
+   ts.state_name,
+   CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM topic_level_N 
+            WHERE   TLN.topic_id=topic_level_N.top_level_topic_id
+        ) THEN FALSE
+        ELSE TRUE
+    END AS is_last
+  FROM topic_level_N TLN
+  LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id AND ps.topic_level = TLN.topic_id AND ps.student_id = $1
+  LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
+  WHERE TLN.top_level_topic_id = $2;
+    `;
+      const values = [studentId, topic_levelN_id];
+      const result = await pool.query(query, values);
+      if (result.rows.length === 0) {
+        res.status(404).json({
+          status: "error",
+          message: "topic not found",
+        });
+        return;
+      }
+
+      const topics = result.rows
+        .map((row) => ({
+          topic_id: row.topic_id_ln,
+          topic_title: row.topic_title,
+          topic_description: row.topic_description,
+          topic_status: row.topic_status,
+          topic_level: row.topic_level_ln,
+          topic_order: row.topic_order,
+          isItLast: row.is_last,
+        }))
+        .filter((topic) => topic.topic_id !== null);
+
+      const progressData = result.rows
+        .map((row) => ({
+          progress_id: row.progress_id,
+          student_id: row.student_id,
+          progress_state_id: row.progress_state_id,
+          topic_id: row.topic_id,
+          topic_level:row.topic_level,
+          state_name: row.state_name,
+        }))
+        .filter((progress) => progress.progress_id !== null);
+
+      res.status(200).json({
+        status: "success",
+        topics: topics,
+        progress: progressData
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "An error occurred",
+    });
+  }
+});
+
+// * Returns topics from the N level without login
+router.get("/topicN/:id", async (req, res) => {
+  try {
+    const  topic_levelN_id = req.params.id;
+        // Extract student ID from the token and proceed with your logic
+      const query = `
+SELECT
+   TLN.topic_id,
+   TLN.topic_title,
+   TLN.topic_description,
+   TLN.topic_status,
+   TLN.topic_level AS topic_level_lN,
+   TLN.topic_order,
+   CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM topic_level_N 
+            WHERE   TLN.topic_id=topic_level_N.top_level_topic_id
+        ) THEN FALSE
+        ELSE TRUE
+    END AS is_last
+  FROM topic_level_N TLN
+  WHERE TLN.top_level_topic_id = $1;
+    `;
+      const values = [topic_levelN_id];
+      const result = await pool.query(query, values);
+      if (result.rows.length === 0) {
+        res.status(404).json({
+          status: "error",
+          message: "topic not found",
+        });
+        return;
+      }
+
+      const topics = result.rows
+        .map((row) => ({
+          topic_id: row.topic_id,
+          topic_title: row.topic_title,
+          topic_description: row.topic_description,
+          topic_status: row.topic_status,
+          topic_level: row.topic_level_ln,
+          topic_order: row.topic_order,
+          isItLast: row.is_last,
+        }))
+        .filter((topic) => topic.topic_id !== null);
+
+      res.status(200).json({
+        status: "success",
+        topics: topics
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: "error",
+      message: "An error occurred",
+    });
+  }
+});
 
 
 module.exports = router;

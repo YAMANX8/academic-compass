@@ -1421,86 +1421,51 @@ SELECT
   LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
   WHERE TLN.topic_level1_id = 1 AND TLN.topic_level=2;
 
--- topic_level_N
-WITH RECURSIVE topic_hierarchy AS (
-  SELECT topic_id, topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id
-  FROM topic_level_N
-  WHERE  topic_id = 19
-  UNION ALL
-  SELECT tn.topic_id, tn.topic_title, tn.topic_description, tn.topic_status, tn.topic_level, tn.top_level_topic_id, tn.topic_level1_id
-  FROM topic_level_N tn
-  INNER JOIN topic_hierarchy th ON tn.top_level_topic_id = th.topic_id
-)
-SELECT * FROM topic_hierarchy;
---بدون أول قيمة
-WITH RECURSIVE topic_hierarchy AS (
-  SELECT 
-    tn.topic_id, 
-    tn.topic_title, 
-    tn.topic_description, 
-    tn.topic_status, 
-    tn.topic_level, 
-    tn.top_level_topic_id, 
-    tn.topic_level1_id
-  FROM 
-    topic_level_N tn
-  WHERE  
-    tn.top_level_topic_id = 21 -- قم بتغيير هذه القيمة إلى القيمة المحددة
-  UNION ALL
-  SELECT 
-    tn.topic_id, 
-    tn.topic_title, 
-    tn.topic_description, 
-    tn.topic_status, 
-    tn.topic_level, 
-    tn.top_level_topic_id, 
-    tn.topic_level1_id
-  FROM 
-    topic_level_N tn
-  INNER JOIN 
-    topic_hierarchy th 
-  ON 
-    tn.top_level_topic_id = th.topic_id
-)
-SELECT * FROM topic_hierarchy WHERE topic_id <> 21; -- استبعد القيمة المحددة نفسها
---
+-- topic_level_N with login
+SELECT
+   TLN.topic_id AS topic_id_lN,
+   TLN.topic_title,
+   TLN.topic_description,
+   TLN.topic_status,
+   TLN.topic_level AS topic_level_lN,
+   TLN.topic_order,
+   ps.progress_id,
+   ps.student_id,
+   ps.state_id AS progress_state_id,
+   ps.topic_id,
+   ps.topic_level,
+   ts.state_name,
+   CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM topic_level_N 
+            WHERE   TLN.topic_id=topic_level_N.top_level_topic_id
+        ) THEN FALSE
+        ELSE TRUE
+    END AS is_last
+  FROM topic_level_N TLN
+  LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id AND ps.topic_level = TLN.topic_id AND ps.student_id = 5
+  LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
+  WHERE TLN.top_level_topic_id = 19;
 
-WITH RECURSIVE topic_hierarchy AS (
-  SELECT 
-    tn.topic_id, 
-    tn.topic_title, 
-    tn.topic_description, 
-    tn.topic_status, 
-    tn.topic_level, 
-    tn.top_level_topic_id, 
-    tn.topic_level1_id
-  FROM 
-    topic_level_N tn
-  WHERE  
-    tn.top_level_topic_id = 19 -- قم بتغيير هذه القيمة إلى القيمة المحددة
-  UNION ALL
-  SELECT 
-    tn.topic_id, 
-    tn.topic_title, 
-    tn.topic_description, 
-    tn.topic_status, 
-    tn.topic_level, 
-    tn.top_level_topic_id, 
-    tn.topic_level1_id
-  FROM 
-    topic_level_N tn
-  INNER JOIN 
-    topic_hierarchy th 
-  ON 
-    tn.top_level_topic_id = th.topic_id
-)
-SELECT 
-  *,
-  CASE WHEN LEAD(top_level_topic_id) OVER (ORDER BY topic_id) IS NULL THEN true ELSE false END AS isItLast
-FROM 
-  topic_hierarchy
-WHERE 
-  topic_id <> 19;
+-- topic_level_N without login
+SELECT
+   TLN.topic_id AS topic_id_lN,
+   TLN.topic_title,
+   TLN.topic_description,
+   TLN.topic_status,
+   TLN.topic_level AS topic_level_lN,
+   TLN.topic_order,
+   CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM topic_level_N 
+            WHERE   TLN.topic_id=topic_level_N.top_level_topic_id
+        ) THEN FALSE
+        ELSE TRUE
+    END AS is_last
+  FROM topic_level_N TLN
+  WHERE TLN.top_level_topic_id = 19;
 --
 --database
 ALTER TABLE course
