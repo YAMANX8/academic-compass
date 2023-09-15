@@ -450,13 +450,15 @@ WHERE
 -- roadmap+topic by ID without sigin
 SELECT
     Roadmap.*,
-    Topic_Level_1.*
+    TL1.*,
+    TC.category_name
 FROM
     Roadmap
 JOIN
-    Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
+    Topic_Level_1 TL1 ON Roadmap.roadmap_id = TL1.roadmap_id
+LEFT JOIN Topic_Category TC ON TL1.category_id = TC.category_id
 WHERE
-    Roadmap.roadmap_id = 1;
+    Roadmap.roadmap_id = 18;
 --بدون تكرار id
 SELECT
     Roadmap.roadmap_id,

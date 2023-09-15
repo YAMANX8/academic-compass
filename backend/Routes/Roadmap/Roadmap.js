@@ -135,12 +135,22 @@ ORDER BY
   }
 });
 
-//* Returns topics without login by roadmapID
+//* Returns topics without login by roadmapID ##
 router.get("/:id", async (req, res) => {
   try {
     const roadmap_id = req.params.id;
     const query =
-      "SELECT roadmap.*, topic_level_1.* FROM roadmap LEFT JOIN topic_level_1 ON roadmap.roadmap_id = topic_level_1.roadmap_id WHERE roadmap.roadmap_id = $1";
+      `SELECT
+    Roadmap.*,
+    TL1.*,
+    TC.category_name
+    FROM
+    Roadmap
+    JOIN
+    Topic_Level_1 TL1 ON Roadmap.roadmap_id = TL1.roadmap_id
+    LEFT JOIN Topic_Category TC ON TL1.category_id = TC.category_id
+    WHERE
+    Roadmap.roadmap_id = $1`;
     const result = await pool.query(query, [roadmap_id]);
 
     if (result.rows.length === 0) {
@@ -165,6 +175,7 @@ router.get("/:id", async (req, res) => {
       topic_description: row.topic_description,
       topic_status: row.topic_status,
       topic_order: row.topic_order,
+      topic_category: row.category_name
     }));
 
     res.status(200).json({
