@@ -9,44 +9,53 @@ import {
   Topic,
   Modal,
 } from "../../components";
-import { Link, useOutletContext } from "react-router-dom";
-
+import { Link, useOutletContext, useParams } from "react-router-dom";
+import axios from "../../apis/axios";
 const LevelZero = () => {
+  const {roadmapId} = useParams();
+  useEffect(() => {
+    const getData = async () => {
+      const response = await axios.get(`/roadmap/${roadmapId}`);
+      console.log(response.data);
+      setRoadmap(response.data.topics);
+    }
+    getData();
+  }, [])
   const [roadmap, setRoadmap] = useState([
     {
-      id: 1,
-      topicTitle: "internet",
-      topicDescription:
+      topic_level1_id: 1,
+      topic_title: "internet",
+      topic_description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
       topicOrder: 1,
-      topicStatus: "Trending",
+      topic_status: "Trending",
       topicCategory: "essential",
     },
     {
-      id: 2,
-      topicTitle: "react.js",
-      topicDescription:
+      topic_level1_id: 2,
+      topic_title: "react.js",
+      topic_description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
       topicOrder: 2,
-      topicStatus: "Trending",
+      topic_status: "Trending",
       topicCategory: "intermediate",
     },
     {
-      id: 3,
-      topicTitle: "jquery",
-      topicDescription:
+      topic_level1_id: 3,
+      topic_title: "jquery",
+      topic_description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
       topicOrder: 3,
-      topicStatus: "Deprecated",
+      topic_status: "Deprecated",
       topicCategory: "intermediate",
     },
     {
-      id: 4,
-      topicTitle: "typescript",
-      topicDescription:
+      topic_level1_id: 4,
+      topic_title: "typescript",
+      topic_description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
       topicOrder: 3,
-      topicStatus: "Cutting-edge",
+      topic_status: "Cutting-edge",
       topicCategory: "additional",
     },
   ]);
@@ -101,16 +110,16 @@ const LevelZero = () => {
         //the first topic rendering
         if (index == 0) {
           return (
-            <div key={topic.id} className="w-full">
+            <div key={topic.topic_level1_id} className="w-full">
               <StartLine />
               <Topic
-                topicId={topic.id}
+                topicId={topic.topic_level1_id}
                 setIsOpen={setIsOpen}
                 modalTitle={setModalTitle}
-                topicTitle={topic.topicTitle}
-                topicDescription={topic.topicDescription}
+                topicTitle={topic.topic_title}
+                topicDescription={topic.topic_description}
                 modalLinks={setModalLinks}
-                topicStatus={topic.topicStatus}
+                topicStatus={topic.topic_status}
                 category={topic.topicCategory}
               />
               <RightLine />
@@ -121,15 +130,15 @@ const LevelZero = () => {
           //checking if the last topic is even (Means that the topic is in the right side)
           if (index % 2 == 0)
             return (
-              <div key={topic.id} className="w-full">
+              <div key={topic.topic_level1_id} className="w-full">
                 <Topic
-                  topicId={topic.id}
+                  topicId={topic.topic_level1_id}
                   setIsOpen={setIsOpen}
                   modalTitle={setModalTitle}
-                  topicTitle={topic.topicTitle}
-                  topicDescription={topic.topicDescription}
+                  topicTitle={topic.topic_title}
+                  topicDescription={topic.topic_description}
                   modalLinks={setModalLinks}
-                  topicStatus={topic.topicStatus}
+                  topicStatus={topic.topic_status}
                   category={topic.topicCategory}
                 />{" "}
                 <EndLineRight />
@@ -138,15 +147,15 @@ const LevelZero = () => {
           //if its not, so it is in left side
           else
             return (
-              <div key={topic.id} className="w-full">
+              <div key={topic.topic_level1_id} className="w-full">
                 <Topic
-                  topicId={topic.id}
+                  topicId={topic.topic_level1_id}
                   setIsOpen={setIsOpen}
                   modalTitle={setModalTitle}
-                  topicTitle={topic.topicTitle}
-                  topicDescription={topic.topicDescription}
+                  topicTitle={topic.topic_title}
+                  topicDescription={topic.topic_description}
                   modalLinks={setModalLinks}
-                  topicStatus={topic.topicStatus}
+                  topicStatus={topic.topic_status}
                   category={topic.topicCategory}
                   isRight={false}
                 />
@@ -156,15 +165,15 @@ const LevelZero = () => {
           //the even topic rendering (right side)
         } else if (index % 2 == 0) {
           return (
-            <div key={topic.id} className="w-full">
+            <div key={topic.topic_level1_id} className="w-full">
               <Topic
-                topicId={topic.id}
+                topicId={topic.topic_level1_id}
                 setIsOpen={setIsOpen}
                 modalTitle={setModalTitle}
-                topicTitle={topic.topicTitle}
-                topicDescription={topic.topicDescription}
+                topicTitle={topic.topic_title}
+                topicDescription={topic.topic_description}
                 modalLinks={setModalLinks}
-                topicStatus={topic.topicStatus}
+                topicStatus={topic.topic_status}
                 category={topic.topicCategory}
               />{" "}
               <RightLine />
@@ -173,15 +182,15 @@ const LevelZero = () => {
           //the final case is the left side topic rendering
         } else {
           return (
-            <div key={topic.id} className="w-full">
+            <div key={topic.topic_level1_id} className="w-full">
               <Topic
-                topicId={topic.id}
+                topicId={topic.topic_level1_id}
                 setIsOpen={setIsOpen}
                 modalTitle={setModalTitle}
-                topicTitle={topic.topicTitle}
-                topicDescription={topic.topicDescription}
+                topicTitle={topic.topic_title}
+                topicDescription={topic.topic_description}
                 modalLinks={setModalLinks}
-                topicStatus={topic.topicStatus}
+                topicStatus={topic.topic_status}
                 category={topic.topicCategory}
                 isRight={false}
               />
