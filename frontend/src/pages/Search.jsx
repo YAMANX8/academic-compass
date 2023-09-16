@@ -281,7 +281,7 @@ const SearchStudent = () => {
               >
                 {result.courses.map((course) => (
                   <Link
-                    to={`courseview/${course.id}`}
+                    to={`/student/courseview/${course.id}`}
                     key={course.id}
                     className="py-8 px-4 shadow-[5px_5px_5px_0] bg-light dark:bg-dark shadow-black/20 hover:scale-[1.03] [transition:background-color_1s_cubic-bezier(0.780,-0.375,0.260,1.320),transform_.3s_cubic-bezier(0.780,-0.375,0.260,1.320)]"
                   >

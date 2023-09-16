@@ -8,11 +8,15 @@ const Topic = ({
   topicStatus,
   last = false,
   setIsLast = () => false,
-  category = "essential",
+  category = "Basic",
   isRight = true,
 }) => {
   return (
-    <div className={`flex justify-between w-full ${isRight && 'flex-row-reverse'} px-[100px] tracking-tight font-semibold`}>
+    <div
+      className={`flex justify-between w-full ${
+        isRight && "flex-row-reverse"
+      } px-[100px] tracking-tight font-semibold`}
+    >
       <button
         onClick={() => {
           modalTitle(
@@ -29,9 +33,9 @@ const Topic = ({
           setIsOpen(true);
         }}
         className={`w-[400px] text-[32px] text-center ${
-          category == "intermediate" && "bg-accent"
-        } ${category == "additional" && "bg-advance"} ${
-          category == "essential" && "bg-primary"
+          category == "Advance" && "bg-accent"
+        } ${category == "Aditional" && "bg-advance"} ${
+          category == "Basic" && "bg-primary"
         } text-light py-[26px] rounded-full`}
       >
         {topicTitle}

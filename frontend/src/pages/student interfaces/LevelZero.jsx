@@ -11,16 +11,24 @@ import {
 } from "../../components";
 import { Link, useOutletContext, useParams } from "react-router-dom";
 import axios from "../../apis/axios";
+import useAuth from "../../hooks/useAuth";
 const LevelZero = () => {
-  const {roadmapId} = useParams();
+  const { isAuth } = useAuth();
+  const { roadmapId } = useParams();
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get(`/roadmap/${roadmapId}`);
-      console.log(response.data);
+      const response = await axios.get(
+        `/roadmap/${!isAuth ? `${roadmapId}` : `student/${roadmapId}`}`,
+        {
+          headers: {
+            token: localStorage.token,
+          },
+        }
+      );
       setRoadmap(response.data.topics);
-    }
+    };
     getData();
-  }, [])
+  }, []);
   const [roadmap, setRoadmap] = useState([
     {
       topic_level1_id: 1,
@@ -29,7 +37,7 @@ const LevelZero = () => {
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
       topicOrder: 1,
       topic_status: "Trending",
-      topicCategory: "essential",
+      topic_category: "Basic",
     },
     {
       topic_level1_id: 2,
@@ -38,7 +46,7 @@ const LevelZero = () => {
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
       topicOrder: 2,
       topic_status: "Trending",
-      topicCategory: "intermediate",
+      topic_category: "Advance",
     },
     {
       topic_level1_id: 3,
@@ -47,7 +55,7 @@ const LevelZero = () => {
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
       topicOrder: 3,
       topic_status: "Deprecated",
-      topicCategory: "intermediate",
+      topic_category: "Advance",
     },
     {
       topic_level1_id: 4,
@@ -56,17 +64,21 @@ const LevelZero = () => {
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
       topicOrder: 3,
       topic_status: "Cutting-edge",
-      topicCategory: "additional",
+      topic_category: "Aditional",
     },
   ]);
   //some styles
   const style = "p-4 rounded-md text-dark border-2";
   const important = "bg-gradient-to-r from-primary to-accent text-light";
-  
+
   //for the title of the page
   const [title, setTitle] = useOutletContext();
   // setTitle("FE") : I put it in a useEffect because of the warning in the console.
-  useEffect(() => setTitle("fronTEnd"[0].toUpperCase() + "fronTEnd".slice(1).toLowerCase()), []);
+  useEffect(
+    () =>
+      setTitle("fronTEnd"[0].toUpperCase() + "fronTEnd".slice(1).toLowerCase()),
+    []
+  );
 
   //for the modal:
   //the first is for the opening state of the modal
@@ -120,7 +132,7 @@ const LevelZero = () => {
                 topicDescription={topic.topic_description}
                 modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
-                category={topic.topicCategory}
+                category={topic.topic_category}
               />
               <RightLine />
             </div>
@@ -139,7 +151,7 @@ const LevelZero = () => {
                   topicDescription={topic.topic_description}
                   modalLinks={setModalLinks}
                   topicStatus={topic.topic_status}
-                  category={topic.topicCategory}
+                  category={topic.topic_category}
                 />{" "}
                 <EndLineRight />
               </div>
@@ -156,7 +168,7 @@ const LevelZero = () => {
                   topicDescription={topic.topic_description}
                   modalLinks={setModalLinks}
                   topicStatus={topic.topic_status}
-                  category={topic.topicCategory}
+                  category={topic.topic_category}
                   isRight={false}
                 />
                 <EndLineLeft />
@@ -174,7 +186,7 @@ const LevelZero = () => {
                 topicDescription={topic.topic_description}
                 modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
-                category={topic.topicCategory}
+                category={topic.topic_category}
               />{" "}
               <RightLine />
             </div>
@@ -191,7 +203,7 @@ const LevelZero = () => {
                 topicDescription={topic.topic_description}
                 modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
-                category={topic.topicCategory}
+                category={topic.topic_category}
                 isRight={false}
               />
               <LeftLine />

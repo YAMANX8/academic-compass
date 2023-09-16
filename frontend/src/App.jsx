@@ -48,7 +48,7 @@ const App = () => {
                   </Route>
                 </Route>
 
-                <Route path="courseview" element={<CourseView />} />
+                <Route path="courseview/:id" element={<CourseView />} />
                 
                 <Route path="video" element={<Video />} />
                 <Route path="search">
