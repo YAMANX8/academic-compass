@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const pool = require("../../Database/db");
 const jwt = require("jsonwebtoken");
+const checkPermission = require("../../middleware/checkPermissions");
 // Get all roadmaps
 router.get("/", async (req, res) => {
   try {
@@ -44,6 +45,11 @@ router.get("/student/:id", async (req, res) => {
       // Extract student ID from the token and proceed with your logic
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
       const studentId = payload.studentId;
+      //permission
+      const hasAccess = await checkPermission(studentId, "show_roadmap");
+      if (!hasAccess) {
+        return res.status(403).json("Access denied");
+      }
       const query = `
     SELECT DISTINCT ON (r.roadmap_id, TL1.topic_level1_id)
     r.roadmap_id,

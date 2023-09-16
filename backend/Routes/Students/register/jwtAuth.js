@@ -12,7 +12,7 @@ router.post("/student/register", validInfo, async (req, res) => {
     // 1. destructure the req.body (first_name,last_name,email,password)
 
     const { first_name, last_name, email, password } = req.body;
-
+    const role_id=2;
     // 2. check if student exist (if student exist then throw error)
     const student = await pool.query("SELECT * FROM student WHERE email=$1", [
       email,
@@ -27,8 +27,8 @@ router.post("/student/register", validInfo, async (req, res) => {
     const bcryptPassword = await bcrypt.hash(password, salt);
     // 4.enter the new student inside our database
     const newStudent = await pool.query(
-      "INSERT INTO student  (first_name,last_name,email,password) VALUES ($1,$2,$3,$4) RETURNING *",
-      [first_name, last_name, email, bcryptPassword]
+      "INSERT INTO student  (first_name,last_name,email,password,role_id) VALUES ($1,$2,$3,$4,$5) RETURNING *",
+      [first_name, last_name, email, bcryptPassword,role_id]
     );
 
     // 5.generating our jwt token
@@ -50,7 +50,6 @@ router.post("/student/login", validInfo, async (req, res) => {
     // 1. destructure req.body
 
     const { email, password } = req.body;
-
     // 2. check student doesn't exist (if not then throw error)
     const student = await pool.query("SELECT * FROM student WHERE email=$1", [
       email,

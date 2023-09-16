@@ -16,7 +16,7 @@ const checkPermission = async (userId, permissionName) => {
         SELECT 1
         FROM role_permission
         WHERE role_id = $1 AND permission_id = (
-          SELECT permission_id FROM permissions WHERE permission_name = $2
+          SELECT permission_id FROM permission WHERE permission_name = $2
         )
       )
     `;
