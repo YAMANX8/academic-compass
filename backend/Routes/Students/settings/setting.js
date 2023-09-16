@@ -4,6 +4,7 @@ const multer = require("multer");
 const path = require("path");
 const authorization = require("../../../middleware/authorization");
 const bcrypt = require("bcrypt");
+const checkPermission = require("../../../middleware/checkPermissions");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -42,6 +43,11 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
       verifyNewPassword,
     } = req.body;
     const student_id = req.student.studentId;
+    //permission
+    const hasAccess = await checkPermission(student_id, "update_stting");
+    if (!hasAccess) {
+        return res.status(403).json("Access denied");
+      }
     let query = "";
     let imageFilePath = null;
 

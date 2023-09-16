@@ -1,4 +1,4 @@
-const pool = require("../db.js");
+const pool = require("../Database/db");
 // todo this function to student
 const checkPermission = async (userId, permissionName) => {
   const userRoleQuery = "SELECT role_id FROM student WHERE student_id = $1";
@@ -16,7 +16,7 @@ const checkPermission = async (userId, permissionName) => {
         SELECT 1
         FROM role_permission
         WHERE role_id = $1 AND permission_id = (
-          SELECT permission_id FROM permissions WHERE permission_name = $2
+          SELECT permission_id FROM permission WHERE permission_name = $2
         )
       )
     `;

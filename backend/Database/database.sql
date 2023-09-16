@@ -14,6 +14,9 @@ ADD COLUMN new_column_name data_type;
 ALTER TABLE course
 ADD COLUMN subtitle VARCHAR(150);
 
+ALTER TABLE student
+ADD COLUMN role_id INT;
+
 ALTER TABLE topic_level_1
 ADD COLUMN topic_order character varying(50);
 
@@ -83,10 +86,10 @@ ALTER COLUMN password TYPE character varying(100);
 -- Add Add values to a table (Note These values are constant)
 INSERT INTO Role (role_name)
 VALUES
-  ('platform manager'),
-  ('Academic manager'),
-  ('Academic supervisor'),
-  ('lecturer');
+  ('manager'),
+  ('supervisor'),
+  ('AcademicManager');
+
 
 
 --insert data
@@ -483,13 +486,19 @@ VALUES
     (2, 'In Progress'),
     (3, 'Completed');
 
-INSERT INTO Progress_Status (topic_title, student_id, state_id)
+INSERT INTO Progress_Status ( topic_id, topic_level,student_id,state_id)
 VALUES
-    ('Introduction to Programming', 1, 1),
-    ('Data Structures and Algorithms', 1, 2),
-    ('Web Development Basics', 1, 2),
-    ('Introduction to Programming', 2, 1),
-    ('Introduction to Programming', 2, 3);
+    ( 29, 3,5,1),
+    ( 30, 2,6,2),
+    ( 31, 3,7,3),
+    ( 32, 3,8,1),
+    ( 33, 3,5,2),
+    ( 2,1,8,1),
+    ( 3,1,5,2),
+    ( 4,1,6,3),
+    ( 5,1,7,2);
+
+
 
 
 --roadmap+topic by ID with sigin to student 
@@ -647,7 +656,7 @@ FROM
 JOIN
     Topic_Level_1 TL1 ON r.roadmap_id = TL1.roadmap_id
 LEFT JOIN Topic_Category TC ON TL1.category_id = TC.category_id
-LEFT JOIN Progress_Status ps ON TL1.topic_level1_id = ps.topic_id AND ps.topic_level = 1 AND ps.student_id = 1
+LEFT JOIN Progress_Status ps ON TL1.topic_level1_id = ps.topic_id AND ps.topic_level = 1 AND ps.student_id = 5
 LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
 
 WHERE
@@ -672,7 +681,7 @@ JOIN
 JOIN
     Enrollment E ON C.course_id = E.course_id
 WHERE
-    E.student_id = 1;
+    E.student_id = 6;
 
 -- search
 ---
@@ -1556,6 +1565,192 @@ VALUES
     --------
     ('How dose the internet work', 'The Internet is a global network of computers connected to each other which communicate through a standardized set of protocols.', 'Stable',2,Null, 2,1),
 
+INSERT INTO Course (course_title,subtitle,course_description, course_duration, items_count, course_status, instructor_id, course_level, course_type,course_thumnail)
+VALUES 
+-- -- for html basics 
+-- ('HTML Basics for Beginners',' Learn the Fundamentals of HTML','This course covers the basics of HTML, including tags, elements, and structure. Perfect for beginners.', 45, 6 ,'Active', 1, 1,2,'photo.png'),
+-- ('HTML Essentials','Master the Core Concepts of HTML', 'Dive deeper into HTML with this comprehensive course. Learn advanced techniques and best practices.',50, 7 ,'Active', 1,2,2, 'photo.png'),
+-- ('HTML Advanced Techniques','Take Your HTML Skills to the Next Level', 'Explore advanced HTML concepts and techniques to create dynamic web content.',55, 6 ,'Active', 1,3,3, 'photo.png');
+
+-- for Basics of SEO
+-- ('Local SEO Strategies',' Rank Higher in Local Search Results','Discover the techniques to improve your local SEO presence and reach a local audience effectively.', 35, 5 ,'Active', 1, 1,3, 'photo.png'),
+-- ('On-Page SEO Techniques',' Optimize Your Webpages for Better Rankings','Dive deeper into on-page SEO strategies, including content optimization, meta tags, and user experience.', 45, 7 ,'Active', 1, 2,3, 'photo.png'),
+-- ('SEO for E-commerce',' Drive Organic Traffic to Your Online Store','Learn how to optimize e-commerce websites for SEO, increase sales, and improve product visibility.', 45, 7 ,'Active', 1, 3,3, 'photo.png');    
+-- for CSS Basics
+-- ('Introduction to CSS',' Learn the Basics of Cascading Style Sheets','This course introduces you to the fundamentals of CSS, including selectors, properties, and styling web elements.', 25, 5 ,'Active', 1, 1,2, 'photo.png');
+-- for Making layouts
+-- ('CSS Layout Fundamentals','Learn the Basics of Creating Web Layouts','This course covers the fundamental concepts of creating web layouts using CSS, including box model, positioning, and responsive design principles.', 30, 5 ,'Active', 1, 1,1, 'photo.png'),
+-- ('Advanced CSS Layout Techniques','Learn the Advanced of Creating Web Layouts','Master Complex Web Layouts course_description: Dive deeper into CSS layout techniques, including CSS Grid and Flexbox, to create complex and responsive web layouts.', 45, 5 ,'Active', 1, 2,2, 'photo.png');
+-- for Responsive Web Design
+-- ('Expert Responsive Web Design','Master the Art of Crafting Responsive Websites','This advanced course is tailored for experts in web design and development. Learn the intricacies of creating responsive web designs that adapt seamlessly to various screen sizes and devices. Explore techniques such as fluid layouts, media queries, and mobile-first design strategies. Elevate your skills and ensure your web projects look stunning on all devices.', 55, 5 ,'Active', 1, 3,2, 'photo.png');
+-- for build tools\module builder\vite
+-- ('Responsive Web Design with Vite','Building Adaptive Websites',' Learn how to create responsive and adaptive websites using Vite, a fast and modern build tool. This course covers the fundamentals of responsive design, CSS techniques, media queries, and how to leverage Vite to optimize your web development workflow. By the end of this course, you will be able to build websites that look great on any device.', 25, 5 ,'Active', 1, 2,3, 'photo.png'),
+-- ('Advanced Responsive Web Design with Vite',' Mastering Adaptive Layouts','Take your responsive web design skills to the next level with this advanced course. Learn how to create complex, adaptive layouts, implement advanced CSS techniques, and utilize Vite s powerful features for efficient web development. This course is perfect for web designers and developers looking to create stunning, device-agnostic web experiences.', 45, 5 ,'Active', 1, 3,1, 'photo.png');
+-- for build tools\module builder\esbuild
+
+-- ('Introduction to Responsive Web Design with esbuild','Building Your First Responsive Websites','Start your journey into responsive web design and esbuild with this beginner-friendly course. Learn the basics of creating web layouts that adapt to different screen sizes using HTML, CSS, and esbuild. This course will guide you through essential concepts and hands-on exercises to get you started in the world of responsive web development.', 25, 5 ,'Active', 1, 1,3, 'photo.png'),
+-- ('Responsive Web Design with esbuild','Creating Efficient and Fast Websites',' Dive into the world of responsive web design while harnessing the power of esbuild, a lightning-fast build tool. This course teaches you the essentials of responsive design, including fluid layouts, media queries, and esbuild s role in optimizing your website s performance. By the end of this course, you will be building responsive websites that load in the blink of an eye.', 25, 5 ,'Active', 1, 2,1, 'photo.png'),
+-- ('Advanced Responsive Web Design with esbuild','Mastering Performance-Oriented Layouts',' Elevate your responsive web design skills to an advanced level with this course. Explore advanced CSS techniques, efficient layout strategies, and how esbuild can supercharge your development workflow. Ideal for web designers and developers looking to create highly performant and responsive websites.', 35, 5 ,'Active', 1, 3,2, 'photo.png');
+-- for build tools\Task Runners\npm Scripts
+-- ('Task Runners with npm Scripts','Automate Your Development Workflow','Discover the power of npm Scripts as a versatile task runner for automating various development tasks. In this course, you will learn how to set up and configure npm Scripts, automate common build processes, optimize your projects workflow, and manage dependencies effectively. By the end of this course, you will have the skills to streamline your development tasks using npm Scripts.', 45, 5 ,'Active', 1, 1,2, 'photo.png'),
+-- ('Advanced Task Automation with npm Scripts','Enhance Your Development Productivity','Take your npm Scripts knowledge to the next level with this advanced course. Explore advanced automation techniques, create custom scripts, integrate npm Scripts with other tools, and optimize your development workflow further. This course is designed for developers looking to maximize their productivity and efficiency in managing complex projects.', 55, 5 ,'Active', 1, 3,3, 'photo.png');
+-- for build tools\Linters formatters\Prettier
+-- ('Linters and Formatters with Prettier','Streamlining Code Quality and Formatting','Learn how to enhance code quality and consistency by leveraging Prettier along with popular linters. This course covers the fundamentals of linting and code formatting, introduces you to Prettier s features, and demonstrates how to integrate it into your development workflow. By the end of this course, you will be able to write clean, well-formatted code with ease.', 45, 5 ,'Active', 1, 1,2, 'photo.png'),
+-- ('Advanced Code Formatting with Prettier','Mastering Code Consistency and Readability','Take your code formatting skills to the next level with this advanced course. Explore advanced Prettier configuration, customize formatting rules, integrate Prettier with various IDEs, and enforce code consistency in large projects. This course is designed for developers who want to become experts in code formatting and maintainability.', 55, 5 ,'Active', 1, 3,3, 'photo.png');
+-- for build tools\Linters formatters\ESLint
+-- ('ESLint for Front-End Developers','Code Quality in Web Development','Dive into ESLint and its role in front-end web development. This course focuses on ESLint s application in HTML, CSS, and JavaScript projects, helping front-end developers maintain code consistency, readability, and error-free code. By the end of this course, you will be equipped to create high-quality web applications with ESLint.', 45, 5 ,'Active', 1, 1,1, 'photo.png'),
+
+
+-- ('Effective Code Quality with ESLint','Mastering Code Analysis and Formatting','Learn how to enhance code quality and maintainability by using ESLint, a popular JavaScript linter. This course covers the essentials of ESLint configuration, rule customization, and integrating ESLint into your development workflow. By the end of this course, you will be able to write clean and error-free JavaScript code.', 35, 5 ,'Active', 1, 2,2, 'photo.png'),
+-- ('Advanced ESLint Configuration and Best Practices','Customizing ESLint for Complex Projects','Take your ESLint skills to the next level with this advanced course. Explore advanced ESLint configuration, rule sets, and best practices for maintaining code quality in large and complex JavaScript projects. This course is designed for developers who want to become experts in code analysis and formatting using ESLint.', 35, 5 ,'Active', 1, 3,3, 'photo.png');
+
+
+INSERT INTO Enrollment (strting_date, progress_state, ending_date, student_id, course_id)
+VALUES
+-- For Student 6
+-- ('2023-09-15', 3, NULL, 6, 12);
+-- F
+-- ('2023-09-10', 7, '2023-09-15', 6, 13);
+-- For Student 8 F
+-- ('2023-09-15', 6, '2023-09-15', 8, 14);
+--
+
+INSERT INTO Items (item_title, item_description, item_no, course_id, topic_id,item_type)
+VALUES
+--! for first COURSE this item = 1 (1 , 2 ,3) = 3
+-- ('video intro to html basics', 'video covers the basics of HTML', 1, 12,35,2)
+-- ('Article intro to html basics', 'Article covers the basics of HTML', 2, 12,35,1),
+--('quiz intro to html basics', 'quiz covers the basics of HTML', 3, 12,35,3);
+
+
+
+
+--! for first COURSE this item = 2(1 , 2 ,3) = 6
+-- ('video to html basics', 'video covers the basics of HTML', 1, 12,35,2),
+-- ('Article to html basics', 'Article covers the basics of HTML', 2, 12,35,1),
+-- ('quiz to html basics', 'quiz covers the basics of HTML', 3, 12,35,3);
+
+
+
+
+--! for scound COURSE this item = 1(1 ,2 ,3 ) = 3
+-- ('video intro to Essentials', 'video covers Essentials', 1, 13,35,2),
+-- ('Article intro to Essentials', 'Article covers Essentials', 2, 13,35,1),
+-- ('quiz intro to Essentials', 'quiz covers Essentials', 3, 13,35,3);
+
+
+
+-- for scound COURSE this item = 2(1 ,2 ,3) = 6
+-- ('video to Essentials', 'video covers Essentials', 1, 13,35,2),
+-- ('Article to Essentials', 'Article covers Essentials', 2, 13,35,1),
+-- ('quiz to Essentials', 'quiz covers Essentials', 3, 13,35,3);
+
+
+
+
+-- -- for scound COURSE this item = 3(1) = 7
+-- ('more Article about Essentials', 'Article covers Essentials', 1, 13,35,1),;
+
+-- -- for third COURSE this item = 1 (1 ,2 ,3) = 3
+-- ('video intro to HTML Advanced Techniques', 'video covers HTML Advanced Techniques', 1, 14,35,2),
+-- ('Article intro to HTML Advanced Techniques', 'Article covers HTML Advanced Techniques', 2, 14,35,1),
+-- ('quiz intro to HTML Advanced Techniques', 'quiz covers HTML Advanced Techniques', 3, 14,35,3);
+-- -- for third COURSE this item = 2 (1 ,2 ,3) = 6
+-- ('video to HTML Advanced Techniques', 'video covers HTML Advanced Techniques', 1, 14,35,2),
+-- ('Article to HTML Advanced Techniques', 'Article covers HTML Advanced Techniques', 2, 14,35,1),
+-- ('quiz to HTML Advanced Techniques', 'quiz covers HTML Advanced Techniques', 3, 14,35,3);
+
+
+INSERT INTO Option (option_body, is_correct, option_no, question_id)
+VALUES
+('HTML stands for HyperText Markup Language.', TRUE, 1, 17),
+('HTML stands for High-Level Text Markup Language.', FALSE, 2, 17),
+
+('HTML is used to structure and present content on the internet by defining the structure of web pages using markup.', TRUE, 1, 18),
+('HTML is used to create interactive and dynamic elements on the web by integrating programming logic and functionalities directly into web pages.', FALSE, 2, 18),
+
+('HTML tags are used to define the structure and elements of a web page, organizing content into headings, paragraphs, lists, images, links, and other essential components', TRUE, 1, 19),
+('HTML tags are used primarily for styling and design, allowing developers to apply various visual effects, layouts, and colors to the web page.', FALSE, 2, 19),
+
+('HTML elements are the building blocks of a web page s structure and content. They define the type of content, such as headings, paragraphs, images, and links.', TRUE, 1, 20),
+('HTML elements and HTML attributes are essentially the same, and the terms are interchangeable.', FALSE, 2, 20),
+
+('HTML tags are used to define the structure and elements of a web page. They enclose content and provide the browser with information on how to present and interpret that content.', TRUE, 1, 21),
+('HTML tags are only used for styling purposes, allowing developers to apply formatting, colors, and layouts to the web page.', FALSE, 2, 21),
+
+('HTML5 is the fifth and latest version of the HyperText Markup Language.', TRUE, 1, 22),
+('HTML5 is a version of HTML that focuses primarily on improving the styling and design capabilities of web pages.', FALSE, 2, 22),
+
+('Responsive web design in HTML is an approach that allows a website to adapt and display optimally on various devices and screen sizes.', TRUE, 1, 23),
+('Responsive web design in HTML refers to designing websites with fixed layouts that do not change regardless of the device or screen size.', FALSE, 2, 23),
+
+
+
+INSERT INTO Topic_Level_N (topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id,topic_order)
+VALUES
+    ('How dose the internet work', 'The Internet is a global network of computers connected to each other which communicate through a standardized set of protocols.', 'Stable',2,Null, 2,1),
+    ('What is HTTP', 'HTTP is the TCP/IP based application layer communication protocol which standardizes how the client and server communicate with each other. HTTP follows a classical “Client-Server model” with a client opening a connection request, then waiting until it receives a response. HTTP is a stateless protocol, that means that the server does not keep any data (state) between two requests.', 'Stable',2,Null, 2,2),
+    ('Domain Name', 'A domain name is a unique, easy-to-remember address used to access websites, such as google.com, and facebook.com. Users can connect to websites using domain names thanks to the Domain Name System (DNS).', 'Stable',2,Null, 2,3),
+    ('Hosting', 'Web hosting is an online service that allows you to publish your website files onto the internet. So, anyone who has access to the internet has access to your website.', 'Stable',2,Null, 2,4),
+    ('DNS', 'The Domain Name System (DNS) is the phonebook of the Internet. Humans access information online through domain names, like nytimes.com or espn.com. Web browsers interact through Internet Protocol (IP) addresses. DNS translates domain names to IP addresses so browsers can load Internet resources.', 'Stable',2,Null, 2,5),
+    ('Browsers', 'A web browser is a software application that enables a user to access and display web pages or other online content through its graphical user interface.', 'Stable',2,Null, 2,6),
+
+    ('HTML Basics', 'HTML stands for HyperText Markup Language. It is used on the frontend and gives the structure to the webpage which you can style using CSS and make interactive using JavaScript.', 'Trending',2,Null, 5,1),
+    ('Semantic HTML', 'Semantic element clearly describes its meaning to both the browser and the developer. In HTML, semantic element are the type of elements that can be used to define different parts of a web page such as <form>, <table>, <article>, <header>, <footer>', 'Stable',2,Null, 5,2),
+    ('Forms and Validations', 'Before submitting data to the server, it is important to ensure all required form controls are filled out, in the correct format. This is called client-side form validation, and helps ensure data submitted matches the requirements set forth in the various form controls.', 'Stable',2,Null, 5,3),
+    ('Accessibility', 'Web accessibility means that websites, tools, and technologies are designed and developed in such a way that people with disabilities can use them easily.', 'Stable',2,Null, 5,4),
+    ('Basics of SEO', 'SEO or Search Engine Optimization is the technique used to optimize your website for better rankings on search engines such as Google, Bing etc.', 'Cutting Edge',2,Null, 5,5)
+
+    ('CSS Basics', 'CSS or Cascading Style Sheets is the language used to style the frontend of any website. CSS is a cornerstone technology of the World Wide Web, alongside HTML and JavaScript.', 'Trending',2,Null, 6,1),
+    ('Making layouts', 'Float, grid, flexbox, positioning, display and box model are some of the key topics that are used for making layouts .', 'Stable',2,Null, 6,2),
+    ('Responsive Web Design', 'Responsive Web Designing is the technique to make your webpages look good on all screen sizes. There are certain techniques used to achieve that e.g. CSS media queries, percentage widths, min or max widths heights etc.', 'Stable',2,Null, 6,3),
+
+
+        ('JavaScript', 'JavaScript allows you to add interactivity to your pages. Common examples that you may have seen on the websites are sliders, click interactions, popups and so on.', 'Stable',2,Null, 7,1),
+    ('DOM Manipulation', 'The Document Object Model (DOM) is a programming interface built for HTML and XML documents. It represents the page that allows programs and scripts to dynamically update the document structure, content, and style. With DOM, we can easily access and manipulate tags, IDs, classes, attributes, etc.', 'Stable',2,Null, 7,2),
+    ('Fetch API', 'Ajax is the technique that lets us send and receive the data asynchronously from the servers e.g. updating the user profile or asynchronously fetching the list of searched products without reloading the page.', 'Cutting Edge',2,Null, 7,3),
+    
+    ('Git', 'Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.', 'Stable',2,Null, 10,1),
+
+    ('npm', 'npm is a package manager for the JavaScript programming language maintained by npm, Inc. npm is the default package manager for the JavaScript runtime environment Node.js.', 'Stable',2,Null, 12,1),
+    ('pnpm', 'PNPM is an alternative package manager for Node. js which stands for “Performant NPM”. The main purpose of PNPM is to hold all the packages at a global (centralized) store and use them if needed by other projects too by creating hard links to it.', 'Stable',2,Null, 12,2),
+    ('Yarn', 'Yarn is a software packaging system developed in 2016 by Facebook for Node.js JavaScript runtime environment that provides speed, consistency, stability, and security as an alternative to npm (package manager).', 'Stable',2,Null, 12,3),
+
+    ('React', 'React is the most popular front-end JavaScript library for building user interfaces. React can also render on the server using Node and power mobile apps using React Native.', 'Trending',2,Null, 13,1),
+    ('Vue.js', 'Vue.js is an open-source JavaScript framework for building user interfaces and single-page applications. It is mainly focused on front end development.', 'Stable',2,Null, 13,2),
+    ('Angular', 'Angular is a component based front-end development framework built on TypeScript which includes a collection of well-integrated libraries that include features like routing, forms management, client-server communication, and more.', 'Stable',2,Null, 13,3),
+    ('Svelte', 'Svelte is a javascript framework that unlike Vue and React does not use vertical DOM diffing but instead knows exactly what and where to update when the state changes. It iss mainly focused on frontend and building user interfaces.', 'Stable',2,Null, 13,4),
+    ('SolidJS', 'Solid is a reactive JavaScript toolkit for building user interfaces without a virtual DOM. To ensure that only the relevant code is executed when a state update occurs, it compiles templates down to real DOM nodes once and wraps modifications into fine-grained reactions.', 'Stable',2,Null, 13,5),
+    ('Qwik', 'Qwik is a new kind of web framework that can deliver instant loading web applications at any size or complexity. Your sites and apps can boot with about 1kb of JS (regardless of application complexity), and achieve consistent performance at scale.', 'Stable',2,Null, 13,6),
+
+    ('BEM', 'The Block, Element, Modifier methodology (commonly referred to as BEM) is a popular naming convention for classes in HTML and CSS. Developed by the team at Yandex, its goal is to help developers better understand the relationship between the HTML and CSS in a given project.', 'Cutting Edge',2,Null, 14,1),
+
+    ('Module Bundlers', 'A module bundler is a tool that takes pieces of JavaScript and their dependencies and bundles them into a single file, usually for use in the browser. You may have used tools such as Browserify, Webpack, Rollup or one of many others.It usually starts with an entry file, and from there it bundles up all of the code needed for that entry file.', 'Stable',2,Null, 15,1),
+    ('Task Runners', 'Task Runner are tools to simplify certain tedious tasks of development, like automating sass/scss compilation, bundling assets, linting source code, and hot reloading local server.', 'Stable',2,Null, 15,2),
+    ('Linters formatters', 'A linter is a tool used to analyze code and discover bugs, syntax errors, stylistic inconsistencies, and suspicious constructs. Popular linters for JavaScript include ESLint, JSLint, and JSHint.', 'Stable',2,Null, 15,3),
+
+    ('Vite', 'Vite is a build tool that aims to provide a faster and leaner development experience for modern web projects.', 'Stable',3,57, NULL,1),
+    ('esbuild', 'Our current build tools for the web are 10-100x slower than they could be. The main goal of the esbuild bundler project is to bring about a new era of build tool performance, and create an easy-to-use modern bundler along the way.', 'Stable',3,57, NULL,2),
+    ('Webpack', 'Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.', 'Stable',3,57, NULL,3),
+    ('Rollup', 'Rollup is a module bundler for JavaScript which compiles small pieces of code into something larger and more complex, such as a library or application.', 'Stable',3,57, NULL,4),
+    ('Parcel', 'Parcel is a web application bundler, differentiated by its developer experience. It offers blazing-fast performance utilizing multicore processing and requires zero configuration.', 'Cutting Edge',3,57, NULL,5),
+
+    ('npm Scripts', 'npm scripts are the entries in the scripts field of the package.json file. The scripts field holds an object where you can specify various commands and scripts that you want to expose.', 'Stable',3,58, NULL,1),
+
+
+    ('Prettier', 'Prettier is an opinionated code formatter with support for JavaScript, HTML, CSS, YAML, Markdown, GraphQL Schemas. By far the biggest reason for adopting Prettier is to stop all the on-going debates over styles.', 'Stable',3,59, NULL,1),
+    ('ESLint', 'With ESLint you can impose the coding standard using a certain set of standalone rules.', 'Trending',3,59, NULL,2),
+    ('React Native', 'React Native is a popular JavaScript-based mobile app framework that allows you to build natively-rendered mobile apps for iOS and Android. The framework lets you create an application for various platforms by using the same codebase.', 'Cutting Edge',2,Null, 16,1),
+    ('Flutter', 'Flutter is a free and open-source mobile UI framework created by Google and released in May 2017. In a few words, it allows you to create a native mobile application with only one codebase. This means that you can use one programming language and one codebase to create two different apps (for iOS and Android).', 'Trending',2,Null, 16,2),
+    ('Ionic', 'Ionic framework is an open-source UI toolkit for building performant, high-quality mobile apps, desktop apps, and progressive web apps using web technologies such as HTML, CSS, and JavaScript.', 'Stable',2,Null, 16,3),
+    ('NativeScript', 'NativeScript is an open source framework for creating native iOS and Android apps in Angular, TypeScript, or JavaScript.', 'Stable',2,Null, 16,4);
+
+    ('Conditional Statements', 'Exploring if-else statements and switch cases', 'Active', 2, 19, 1),
+    ('Linked Lists', 'Understanding linked list data structure', 'Active', 3, 20, 2), 
+    ('Arrays and Matrices', 'Exploring arrays and matrix data structures', 'Active', 4, 21, 2), 
+    ('HTML Basics', 'Introduction to HTML markup', 'Active', 5, 22, 3), 
+    ('CSS Styling', 'Styling web pages using CSS', 'Active', 6, 23, 3),
+    ('Java script', 'Styling web pages using CSS', 'Active', 7, 24, 4);
     -------
     --api roadmap by id
     --api topic_1=> topic_N
@@ -1568,3 +1763,72 @@ SET topic_level =1 WHERE progress_id=7;
 SET topic_level =2 WHERE progress_id=8;
     UPDATE Progress_Status
 SET topic_id =21 WHERE progress_id=8;
+---
+DELETE FROM Progress_Status;
+
+INSERT INTO Progress_Status ( topic_id, topic_level,student_id,state_id)
+VALUES
+    ( 29, 2,5,1),
+    ( 30, 2,6,2),
+    ( 31, 2,7,3),
+    ( 32, 2,8,1),
+    ( 33, 2,5,2),
+    ( 60, 3,5,2),
+    ( 2,1,8,1),
+    ( 5,1,5,2),
+    ( 6,1,6,3),
+    ( 7,1,7,2);
+
+UPDATE Topic_States
+SET state_name ='Skip' WHERE state_id=1;
+-- إضافة عمود role_id إلى جدول student
+ALTER TABLE student
+ADD COLUMN role_id INT;
+
+-- إضافة مفتاح خارجي للعمود role_id يشير إلى مفتاح الجدول role
+ALTER TABLE student
+ADD CONSTRAINT fk_student_role FOREIGN KEY (role_id) REFERENCES role(role_id);
+
+INSERT INTO Permission (permission_name)
+VALUES ('dashboard_access'),
+ ('update_stting'),
+ ('show_roadmap'),
+ ('show_course'),
+ ('show_video'),
+ ('show_article'),
+ ('show_quiz');
+
+ INSERT INTO Role_Permission (role_id,permission_id)
+VALUES (2,1),
+(2,2),
+(2,3),
+(2,4),
+(2,5),
+(2,6),
+(2,7);
+
+UPDATE student
+SET role_id =2 WHERE student_id=9; 
+UPDATE student
+SET role_id =2 WHERE student_id=10; 
+UPDATE student
+SET role_id =2 WHERE student_id=11; 
+UPDATE student
+SET role_id =2 WHERE student_id=12; 
+
+-- تصحيح popular roadmap
+SELECT Roadmap.roadmap_id, Roadmap.roadmap_title, Roadmap.roadmap_description, Roadmap.image_path,
+       COUNT(Enrollment.enrollment_id) AS enrollment_count
+FROM Roadmap
+JOIN Topic_Level_1 ON Roadmap.roadmap_id = Topic_Level_1.roadmap_id
+JOIN Topic_Level_N ON Topic_Level_1.topic_level1_id = Topic_Level_N.topic_level1_id
+JOIN Items ON Topic_Level_N.topic_id = Items.topic_id
+JOIN Course ON Items.course_id = Course.course_id
+JOIN Enrollment ON Course.course_id = Enrollment.course_id
+GROUP BY Roadmap.roadmap_id, Roadmap.roadmap_title, Roadmap.roadmap_description, Roadmap.image_path
+ORDER BY enrollment_count DESC
+LIMIT 3;
+
+--
+
+
