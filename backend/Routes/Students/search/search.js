@@ -1,9 +1,8 @@
 const router = require("express").Router();
 const pool = require("../../../Database/db");
-const authorization = require("../../../middleware/authorization");
 
 // todo Here we used dynamic query
-router.get("/course", authorization, async (req, res) => {
+router.get("/course", async (req, res) => {
   try {
     const {
       Beginner,
@@ -261,7 +260,7 @@ ORDER BY
 });
 
 //* serch by topc_id
-router.get("/topic", authorization, async (req, res) => {
+router.get("/topic", async (req, res) => {
   try {
     const {
       Beginner,
