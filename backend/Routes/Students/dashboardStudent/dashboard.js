@@ -7,11 +7,14 @@ const completCourseInfo = require("../../../Utils/dashboard/CompletedCourse");
 const MyRoadmaps=require("../../../Utils/dashboard/MyRoadmaps");
 const bringdataQuizETS =require("../../../Utils/dashboard/bringdataQuizETS");
 const bring_All_Courses_Number =require("../../../Utils/dashboard/bring_All_Courses_Number");
-
+const checkPermission = require("../../../middleware/checkPermissions");
 router.get("/", authorization, async (req, res, next) => {
   try {
     const Id = req.student.studentId;
-    // const Id = req.params.id;
+    const hasAccess = await checkPermission(Id, "dashboard_access");
+    if (!hasAccess) {
+        return res.status(403).json("Access denied");
+      }
     //get information to student
     const studentInfo = await pool.query(
       "SELECT * FROM student WHERE student_id = $1",
@@ -46,15 +49,17 @@ router.get("/", authorization, async (req, res, next) => {
       counts: [
         {
           id: 1,
-          count: countData.Data.data[0]?.completed_courses || 0,
+          completed_courses_count:
+            countData.Data.data[0]?.completed_courses || 0,
         },
         {
           id: 2,
-          count: countData.Data.data[0]?.incomplete_courses || 0,
+          incomplete_courses_count:
+            countData.Data.data[0]?.incomplete_courses || 0,
         },
         {
           id: 3,
-          count: TotalPoint.Data.data[0]?.total_points || 0,
+          total_points_count: TotalPoint.Data.data[0]?.total_points || 0,
         },
       ],
     };
@@ -62,19 +67,20 @@ router.get("/", authorization, async (req, res, next) => {
     const performance = [
       {
         id: 1,
-        count: Get_All_Courses_Number.Data.data.total_enrollments || 0,
+        total_enrollments_count:
+          Get_All_Courses_Number.Data.data.total_enrollments || 0,
       },
       {
         id: 2,
-        count: Get_Quiz_Vedio_Artical.Data.data.article_count || 0,
+        article_count: Get_Quiz_Vedio_Artical.Data.data.article_count || 0,
       },
       {
         id: 3,
-        count: Get_Quiz_Vedio_Artical.Data.data.quiz_count || 0,
+        quiz_count: Get_Quiz_Vedio_Artical.Data.data.quiz_count || 0,
       },
       {
         id: 4,
-        count: Get_Quiz_Vedio_Artical.Data.data.video_count || 0,
+        video_count: Get_Quiz_Vedio_Artical.Data.data.video_count || 0,
       },
     ];
 
