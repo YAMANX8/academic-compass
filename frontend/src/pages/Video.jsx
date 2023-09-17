@@ -44,19 +44,19 @@ function Video() {
           title: "Topic level N",
           items: [
             {
-              id: 1,
+              id: 4, 
               title: "A Lecture",
               order: 1,
               type: "video",
             },
             {
-              id: 2,
+              id: 5, 
               title: "An Article",
               order: 2,
               type: "article",
             },
             {
-              id: 3,
+              id: 6, 
               title: "A Quiz",
               order: 3,
               type: "quiz",
@@ -70,32 +70,32 @@ function Video() {
       topicTitle: "Topic level 1",
       subTopics: [
         {
-          id: 1,
+          id: 3,
           title: "Topic level N",
           items: [
             {
-              id: 4,
+              id: 7, 
               title: "A Lecture",
-              order: 4,
+              order: 1,
               type: "video",
             },
             {
-              id: 5,
+              id: 8, 
               title: "An Article",
-              order: 5,
+              order: 2,
               type: "article",
             },
             {
-              id: 6,
+              id: 9, 
               title: "A Quiz",
-              order: 6,
+              order: 3,
               type: "quiz",
             },
           ],
         },
       ],
     },
-  ];
+];
 
   const [isOpen, setIsOpen] = useState(
     courseContent.map((content) => ({
@@ -119,6 +119,18 @@ function Video() {
     setIsOpen(updatedIsOpen);
   };
 
+  const [checkedItems, setCheckedItems] = useState([]);
+
+  const toggleCheck = (outerIndex, innerIndex) => {
+    const updatedCheckedItems = [...checkedItems];
+    if (!updatedCheckedItems[outerIndex]) {
+      updatedCheckedItems[outerIndex] = [];
+    }
+    updatedCheckedItems[outerIndex][innerIndex] =
+      !updatedCheckedItems[outerIndex][innerIndex];
+    setCheckedItems(updatedCheckedItems);
+  };
+
   return (
     <>
       <container className="w-full px-[120px] ">
@@ -133,28 +145,27 @@ function Video() {
               <span className=" font-semibold  text-[48px]">Item Title </span>
             </div>
 
-            <div className=" py-[48px] ">
+            <div className=" py-[48px]  ">
               <Link
                 to="#"
-                className=" relative bg-dark w-[800px] h-[450px] flex items-center justify-center"
+                className=" relative bg-dark w-[700px] h-[400px] flex items-center justify-center"
               >
                 <div className="absolute inset-0 bg-black opacity-50"></div>
                 <div className="bg-white p-[30px] rounded-full z-10 hover:bg-slate-500 group">
                   <Library
                     size={50}
-                    className="text-black group-hover:text-white"
+                    className="text-black group-hover:text-white "
                   />
                 </div>
               </Link>
-            </div>
-            <div className="px-[300px]">
+              <div className="ml-[500px] py-[20px]">
               <Button> Completion Flag</Button>
-               </div>
+            </div>
+            </div>
           </div>
-  
-         <div className="px-[370px]"> 
-          <div className="  bg-secondary w-[400px]   ">
-            
+
+          <div className="px-[140px] ">
+            <div className="  bg-secondary  h-full w-[400px]  ">
               {courseContent.map((content, outerIndex) => (
                 <details
                   key={content.id}
@@ -190,20 +201,38 @@ function Video() {
                           )}
                         </summary>
 
-                        {subTopic.items.map((item) => (
+                        {subTopic.items.map((item, itemIndex) => (
                           <Link
                             key={item.id}
-                            to={`${item.id}`}
+                            to="#"
                             className={`bg-light dark:bg-dark text-dark dark:text-light flex p-4 gap-4 items-center transition-all duration-1000 ease-in-out-back `}
                           >
-                            <span className="text-[24px]">
+                           
+                            <span className="text-[24px] ">
                               {item.type == "video" && <Video1 />}
                               {item.type == "article" && <Article />}
-                              {item.type == "quiz" && <Quiz />}
+                              {item.type == "quiz" &&  <Quiz />}
                             </span>
                             <p className="text-accent dark:text-accent-dark tracking-tight">
                               {item.title}
                             </p>
+                            <div
+                              onClick={() => toggleCheck(index, itemIndex)}
+                              className={`w-6 h-6 border-2 ${
+                                checkedItems[index] &&
+                                checkedItems[index][itemIndex]
+                                  ? "border-green-500"
+                                  : "border-gray-300"
+                              } flex items-center justify-center cursor-pointer  ml-[200px] `}
+                            >
+                              {checkedItems[index] &&
+                                checkedItems[index][itemIndex] && (
+                                  <span className="flex items-center justify-center w-full h-full bg-accent text-xl text-light ">
+                                  &#x2713;
+                              </span>
+                               // هذه علامة الصح
+                                )}
+                            </div>
                           </Link>
                         ))}
                       </details>
@@ -212,8 +241,8 @@ function Video() {
                 </details>
               ))}
             </div>
-            </div>
           </div>
+        </div>
       </container>
     </>
   );
