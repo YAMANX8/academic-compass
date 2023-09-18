@@ -1,9 +1,8 @@
 const router = require("express").Router();
 const pool = require("../../../Database/db");
-const authorization = require("../../../middleware/authorization");
 
 // todo Here we used dynamic query
-router.get("/course", authorization, async (req, res) => {
+router.post("/course", async (req, res) => {
   try {
     const {
       Beginner,
@@ -110,69 +109,72 @@ router.get("/course", authorization, async (req, res) => {
     // بناء الاستعلام النهائي باستخدام الشرط النهائي
     const query = `
 WITH RankedCourses AS (
-  SELECT
-    r.roadmap_id,
-    c.course_id,
-    ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
-  FROM
-    Course c
-  JOIN
-    Levels l ON c.course_level = l.level_id
-  JOIN
-    Courses_Type ct ON c.course_type = ct.type_id
-  JOIN
-    Users u ON c.instructor_id = u.user_id
-  LEFT JOIN (
-    SELECT
-      e.course_id,
-      AVG(r.stars_number) AS rating_stars
+    SELECT DISTINCT
+        r.roadmap_id,
+        c.course_id,
+        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
     FROM
-      Enrollment e
+        Course c
     JOIN
-      Rating r ON e.enrollment_id = r.enrollment_id
-    GROUP BY
-      e.course_id
-  ) rt ON c.course_id = rt.course_id
-  JOIN
-    items i ON c.course_id = i.course_id
-  JOIN
-    Topic_level_N TLN ON i.topic_id = TLN.topic_id
-  JOIN
-    Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
-  JOIN
-    roadmap r ON TL1.roadmap_id = r.roadmap_id
-  WHERE
+        Levels l ON c.course_level = l.level_id
+    JOIN
+        Courses_Type ct ON c.course_type = ct.type_id
+    JOIN
+        Users u ON c.instructor_id = u.user_id
+    LEFT JOIN (
+        SELECT DISTINCT
+            e.course_id,
+            AVG(r.stars_number) AS rating_stars
+        FROM
+            Enrollment e
+        JOIN
+            Rating r ON e.enrollment_id = r.enrollment_id
+        GROUP BY
+            e.course_id
+    ) rt ON c.course_id = rt.course_id
+   LEFT JOIN
+        items i ON c.course_id = i.course_id
+    LEFT JOIN
+        Topic_level_N TLN ON i.topic_id = TLN.topic_id
+    LEFT JOIN
+        Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
+    LEFT JOIN
+        roadmap r ON TL1.roadmap_id = r.roadmap_id
+WHERE
     ${finalCondition}
     )
-  , TotalCourseCount AS (
-    SELECT COUNT(*) AS total_courses 
+ , TotalCourseCount AS (
+    SELECT COUNT( DISTINCT course_id) AS total_courses 
     FROM RankedCourses
 )
-SELECT
+SELECT DISTINCT
     RC.roadmap_id,
     r.roadmap_title,
     RC.course_id,
     c.course_title,
     c.subtitle,
     c.course_duration,
+    c.items_count,
+    c.course_thumnail,
     l.level_name,
     u.first_name,
     u.last_name,
-    rt.rating_stars,
-    i.item_no,
+    COALESCE(rt.rating_stars, 0.0) AS rating_stars,
+    ct.type_name,
     TLN.topic_title,
     (SELECT total_courses FROM TotalCourseCount) AS total_courses
+
 FROM
     RankedCourses RC
-JOIN
+LEFT JOIN
     Course c ON RC.course_id = c.course_id
-JOIN
+LEFT JOIN
     roadmap r ON RC.roadmap_id = r.roadmap_id
-JOIN
+LEFT JOIN
     Levels l ON c.course_level = l.level_id
-JOIN
+LEFT JOIN
     Courses_Type ct ON c.course_type = ct.type_id
-JOIN
+LEFT JOIN
     Users u ON c.instructor_id = u.user_id
 LEFT JOIN (
     SELECT
@@ -185,15 +187,12 @@ LEFT JOIN (
     GROUP BY
         e.course_id
 ) rt ON c.course_id = rt.course_id
-JOIN
+LEFT JOIN
     items i ON c.course_id = i.course_id
-JOIN
+LEFT JOIN
     Topic_level_N TLN ON i.topic_id = TLN.topic_id
-WHERE
+    WHERE
    ${condition6}
-ORDER BY
-    RC.roadmap_id,
-    RC.course_rank;
 `;
     console.log(query);
 
@@ -213,7 +212,7 @@ ORDER BY
       const levelName = row.level_name;
       const instructorName = `${row.first_name} ${row.last_name}`;
       const ratingStars = parseFloat(row.rating_stars);
-      const itemNo = row.item_no;
+      const itemCount = row.items_count;
       const topicTitle = row.topic_title;
       total_courses = row.total_courses;
       // تحقق مما إذا كانت هناك مسارات مكررة في القائمة أو لا
@@ -237,7 +236,7 @@ ORDER BY
         subtitle: subtitle,
         ratings: ratingStars,
         duration: courseDuration,
-        itemsCount: itemNo,
+        itemsCount: itemCount,
         level: levelName,
         instructor: instructorName,
         topics: [topicTitle],
@@ -261,7 +260,7 @@ ORDER BY
 });
 
 //* serch by topc_id
-router.get("/topic", authorization, async (req, res) => {
+router.post("/topic", async (req, res) => {
   try {
     const {
       Beginner,

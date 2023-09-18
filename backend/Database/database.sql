@@ -1088,7 +1088,7 @@ ORDER BY
         l.level_name IN ('Beginner')
         AND rt.rating_stars >= 4.5
         AND ct.type_name IN ('Programming')
-        AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%'
+        AND c.course_title ILIKE '%' || 'Local SEO Strategies' || '%'
 )
 , TotalCourseCount AS (
     SELECT COUNT(*) AS total_courses 
@@ -1145,7 +1145,7 @@ ORDER BY
 --معالجة الحالات الخاصة
 -------------------
 WITH RankedCourses AS (
-    SELECT
+    SELECT DISTINCT
         r.roadmap_id,
         c.course_id,
         ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
@@ -1158,7 +1158,7 @@ WITH RankedCourses AS (
     JOIN
         Users u ON c.instructor_id = u.user_id
     LEFT JOIN (
-        SELECT
+        SELECT DISTINCT
             e.course_id,
             AVG(r.stars_number) AS rating_stars
         FROM
@@ -1168,58 +1168,52 @@ WITH RankedCourses AS (
         GROUP BY
             e.course_id
     ) rt ON c.course_id = rt.course_id
-    JOIN
+   LEFT JOIN
         items i ON c.course_id = i.course_id
-    JOIN
+    LEFT JOIN
         Topic_level_N TLN ON i.topic_id = TLN.topic_id
-    JOIN
+    LEFT JOIN
         Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
-    JOIN
+    LEFT JOIN
         roadmap r ON TL1.roadmap_id = r.roadmap_id
 WHERE
-    (
-        (l.level_name IS NOT NULL AND l.level_name IN ('') OR l.level_name IN ('') OR l.level_name IN (''))
-        OR
-        (ct.type_name IS NOT NULL AND ct.type_name IN ('') OR ct.type_name IN ('') OR ct.type_name IN (''))
-    )
-    OR
-    (
-        
-        (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || 'Introduction to Programming' || '%')
+(
+      (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || 'SEO for E-commerce' || '%') 
     )
 
 
 )
 , TotalCourseCount AS (
-    SELECT COUNT(*) AS total_courses 
+    SELECT COUNT( DISTINCT course_id) AS total_courses 
     FROM RankedCourses
 )
-SELECT
+SELECT DISTINCT
     RC.roadmap_id,
     r.roadmap_title,
     RC.course_id,
     c.course_title,
-    c.course_description,
+    c.subtitle,
     c.course_duration,
+    c.items_count,
+    c.course_thumnail,
     l.level_name,
     u.first_name,
     u.last_name,
-    rt.rating_stars,
+    COALESCE(rt.rating_stars, 0.0) AS rating_stars,
     ct.type_name,
-    i.item_no,
     TLN.topic_title,
     (SELECT total_courses FROM TotalCourseCount) AS total_courses
 FROM
     RankedCourses RC
-JOIN
+LEFT JOIN
     Course c ON RC.course_id = c.course_id
-JOIN
+LEFT JOIN
     roadmap r ON RC.roadmap_id = r.roadmap_id
-JOIN
+LEFT JOIN
     Levels l ON c.course_level = l.level_id
-JOIN
+LEFT JOIN
     Courses_Type ct ON c.course_type = ct.type_id
-JOIN
+LEFT JOIN
     Users u ON c.instructor_id = u.user_id
 LEFT JOIN (
     SELECT
@@ -1232,16 +1226,15 @@ LEFT JOIN (
     GROUP BY
         e.course_id
 ) rt ON c.course_id = rt.course_id
-JOIN
+LEFT JOIN
     items i ON c.course_id = i.course_id
-JOIN
+LEFT JOIN
     Topic_level_N TLN ON i.topic_id = TLN.topic_id
-WHERE
+    WHERE
     RC.course_rank > ((1 - 1) * 4)
-    AND RC.course_rank <= (1 * 4)
-ORDER BY
-    RC.roadmap_id,
-    RC.course_rank;
+    AND RC.course_rank <= (1 * 4);
+
+
     ---------
 -- searsh by topic
 WITH RankedCourses AS (
@@ -1830,5 +1823,70 @@ ORDER BY enrollment_count DESC
 LIMIT 3;
 
 --
+
+-- search update:
+WITH RankedCourses AS (
+)
+, TotalCourseCount AS (
+    SELECT COUNT(DISTINCT course_id) AS total_courses
+    FROM RankedCourses
+)
+SELECT
+    RC.roadmap_id,
+    r.roadmap_title,
+    RC.course_id,
+    c.course_title,
+    c.course_description,
+    c.course_duration,
+    l.level_name,
+    u.first_name,
+    u.last_name,
+    rt.rating_stars,
+    ct.type_name,
+    i.item_no,
+    TLN.topic_title,
+    (SELECT total_courses FROM TotalCourseCount) AS total_courses
+FROM (
+    SELECT
+        roadmap_id,
+        course_id,
+        course_rank
+    FROM RankedCourses
+    WHERE course_rank <= 4
+) RC
+JOIN
+    Course c ON RC.course_id = c.course_id
+JOIN
+    roadmap r ON RC.roadmap_id = r.roadmap_id
+JOIN
+    Levels l ON c.course_level = l.level_id
+JOIN
+    Courses_Type ct ON c.course_type = ct.type_id
+JOIN
+    Users u ON c.instructor_id = u.user_id
+LEFT JOIN (
+    SELECT
+        e.course_id,
+        AVG(r.stars_number) AS rating_stars
+    FROM
+        Enrollment e
+    JOIN
+        Rating r ON e.enrollment_id = r.enrollment_id
+    GROUP BY
+        e.course_id
+) rt ON c.course_id = rt.course_id
+JOIN
+    items i ON c.course_id = i.course_id
+JOIN
+    Topic_level_N TLN ON i.topic_id = TLN.topic_id
+WHERE
+    rt.rating_stars IS NOT NULL 
+ORDER BY
+    RC.roadmap_id,
+    RC.course_rank;
+    
+ roadmap_id | roadmap_title | course_id |       course_title        |                                           course_description                                           | course_duration | level_name | first_name | last_name |    rating_stars    |     type_name     | item_no | topic_title | total_courses
+------------+---------------+-----------+---------------------------+--------------------------------------------------------------------------------------------------------+-----------------+------------+------------+-----------+--------------------+-------------------+---------+-------------+---------------
+         18 | frontend      |        12 | HTML Basics for Beginners | This course covers the basics of HTML, including tags, elements, and structure. Perfect for beginners. |              45 | Beginner   | Ahmed      | Hassan    | 5.0000000000000000 | beginner|advanced |       1 | HTML Basics |            19
 
 
