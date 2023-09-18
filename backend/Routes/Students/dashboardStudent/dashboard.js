@@ -49,17 +49,17 @@ router.get("/", authorization, async (req, res, next) => {
       counts: [
         {
           id: 1,
-          completed_courses_count:
+          count:
             countData.Data.data[0]?.completed_courses || 0,
         },
         {
           id: 2,
-          incomplete_courses_count:
+          count:
             countData.Data.data[0]?.incomplete_courses || 0,
         },
         {
           id: 3,
-          total_points_count: TotalPoint.Data.data[0]?.total_points || 0,
+          count: TotalPoint.Data.data[0]?.total_points || 0,
         },
       ],
     };
@@ -67,20 +67,20 @@ router.get("/", authorization, async (req, res, next) => {
     const performance = [
       {
         id: 1,
-        total_enrollments_count:
+        count:
           Get_All_Courses_Number.Data.data.total_enrollments || 0,
       },
       {
         id: 2,
-        article_count: Get_Quiz_Vedio_Artical.Data.data.article_count || 0,
+        count: Get_Quiz_Vedio_Artical.Data.data.article_count || 0,
       },
       {
         id: 3,
-        quiz_count: Get_Quiz_Vedio_Artical.Data.data.quiz_count || 0,
+        count: Get_Quiz_Vedio_Artical.Data.data.quiz_count || 0,
       },
       {
         id: 4,
-        video_count: Get_Quiz_Vedio_Artical.Data.data.video_count || 0,
+        count: Get_Quiz_Vedio_Artical.Data.data.video_count || 0,
       },
     ];
 

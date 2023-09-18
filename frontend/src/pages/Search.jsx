@@ -8,6 +8,7 @@ import {
   BsChevronDown as ChevronDown,
 } from "react-icons/bs";
 import Card from "../assets/images/Rectangle 63.png";
+import { toast } from "react-toastify";
 const SearchStudent = () => {
   const { text } = useParams();
   const [results, setResults] = useState([
@@ -152,8 +153,10 @@ const SearchStudent = () => {
       };
     });
   }
-  console.log(formData);
   const ratingsList = ["4.5", "4.0", "3.5", "3.0"];
+  useEffect(() => {
+    toast.success(`Beginner: ${formData.Beginner}  Intermediate: ${formData.Intermediate}  Expert: ${formData.Expert}  Rating: ${formData.rating}`);
+  },[formData]);
   return (
     <section className=" w-[1200px]">
       <h1 className=" font-semibold text-[48px] tracking-tight p-[16px]">
@@ -260,14 +263,12 @@ const SearchStudent = () => {
                     />
                   </div>
                   <label htmlFor={item} className="flex gap-[5px]">
-                    {[...Array(Math.floor(item))].map(
-                      (_, starIndex) => (
-                        <Full
-                          key={starIndex}
-                          className="text-yellow-500 text-[24px]"
-                        />
-                      )
-                    )}
+                    {[...Array(Math.floor(item))].map((_, starIndex) => (
+                      <Full
+                        key={starIndex}
+                        className="text-yellow-500 text-[24px]"
+                      />
+                    ))}
                     {item % 1 !== 0 && (
                       <Half className="text-yellow-500 text-[24px]" />
                     )}
@@ -279,9 +280,7 @@ const SearchStudent = () => {
                         />
                       )
                     )}
-                    <span className="ml-[10px] text-xl">
-                      {item} & up
-                    </span>
+                    <span className="ml-[10px] text-xl">{item} & up</span>
                   </label>
                 </div>
               ))}
@@ -309,7 +308,7 @@ const SearchStudent = () => {
                   <Link
                     to={`/student/courseview/${course.id}`}
                     key={course.id}
-                    className="py-8 px-4 shadow-[5px_5px_5px_0] bg-light dark:bg-dark shadow-black/20 hover:scale-[1.03] [transition:background-color_1s_cubic-bezier(0.780,-0.375,0.260,1.320),transform_.3s_cubic-bezier(0.780,-0.375,0.260,1.320)]"
+                    className="py-8 px-4 shadow-[5px_5px_5px_0] bg-light dark:bg-dark shadow-black/20 hover:scale-[1.02] [transition:background-color_1s_cubic-bezier(0.780,-0.375,0.260,1.320),transform_.3s_cubic-bezier(0.780,-0.375,0.260,1.320)]"
                   >
                     <CourseCard
                       title={course.title}
