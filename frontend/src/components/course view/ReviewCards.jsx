@@ -68,7 +68,7 @@ const ReviewCards = ({ reviews }) => {
             <p
               className={`comment-overflow relative ${
                 overflowStatus[index] &&
-                "before:absolute before:bg-gradient-to-b before:from-transparent before:to-light/90 before:pointer-events-none before:h-full before:w-full"
+                "before:absolute before:bg-gradient-to-b before:from-transparent before:to-light/90 dark:before:to-dark/90 before:pointer-events-none before:h-full before:w-full"
               }`}
               ref={(el) => (containerRefs.current[index] = el)}
               style={{}}

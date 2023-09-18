@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import {
   BsStarHalf as Half,
   BsFillStarFill as Full,
@@ -10,12 +10,17 @@ import {
 import Card from "../assets/images/Rectangle 63.png";
 import axios from "../apis/axios";
 
-//ratings list
+// An array containing possible ratings
 const ratingsList = ["4.5", "4.0", "3.5", "3.0"];
 
 const SearchStudent = () => {
-  //getting the search text
-  const { text } = useParams();
+  const location = useLocation();
+  console.log("state: byText - ", location?.state.byText);
+
+  // Use useParams to extract data from the URL
+  const { text, id } = useParams();
+
+  // State to store search results and courses data
   const [results, setResults] = useState({
     total_courses: 4,
     data: [
@@ -139,13 +144,18 @@ const SearchStudent = () => {
       },
     ],
   });
-  //controling the state of the details tags
+
+  // State to track whether course details are open or closed
   const [isOpen, setIsOpen] = useState(Array(results.data.length).fill(true)); //لك اللّاوي الشغل لك وليييييي
+
+  // Function to toggle course details open or closed
   const toggleDetails = async (index) => {
     const updatedIsOpen = [...isOpen];
     updatedIsOpen[index] = !updatedIsOpen[index];
     setIsOpen(updatedIsOpen);
   };
+
+  // State to store search filter data
   const [formData, setFormData] = useState({
     Beginner: "",
     Intermediate: "",
@@ -155,6 +165,8 @@ const SearchStudent = () => {
     Observational: "",
     rating: "0",
   });
+
+  // Function to handle changes in search filter fields
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
     setFormData((prevFormData) => {
@@ -165,34 +177,96 @@ const SearchStudent = () => {
     });
   }
 
-  //call the api
+  // Call the api
+  // Call the API when search filters change
   useEffect(() => {
-    const postData = async () => {
-      try {
-        const response = await axios.post(
-          "/search/course",
-          JSON.stringify({
-            Beginner: formData.Beginner,
-            Intermediate: formData.Intermediate,
-            Expert: formData.Expert,
-            Rating: formData.rating,
-            typeName1: formData.Project,
-            typeName2: formData.Challenge,
-            typeName3: formData.Observational,
-            courseTitle: text,
-            courseRank: 1,
-          }),
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        console.log(response.data.data)
-        setResults(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    postData();
+    //for the text search endpoint
+    if (location.state.byText) {
+      const postData = async () => {
+        try {
+          const response = await axios.post(
+            "/search/course",
+            JSON.stringify({
+              Beginner: formData.Beginner,
+              Intermediate: formData.Intermediate,
+              Expert: formData.Expert,
+              Rating: formData.rating,
+              typeName1: formData.Project,
+              typeName2: formData.Challenge,
+              typeName3: formData.Observational,
+              courseTitle: text,
+              courseRank: 1,
+            }),
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          console.log(response.data.data);
+          setResults(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      postData();
+      //for the topics from the level one search endpoint
+    } else if (location.state.level1) {
+      const postData = async () => {
+        try {
+          const response = await axios.post(
+            "/search/topic",
+            JSON.stringify({
+              Beginner: formData.Beginner,
+              Intermediate: formData.Intermediate,
+              Expert: formData.Expert,
+              Rating: formData.rating,
+              typeName1: formData.Project,
+              typeName2: formData.Challenge,
+              typeName3: formData.Observational,
+              topiclevel_N: "",
+              topiclevel_1: id,
+              courseRank: 1,
+            }),
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          console.log(response.data);
+          // setResults(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      postData();
+      //for the topics from the level N endpoint
+    } else {
+      const postData = async () => {
+        try {
+          const response = await axios.post(
+            "/search/topic",
+            JSON.stringify({
+              Beginner: formData.Beginner,
+              Intermediate: formData.Intermediate,
+              Expert: formData.Expert,
+              Rating: formData.rating,
+              typeName1: formData.Project,
+              typeName2: formData.Challenge,
+              typeName3: formData.Observational,
+              topiclevel_N: id,
+              topiclevel_1: "",
+              courseRank: 1,
+            }),
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          console.log(response.data);
+          // setResults(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      postData();
+    }
   }, [formData]);
 
   return (

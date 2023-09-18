@@ -23,7 +23,7 @@ const Navbar = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate(`/student/search/by-text/${search}`)
+    navigate(`/student/search/by-text/${search}`, {state:{byText: true}})
   };
   const handleLogout = () => {
     // إزالة الرمز من المتصفح

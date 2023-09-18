@@ -106,10 +106,10 @@ const LevelZero = () => {
         <h3>Or make another action:</h3>
         <div className="flex justify-evenly mt-4">
           {/* here we use the links state that we declare before */}
-          <Link to={modalLinks.search} className={`${style} ${important}`}>
+          <Link to={modalLinks.search} className={`${style} ${important}`} state={{byText:false, level1: true}}>
             Search for a course that cover this topic
           </Link>
-          <Link to={modalLinks.deeper} className={`${style} ${important}`}>
+          <Link to={modalLinks.deeper} className={`${style} ${important}`} >
             Go Deeper!
           </Link>
         </div>
