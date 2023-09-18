@@ -10,47 +10,69 @@ import {
   Modal,
 } from "../../components";
 import { useOutletContext, useNavigate, useParams } from "react-router-dom";
+import axios from "../../apis/axios";
+import useAuth from "../../hooks/useAuth";
 
 const LevelN = () => {
-  const { roadmapId, topicL1Id } = useParams();
+  const { isAuth } = useAuth();
+
+  const { roadmapId, topicL1Id, topicLnId } = useParams();
   const navigate = useNavigate();
+  //getting the data
+  useEffect(() => {
+    const getData = async () => {
+      const response = await axios.get(
+        `/roadmap/${
+          !isAuth ? `topicN/${topicLnId}` : `student/topicN/${topicLnId}`
+        }`,
+        {
+          headers: {
+            token: localStorage.token,
+          },
+        }
+      );
+      setLevelN(response.data.topics);
+    };
+    getData();
+  }, []);
+
   //to know if the topic is in the last level
   const [isLast, setIsLast] = useState(false);
-  const [levelOne, setLevelOne] = useState([
+  const [levelN, setLevelN] = useState([
     {
-      id: 5,
-      topicTitle: "topic title",
-      topicDescription:
+      topic_id: 5,
+      topic_title: "topic title",
+      topic_description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topicOrder: 1,
-      topicStatus: "Trending",
+      topic_order: 1,
+      topic_status: "Trending",
       isItLast: false,
     },
     {
-      id: 6,
-      topicTitle: "topic title",
-      topicDescription:
+      topic_id: 6,
+      topic_title: "topic title",
+      topic_description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topicOrder: 2,
-      topicStatus: "Stable",
+      topic_order: 2,
+      topic_status: "Stable",
       isItLast: true,
     },
     {
-      id: 7,
-      topicTitle: "topic title",
-      topicDescription:
+      topic_id: 7,
+      topic_title: "topic title",
+      topic_description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topicOrder: 3,
-      topicStatus: "Stable",
+      topic_order: 3,
+      topic_status: "Stable",
       isItLast: true,
     },
     {
-      id: 8,
-      topicTitle: "topic title",
-      topicDescription:
+      topic_id: 8,
+      topic_title: "topic title",
+      topic_description:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topicOrder: 3,
-      topicStatus: "deprecated",
+      topic_order: 4,
+      topic_status: "deprecated",
       isItLast: true,
     },
   ]);
@@ -120,20 +142,40 @@ const LevelN = () => {
   );
   return (
     <>
-      {levelOne.map((topic, index) => {
-        //the first topic rendering
-        if (index == 0) {
+      {levelN.map((topic, index) => {
+        //if there is just one topic
+        if(levelN.length == 1) {
           return (
-            <div key={topic.id} className="w-full">
+            <div key={topic.topic_id} className="w-full">
               <StartLine />
               <Topic
-                topicId={topic.id}
+                topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
                 modalTitle={setModalTitle}
-                topicTitle={topic.topicTitle}
-                topicDescription={topic.topicDescription}
+                topicTitle={topic.topic_title}
+                topicDescription={topic.topic_description}
                 modalLinks={setModalLinks}
-                topicStatus={topic.topicStatus}
+                topicStatus={topic.topic_status}
+                last={topic.isItLast}
+                setIsLast={setIsLast}
+              />
+              <EndLineRight />
+            </div>
+          );
+        }
+        //the first topic rendering
+        else if (index == 0) {
+          return (
+            <div key={topic.topic_id} className="w-full">
+              <StartLine />
+              <Topic
+                topicId={topic.topic_id}
+                setIsOpen={setIsOpen}
+                modalTitle={setModalTitle}
+                topicTitle={topic.topic_title}
+                topicDescription={topic.topic_description}
+                modalLinks={setModalLinks}
+                topicStatus={topic.topic_status}
                 last={topic.isItLast}
                 setIsLast={setIsLast}
               />
@@ -141,19 +183,19 @@ const LevelN = () => {
             </div>
           );
           //the last topic rendering
-        } else if (index == levelOne.length - 1) {
+        } else if (index == levelN.length - 1) {
           //checking if the last topic is even (Means that the topic is in the right side)
           if (index % 2 == 0)
             return (
-              <div key={topic.id} className="w-full">
+              <div key={topic.topic_id} className="w-full">
                 <Topic
-                  topicId={topic.id}
+                  topicId={topic.topic_id}
                   setIsOpen={setIsOpen}
                   modalTitle={setModalTitle}
-                  topicTitle={topic.topicTitle}
-                  topicDescription={topic.topicDescription}
+                  topicTitle={topic.topic_title}
+                  topicDescription={topic.topic_description}
                   modalLinks={setModalLinks}
-                  topicStatus={topic.topicStatus}
+                  topicStatus={topic.topic_status}
                   last={topic.isItLast}
                   setIsLast={setIsLast}
                 />{" "}
@@ -163,15 +205,15 @@ const LevelN = () => {
           //if its not, so it is in left side
           else
             return (
-              <div key={topic.id} className="w-full">
+              <div key={topic.topic_id} className="w-full">
                 <Topic
-                  topicId={topic.id}
+                  topicId={topic.topic_id}
                   setIsOpen={setIsOpen}
                   modalTitle={setModalTitle}
-                  topicTitle={topic.topicTitle}
-                  topicDescription={topic.topicDescription}
+                  topicTitle={topic.topic_title}
+                  topicDescription={topic.topic_description}
                   modalLinks={setModalLinks}
-                  topicStatus={topic.topicStatus}
+                  topicStatus={topic.topic_status}
                   last={topic.isItLast}
                   setIsLast={setIsLast}
                   isRight={false}
@@ -182,15 +224,15 @@ const LevelN = () => {
           //the even topic rendering (right side)
         } else if (index % 2 == 0) {
           return (
-            <div key={topic.id} className="w-full">
+            <div key={topic.topic_id} className="w-full">
               <Topic
-                topicId={topic.id}
+                topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
                 modalTitle={setModalTitle}
-                topicTitle={topic.topicTitle}
-                topicDescription={topic.topicDescription}
+                topicTitle={topic.topic_title}
+                topicDescription={topic.topic_description}
                 modalLinks={setModalLinks}
-                topicStatus={topic.topicStatus}
+                topicStatus={topic.topic_status}
                 last={topic.isItLast}
                 setIsLast={setIsLast}
               />{" "}
@@ -200,15 +242,15 @@ const LevelN = () => {
           //the final case is the left side topic rendering
         } else {
           return (
-            <div key={topic.id} className="w-full">
+            <div key={topic.topic_id} className="w-full">
               <Topic
-                topicId={topic.id}
+                topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
                 modalTitle={setModalTitle}
-                topicTitle={topic.topicTitle}
-                topicDescription={topic.topicDescription}
+                topicTitle={topic.topic_title}
+                topicDescription={topic.topic_description}
                 modalLinks={setModalLinks}
-                topicStatus={topic.topicStatus}
+                topicStatus={topic.topic_status}
                 last={topic.isItLast}
                 setIsLast={setIsLast}
                 isRight={false}
