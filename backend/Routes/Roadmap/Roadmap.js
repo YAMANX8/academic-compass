@@ -141,7 +141,7 @@ ORDER BY
   }
 });
 
-//* Returns topics without login by roadmapID ##
+//* Returns topics without login by roadmapID 
 router.get("/:id", async (req, res) => {
   try {
     const roadmap_id = req.params.id;
