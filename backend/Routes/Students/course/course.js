@@ -5,13 +5,14 @@ router.get("/:studentId/:courseId", async (req, res) => {
   try {
     const studentId = req.params.studentId;
     const courseId = req.params.courseId;
+    
 
     const Get_Course_info =
       "SELECT course.course_thumnail, course.course_title, course.subtitle, ROUND(COALESCE(AVG(Rating.stars_number), 0), 0) AS average_rating, COUNT(DISTINCT Rating.enrollment_id) AS rating_count, course.course_duration, course.items_count, Levels.level_name, Users.first_name, Users.last_name, COUNT(CASE WHEN items.item_type = 1 THEN 1 END) AS article_count, COUNT(CASE WHEN items.item_type = 2 THEN 1 END) AS video_count, COUNT(CASE WHEN items.item_type = 3 THEN 1 END) AS quiz_count, course.course_description, COALESCE(IS_ENROLLED.is_enrolled, 0) AS is_enrolled FROM course JOIN Levels ON course.course_level = Levels.level_id JOIN Users ON course.instructor_id = Users.user_id JOIN items ON course.course_id = items.course_id LEFT JOIN Enrollment ON course.course_id = Enrollment.course_id LEFT JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id LEFT JOIN (SELECT course_id, MAX(CASE WHEN student_id = $1 THEN 1 ELSE 0 END) AS is_enrolled FROM Enrollment GROUP BY course_id) AS IS_ENROLLED ON course.course_id = IS_ENROLLED.course_id WHERE course.course_id = $2 GROUP BY course.course_thumnail, course.course_title, course.subtitle, course.course_duration, course.items_count, Users.first_name, Users.last_name, Levels.level_name, course.course_description, IS_ENROLLED.is_enrolled";
-    const Get_Topic_content =
-      "SELECT Topic_Level_1.topic_level1_id, Topic_Level_1.topic_title AS tl1, Topic_Level_n.topic_id, Topic_Level_n.topic_title AS tln, Items.item_id, Items.item_title, Items.item_no, Items_Types.type_name FROM course JOIN items ON course.course_id= items.course_id JOIN Items_Types ON Items.item_type= Items_Types.type_id join Topic_Level_N ON items.topic_id= Topic_Level_N.topic_id join Topic_Level_1 ON Topic_Level_N.topic_level1_id= Topic_Level_1.topic_level1_id WHERE course.course_id = $1";
     const Part_2From_Course_info =
       "SELECT List_Type.type_name, Course_Lists.item_body, Course_Lists.item_order FROM course JOIN Course_Lists ON Course.course_id = Course_Lists.course_id JOIN List_Type ON Course_Lists.list_type= List_Type.type_id WHERE course.course_id = $1";
+    const Get_Topic_content =
+      "SELECT Topic_Level_1.topic_level1_id, Topic_Level_1.topic_title AS tl1, Topic_Level_n.topic_id, Topic_Level_n.topic_title AS tln, Items.item_id, Items.item_title, Items.item_no, Items_Types.type_name FROM course JOIN items ON course.course_id= items.course_id JOIN Items_Types ON Items.item_type= Items_Types.type_id join Topic_Level_N ON items.topic_id= Topic_Level_N.topic_id join Topic_Level_1 ON Topic_Level_N.topic_level1_id= Topic_Level_1.topic_level1_id WHERE course.course_id = $1";
     const Get_Review =
       "SELECT Rating.rating_id, Student.first_name, Student.last_name, Student.picture, Rating.stars_number, Rating.review FROM course LEFT JOIN Enrollment ON Course.course_id = Enrollment.course_id JOIN Student ON Enrollment.student_id = Student.student_id JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id WHERE course.course_id = $1";
     // const values = [studentId, courseId];
@@ -20,13 +21,13 @@ router.get("/:studentId/:courseId", async (req, res) => {
       studentId,
       courseId,
     ]);
-    const Get_Topic_content_result = await db.query(Get_Topic_content, [
-      courseId,
-    ]);
     const Part_2From_Course_info_result = await db.query(
       Part_2From_Course_info,
       [courseId]
     );
+    const Get_Topic_content_result = await db.query(Get_Topic_content, [
+      courseId,
+    ]);
     const Get_Review_result = await db.query(Get_Review, [courseId]);
 
     // const data4 = Part_2From_Course_info_result.rows.map((item) => ({
@@ -51,50 +52,50 @@ router.get("/:studentId/:courseId", async (req, res) => {
     });
 
     // Process the course content data
-const courseContent = [];
+    const courseContent = [];
 
-// Set لتتبع العناصر التي تم استخدامها بالفعل بناءً على topic_id
-const usedTopicIds = new Set();
+    // Set لتتبع العناصر التي تم استخدامها بالفعل بناءً على topic_id
+    const usedTopicIds = new Set();
 
-Get_Topic_content_result.rows.forEach((row) => {
-  const topicId = row.topic_level1_id;
-  const subTopicId = row.topic_id;
+    Get_Topic_content_result.rows.forEach((row) => {
+      const topicId = row.topic_level1_id;
+      const subTopicId = row.topic_id;
 
-  // التحقق مما إذا كان topic_id تم استخدامه بالفعل
-  if (!usedTopicIds.has(topicId)) {
-    courseContent.push({
-      id: topicId,
-      topicTitle: row.tl1,
-      subTopics: [],
+      // التحقق مما إذا كان topic_id تم استخدامه بالفعل
+      if (!usedTopicIds.has(topicId)) {
+        courseContent.push({
+          id: topicId,
+          topicTitle: row.tl1,
+          subTopics: [],
+        });
+        // إضافة topic_id إلى مجموعة العناصر المستخدمة بالفعل
+        usedTopicIds.add(topicId);
+      }
+
+      // البحث عن الموضوع الحالي في courseContent
+      const currentTopic = courseContent.find((topic) => topic.id === topicId);
+
+      // التحقق مما إذا كان subTopicId تم استخدامه بالفعل
+      if (!currentTopic.subTopics.find((subTopic) => subTopic.id === subTopicId)) {
+        currentTopic.subTopics.push({
+          id: subTopicId,
+          title: row.tln,
+          items: [],
+        });
+      }
+
+      // البحث عن الموضوع الفرعي الحالي في subTopics
+      const currentSubTopic = currentTopic.subTopics.find(
+        (subTopic) => subTopic.id === subTopicId
+      );
+
+      currentSubTopic.items.push({
+        id: row.item_id,
+        title: row.item_title,
+        order: row.item_no,
+        type: row.type_name,
+      });
     });
-    // إضافة topic_id إلى مجموعة العناصر المستخدمة بالفعل
-    usedTopicIds.add(topicId);
-  }
-
-  // البحث عن الموضوع الحالي في courseContent
-  const currentTopic = courseContent.find((topic) => topic.id === topicId);
-
-  // التحقق مما إذا كان subTopicId تم استخدامه بالفعل
-  if (!currentTopic.subTopics.find((subTopic) => subTopic.id === subTopicId)) {
-    currentTopic.subTopics.push({
-      id: subTopicId,
-      title: row.tln,
-      items: [],
-    });
-  }
-
-  // البحث عن الموضوع الفرعي الحالي في subTopics
-  const currentSubTopic = currentTopic.subTopics.find(
-    (subTopic) => subTopic.id === subTopicId
-  );
-
-  currentSubTopic.items.push({
-    id: row.item_id,
-    title: row.item_title,
-    order: row.item_no,
-    type: row.type_name,
-  });
-});
 
 
     // Process the reviews data
@@ -134,6 +135,27 @@ Get_Topic_content_result.rows.forEach((row) => {
     res.status(500).json({ error: "Server Error" });
   }
 });
+
+router.post('/enroll', async (req, res) => {
+  try {
+    const { studentId, courseId, strting_date, progressState, endingDate } = req.body;
+
+    const insertEnrollmentQuery = `
+      INSERT INTO enrollment (student_id, course_id, strting_date, progress_state, ending_date)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING enrollment_id;`;
+
+    const values = [studentId, courseId, strting_date, progressState, endingDate];
+
+    const result = await db.query(insertEnrollmentQuery, values);
+
+    res.json({ enrollmentId: result.rows[0].enrollment_id });
+  } catch (err) {
+    console.error('Error inserting enrollment:', err);
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
+
 
 module.exports = router;
 
