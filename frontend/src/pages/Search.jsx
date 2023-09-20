@@ -201,7 +201,6 @@ const SearchStudent = () => {
               headers: { "Content-Type": "application/json" },
             }
           );
-          console.log(response.data.data);
           setResults(response.data);
         } catch (error) {
           console.log(error);
@@ -230,8 +229,7 @@ const SearchStudent = () => {
               headers: { "Content-Type": "application/json" },
             }
           );
-          console.log(response.data);
-          // setResults(response.data);
+          setResults(response.data);
         } catch (error) {
           console.log(error);
         }
@@ -259,8 +257,7 @@ const SearchStudent = () => {
               headers: { "Content-Type": "application/json" },
             }
           );
-          console.log(response.data);
-          // setResults(response.data);
+          setResults(response.data);
         } catch (error) {
           console.log(error);
         }
@@ -272,7 +269,8 @@ const SearchStudent = () => {
   return (
     <section className="w-[1200px]">
       <h1 className="font-semibold text-[48px] tracking-tight p-[16px]">
-        {results.total_courses} Result for “{text}”
+        {results.total_courses} Result for “
+        {location.state.byText ? text : results.topicTitle}”
       </h1>
       <div className="flex">
         <div className="flex flex-col gap-4 p-4 min-w-[282px] bg-secondary dark:bg-secondary-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back min-h-screen">
@@ -472,7 +470,7 @@ const CourseCard = ({
   level,
   instructor,
   topics,
-  thumnail,
+  thumnail = Card,
 }) => {
   return (
     <>

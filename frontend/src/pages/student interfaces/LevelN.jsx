@@ -119,7 +119,11 @@ const LevelN = () => {
         <div className="flex justify-evenly mt-4">
           {/* here we use the links state that we declare before */}
           <button
-            onClick={() => navigate(modalLinks.search, {state:{byText: false, level1: false}})}
+            onClick={() =>
+              navigate(modalLinks.search, {
+                state: { byText: false, level1: false },
+              })
+            }
             className={`${style} ${important}`}
           >
             Search for a course that cover this topic
@@ -144,7 +148,7 @@ const LevelN = () => {
     <>
       {levelN.map((topic, index) => {
         //if there is just one topic
-        if(levelN.length == 1) {
+        if (levelN.length == 1) {
           return (
             <div key={topic.topic_id} className="w-full">
               <StartLine />
