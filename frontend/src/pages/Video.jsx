@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player";
 // import V from "../assets/video.mp4";
-
 import { MdVideoLibrary as Library } from "react-icons/md";
 import { Button, CourseContent } from "../components";
 function Video() {
@@ -153,8 +152,13 @@ function Video() {
                     />
                   </div> */}
                   <ReactPlayer
-                    url=""
-                    style={{ backgroundColor: "#0D1832" }}
+                    url={V}
+                    style={{ 
+                      backgroundColor: "#0D1832",
+                      borderRadius: "15px",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.8)",
+                     cursor:"pointer"
+                  }}
                     width="800px"
                     height="450px"
                     controls={true}
