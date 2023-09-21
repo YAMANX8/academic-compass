@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player";
-// import V from "../assets/video.mp4";
+import V from "../assets/V.mp4";
 import { MdVideoLibrary as Library } from "react-icons/md";
 import { Button, CourseContent } from "../components";
 function Video() {
