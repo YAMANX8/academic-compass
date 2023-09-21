@@ -42,7 +42,7 @@ app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
 app.use("/AcademicCompass/search",require("./Routes/Students/search/search"));
 
 //show course
-app.use("/AcademicCompass/course",require("./Routes/Students/course/course"));
+app.use("/AcademicCompass/course",require("./Routes/course/course"));
 
 // Register routes to Lucturer
 app.use("/AcademicCompass/auth", require("./Routes/lecturer/register"));
