@@ -1896,3 +1896,132 @@ SELECT EXISTS (
 UPDATE Progress_Status
 SET topic_id = 7, topic_level = 1, student_id = 12, state_id = 2
 WHERE topic_id = 7 AND topic_level = 1 AND student_id = 12;
+
+SELECT
+    course.course_thumnail,
+    course.course_title,
+    course.subtitle,
+    ROUND(COALESCE(AVG(Rating.stars_number), 0), 0) AS average_rating,
+    COUNT(DISTINCT Rating.enrollment_id) AS rating_count,
+    course.course_duration,
+    course.items_count,
+    Levels.level_name,
+    Users.first_name,
+    Users.last_name,
+    COUNT(CASE WHEN items.item_type = 1 THEN 1 END) AS article_count,
+    COUNT(CASE WHEN items.item_type = 2 THEN 1 END) AS video_count,
+    COUNT(CASE WHEN items.item_type = 3 THEN 1 END) AS quiz_count,
+    course.course_description,
+    COALESCE(IS_ENROLLED.is_enrolled, 0) AS is_enrolled
+
+FROM
+    course
+JOIN
+    Levels ON course.course_level = Levels.level_id
+JOIN
+    Users ON course.instructor_id = Users.user_id
+JOIN
+    items ON course.course_id = items.course_id
+LEFT JOIN
+    Enrollment ON course.course_id = Enrollment.course_id
+LEFT JOIN
+    Rating ON Enrollment.enrollment_id = Rating.enrollment_id
+
+-- Subquery to check if the student is enrolled in the course
+LEFT JOIN (
+    SELECT
+        course_id,
+        -- * 1 mean he has enroll 
+        -- * 0 mean he hasn't enroll 
+        MAX(CASE WHEN student_id = 9 THEN 1 ELSE 0 END) AS is_enrolled
+    FROM
+        Enrollment
+    GROUP BY
+        course_id
+) AS IS_ENROLLED ON course.course_id = IS_ENROLLED.course_id
+
+WHERE
+    course.course_id = 12
+
+GROUP BY
+    course.course_thumnail,
+    course.course_title,
+    course.subtitle,
+    course.course_duration,
+    course.items_count,
+    Users.first_name,
+    Users.last_name,
+    Levels.level_name,
+    course.course_description,
+    IS_ENROLLED.is_enrolled;
+
+
+
+
+-- separated To 2 query
+select 
+    List_Type.type_name, 
+    Course_Lists.item_body,
+    Course_Lists.item_order
+from course
+    join Course_Lists on Course.course_id = Course_Lists.course_id  
+    join List_Type on Course_Lists.list_type= List_Type.type_id
+where course.course_id =12 ;
+
+
+-- for review
+select 
+    Rating.rating_id,
+    Student.first_name,
+    Student.last_name,
+    Student.picture,
+    Rating.stars_number,
+    Rating.review
+
+from course
+left join Enrollment on  Course.course_id = Enrollment.course_id
+join Student ON Enrollment.course_id = Student.student_id
+join Rating on enrollment.enrollment_id = Rating.enrollment_id
+where  course.course_id = 12;
+
+-- ! Topci_content
+-- WITH combined_topics AS (
+--   SELECT DISTINCT c.course_title, i.item_title, tl0.topic_title, tl1.topic_title AS topic_1_title
+--   FROM course AS c
+--   JOIN items AS i ON c.course_id = i.course_id
+--   JOIN topic_level_n AS tl0 ON i.topic_id = tl0.topic_id
+--   LEFT JOIN topic_level_n AS tl1 ON tl0.topic_id = tl1.top_level_topic_id
+--   WHERE tl0.top_level_topic_id = 0
+--     AND c.course_id = 12
+
+--   UNION ALL
+
+--   SELECT DISTINCT NULL AS course_title, NULL AS item_title, NULL AS topic_title, tl1.topic_title AS topic_1_title
+--   FROM topic_level_n AS tl0
+--   JOIN topic_level_1 AS tl1 ON tl0.topic_level1_id = tl1.topic_level1_id
+--   WHERE tl0.topic_id = 35
+--     AND tl0.topic_level = 2
+--     AND tl1.topic_level1_id = 5
+-- )
+-- SELECT course_title, item_title, topic_title, topic_1_title
+-- FROM combined_topics;   
+
+
+select 
+ Topic_Level_1.topic_level1_id,
+ Topic_Level_1.topic_title,
+ Topic_Level_n.topic_id,
+ Topic_Level_n.topic_title,
+ Items.item_id,
+ Items.item_title,
+ Items.item_no,
+ Items_Types.type_name
+
+FROM  course 
+JOIN items ON course.course_id= items.course_id
+JOIN Items_Types ON Items.item_type= Items_Types.type_id
+join Topic_Level_N ON items.topic_id= Topic_Level_N.topic_id
+join Topic_Level_1 ON Topic_Level_N.topic_level1_id= Topic_Level_1.topic_level1_id
+
+WHERE course.course_id = 13;
+

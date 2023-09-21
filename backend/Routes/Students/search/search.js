@@ -194,6 +194,7 @@ LEFT JOIN
     WHERE
    ${condition6}
 `;
+const result = await pool.query(query, values);
     const courses = [];
     let total_courses = 0;
     // تحويل البيانات من قاعدة البيانات إلى التنسيق المطلوب
@@ -442,6 +443,7 @@ SELECT DISTINCT
     c.course_title,
     c.subtitle,
     c.course_duration,
+    c.course_thumnail,
     l.level_name,
     u.first_name,
     u.last_name,
