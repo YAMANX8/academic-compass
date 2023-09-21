@@ -9,64 +9,94 @@ import {
   Topic,
   Modal,
 } from "../../components";
-import { Link, useOutletContext, useParams } from "react-router-dom";
+import {
+  Link,
+  useOutletContext,
+  useParams,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import axios from "../../apis/axios";
 import useAuth from "../../hooks/useAuth";
+import { toast } from "react-toastify";
+
 const LevelZero = () => {
-  const { isAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { auth, isAuth } = useAuth();
   const { roadmapId } = useParams();
+  //a state for holding the response message when changing the topics state!
+  const [countUpdate, setCountUpdate] = useState(1);
+  //the actual roadmap data
+  const [mergedData, setMergedData] = useState([]);
   useEffect(() => {
     const getData = async () => {
       const response = await axios.get(
         `/roadmap/${!isAuth ? `${roadmapId}` : `student/${roadmapId}`}`,
         {
           headers: {
-            token: localStorage.token,
+            token: auth.accessToken,
           },
         }
       );
-      setRoadmap(response.data.topics);
+      //consider if the user is not loged in so, I put "|| []"
+      const progress = (await response.data.progress) || [];
+
+      const mergedData = await response.data.topics.map((topic) => {
+        const matchingProgress = progress.find(
+          (item) => item.topic_id === topic.topic_level1_id
+        );
+        return {
+          topic_level1_id: topic.topic_level1_id,
+          topic_title: topic.topic_title,
+          topic_description: topic.topic_description,
+          topic_status: topic.topic_status,
+          topic_order: topic.topic_order,
+          topic_category: topic.topic_category,
+          state_name: matchingProgress ? matchingProgress.state_name : "",
+        };
+      });
+      setMergedData(mergedData);
     };
     getData();
-  }, []);
-  const [roadmap, setRoadmap] = useState([
-    {
-      topic_level1_id: 1,
-      topic_title: "internet",
-      topic_description:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topicOrder: 1,
-      topic_status: "Trending",
-      topic_category: "Basic",
-    },
-    {
-      topic_level1_id: 2,
-      topic_title: "react.js",
-      topic_description:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topicOrder: 2,
-      topic_status: "Trending",
-      topic_category: "Advance",
-    },
-    {
-      topic_level1_id: 3,
-      topic_title: "jquery",
-      topic_description:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topicOrder: 3,
-      topic_status: "Deprecated",
-      topic_category: "Advance",
-    },
-    {
-      topic_level1_id: 4,
-      topic_title: "typescript",
-      topic_description:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topicOrder: 3,
-      topic_status: "Cutting-edge",
-      topic_category: "Aditional",
-    },
-  ]);
+  }, [countUpdate]);
+
+  // {
+  //   topic_level1_id: 1,
+  //   topic_title: "internet",
+  //   topic_description:
+  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
+  //   topic_order: 1,
+  //   topic_status: "Trending",
+  //   topic_category: "Basic",
+  // },
+  // {
+  //   topic_level1_id: 2,
+  //   topic_title: "react.js",
+  //   topic_description:
+  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
+  //   topic_order: 2,
+  //   topic_status: "Trending",
+  //   topic_category: "Advance",
+  // },
+  // {
+  //   topic_level1_id: 3,
+  //   topic_title: "jquery",
+  //   topic_description:
+  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
+  //   topic_order: 3,
+  //   topic_status: "Deprecated",
+  //   topic_category: "Advance",
+  // },
+  // {
+  //   topic_level1_id: 4,
+  //   topic_title: "typescript",
+  //   topic_description:
+  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
+  //   topic_order: 3,
+  //   topic_status: "Cutting-edge",
+  //   topic_category: "Aditional",
+  // },
   //some styles
   const style = "p-4 rounded-md text-dark border-2";
   const important = "bg-gradient-to-r from-primary to-accent text-light";
@@ -83,23 +113,91 @@ const LevelZero = () => {
   //for the modal:
   //the first is for the opening state of the modal
   const [isOpen, setIsOpen] = useState(false);
-  //the second is for the title of the modal
-  const [modalTitle, setModalTitle] = useState("");
-  //this state is for the links that the modal is going to deliver us to
-  const [modalLinks, setModalLinks] = useState({
+  //modal data
+  const [modalData, setModalData] = useState({
+    id: "",
+    level: "",
+    title: "",
     deeper: "/",
     search: "/",
   });
+
+  //handling the states of the topics
+  const handleState = async (state) => {
+    try {
+      const res = await axios.post(
+        "/roadmap/addState/student/state",
+        JSON.stringify({
+          topic_id: modalData.id,
+          topic_level: modalData.level,
+          state_id: state,
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: auth.accessToken,
+          },
+        }
+      );
+      // console.log(res.data.status);
+      setCountUpdate((prev) => prev + 1);
+      setIsOpen(false);
+      toast.success(`topic state is updated successfully (${countUpdate})`);
+    } catch (err) {
+      if (err.response.status === 403)
+        navigate("/student/login", { state: { from: location } });
+    }
+  };
+  const handleReset = async () => {
+    try {
+      const res = await axios.delete(
+        `/roadmap/addState/student/reset/${modalData.id}/${modalData.level}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: auth.accessToken,
+          },
+        }
+      );
+      setCountUpdate((prev) => prev + 1);
+      setIsOpen(false);
+      toast.success(`topic state is updated successfully (${countUpdate})`);
+    } catch (err) {
+      if (err.response.status === 403)
+        navigate("/student/login", { state: { from: location } });
+    }
+  };
+
   //and this variable is for the markup inside the modal
   let modalTemplate = (
     <div className="flex flex-col text-[20px] gap-6">
       <div>
         <h3>Change the state:</h3>
         <div className="flex justify-evenly mt-4">
-          <button className={`${style} border-primary`}>Reset</button>
-          <button className={`${style} border-accent`}>Done</button>
-          <button className={`${style} border-green`}>Inprogress</button>
-          <button className={`${style} border-advance`}>Skip it</button>
+          <button
+            className={`${style} border-primary`}
+            onClick={() => handleReset()}
+          >
+            Reset
+          </button>
+          <button
+            className={`${style} border-accent`}
+            onClick={() => handleState(3)}
+          >
+            Done
+          </button>
+          <button
+            className={`${style} border-green`}
+            onClick={() => handleState(2)}
+          >
+            Inprogress
+          </button>
+          <button
+            className={`${style} border-advance`}
+            onClick={() => handleState(4)}
+          >
+            Skip it
+          </button>
         </div>
       </div>
       <div className="border-t-2 border-dark/20 pt-4">
@@ -107,13 +205,13 @@ const LevelZero = () => {
         <div className="flex justify-evenly mt-4">
           {/* here we use the links state that we declare before */}
           <Link
-            to={modalLinks.search}
+            to={modalData.search}
             className={`${style} ${important}`}
             state={{ byText: false, level1: true }}
           >
             Search for a course that cover this topic
           </Link>
-          <Link to={modalLinks.deeper} className={`${style} ${important}`}>
+          <Link to={modalData.deeper} className={`${style} ${important}`}>
             Go Deeper!
           </Link>
         </div>
@@ -122,7 +220,7 @@ const LevelZero = () => {
   );
   return (
     <>
-      {roadmap.map((topic, index) => {
+      {mergedData.map((topic, index) => {
         //the first topic rendering
         if (index == 0) {
           return (
@@ -131,18 +229,18 @@ const LevelZero = () => {
               <Topic
                 topicId={topic.topic_level1_id}
                 setIsOpen={setIsOpen}
-                modalTitle={setModalTitle}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}
-                modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
                 category={topic.topic_category}
+                modalData={setModalData}
+                progressState={topic.state_name}
               />
               <RightLine />
             </div>
           );
           //the last topic rendering
-        } else if (index == roadmap.length - 1) {
+        } else if (index == mergedData.length - 1) {
           //checking if the last topic is even (Means that the topic is in the right side)
           if (index % 2 == 0)
             return (
@@ -150,12 +248,12 @@ const LevelZero = () => {
                 <Topic
                   topicId={topic.topic_level1_id}
                   setIsOpen={setIsOpen}
-                  modalTitle={setModalTitle}
                   topicTitle={topic.topic_title}
                   topicDescription={topic.topic_description}
-                  modalLinks={setModalLinks}
                   topicStatus={topic.topic_status}
                   category={topic.topic_category}
+                  modalData={setModalData}
+                  progressState={topic.state_name}
                 />{" "}
                 <EndLineRight />
               </div>
@@ -167,13 +265,13 @@ const LevelZero = () => {
                 <Topic
                   topicId={topic.topic_level1_id}
                   setIsOpen={setIsOpen}
-                  modalTitle={setModalTitle}
                   topicTitle={topic.topic_title}
                   topicDescription={topic.topic_description}
-                  modalLinks={setModalLinks}
                   topicStatus={topic.topic_status}
                   category={topic.topic_category}
                   isRight={false}
+                  modalData={setModalData}
+                  progressState={topic.state_name}
                 />
                 <EndLineLeft />
               </div>
@@ -185,12 +283,12 @@ const LevelZero = () => {
               <Topic
                 topicId={topic.topic_level1_id}
                 setIsOpen={setIsOpen}
-                modalTitle={setModalTitle}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}
-                modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
                 category={topic.topic_category}
+                modalData={setModalData}
+                progressState={topic.state_name}
               />{" "}
               <RightLine />
             </div>
@@ -202,13 +300,13 @@ const LevelZero = () => {
               <Topic
                 topicId={topic.topic_level1_id}
                 setIsOpen={setIsOpen}
-                modalTitle={setModalTitle}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}
-                modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
                 category={topic.topic_category}
                 isRight={false}
+                modalData={setModalData}
+                progressState={topic.state_name}
               />
               <LeftLine />
             </div>
@@ -219,7 +317,7 @@ const LevelZero = () => {
       <Modal
         isOpen={isOpen}
         content={modalTemplate}
-        title={modalTitle}
+        title={modalData.title}
         close={() => setIsOpen(false)}
       />
     </>
