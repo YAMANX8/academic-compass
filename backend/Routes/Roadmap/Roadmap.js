@@ -378,7 +378,7 @@ router.get("/student/topicN/:id", async (req, res) => {
         ELSE TRUE
     END AS is_last
   FROM topic_level_N TLN
-  LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id AND ps.topic_level = TLN.topic_id AND ps.student_id = $1
+  LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id AND ps.topic_level = TLN.topic_level AND ps.student_id = $1
   LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
   WHERE TLN.top_level_topic_id = $2;
     `;

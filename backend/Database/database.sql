@@ -1441,9 +1441,9 @@ SELECT
         ELSE TRUE
     END AS is_last
   FROM topic_level_N TLN
-  LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id AND ps.topic_level = TLN.topic_id AND ps.student_id = 5
+  LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id AND ps.topic_level = TLN.topic_level AND ps.student_id = 5
   LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
-  WHERE TLN.top_level_topic_id = 19;
+  WHERE TLN.top_level_topic_id = 59;
 
 -- topic_level_N without login
 SELECT
@@ -2024,4 +2024,69 @@ join Topic_Level_N ON items.topic_id= Topic_Level_N.topic_id
 join Topic_Level_1 ON Topic_Level_N.topic_level1_id= Topic_Level_1.topic_level1_id
 
 WHERE course.course_id = 13;
+-- video 
+SELECT 
+    Topic_Level_1.topic_level1_id,
+    Topic_Level_1.topic_title AS topicTitle1,
+    Topic_Level_n.topic_id,
+    Topic_Level_n.topic_title AS topicTitlen,
+    Items.item_id,
+    Items.item_title,
+    Items.item_no,
+    Items_Types.type_name,
+    CASE WHEN Completed_Items.item_id IS NOT NULL THEN TRUE ELSE FALSE END AS is_completed
+FROM course 
+JOIN items ON course.course_id = items.course_id
+JOIN Items_Types ON Items.item_type = Items_Types.type_id
+LEFT JOIN Completed_Items ON Items.item_id = Completed_Items.item_id
+JOIN Topic_Level_N ON items.topic_id = Topic_Level_N.topic_id
+JOIN Topic_Level_1 ON Topic_Level_N.topic_level1_id = Topic_Level_1.topic_level1_id
+WHERE course.course_id = 12;
+--video path
+SELECT 
+v.video_path
+FROM video v
+WHERE item_id=26;
+--course
+SELECT
+    course.course_thumnail,
+    course.course_title,
+    course.subtitle,
+    ROUND(COALESCE(AVG(Rating.stars_number), 0), 0) AS average_rating,
+    COUNT(DISTINCT Rating.enrollment_id) AS rating_count,
+    course.course_duration,
+    course.items_count,
+    Levels.level_name,
+    Users.first_name,
+    Users.last_name,
+    COUNT(CASE WHEN items.item_type = 1 THEN 1 END) AS article_count,
+    COUNT(CASE WHEN items.item_type = 2 THEN 1 END) AS video_count,
+    COUNT(CASE WHEN items.item_type = 3 THEN 1 END) AS quiz_count,
+    course.course_description
 
+FROM
+    course
+JOIN
+    Levels ON course.course_level = Levels.level_id
+JOIN
+    Users ON course.instructor_id = Users.user_id
+JOIN
+    items ON course.course_id = items.course_id
+LEFT JOIN
+    Enrollment ON course.course_id = Enrollment.course_id
+LEFT JOIN
+    Rating ON Enrollment.enrollment_id = Rating.enrollment_id
+
+WHERE
+    course.course_id = $1
+
+GROUP BY
+    course.course_thumnail,
+    course.course_title,
+    course.subtitle,
+    course.course_duration,
+    course.items_count,
+    Users.first_name,
+    Users.last_name,
+    Levels.level_name,
+    course.course_description;

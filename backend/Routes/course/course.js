@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const db = require("../../../Database/db");
+const db = require("../../Database/db");
 const jwt = require("jsonwebtoken");
 const checkPermission = require("../../middleware/checkPermissions");
 
