@@ -12,7 +12,9 @@ FROM
 JOIN
     completed_items ci ON e.enrollment_id = ci.enrollment_id
 JOIN
-    items_types it ON ci.type_id = it.type_id
+    items i ON ci.item_id = i.item_id
+JOIN 
+  Items_Types it ON i.item_type = it.type_id
 WHERE
     e.student_id = $1;`
 
