@@ -9,11 +9,11 @@ router.post("/student/state", authorization, async (req, res) => {
     // Verify before adding(true or false)
     const verify = await pool.query(
       ` SELECT EXISTS (
-        SELECT 1 FROM Progress_Status WHERE topic_id=$1 AND student_id=$2 AND topic_level=$3)`,
+        SELECT 1 FROM Progress_Status WHERE topic_id=$1 AND topic_level=$2 AND student_id=$3)`,
       [topic_id, topic_level, studentId]
     );
     // * Update state
-    if(verify){
+    if(verify.rows[0].exists){
       try {
         const updateResponse = await pool.query(
           `UPDATE Progress_Status
@@ -37,7 +37,7 @@ router.post("/student/state", authorization, async (req, res) => {
       [topic_id, topic_level, studentId, state_id]
     );
 
-    res.status(200).json({ status: "success: topic was updated state" });
+    res.status(200).json({ status: "success: topic was added state" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ status: "error", message: "An error occurred" });

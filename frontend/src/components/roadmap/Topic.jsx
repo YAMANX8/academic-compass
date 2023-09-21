@@ -2,14 +2,15 @@ const Topic = ({
   topicId,
   setIsOpen,
   topicTitle,
-  modalTitle,
   topicDescription,
-  modalLinks,
   topicStatus,
+  topicLevel = 1,
   last = false,
   setIsLast = () => false,
   category = "Basic",
   isRight = true,
+  modalData,
+  progressState = "",
 }) => {
   return (
     <div
@@ -19,15 +20,16 @@ const Topic = ({
     >
       <button
         onClick={() => {
-          modalTitle(
-            `${
+          modalData({
+            id: topicId,
+            level: topicLevel,
+            title: `${
               topicTitle[0].toUpperCase() + topicTitle.slice(1).toLowerCase()
-            } (${topicStatus})`
-          );
-          modalLinks({
+            } (${topicStatus})`,
             search: `/student/search/by-topic/${topicId}`,
             deeper: `${topicId}`,
           });
+
           if (last) setIsLast(true);
           else setIsLast(false);
           setIsOpen(true);
@@ -36,7 +38,14 @@ const Topic = ({
           category == "Advance" && "bg-accent"
         } ${category == "Aditional" && "bg-advance"} ${
           category == "Basic" && "bg-primary"
-        } text-light py-[26px] rounded-full`}
+        } text-light py-[26px] rounded-full ${
+          progressState == "Completed" &&
+          "line-through bg-gray-500/80"
+        } ${
+          progressState == "In Progress" &&
+          "underline contrast-200 brightness-200"
+        } ${progressState == "Skipped" && "line-through blur-[3px]"}
+        transition-all ease-in-out-back duration-1000`}
       >
         {topicTitle}
       </button>
