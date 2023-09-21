@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   BsStarHalf as Half,
@@ -8,8 +8,9 @@ import {
   BsChevronDown as ChevronDown,
 } from "react-icons/bs";
 import Card from "../assets/images/Rectangle 63.png";
+import { toast } from "react-toastify";
 const SearchStudent = () => {
-  const {text} = useParams();
+  const { text } = useParams();
   const [results, setResults] = useState([
     {
       id: 1,
@@ -137,7 +138,25 @@ const SearchStudent = () => {
     updatedIsOpen[index] = !updatedIsOpen[index];
     setIsOpen(updatedIsOpen);
   };
-
+  const [formData, setFormData] = useState({
+    Beginner: false,
+    Intermediate: false,
+    Expert: false,
+    rating: "0",
+  });
+  function handleChange(event) {
+    const { name, value, type, checked } = event.target;
+    setFormData((prevFormData) => {
+      return {
+        ...prevFormData,
+        [name]: type === "checkbox" ? checked : value,
+      };
+    });
+  }
+  const ratingsList = ["4.5", "4.0", "3.5", "3.0"];
+  useEffect(() => {
+    toast.success(`Beginner: ${formData.Beginner}  Intermediate: ${formData.Intermediate}  Expert: ${formData.Expert}  Rating: ${formData.rating}`);
+  },[formData]);
   return (
     <section className=" w-[1200px]">
       <h1 className=" font-semibold text-[48px] tracking-tight p-[16px]">
@@ -145,7 +164,7 @@ const SearchStudent = () => {
       </h1>
       <div className="flex">
         <div className="p-4 min-w-[282px] bg-secondary dark:bg-secondary-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back min-h-screen">
-          <div>
+          {/* <div>
             <h2 className="text-[32px] font-semibold tracking-tight">
               {" "}
               Topics
@@ -177,45 +196,50 @@ const SearchStudent = () => {
               </div>
               <label>Cover additional topics</label>
             </div>
-          </div>
+          </div> */}
           {/*  */}
-          <div className="py-[32px]">
-            <h2 className="text-[32px] font-semibold tracking-tight"> Level</h2>
+          <div>
+            <h2 className="text-[32px] font-semibold tracking-tight">
+              By Level
+            </h2>
             <div className="flex gap-[10px] py-[16px]">
-              <div className="border-[3px] border-black w-6 h-6 flex items-center justify-center">
+              <div className="w-6 h-6 flex items-center justify-center">
                 <input
+                  id="Beginner"
+                  name="Beginner"
                   className=" w-full h-full cursor-pointer"
+                  checked={formData.Beginner}
                   type="checkbox"
+                  onChange={handleChange}
                 />
               </div>
-              <label>Beginner</label>
+              <label htmlFor="Beginner">Beginner</label>
             </div>
             <div className="flex gap-[10px] py-[16px]">
-              <div className="border-[3px] border-black w-6 h-6 flex items-center justify-center">
+              <div className="w-6 h-6 flex items-center justify-center">
                 <input
+                  id="Intermediate"
+                  name="Intermediate"
                   className=" w-full h-full cursor-pointer"
+                  checked={formData.Intermediate}
                   type="checkbox"
+                  onChange={handleChange}
                 />
               </div>
-              <label>Intermediate</label>
+              <label htmlFor="Intermediate">Intermediate</label>
             </div>
             <div className="flex gap-[10px] py-[16px]">
-              <div className="border-[3px] border-black w-6 h-6 flex items-center justify-center">
+              <div className="w-6 h-6 flex items-center justify-center">
                 <input
+                  id="Expert"
+                  name="Expert"
                   className=" w-full h-full cursor-pointer"
+                  checked={formData.Expert}
                   type="checkbox"
+                  onChange={handleChange}
                 />
               </div>
-              <label>Expert</label>
-            </div>
-            <div className="flex gap-[10px] py-4">
-              <div className="border-[3px] border-black w-6 h-6 flex items-center justify-center">
-                <input
-                  className=" w-full h-full cursor-pointer"
-                  type="checkbox"
-                />
-              </div>
-              <label>All Levels</label>
+              <label htmlFor="Expert">Expert</label>
             </div>
           </div>
           {/*  */}
@@ -224,28 +248,31 @@ const SearchStudent = () => {
               {" "}
               Ratings
             </h2>
-            <div className="  py-[16px] ">
-              {results[0].courses.map((course) => (
-                <div className="flex gap-[10px] py-[16px] " key={course.id}>
-                  <div className="border-[3px] border-black w-6 h-6 flex items-center justify-center">
+            <div className="py-[16px]">
+              {ratingsList.map((item, index) => (
+                <div className="flex gap-[10px] py-[16px]" key={index}>
+                  <div className="w-6 h-6 flex items-center justify-center">
                     <input
-                      className="w-full h-full cursor-pointer  "
-                      type="checkbox"
+                      className="w-full h-full cursor-pointer"
+                      type="radio"
+                      id={item}
+                      name="rating"
+                      value={item}
+                      checked={formData.rating === item}
+                      onChange={handleChange}
                     />
                   </div>
-                  <div className="flex gap-[5px]">
-                    {[...Array(Math.floor(course.ratings))].map(
-                      (_, starIndex) => (
-                        <Full
-                          key={starIndex}
-                          className="text-yellow-500 text-[24px]"
-                        />
-                      )
-                    )}
-                    {course.ratings % 1 !== 0 && (
+                  <label htmlFor={item} className="flex gap-[5px]">
+                    {[...Array(Math.floor(item))].map((_, starIndex) => (
+                      <Full
+                        key={starIndex}
+                        className="text-yellow-500 text-[24px]"
+                      />
+                    ))}
+                    {item % 1 !== 0 && (
                       <Half className="text-yellow-500 text-[24px]" />
                     )}
-                    {[...Array(5 - Math.ceil(course.ratings))].map(
+                    {[...Array(5 - Math.ceil(item))].map(
                       (_, emptyStarIndex) => (
                         <Star
                           key={emptyStarIndex}
@@ -253,10 +280,8 @@ const SearchStudent = () => {
                         />
                       )
                     )}
-                    <span className="ml-[10px] text-xl">
-                      {course.ratings} & up
-                    </span>
-                  </div>
+                    <span className="ml-[10px] text-xl">{item} & up</span>
+                  </label>
                 </div>
               ))}
             </div>
@@ -281,9 +306,9 @@ const SearchStudent = () => {
               >
                 {result.courses.map((course) => (
                   <Link
-                    to={`courseview/${course.id}`}
+                    to={`/student/courseview/${course.id}`}
                     key={course.id}
-                    className="py-8 px-4 shadow-[5px_5px_5px_0] bg-light dark:bg-dark shadow-black/20 hover:scale-[1.03] [transition:background-color_1s_cubic-bezier(0.780,-0.375,0.260,1.320),transform_.3s_cubic-bezier(0.780,-0.375,0.260,1.320)]"
+                    className="py-8 px-4 shadow-[5px_5px_5px_0] bg-light dark:bg-dark shadow-black/20 hover:scale-[1.02] [transition:background-color_1s_cubic-bezier(0.780,-0.375,0.260,1.320),transform_.3s_cubic-bezier(0.780,-0.375,0.260,1.320)]"
                   >
                     <CourseCard
                       title={course.title}
