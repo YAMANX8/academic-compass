@@ -9,13 +9,25 @@ import {
   Topic,
   Modal,
 } from "../../components";
-import { useOutletContext, useNavigate, useParams } from "react-router-dom";
+import {
+  useOutletContext,
+  useNavigate,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 import axios from "../../apis/axios";
 import useAuth from "../../hooks/useAuth";
+import { toast } from "react-toastify";
+
 const LevelOne = () => {
-  const { isAuth } = useAuth();
+  const location = useLocation();
+  const { auth, isAuth } = useAuth();
   const { topicL1Id } = useParams();
   const navigate = useNavigate();
+  //a state for holding the response message when changing the topics state!
+  const [countUpdate, setCountUpdate] = useState(1);
+  //the actual roadmap data
+  const [mergedData, setMergedData] = useState([]);
   //getting the data
   useEffect(() => {
     const getData = async () => {
@@ -25,54 +37,75 @@ const LevelOne = () => {
         }`,
         {
           headers: {
-            token: localStorage.token,
+            token: auth.accessToken,
           },
         }
       );
-      setLevelOne(response.data.topics);
+      // setLevelOne(response.data.topics);
+      //consider if the user is not loged in so, I put "|| []"
+      const progress = (await response.data.progress) || [];
+      console.log(response.data);
+
+      const mergedData = await response.data.topics.map((topic) => {
+        const matchingProgress = progress.find(
+          (item) => item.topic_id === topic.topic_id
+        );
+        return {
+          topic_id: topic.topic_id,
+          topic_title: topic.topic_title,
+          topic_description: topic.topic_description,
+          topic_status: topic.topic_status,
+          topic_order: topic.topic_order,
+          topic_category: topic.topic_category,
+          isItLast: topic.isItLast,
+          topic_level: topic.topic_level,
+          state_name: matchingProgress ? matchingProgress.state_name : "",
+        };
+      });
+      setMergedData(mergedData);
     };
     getData();
-  }, []);
+  }, [countUpdate]);
   //to know if the topic is in the last level
   const [isLast, setIsLast] = useState(false);
-  const [levelOne, setLevelOne] = useState([
-    {
-      topic_id: 1,
-      topic_title: "topic title",
-      topic_description:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topic_order: 1,
-      topic_status: "Trending",
-      isItLast: false,
-    },
-    {
-      topic_id: 2,
-      topic_title: "topic title",
-      topic_description:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topic_order: 2,
-      topic_status: "Stable",
-      isItLast: true,
-    },
-    {
-      topic_id: 3,
-      topic_title: "topic title",
-      topic_description:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topic_order: 3,
-      topic_status: "Stable",
-      isItLast: true,
-    },
-    {
-      topic_id: 4,
-      topic_title: "topic title",
-      topic_description:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-      topic_order: 3,
-      topic_status: "deprecated",
-      isItLast: true,
-    },
-  ]);
+  // const [levelOne, setLevelOne] = useState([
+  //   {
+  //     topic_id: 1,
+  //     topic_title: "topic title",
+  //     topic_description:
+  //       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
+  //     topic_order: 1,
+  //     topic_status: "Trending",
+  //     isItLast: false,
+  //   },
+  //   {
+  //     topic_id: 2,
+  //     topic_title: "topic title",
+  //     topic_description:
+  //       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
+  //     topic_order: 2,
+  //     topic_status: "Stable",
+  //     isItLast: true,
+  //   },
+  //   {
+  //     topic_id: 3,
+  //     topic_title: "topic title",
+  //     topic_description:
+  //       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
+  //     topic_order: 3,
+  //     topic_status: "Stable",
+  //     isItLast: true,
+  //   },
+  //   {
+  //     topic_id: 4,
+  //     topic_title: "topic title",
+  //     topic_description:
+  //       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
+  //     topic_order: 3,
+  //     topic_status: "deprecated",
+  //     isItLast: true,
+  //   },
+  // ]);
   //for the title of the page
   const [title, setTitle] = useOutletContext();
   // setTitle("FE") : I put it in a useEffect because of the warning in the console.
@@ -92,23 +125,90 @@ const LevelOne = () => {
   //for the modal:
   //the first is for the opening state of the modal
   const [isOpen, setIsOpen] = useState(false);
-  //the second is for the title of the modal
-  const [modalTitle, setModalTitle] = useState("");
-  //this state is for the links that the modal is going to deliver us to
-  const [modalLinks, setModalLinks] = useState({
+  //modal data
+  const [modalData, setModalData] = useState({
+    id: "",
+    level: "",
+    title: "",
     deeper: "/",
     search: "/",
   });
+  //handling the states of the topics
+  const handleState = async (state) => {
+    try {
+      const res = await axios.post(
+        "/roadmap/addState/student/state",
+        JSON.stringify({
+          topic_id: modalData.id,
+          topic_level: modalData.level,
+          state_id: state,
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: auth.accessToken,
+          },
+        }
+      );
+      // console.log(res.data.status);
+      setCountUpdate((prev) => prev + 1);
+      setIsOpen(false);
+      toast.success(`topic state is updated successfully (${countUpdate})`);
+    } catch (err) {
+      if (err.response.status === 403)
+        navigate("/student/login", { state: { from: location } });
+    }
+  };
+  const handleReset = async () => {
+    try {
+      const res = await axios.delete(
+        `/roadmap/addState/student/reset/${modalData.id}/${modalData.level}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: auth.accessToken,
+          },
+        }
+      );
+      setCountUpdate((prev) => prev + 1);
+      setIsOpen(false);
+      toast.success(`topic state is updated successfully (${countUpdate})`);
+    } catch (err) {
+      if (err.response.status === 403)
+        navigate("/student/login", { state: { from: location } });
+    }
+  };
+
   //and this variable is for the markup inside the modal
   let modalTemplate = (
     <div className="flex flex-col text-[20px] gap-6">
       <div>
         <h3>Change the state:</h3>
         <div className="flex justify-evenly mt-4">
-          <button className={`${style} border-primary`}>Reset</button>
-          <button className={`${style} border-accent`}>Done</button>
-          <button className={`${style} border-green`}>Inprogress</button>
-          <button className={`${style} border-advance`}>Skip it</button>
+          <button
+            className={`${style} border-primary`}
+            onClick={() => handleReset()}
+          >
+            Reset
+          </button>
+          <button
+            className={`${style} border-accent`}
+            onClick={() => handleState(3)}
+          >
+            Done
+          </button>
+          <button
+            className={`${style} border-green`}
+            onClick={() => handleState(2)}
+          >
+            Inprogress
+          </button>
+          <button
+            className={`${style} border-advance`}
+            onClick={() => handleState(4)}
+          >
+            Skip it
+          </button>
         </div>
       </div>
       <div className="border-t-2 border-dark/20 pt-4">
@@ -116,13 +216,17 @@ const LevelOne = () => {
         <div className="flex justify-evenly mt-4">
           {/* here we use the links state that we declare before */}
           <button
-            onClick={() => navigate(modalLinks.search, {state:{byText: false, level1: false}})}
+            onClick={() =>
+              navigate(modalData.search, {
+                state: { byText: false, level1: false },
+              })
+            }
             className={`${style} ${important}`}
           >
             Search for a course that cover this topic
           </button>
           <button
-            onClick={() => navigate(modalLinks.deeper)}
+            onClick={() => navigate(modalData.deeper)}
             className={`${style} ${important}`}
             disabled={isLast}
           >
@@ -134,23 +238,24 @@ const LevelOne = () => {
   );
   return (
     <>
-      {levelOne.map((topic, index) => {
-         //if there is just one topic
-         if(levelOne.length == 1) {
+      {mergedData.map((topic, index) => {
+        //if there is just one topic
+        if (mergedData.length == 1) {
           return (
             <div key={topic.topic_id} className="w-full">
               <StartLineLeft />
               <Topic
                 topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
-                modalTitle={setModalTitle}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}
-                modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
                 last={topic.isItLast}
                 setIsLast={setIsLast}
                 isRight={false}
+                modalData={setModalData}
+                progressState={topic.state_name}
+                topicLevel={topic.topic_level}
               />
               <EndLineLeft />
             </div>
@@ -164,20 +269,21 @@ const LevelOne = () => {
               <Topic
                 topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
-                modalTitle={setModalTitle}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}
-                modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
                 last={topic.isItLast}
                 setIsLast={setIsLast}
                 isRight={false}
+                modalData={setModalData}
+                progressState={topic.state_name}
+                topicLevel={topic.topic_level}
               />
               <LeftLine />
             </div>
           );
           //the last topic rendering
-        } else if (index == levelOne.length - 1) {
+        } else if (index == mergedData.length - 1) {
           //checking if the last topic is even (Means that the topic is in the right side)
           if (index % 2 == 0)
             return (
@@ -185,14 +291,15 @@ const LevelOne = () => {
                 <Topic
                   topicId={topic.topic_id}
                   setIsOpen={setIsOpen}
-                  modalTitle={setModalTitle}
                   topicTitle={topic.topic_title}
                   topicDescription={topic.topic_description}
-                  modalLinks={setModalLinks}
                   topicStatus={topic.topic_status}
                   last={topic.isItLast}
                   setIsLast={setIsLast}
                   isRight={false}
+                  modalData={setModalData}
+                  progressState={topic.state_name}
+                  topicLevel={topic.topic_level}
                 />{" "}
                 <EndLineLeft />
               </div>
@@ -204,13 +311,14 @@ const LevelOne = () => {
                 <Topic
                   topicId={topic.topic_id}
                   setIsOpen={setIsOpen}
-                  modalTitle={setModalTitle}
                   topicTitle={topic.topic_title}
                   topicDescription={topic.topic_description}
-                  modalLinks={setModalLinks}
                   topicStatus={topic.topic_status}
                   last={topic.isItLast}
                   setIsLast={setIsLast}
+                  modalData={setModalData}
+                  progressState={topic.state_name}
+                  topicLevel={topic.topic_level}
                 />
                 <EndLineRight />
               </div>
@@ -222,14 +330,15 @@ const LevelOne = () => {
               <Topic
                 topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
-                modalTitle={setModalTitle}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}
-                modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
                 last={topic.isItLast}
                 setIsLast={setIsLast}
                 isRight={false}
+                modalData={setModalData}
+                progressState={topic.state_name}
+                topicLevel={topic.topic_level}
               />{" "}
               <LeftLine />
             </div>
@@ -241,13 +350,14 @@ const LevelOne = () => {
               <Topic
                 topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
-                modalTitle={setModalTitle}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}
-                modalLinks={setModalLinks}
                 topicStatus={topic.topic_status}
                 last={topic.isItLast}
                 setIsLast={setIsLast}
+                modalData={setModalData}
+                progressState={topic.state_name}
+                topicLevel={topic.topic_level}
               />
               <RightLine />
             </div>
@@ -258,7 +368,7 @@ const LevelOne = () => {
       <Modal
         isOpen={isOpen}
         content={modalTemplate}
-        title={modalTitle}
+        title={modalData.title}
         close={() => setIsOpen(false)}
       />
     </>

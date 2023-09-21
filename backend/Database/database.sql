@@ -374,12 +374,14 @@ ORDER BY ic.course_title;
 -- insert data to topic(ther is topic_order +++)
 INSERT INTO Topic_Level_1 (topic_title, topic_description, topic_status, roadmap_id, topic_order,category_id)
 VALUES
+    ('test','A while back, developing a mobile app using JavaScript was impossible. But now JavaScript developers can create mobile applications using their knowledge for web development. Here is the list of options to create mobile applications in JavaScript.', 'Active', 17,11,3);
     ('Mobile applications','A while back, developing a mobile app using JavaScript was impossible. But now JavaScript developers can create mobile applications using their knowledge for web development. Here is the list of options to create mobile applications in JavaScript.', 'Active', 18,11,3);
 
 
     -- إدراج بيانات في جدول Topic_Level_N
 INSERT INTO Topic_Level_N (topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id)
 VALUES
+    ('vite', 'Understanding variables and different data types', 'Active',1, ,17),
     ('vite', 'Understanding variables and different data types', 'Active',3,19, ),
     ('Conditional Statements', 'Exploring if-else statements and switch cases', 'Active', 2, 19, 1),
     ('Linked Lists', 'Understanding linked list data structure', 'Active', 3, 20, 2), 
@@ -1145,10 +1147,11 @@ ORDER BY
 --معالجة الحالات الخاصة
 -------------------
 WITH RankedCourses AS (
-    SELECT DISTINCT
+    SELECT DISTINCT ON (r.roadmap_id, c.course_id)
         r.roadmap_id,
         c.course_id,
-        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
+       DENSE_RANK() OVER (ORDER BY r.roadmap_id) AS roadmap_rank,
+        DENSE_RANK() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
     FROM
         Course c
     JOIN
@@ -1168,20 +1171,18 @@ WITH RankedCourses AS (
         GROUP BY
             e.course_id
     ) rt ON c.course_id = rt.course_id
-   LEFT JOIN
+     JOIN
         items i ON c.course_id = i.course_id
-    LEFT JOIN
+    JOIN
         Topic_level_N TLN ON i.topic_id = TLN.topic_id
-    LEFT JOIN
+     JOIN
         Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
-    LEFT JOIN
+     JOIN
         roadmap r ON TL1.roadmap_id = r.roadmap_id
 WHERE
 (
-      (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || 'SEO for E-commerce' || '%') 
+      (c.course_title IS NOT NULL AND c.course_title ILIKE '%' || 'html' || '%') 
     )
-
-
 )
 , TotalCourseCount AS (
     SELECT COUNT( DISTINCT course_id) AS total_courses 
@@ -1205,7 +1206,7 @@ SELECT DISTINCT
     (SELECT total_courses FROM TotalCourseCount) AS total_courses
 FROM
     RankedCourses RC
-LEFT JOIN
+ JOIN
     Course c ON RC.course_id = c.course_id
 LEFT JOIN
     roadmap r ON RC.roadmap_id = r.roadmap_id
@@ -1233,15 +1234,17 @@ LEFT JOIN
     WHERE
     RC.course_rank > ((1 - 1) * 4)
     AND RC.course_rank <= (1 * 4);
-
-
+ORDER BY
+    RC.roadmap_id,
+    RC.course_rank;
     ---------
 -- searsh by topic
 WITH RankedCourses AS (
-    SELECT
+    SELECT DISTINCT ON (r.roadmap_id, c.course_id)
         r.roadmap_id,
         c.course_id,
-        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
+       DENSE_RANK() OVER (ORDER BY r.roadmap_id) AS roadmap_rank,
+        DENSE_RANK() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
     FROM
         Course c
     JOIN
@@ -1251,7 +1254,7 @@ WITH RankedCourses AS (
     JOIN
         Users u ON c.instructor_id = u.user_id
     LEFT JOIN (
-        SELECT
+        SELECT DISTINCT
             e.course_id,
             AVG(r.stars_number) AS rating_stars
         FROM
@@ -1261,46 +1264,39 @@ WITH RankedCourses AS (
         GROUP BY
             e.course_id
     ) rt ON c.course_id = rt.course_id
-    JOIN
+     JOIN
         items i ON c.course_id = i.course_id
     JOIN
         Topic_level_N TLN ON i.topic_id = TLN.topic_id
-    JOIN
+     JOIN
         Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
-    JOIN
+     JOIN
         roadmap r ON TL1.roadmap_id = r.roadmap_id
 WHERE
     (
-        (l.level_name IS NOT NULL AND l.level_name IN ('Intermediate') OR l.level_name IN ('') OR l.level_name IN (''))
-        OR
-        (ct.type_name IS NOT NULL AND ct.type_name IN ('') OR ct.type_name IN ('') OR ct.type_name IN (''))
-    )
-    AND
-    (
-        (rt.rating_stars IS NOT NULL AND rt.rating_stars >=4.5 )
-        AND
-        ( TLN.topic_id NOT NULL AND TLN.topic_id = 21) 
+        
+        ( TLN.topic_id IS NOT NULL AND TLN.topic_id = 35) 
     )
 )
 , TotalCourseCount AS (
-    SELECT COUNT(*) AS total_courses 
+    SELECT COUNT( DISTINCT course_id) AS total_courses 
     FROM RankedCourses
 )
-SELECT
+SELECT DISTINCT
     RC.roadmap_id,
     r.roadmap_title,
     RC.course_id,
     c.course_title,
-    c.course_description,
+    c.subtitle,
     c.course_duration,
     l.level_name,
     u.first_name,
     u.last_name,
     rt.rating_stars,
     ct.type_name,
-    i.item_no,
-    TLN.topic_title,
-    TL1.topic_title,
+    c.items_count,
+    TLN.topic_title AS TLN,
+    TL1.topic_title AS TL1,
     
     (SELECT total_courses FROM TotalCourseCount) AS total_courses
 FROM
@@ -1316,7 +1312,7 @@ JOIN
 JOIN
     Users u ON c.instructor_id = u.user_id
 LEFT JOIN (
-    SELECT
+    SELECT DISTINCT
         e.course_id,
         AVG(r.stars_number) AS rating_stars
     FROM
@@ -1334,10 +1330,7 @@ JOIN
     Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
 WHERE
     RC.course_rank > ((1 - 1) * 4)
-    AND RC.course_rank <= (1 * 4)
-ORDER BY
-    RC.roadmap_id,
-    RC.course_rank;
+    AND RC.course_rank <= (1 * 4);
 
 
 -- course show
@@ -1561,7 +1554,7 @@ VALUES
 INSERT INTO Course (course_title,subtitle,course_description, course_duration, items_count, course_status, instructor_id, course_level, course_type,course_thumnail)
 VALUES 
 -- -- for html basics 
--- ('HTML Basics for Beginners',' Learn the Fundamentals of HTML','This course covers the basics of HTML, including tags, elements, and structure. Perfect for beginners.', 45, 6 ,'Active', 1, 1,2,'photo.png'),
+-- ('HTML Basics 3 ',' Learn the Fundamentals of HTML','This course covers the basics of HTML, including tags, elements, and structure. Perfect for beginners.', 45, 6 ,'Active', 1, 1,2,'photo.png'),
 -- ('HTML Essentials','Master the Core Concepts of HTML', 'Dive deeper into HTML with this comprehensive course. Learn advanced techniques and best practices.',50, 7 ,'Active', 1,2,2, 'photo.png'),
 -- ('HTML Advanced Techniques','Take Your HTML Skills to the Next Level', 'Explore advanced HTML concepts and techniques to create dynamic web content.',55, 6 ,'Active', 1,3,3, 'photo.png');
 
@@ -1611,7 +1604,7 @@ VALUES
 INSERT INTO Items (item_title, item_description, item_no, course_id, topic_id,item_type)
 VALUES
 --! for first COURSE this item = 1 (1 , 2 ,3) = 3
--- ('video intro to html basics', 'video covers the basics of HTML', 1, 12,35,2)
+-- ('test', 'video covers the basics of HTML', 1, 36,72,2)
 -- ('Article intro to html basics', 'Article covers the basics of HTML', 2, 12,35,1),
 --('quiz intro to html basics', 'quiz covers the basics of HTML', 3, 12,35,3);
 
@@ -1681,6 +1674,7 @@ VALUES
 
 INSERT INTO Topic_Level_N (topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_level1_id,topic_order)
 VALUES
+('test', 'NativeScript is an open source framework for creating native iOS and Android apps in Angular, TypeScript, or JavaScript.', 'Stable',1,Null, 17,4);
     ('How dose the internet work', 'The Internet is a global network of computers connected to each other which communicate through a standardized set of protocols.', 'Stable',2,Null, 2,1),
     ('What is HTTP', 'HTTP is the TCP/IP based application layer communication protocol which standardizes how the client and server communicate with each other. HTTP follows a classical “Client-Server model” with a client opening a connection request, then waiting until it receives a response. HTTP is a stateless protocol, that means that the server does not keep any data (state) between two requests.', 'Stable',2,Null, 2,2),
     ('Domain Name', 'A domain name is a unique, easy-to-remember address used to access websites, such as google.com, and facebook.com. Users can connect to websites using domain names thanks to the Domain Name System (DNS).', 'Stable',2,Null, 2,3),
@@ -1737,6 +1731,7 @@ VALUES
     ('Flutter', 'Flutter is a free and open-source mobile UI framework created by Google and released in May 2017. In a few words, it allows you to create a native mobile application with only one codebase. This means that you can use one programming language and one codebase to create two different apps (for iOS and Android).', 'Trending',2,Null, 16,2),
     ('Ionic', 'Ionic framework is an open-source UI toolkit for building performant, high-quality mobile apps, desktop apps, and progressive web apps using web technologies such as HTML, CSS, and JavaScript.', 'Stable',2,Null, 16,3),
     ('NativeScript', 'NativeScript is an open source framework for creating native iOS and Android apps in Angular, TypeScript, or JavaScript.', 'Stable',2,Null, 16,4);
+    
 
     ('Conditional Statements', 'Exploring if-else statements and switch cases', 'Active', 2, 19, 1),
     ('Linked Lists', 'Understanding linked list data structure', 'Active', 3, 20, 2), 
@@ -1889,4 +1884,15 @@ ORDER BY
 ------------+---------------+-----------+---------------------------+--------------------------------------------------------------------------------------------------------+-----------------+------------+------------+-----------+--------------------+-------------------+---------+-------------+---------------
          18 | frontend      |        12 | HTML Basics for Beginners | This course covers the basics of HTML, including tags, elements, and structure. Perfect for beginners. |              45 | Beginner   | Ahmed      | Hassan    | 5.0000000000000000 | beginner|advanced |       1 | HTML Basics |            19
 
+DELETE FROM Progress_Status WHERE topic_id = 5 AND student_id = 9;
 
+--true or false
+SELECT EXISTS (
+        SELECT 1 FROM Progress_Status WHERE topic_id= AND student_id= AND topic_level=)
+
+
+
+---
+UPDATE Progress_Status
+SET topic_id = 7, topic_level = 1, student_id = 12, state_id = 2
+WHERE topic_id = 7 AND topic_level = 1 AND student_id = 12;

@@ -27,12 +27,6 @@ app.use("/AcademicCompass/studentDashboard", require("./Routes/Students/dashboar
 
 //setting
 app.use("/AcademicCompass/student/setting", require("./Routes/Students/settings/setting"));
-// change password to student
-// app.use("/AcademicCompass/studentDashboard/change-password", require("./Routes/Students/settings/security"));
-// Update Acount to student
-// app.use("/AcademicCompass/studentDashboard/update-account", require("./Routes/Students/settings/account"));
-//  General Setting to student
-// app.use("/AcademicCompass/setting",require("./Routes/Students/settings/generalInfl"));
 
 // get Roadmap(all&&specific map)
 app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
@@ -40,6 +34,9 @@ app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
 
 // add roadmap
  app.use("/AcademicCompass/addroadmap",require("./Routes/Roadmap/addRoadmap"));
+
+// addProgressState
+ app.use("/AcademicCompass/roadmap/addState",require("./Routes/Roadmap/addProgressState"));
 
 //search
 app.use("/AcademicCompass/search",require("./Routes/Students/search/search"));

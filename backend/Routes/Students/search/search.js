@@ -109,10 +109,11 @@ router.post("/course", async (req, res) => {
     // بناء الاستعلام النهائي باستخدام الشرط النهائي
     const query = `
 WITH RankedCourses AS (
-    SELECT DISTINCT
+    SELECT DISTINCT ON (r.roadmap_id, c.course_id)
         r.roadmap_id,
         c.course_id,
-        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
+       DENSE_RANK() OVER (ORDER BY r.roadmap_id) AS roadmap_rank,
+        DENSE_RANK() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
     FROM
         Course c
     JOIN
@@ -132,18 +133,18 @@ WITH RankedCourses AS (
         GROUP BY
             e.course_id
     ) rt ON c.course_id = rt.course_id
-   LEFT JOIN
+     JOIN
         items i ON c.course_id = i.course_id
-    LEFT JOIN
+    JOIN
         Topic_level_N TLN ON i.topic_id = TLN.topic_id
-    LEFT JOIN
+     JOIN
         Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
-    LEFT JOIN
+     JOIN
         roadmap r ON TL1.roadmap_id = r.roadmap_id
 WHERE
     ${finalCondition}
-    )
- , TotalCourseCount AS (
+)
+, TotalCourseCount AS (
     SELECT COUNT( DISTINCT course_id) AS total_courses 
     FROM RankedCourses
 )
@@ -163,10 +164,9 @@ SELECT DISTINCT
     ct.type_name,
     TLN.topic_title,
     (SELECT total_courses FROM TotalCourseCount) AS total_courses
-
 FROM
     RankedCourses RC
-LEFT JOIN
+ JOIN
     Course c ON RC.course_id = c.course_id
 LEFT JOIN
     roadmap r ON RC.roadmap_id = r.roadmap_id
@@ -194,10 +194,6 @@ LEFT JOIN
     WHERE
    ${condition6}
 `;
-    console.log(query);
-
-    const result = await pool.query(query, values);
-
     const courses = [];
     let total_courses = 0;
     // تحويل البيانات من قاعدة البيانات إلى التنسيق المطلوب
@@ -242,7 +238,6 @@ LEFT JOIN
         topics: [topicTitle],
         thumnail: courseThumnail,
       };
-
       // إضافة معلومات الكورس إلى المسار المناسب
       existingRoadmap.courses.push(courseInfo);
       existingRoadmap.courseescount++;
@@ -250,6 +245,7 @@ LEFT JOIN
     // إرسال البيانات بالشكل المطلوب
     res.status(200).json({
       status: "success",
+      title:"",
       total_courses: total_courses,
       data: courses,
     });
@@ -302,15 +298,69 @@ router.post("/topic", async (req, res) => {
 
     // بناء الشرط الثاني حسب الحالات الثلاث`
     let condition5 = "";
+    let condition6 = "";
+    let values = [];
     let topicId = 0;
-    if (topiclevel_N !== "") {
+    if (topiclevel_N !== "" && Rating !== "") {
       topicId = topiclevel_N;
       condition5 = `(rt.rating_stars IS NOT NULL AND rt.rating_stars >= $7) AND (TLN.topic_id IS NOT NULL AND TLN.topic_id = $8)`;
-    } else if (topiclevel_1 !== "") {
+      condition6 = ` RC.course_rank > (($9 - 1) * 4) AND RC.course_rank <= ($9 * 4)`;
+      values = [
+        Beginner,
+        Intermediate,
+        Expert,
+        typeName1,
+        typeName2,
+        typeName3,
+        Rating,
+        topicId,
+        courseRank,
+      ];
+    } else if (topiclevel_N !== "" && Rating == "") {
+      topicId = topiclevel_N;
+      condition5 = ` (TLN.topic_id IS NOT NULL AND TLN.topic_id = $7)`;
+      condition6 = ` RC.course_rank > (($8 - 1) * 4) AND RC.course_rank <= ($8 * 4)`;
+      values = [
+        Beginner,
+        Intermediate,
+        Expert,
+        typeName1,
+        typeName2,
+        typeName3,
+        topicId,
+        courseRank,
+      ];
+    } else if (topiclevel_1 !== "" && Rating !== "") {
       topicId = topiclevel_1;
       condition5 = `(rt.rating_stars IS NOT NULL AND rt.rating_stars >= $7) AND (TL1.topic_level1_id IS NOT NULL AND TL1.topic_level1_id = $8)`;
+      condition6 = ` RC.course_rank > (($9 - 1) * 4) AND RC.course_rank <= ($9 * 4)`;
+      values = [
+        Beginner,
+        Intermediate,
+        Expert,
+        typeName1,
+        typeName2,
+        typeName3,
+        Rating,
+        topicId,
+        courseRank,
+      ];
+    }else if (topiclevel_1 !== "" && Rating == ""){
+      topicId = topiclevel_1;
+      condition5 = ` (TL1.topic_level1_id IS NOT NULL AND TL1.topic_level1_id = $7)`;
+      condition6 = ` RC.course_rank > (($8 - 1) * 4) AND RC.course_rank <= ($8 * 4)`;
+      values = [
+        Beginner,
+        Intermediate,
+        Expert,
+        typeName1,
+        typeName2,
+        typeName3,
+        topicId,
+        courseRank,
+      ];
     }
-
+      
     // دمج الشروط الثلاث حسب الحالة
     let finalCondition = "";
     if (
@@ -346,10 +396,11 @@ router.post("/topic", async (req, res) => {
     // بناء الاستعلام النهائي باستخدام الشرط النهائي
     const query = `
 WITH RankedCourses AS (
-    SELECT
+    SELECT DISTINCT ON (r.roadmap_id, c.course_id)
         r.roadmap_id,
         c.course_id,
-        ROW_NUMBER() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
+       DENSE_RANK() OVER (ORDER BY r.roadmap_id) AS roadmap_rank,
+        DENSE_RANK() OVER (PARTITION BY r.roadmap_id ORDER BY c.course_id) AS course_rank
     FROM
         Course c
     JOIN
@@ -359,7 +410,7 @@ WITH RankedCourses AS (
     JOIN
         Users u ON c.instructor_id = u.user_id
     LEFT JOIN (
-        SELECT
+        SELECT DISTINCT
             e.course_id,
             AVG(r.stars_number) AS rating_stars
         FROM
@@ -369,36 +420,35 @@ WITH RankedCourses AS (
         GROUP BY
             e.course_id
     ) rt ON c.course_id = rt.course_id
-    JOIN
+     JOIN
         items i ON c.course_id = i.course_id
     JOIN
         Topic_level_N TLN ON i.topic_id = TLN.topic_id
-    JOIN
+     JOIN
         Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
-    JOIN
+     JOIN
         roadmap r ON TL1.roadmap_id = r.roadmap_id
-  WHERE
+WHERE
     ${finalCondition}
-    )
-  , TotalCourseCount AS (
-    SELECT COUNT(*) AS total_courses 
+   )
+, TotalCourseCount AS (
+    SELECT COUNT( DISTINCT course_id) AS total_courses 
     FROM RankedCourses
 )
-SELECT
+SELECT DISTINCT
     RC.roadmap_id,
     r.roadmap_title,
     RC.course_id,
     c.course_title,
-    c.course_description,
+    c.subtitle,
     c.course_duration,
     l.level_name,
     u.first_name,
     u.last_name,
     rt.rating_stars,
     ct.type_name,
-    i.item_no,
-    TLN.topic_title AS topic_level_N_title, 
-    TL1.topic_title AS topic_level_1_title,
+    c.items_count,
+    TLN.topic_title AS TopicLevelN,
     (SELECT total_courses FROM TotalCourseCount) AS total_courses
 FROM
     RankedCourses RC
@@ -413,7 +463,7 @@ JOIN
 JOIN
     Users u ON c.instructor_id = u.user_id
 LEFT JOIN (
-    SELECT
+    SELECT DISTINCT
         e.course_id,
         AVG(r.stars_number) AS rating_stars
     FROM
@@ -430,30 +480,25 @@ JOIN
 JOIN
     Topic_level_1 TL1 ON TLN.topic_level1_id = TL1.topic_level1_id
 WHERE
-    RC.course_rank > (($9 - 1) * 4)
-    AND RC.course_rank <= ($9 * 4)
-ORDER BY
-    RC.roadmap_id,
-    RC.course_rank;
+${condition6}
 `;
-    console.log(query);
-    const values = [
-      Beginner,
-      Intermediate,
-      Expert,
-      typeName1,
-      typeName2,
-      typeName3,
-      Rating,
-      topicId,
-      courseRank,
-    ];
-    const result = await pool.query(query, values);
+    let query2 = "";
+    let values2;
+if(topiclevel_N !==""){
+query2 = `SELECT topic_title FROM topic_level_N WHERE topic_id=$1`;
+values2 = [topiclevel_N];
+}else if (topiclevel_1 !== "") {
+  query2 = `SELECT topic_title FROM topic_level_1 WHERE topic_level1_id=$1`;
+  values2 = [topiclevel_1];
+}
 
+
+    const result1 = await pool.query(query, values);
+    const result2= await pool.query(query2,values2)
     const courses = [];
     let total_courses = 0;
     // تحويل البيانات من قاعدة البيانات إلى التنسيق المطلوب
-    result.rows.forEach((row) => {
+    result1.rows.forEach((row) => {
       const roadmapId = row.roadmap_id;
       const roadmapTitle = row.roadmap_title;
       const courseId = row.course_id;
@@ -464,9 +509,8 @@ ORDER BY
       const levelName = row.level_name;
       const instructorName = `${row.first_name} ${row.last_name}`;
       const ratingStars = parseFloat(row.rating_stars);
-      const itemNo = row.item_no;
-      const topicTitleN = row.topic_level_N_title;
-      const topicTitle1 = row.topic_level_1_title;
+      const itemNo = row.items_count;
+      const topicTitleN = row.topicleveln;
       total_courses = row.total_courses;
       // تحقق مما إذا كانت هناك مسارات مكررة في القائمة أو لا
       let existingRoadmap = courses.find((course) => course.id === roadmapId);
@@ -492,8 +536,7 @@ ORDER BY
         itemsCount: itemNo,
         level: levelName,
         instructor: instructorName,
-        topicsN: [topicTitleN],
-        topics1: [topicTitle1],
+        topics: [topicTitleN],
         thumnail: courseThumnail,
       };
 
@@ -504,6 +547,7 @@ ORDER BY
     // إرسال البيانات بالشكل المطلوب
     res.status(200).json({
       status: "success",
+      topicTitle:result2.rows[0].topic_title,
       total_courses: total_courses,
       data: courses,
     });

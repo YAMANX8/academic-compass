@@ -23,7 +23,7 @@ const Navbar = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate(`/student/search/by-text/${search}`, {state:{byText: true}})
+    navigate(`/student/search/by-text/${search}`, { state: { byText: true } });
   };
   const handleLogout = () => {
     // إزالة الرمز من المتصفح
@@ -61,12 +61,12 @@ const Navbar = () => {
           <input
             type="search"
             value={search}
-            onChange={(e) => {setSearch(e.target.value)}}
-            className="w-full py-[10px] pl-9 pr-[10px] rounded-full bg-transparent outline-none"
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            className="w-full py-[10px] pl-9 pr-[10px] rounded-full bg-transparent outline-none z-10"
           />
-          <button type="submit">
-            <Search className="font-semibold absolute left-[10px] top-[10px] text-[24px] cursor-pointer" />
-          </button>
+          <Search className="font-semibold absolute left-[10px] top-[10px] text-[24px]" />
         </form>
         <Link to="/student/roadmaps" className="font-semibold">
           Roadmaps{" "}

@@ -36,7 +36,7 @@ router.post("/student/register", validInfo, async (req, res) => {
       newStudent.rows[0].student_id
     );
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, role_id });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
@@ -50,6 +50,7 @@ router.post("/student/login", validInfo, async (req, res) => {
     // 1. destructure req.body
 
     const { email, password } = req.body;
+    const role_id = 2;
     // 2. check student doesn't exist (if not then throw error)
     const student = await pool.query("SELECT * FROM student WHERE email=$1", [
       email,
@@ -73,7 +74,7 @@ router.post("/student/login", validInfo, async (req, res) => {
       const { token } = jwtGenerator(
         student.rows[0].student_id
       );
-      return res.status(200).json({ token });
+      return res.status(200).json({ token,role_id });
     }
   } catch (error) {
     console.error(error);
