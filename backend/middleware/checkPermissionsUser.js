@@ -1,4 +1,4 @@
-const pool = require("../db.js");
+const pool = require("../Database/db");
 // todo this function to student
 const checkPermission = async (userId, permissionName) => {
   const userRoleQuery = "SELECT role_id FROM users WHERE user_id = $1";
