@@ -61,26 +61,43 @@ function Dashboard_Student() {
   const emptyRows = "font-thin text-[20px] text-dark/70 dark:text-light/70";
   const transition = "transition-colors duration-1000 ease-in-out-back";
 
+  const userInfo = {
+    firstName: auth.firstName == null ? "" : auth.firstName,
+    lastName: auth.lastName == null ? "" : auth.lastName,
+    imagePath:
+      auth.image == "http://localhost:5000/image/null" ? "" : auth.image,
+  };
   return (
     <section className="max-w-[1200px] grid grid-cols-12 gap-[20px] grid-rows-8">
       {/* My Profile */}
       <div className=" col-span-8 row-start-1 row-span-2">
         <DashboardWrapper
           heading="My Profile"
-          optionalText={`Welcome back, ${auth.firstName}`}
+          optionalText={`Welcome back, ${userInfo.firstName}`}
         >
           <div className="flex justify-start gap-12">
             <div className="flex flex-col gap-4 text-center justify-center">
-              <div className="w-[167px] aspect-square overflow-hidden rounded-full">
-                <img
+              <div className="w-[167px] aspect-square overflow-hidden rounded-full bg-primary text-light flex justify-center items-center text-3xl">
+                {/* <img
                   src={auth.image}
                   alt="Profile"
+                /> */}
+                {userInfo.imagePath ? (
+                <img
+                  src={userInfo.imagePath}
+                  className="object-cover"
+                  alt="profile picture"
                 />
+              ) : (
+                <span>
+                  {userInfo.firstName.charAt(0)} {userInfo.lastName.charAt(0)}
+                </span>
+              )}
               </div>
 
               <div className="font-semibold leading-l tracking-tight flex flex-col gap-2">
                 <p>
-                  {auth.firstName} {auth.lastName}
+                  {userInfo.firstName} {userInfo.lastName}
                 </p>
                 <p className="text-primary">{`${auth.city}, ${auth.country}`}</p>
               </div>

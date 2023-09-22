@@ -20,6 +20,7 @@ const DataRetrieval = () => {
         const response = await res?.data?.reuslut;
         await setAuth((prev) => ({
           ...prev,
+          accessToken: localStorage.token,
           firstName: response.firstName,
           lastName: response.lastName,
           education: response.education,
