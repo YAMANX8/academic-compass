@@ -63,9 +63,13 @@ GROUP BY
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
       const studentId = payload.studentId;
       //permission
-      const hasAccess = await checkPermission(studentId, "show_course");
-      if (!hasAccess) {
-        return res.status(403).json("Access denied");
+      try {
+        const hasAccess = await checkPermission(studentId,"show_course");
+        if (!hasAccess) {
+          return res.status(403).json("Access denied");
+        }
+      } catch (error) {
+        console.log(error);
       }
       Course_info=`SELECT course.course_thumnail, course.course_title, course.subtitle, ROUND(COALESCE(AVG(Rating.stars_number), 0), 0) AS average_rating, COUNT(DISTINCT Rating.enrollment_id) AS rating_count, course.course_duration, course.items_count, Levels.level_name, Users.first_name, Users.last_name, COUNT(CASE WHEN items.item_type = 1 THEN 1 END) AS article_count, COUNT(CASE WHEN items.item_type = 2 THEN 1 END) AS video_count, COUNT(CASE WHEN items.item_type = 3 THEN 1 END) AS quiz_count, course.course_description, COALESCE(IS_ENROLLED.is_enrolled, 0) AS is_enrolled FROM course JOIN Levels ON course.course_level = Levels.level_id JOIN Users ON course.instructor_id = Users.user_id JOIN items ON course.course_id = items.course_id LEFT JOIN Enrollment ON course.course_id = Enrollment.course_id LEFT JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id LEFT JOIN (SELECT course_id, MAX(CASE WHEN student_id = $1 THEN 1 ELSE 0 END) AS is_enrolled FROM Enrollment GROUP BY course_id) AS IS_ENROLLED ON course.course_id = IS_ENROLLED.course_id WHERE course.course_id = $2 GROUP BY course.course_thumnail, course.course_title, course.subtitle, course.course_duration, course.items_count, Users.first_name, Users.last_name, Levels.level_name, course.course_description, IS_ENROLLED.is_enrolled`;
       values = [studentId, courseId];
