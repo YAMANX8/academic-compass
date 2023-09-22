@@ -139,7 +139,6 @@ const LevelZero = () => {
           },
         }
       );
-      // console.log(res.data.status);
       setCountUpdate((prev) => prev + 1);
       setIsOpen(false);
       toast.success(`topic state is updated successfully (${countUpdate})`);
@@ -194,7 +193,7 @@ const LevelZero = () => {
           </button>
           <button
             className={`${style} border-advance`}
-            onClick={() => handleState(4)}
+            onClick={() => handleState(1)}
           >
             Skip it
           </button>
