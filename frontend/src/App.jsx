@@ -50,7 +50,7 @@ const App = () => {
                 </Route>
 
                 <Route path="courseview/:id" element={<CourseView />} />
-                
+
                 <Route path="video" element={<Video />} />
                 <Route path="Article" element={<Article />} />
                 <Route path="search">
@@ -62,6 +62,16 @@ const App = () => {
                 <Route element={<RequireAuth />}>
                   <Route path="dashboard" element={<Dashboard_Student />} />
                   <Route path="settings" element={<Settings_Student />} />
+
+                  <Route
+                    path="courseview/:id/video/:itemId"
+                    element={<Video />}
+                  />
+                  <Route
+                    path="courseview/:id/article/:itemId"
+                    element={<Article />}
+                  />
+
                   {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
                 </Route>
               </Route>

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
   BsStarHalf as Half,
   BsFillStarFill as Full,
@@ -13,6 +13,8 @@ import Card from "../assets/images/Rectangle 63.png";
 import Profile from "../assets/images/profile.png";
 
 import { CourseContent, ReviewCards } from "../components";
+import axios from "../apis/axios";
+import useAuth from "../hooks/useAuth";
 
 const SectionWrapper = ({ title, children }) => {
   return (
@@ -24,23 +26,25 @@ const SectionWrapper = ({ title, children }) => {
 };
 
 const CourseView = () => {
+  const { id } = useParams();
+  const { auth } = useAuth();
   const [course, setCourse] = useState({
-    image: Card,
-    title: "Learn Api basics, and learn how to integrate with the backend",
+    course_thumnail: Card,
+    course_title: "Learn Api basics, and learn how to integrate with the backend",
     subtitle:
       "Fetch api: Explore how to connect to various web APIs using JavaScript fetch. Use the returned data JSON data within you Code.",
     stars: 4.5,
-    ratings: 1000,
-    duration: 10,
+    ratingCount: 1000,
+    courseDuration: 10,
     itemsCount: 75,
-    level: "beginres",
+    levelName: "beginres",
     instructor: "Jone Doe",
-    videoCount: 25,
-    quizCount: 25,
-    articleCount: 25,
+    video_count: 25,
+    quiz_count: 25,
+    article_count: 25,
     data: "12/12/2023",
     articles: 25,
-    descripation: `60%+ of people who try to learn how to program end up quitting.
+    course_description: `60%+ of people who try to learn how to program end up quitting.
       <br> <br>
         Why?
         <br> <br>
@@ -233,17 +237,34 @@ const CourseView = () => {
   const text =
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur consequatur nesciunt eaqueLorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur consequatur nesciunt eaque recusandae fugit perferendis aperiam atque ipsam dolorem harum! Dolores est amet hic impedit aperiam minima assumenda omnis ut.";
 
-  const descriptionArray = course.descripation.split("<br> <br>");
+  const descriptionArray = course.course_description.split("<br> <br>");
+  useEffect(() => {
+    const getCourse = async () => {
+      try {
+        const res = await axios.get(`/course/${id}`, {
+          headers: {
+            token: auth.accessToken,
+            "Content-Type": "application/json",
+          },
+        });
+        setCourse(res.data)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getCourse();
+  }, []);
+
   return (
     <section className="w-[1200px]">
       <div className="  bg-secondary dark:bg-secondary-dark  shadow-[0px_-1000px_0px_1000px] dark:shadow-secondary-dark shadow-secondary text-dark dark:text-light duration-1000 ease-in-out-back">
         <div className="flex gap-[32px]">
           <div className="flex min-w-[400px] aspect-video">
-            <img className="object-contain" src={course.image} />
+            <img className="object-contain" src={course.course_thumnail} />
           </div>
           <div className="flex flex-col gap-4">
             <h1 className="font-bold text-[32px] leading-[39px] tracking-tight">
-              {course.title}
+              {course.course_title}
             </h1>
             <p className="text-[24px] leading-l tracking-tight">
               {course.subtitle}
@@ -267,13 +288,13 @@ const CourseView = () => {
                 ))}
               </div>
               <span>{course.stars}</span>
-              <span>{`(${course.ratings} ratings)`}</span>
+              <span>{`(${course.ratingCount} ratings)`}</span>
             </div>
 
             <div className="text-accent dark:text-accent-dark flex justify-between duration-1000 ease-in-out-back">
               <span>
-                duration {course.duration} hr • {course.itemsCount} items • for{" "}
-                {course.level}
+                duration {course.courseDuration} hr • {course.itemsCount} items • for{" "}
+                {course.levelName}
               </span>
               <cite>Created By: {course.instructor}</cite>
             </div>
@@ -288,15 +309,15 @@ const CourseView = () => {
 
             <div className=" flex items-center gap-4">
               <Video />
-              {course.videoCount} Videos
+              {course.video_count} Videos
             </div>
             <div className=" flex items-center gap-4">
               <Quiz />
-              {course.quizCount} Quiz
+              {course.quiz_count} Quiz
             </div>
             <div className=" flex items-center gap-4">
               <Articles />
-              {course.articleCount} Articles
+              {course.article_count} Articles
             </div>
           </div>
           <Link className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">

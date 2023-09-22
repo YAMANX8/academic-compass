@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   BsCameraVideo as Video,
   BsQuestionCircle as Quiz,
@@ -9,15 +9,13 @@ import {
 } from "react-icons/bs";
 
 const CourseContent = ({ courseContent }) => {
-
+  const { id } = useParams();
   const [isOpen, setIsOpen] = useState(
     courseContent.map((content) => ({
       outer: true,
       inner: Array(content.subTopics.length).fill(true),
     }))
   ); //لك اللّاوي الشغل لك وليييييي
-
-  console.log(isOpen);
 
   const toggleDetails = (index) => {
     const updatedIsOpen = [...isOpen];
@@ -72,7 +70,13 @@ const CourseContent = ({ courseContent }) => {
                 {subTopic.items.map((item) => (
                   <Link
                     key={item.id}
-                    to={`${item.id}`}
+                    to={
+                      item.type == "video"
+                        ? `/student/courseview/${id}/video/${item.id}`
+                        : item.type == "article"
+                        ? `/student/courseview/${id}/article/${item.id}`
+                        : `/student/courseview/${id}/quiz/${item.id}`
+                    }
                     className={`bg-light dark:bg-dark text-dark dark:text-light flex p-4 gap-4 items-center transition-all duration-1000 ease-in-out-back `}
                   >
                     <span className="text-[24px]">
