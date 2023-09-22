@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 
-function jwtGenerator(student_id) {
+function jwtGenerator(user_id) {
   const payload = {
-    studentId: student_id
+    userId: user_id
   };
 
   const token = jwt.sign(payload, process.env.jwtSecret, {

@@ -1,10 +1,16 @@
     const router = require("express").Router();
     const pool = require("../../Database/db");
     const authorization = require("../../middleware/authorization");
+    const checkPermission=require("../../middleware/checkPermissionsUser")
 
     router.get("/:courseId/:itemID", authorization, async (req, res) => {
       try {
-        // const studentId = req.student.studentId;
+        const studentId = req.user.userId;
+        //permission
+        const hasAccess = await checkPermission(studentId,"show_video");
+        if (!hasAccess) {
+          return res.status(403).json("Access denied");
+        }
         const courseId = req.params.courseId;
         const itemId = req.params.itemID;
         const query1 = `
@@ -86,7 +92,7 @@
             title: row.item_title,
             order: row.item_no,
             type: row.type_name,
-            is_completed: row.is_completed
+            is_completed: row.is_completed,
           });
         });
 
@@ -103,6 +109,7 @@
     });
 
     // complete item
+    // * هل نحتاج إضافة صلاحية هنا أم لا
     router.post("/Completed", authorization, async (req, res) => {
       try {
         const{itemId,enrollmentId}=req.body;
