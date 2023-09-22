@@ -2,6 +2,7 @@ const router = require("express").Router();
 const db = require("../../Database/db");
 const jwt = require("jsonwebtoken");
 const checkPermission = require("../../middleware/checkPermissions");
+const authorization = require("../../middleware/authorization");
 
 router.get("/:courseId", async (req, res) => {
   try {
@@ -200,7 +201,7 @@ GROUP BY
   }
 });
 
-router.post('/enroll', async (req, res) => {
+router.post('/enroll',authorization, async (req, res) => {
   try {
     const { studentId, courseId, strting_date, progressState, endingDate } = req.body;
 
