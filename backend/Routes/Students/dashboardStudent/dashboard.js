@@ -10,7 +10,8 @@ const bring_All_Courses_Number =require("../../../Utils/dashboard/bring_All_Cour
 const checkPermission = require("../../../middleware/checkPermissions");
 router.get("/", authorization, async (req, res, next) => {
   try {
-    const Id = req.student.studentId;
+    const Id = req.user.userId;
+    console.log(Id);
     const hasAccess = await checkPermission(Id, "dashboard_access");
     if (!hasAccess) {
         return res.status(403).json("Access denied");

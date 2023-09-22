@@ -10,8 +10,8 @@ module.exports = function (req, res, next) {
       return res.status(403).json("Not Authorize");
     }
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
-    req.student = {
-      studentId: payload.studentId
+    req.user = {
+      userId: payload.userId
     };
   } catch (error) {
     console.error(error.message);

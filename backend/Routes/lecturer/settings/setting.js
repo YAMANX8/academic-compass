@@ -26,7 +26,8 @@ const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
 //todo // فك ترميز اسم الملف قبل استخدامه لتجنب مشاكل تحويل اللغة
 //* const decodedImagePath = decodeURIComponent(result.rows[0].image_path);
-// Change student information
+// Change instructor information
+
 router.put("/", authorization, upload.single("image"), async (req, res) => {
   try {
     const {
@@ -42,21 +43,22 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
       newPassword,
       verifyNewPassword,
     } = req.body;
-    const student_id = req.user.userId;
-    //permission
-    const hasAccess = await checkPermission(student_id, "update_stting");
+    const instructor_id = req.user.userId;
+    //permission 
+    // مكتوبة غلط ب database
+    const hasAccess = await checkPermission(instructor_id, "update_stting");
     if (!hasAccess) {
-        return res.status(403).json("Access denied");
-      }
+      return res.status(403).json("Access denied");
+    }
     let query = "";
     let imageFilePath = null;
 
     //handling the password
     if (currentPassword) {
-      const pass_query = "SELECT password FROM student WHERE student_id = $1";
-      const { rows } = await pool.query(pass_query, [student_id]);
+      const pass_query = "SELECT password FROM Users WHERE user_id = $1";
+      const { rows } = await pool.query(pass_query, [instructor_id]);
       if (rows.length === 0) {
-        return res.status(404).json({ message: "Student not found" });
+        return res.status(404).json({ message: "instructor not found" });
       }
       const storedPassword = rows[0].password;
       const validPassword = await bcrypt.compare(
@@ -107,7 +109,7 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
       query = `${query} birth_date = '${birth_date}',`;
 
     //continue with the rest of inputs
-    query = `UPDATE student
+    query = `UPDATE Users
         SET ${query}
           first_name = '${first_name}', 
           last_name = '${last_name}',
@@ -116,7 +118,7 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
           bio = '${bio}',
           country = '${country}', 
           city = '${city}'
-        WHERE student_id = '${student_id}';`;
+        WHERE user_id = '${student_id}';`;
 
     await pool.query(query);
 
@@ -138,7 +140,7 @@ router.get("/", authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json("Access denied");
     }
-    const query = "SELECT * FROM student WHERE student_id=$1";
+    const query = "SELECT * FROM Users WHERE user_id=$1";
     const values = [Id];
     const result = await pool.query(query, values);
     const row = result.rows[0];

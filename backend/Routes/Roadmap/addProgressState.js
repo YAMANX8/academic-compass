@@ -5,7 +5,7 @@ const authorization = require("../../middleware/authorization");
 router.post("/student/state", authorization, async (req, res) => {
   try {
     const { topic_id, topic_level, state_id } = req.body;
-    const studentId = req.student.studentId;
+    const studentId = req.user.userId;
     // Verify before adding(true or false)
     const verify = await pool.query(
       ` SELECT EXISTS (
@@ -49,7 +49,7 @@ router.delete("/student/reset/:topicId/:level", authorization, async (req, res) 
   try {
     const topic_id = req.params.topicId;
     const level=req.params.level;
-    const studentId = req.student.studentId;
+    const studentId = req.user.userId;
     const newRodmapInfo = await pool.query(
       "DELETE FROM Progress_Status WHERE topic_id = $1 AND student_id = $2 AND topic_level=$3",
       [topic_id, studentId,level]

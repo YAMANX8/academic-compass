@@ -44,7 +44,7 @@ router.get("/student/:id", async (req, res) => {
     } else {
       // Extract student ID from the token and proceed with your logic
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
-      const studentId = payload.studentId;
+      const studentId = payload.userId;
       //permission
       const hasAccess = await checkPermission(studentId, "show_roadmap");
       if (!hasAccess) {
@@ -141,12 +141,11 @@ ORDER BY
   }
 });
 
-//* Returns topics without login by roadmapID 
+//* Returns topics without login by roadmapID
 router.get("/:id", async (req, res) => {
   try {
     const roadmap_id = req.params.id;
-    const query =
-      `SELECT
+    const query = `SELECT
     Roadmap.*,
     TL1.*,
     TC.category_name
@@ -181,7 +180,7 @@ router.get("/:id", async (req, res) => {
       topic_description: row.topic_description,
       topic_status: row.topic_status,
       topic_order: row.topic_order,
-      topic_category: row.category_name
+      topic_category: row.category_name,
     }));
 
     res.status(200).json({
@@ -202,17 +201,17 @@ router.get("/:id", async (req, res) => {
 router.get("/student/topic/:id", async (req, res) => {
   try {
     const jwtToken = req.header("token");
-    const  topic_level1_id  = req.params.id;
+    const topic_level1_id = req.params.id;
     if (!jwtToken) {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
       return res.redirect(
-          `http://localhost:5000/AcademicCompass/roadmap/topic/${topic_level1_id}`
-        );
-      } else {
-        // Extract student ID from the token and proceed with your logic
+        `http://localhost:5000/AcademicCompass/roadmap/topic/${topic_level1_id}`
+      );
+    } else {
+      // Extract student ID from the token and proceed with your logic
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
-      const studentId = payload.studentId;
+      const studentId = payload.userId;
       const query = `
      SELECT
    TLN.topic_id AS topic_id_lN,
@@ -268,7 +267,7 @@ router.get("/student/topic/:id", async (req, res) => {
           student_id: row.student_id,
           progress_state_id: row.progress_state_id,
           topic_id: row.topic_id,
-          topic_level:row.topic_level,
+          topic_level: row.topic_level,
           state_name: row.state_name,
         }))
         .filter((progress) => progress.progress_id !== null);
@@ -276,7 +275,7 @@ router.get("/student/topic/:id", async (req, res) => {
       res.status(200).json({
         status: "success",
         topics: topics,
-        progress: progressData
+        progress: progressData,
       });
     }
   } catch (err) {
@@ -291,9 +290,9 @@ router.get("/student/topic/:id", async (req, res) => {
 // * Returns topics from the second level without login
 router.get("/topic/:id", async (req, res) => {
   try {
-    const  topic_level1_id = req.params.id;
-        // Extract student ID from the token and proceed with your logic
-      const query = `
+    const topic_level1_id = req.params.id;
+    // Extract student ID from the token and proceed with your logic
+    const query = `
   SELECT topic_id, topic_title, topic_description, topic_status, topic_level,topic_order,
    CASE
         WHEN EXISTS (
@@ -306,32 +305,32 @@ router.get("/topic/:id", async (req, res) => {
   FROM topic_level_N
   WHERE topic_level1_id = $1 AND topic_level=2;
     `;
-      const values = [topic_level1_id];
-      const result = await pool.query(query, values);
-      if (result.rows.length === 0) {
-        res.status(404).json({
-          status: "error",
-          message: "topic not found",
-        });
-        return;
-      }
-
-      const topics = result.rows
-        .map((row) => ({
-          topic_id: row.topic_id,
-          topic_title: row.topic_title,
-          topic_description: row.topic_description,
-          topic_status: row.topic_status,
-          topic_level: row.topic_level_ln,
-          topic_order: row.topic_order,
-          isItLast: row.is_last,
-        }))
-        .filter((topic) => topic.topic_id !== null);
-
-      res.status(200).json({
-        status: "success",
-        topics: topics
+    const values = [topic_level1_id];
+    const result = await pool.query(query, values);
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "topic not found",
       });
+      return;
+    }
+
+    const topics = result.rows
+      .map((row) => ({
+        topic_id: row.topic_id,
+        topic_title: row.topic_title,
+        topic_description: row.topic_description,
+        topic_status: row.topic_status,
+        topic_level: row.topic_level_ln,
+        topic_order: row.topic_order,
+        isItLast: row.is_last,
+      }))
+      .filter((topic) => topic.topic_id !== null);
+
+    res.status(200).json({
+      status: "success",
+      topics: topics,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -344,17 +343,17 @@ router.get("/topic/:id", async (req, res) => {
 router.get("/student/topicN/:id", async (req, res) => {
   try {
     const jwtToken = req.header("token");
-    const  topic_levelN_id  = req.params.id;
+    const topic_levelN_id = req.params.id;
     if (!jwtToken) {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
       return res.redirect(
-          `http://localhost:5000/AcademicCompass/roadmap/topicN/${topic_levelN_id}`
-        );
-      } else {
-        // Extract student ID from the token and proceed with your logic
+        `http://localhost:5000/AcademicCompass/roadmap/topicN/${topic_levelN_id}`
+      );
+    } else {
+      // Extract student ID from the token and proceed with your logic
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
-      const studentId = payload.studentId;
+      const studentId = payload.userId;
       const query = `
   SELECT
    TLN.topic_id AS topic_id_lN,
@@ -410,7 +409,7 @@ router.get("/student/topicN/:id", async (req, res) => {
           student_id: row.student_id,
           progress_state_id: row.progress_state_id,
           topic_id: row.topic_id,
-          topic_level:row.topic_level,
+          topic_level: row.topic_level,
           state_name: row.state_name,
         }))
         .filter((progress) => progress.progress_id !== null);
@@ -418,7 +417,7 @@ router.get("/student/topicN/:id", async (req, res) => {
       res.status(200).json({
         status: "success",
         topics: topics,
-        progress: progressData
+        progress: progressData,
       });
     }
   } catch (err) {
@@ -433,9 +432,9 @@ router.get("/student/topicN/:id", async (req, res) => {
 // * Returns topics from the N level without login
 router.get("/topicN/:id", async (req, res) => {
   try {
-    const  topic_levelN_id = req.params.id;
-        // Extract student ID from the token and proceed with your logic
-      const query = `
+    const topic_levelN_id = req.params.id;
+    // Extract student ID from the token and proceed with your logic
+    const query = `
 SELECT
    TLN.topic_id,
    TLN.topic_title,
@@ -454,32 +453,32 @@ SELECT
   FROM topic_level_N TLN
   WHERE TLN.top_level_topic_id = $1;
     `;
-      const values = [topic_levelN_id];
-      const result = await pool.query(query, values);
-      if (result.rows.length === 0) {
-        res.status(404).json({
-          status: "error",
-          message: "topic not found",
-        });
-        return;
-      }
-
-      const topics = result.rows
-        .map((row) => ({
-          topic_id: row.topic_id,
-          topic_title: row.topic_title,
-          topic_description: row.topic_description,
-          topic_status: row.topic_status,
-          topic_level: row.topic_level_ln,
-          topic_order: row.topic_order,
-          isItLast: row.is_last,
-        }))
-        .filter((topic) => topic.topic_id !== null);
-
-      res.status(200).json({
-        status: "success",
-        topics: topics
+    const values = [topic_levelN_id];
+    const result = await pool.query(query, values);
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "topic not found",
       });
+      return;
+    }
+
+    const topics = result.rows
+      .map((row) => ({
+        topic_id: row.topic_id,
+        topic_title: row.topic_title,
+        topic_description: row.topic_description,
+        topic_status: row.topic_status,
+        topic_level: row.topic_level_ln,
+        topic_order: row.topic_order,
+        isItLast: row.is_last,
+      }))
+      .filter((topic) => topic.topic_id !== null);
+
+    res.status(200).json({
+      status: "success",
+      topics: topics,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -488,6 +487,5 @@ SELECT
     });
   }
 });
-
 
 module.exports = router;

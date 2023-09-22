@@ -62,7 +62,7 @@ GROUP BY
     else {
       // Extract student ID from the token and proceed with your logic
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
-      const studentId = payload.studentId;
+      const studentId = payload.userId;
       //permission
       try {
         const hasAccess = await checkPermission(studentId,"show_course");
@@ -203,14 +203,27 @@ GROUP BY
 
 router.post('/enroll',authorization, async (req, res) => {
   try {
-    const { studentId, courseId, strting_date, progressState, endingDate } = req.body;
+    const studentId = req.user.userId;
+    //permission
+    // todo نضيق صلاحية لإضافة كورس للطالب
+    // const hasAccess = await checkPermission(studentId, "update_stting");
+    // if (!hasAccess) {
+    //   return res.status(403).json("Access denied");
+    // }
+    const { courseId, strting_date, progressState, endingDate } = req.body;
 
     const insertEnrollmentQuery = `
       INSERT INTO enrollment (student_id, course_id, strting_date, progress_state, ending_date)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING enrollment_id;`;
 
-    const values = [studentId, courseId, strting_date, progressState, endingDate];
+    const values = [
+      studentId,
+      courseId,
+      strting_date,
+      progressState,
+      endingDate,
+    ];
 
     const result = await db.query(insertEnrollmentQuery, values);
 

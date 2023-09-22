@@ -44,16 +44,14 @@ app.use("/AcademicCompass/search",require("./Routes/Students/search/search"));
 //show course
 app.use("/AcademicCompass/course",require("./Routes/course/course"));
 
-//show cideo
+//show video
 
 app.use("/AcademicCompass/course/video", require("./Routes/course/video"));
 
 // Register routes to Lucturer
-app.use("/AcademicCompass/auth", require("./Routes/lecturer/register"));
+app.use("/AcademicCompass/auth", require("./Routes/lecturer/register/jwtAuth"));
 
 
-//test route to Register routes to Lucturer
-app.use("/AcademicCompass/test", require("./Routes/lecturer/test"));
 
 
 
