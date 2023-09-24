@@ -6,6 +6,7 @@ import {
   BsBook as Article,
   BsChevronUp as ChevronUp,
   BsChevronDown as ChevronDown,
+  BsFillCheckSquareFill as Check,
 } from "react-icons/bs";
 
 const CourseContent = ({ courseContent }) => {
@@ -77,16 +78,24 @@ const CourseContent = ({ courseContent }) => {
                         ? `/student/courseview/${id}/article/${item.id}`
                         : `/student/courseview/${id}/quiz/${item.id}`
                     }
-                    className={`bg-light dark:bg-dark text-dark dark:text-light flex p-4 gap-4 items-center transition-all duration-1000 ease-in-out-back `}
+                    className={`bg-light dark:bg-dark text-dark dark:text-light flex p-4 items-center justify-between transition-all duration-1000 ease-in-out-back `}
                   >
-                    <span className="text-[24px]">
-                      {item.type == "video" && <Video />}
-                      {item.type == "article" && <Article />}
-                      {item.type == "quiz" && <Quiz />}
-                    </span>
-                    <p className="text-accent dark:text-accent-dark tracking-tight">
-                      {item.title}
-                    </p>
+                    <div className="flex gap-4">
+                      <span className="text-[24px]">
+                        {item.type == "video" && <Video />}
+                        {item.type == "article" && <Article />}
+                        {item.type == "quiz" && <Quiz />}
+                      </span>
+                      <p className="text-accent dark:text-accent-dark tracking-tight transition-all duration-1000 ease-in-out-back">
+                        {item.title}
+                      </p>
+                    </div>
+                    {item?.is_completed && (
+                      <Check
+                        size={25}
+                        className="text-accent dark:text-accent-dark transition-all duration-1000 ease-in-out-back"
+                      />
+                    )}
                   </Link>
                 ))}
               </details>

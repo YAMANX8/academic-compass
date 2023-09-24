@@ -72,7 +72,7 @@ const Navbar = () => {
           Roadmaps{" "}
         </Link>
         <Link to="/instructor/register" className="font-semibold">
-          Teach on Academic compass
+        Become part of Academic compass
         </Link>
         {!isAuth ? (
           <>

@@ -1,34 +1,67 @@
 import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import axios from "../apis/axios";
-import { MdVideoLibrary as Library } from "react-icons/md";
+import { BsPlayCircleFill as Library } from "react-icons/bs";
 import { Button, CourseContent } from "../components";
-import useAuth from "../hooks/useAuth.jsx";
+import useAuth from "../hooks/useAuth";
+import { useParams } from "react-router-dom";
 
 const VIDEO_URL = "/course/video";
 
 function Video() {
   const { auth } = useAuth();
+  const { id, itemId } = useParams();
 
-  const [videoUrl, setVideoUrl] = useState("");
-  const [courseContent, setCourseContent] = useState([]);
+  const [courseContent, setCourseContent] = useState({
+    video: "",
+    courseContent: [
+      {
+        id: 1,
+        topicTitle: "وهي لعيونك",
+        subTopics: [
+          {
+            id: 1,
+            title: "webpack",
+            items: [
+              {
+                id: 1,
+                title: "video intro",
+                order: 1,
+                type: "video",
+                complete: true,
+              },
+              {
+                id: 2,
+                title: "An Article",
+                order: 2,
+                type: "article",
+                complete: true,
+              },
+              {
+                id: 3,
+                title: "An Quiz",
+                order: 3,
+                type: "quiz",
+                complete: false,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
 
   const getData = async () => {
     try {
-      const courseId = 12;
-      const itemId = 26;
-
-      const response = await axios.get(`${VIDEO_URL}/${courseId}/${itemId}`, {
+      const response = await axios.get(`${VIDEO_URL}/${id}/${itemId}`, {
         headers: {
-          token: auth.localstorage
+          token: auth.accessToken,
         },
       });
 
-      console.log(response);
-      setVideoUrl(response.data.video);
-      setCourseContent(response.data.courseContent);
+      setCourseContent(response.data);
     } catch (error) {
-      console.error("يوجد خطأ:", error);
+      console.error(error);
     }
   };
 
@@ -50,7 +83,7 @@ function Video() {
               </div>
               <div className="mt-[48px] mb-[32px]">
                 <ReactPlayer
-                  url={videoUrl}
+                  url={courseContent.video}
                   style={{
                     backgroundColor: "#0D1832",
                     borderRadius: "15px",
@@ -77,7 +110,7 @@ function Video() {
           </div>
           <div>
             <div className="bg-secondary dark:bg-secondary-dark h-full w-[400px] transition-all duration-1000 ease-in-out-back">
-              <CourseContent courseContent={courseContent} />
+              <CourseContent courseContent={courseContent.courseContent} />
             </div>
           </div>
         </div>

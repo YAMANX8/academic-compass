@@ -40,7 +40,7 @@ const Topic = ({
           category == "Basic" && "bg-primary"
         } text-light py-[26px] rounded-full ${
           progressState == "Completed" &&
-          "line-through bg-gray-500/80"
+          "line-through saturate-0 brightness-125"
         } ${
           progressState == "In Progress" &&
           "underline contrast-200 brightness-200"
