@@ -23,7 +23,6 @@ const ReviewCards = ({ reviews }) => {
     });
     setOverflowStatus(newOverflowStatus);
   }, []);
-  console.log(overflowStatus);
   //this code is for knowing if the model is opened or not
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");

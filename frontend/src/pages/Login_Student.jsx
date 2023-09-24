@@ -1,4 +1,8 @@
-import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
+import {
+  BsArrowReturnLeft as ReturnLeft,
+  BsEyeSlash as Hide,
+  BsEye as Show,
+} from "react-icons/bs";
 import { SignInUpWrapper } from "../layout";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -16,13 +20,14 @@ function Login_Student() {
   const from = location.state?.from?.pathname || "/student/dashboard";
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   const emailRef = useRef();
 
   const labelStyle =
     "flex flex-col gap-2 text-[20px] tracking-tight leading-l relative w-[340px]";
   const inputStyle =
-    "p-[10px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back";
+    "p-[10px] pr-[50px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back";
 
   useEffect(() => {
     emailRef.current.focus();
@@ -44,7 +49,6 @@ function Login_Student() {
       localStorage.setItem("token", accessToken);
       // setAuth({ email, pwd, accessToken });
       setIsAuth(true);
-      console.log(accessToken);
       toast.success("Login successfully");
       setEmail("");
       setPwd("");
@@ -75,6 +79,7 @@ function Login_Student() {
               ref={emailRef}
               onChange={(e) => setEmail(e.target.value)}
               value={email}
+              autoComplete="username"
               required
             />
           </label>
@@ -83,12 +88,20 @@ function Login_Student() {
             Password:
             <input
               className={`${inputStyle}`}
-              type="Password"
+              type={isVisible ? "text" : "password"}
               placeholder="********"
               onChange={(e) => setPwd(e.target.value)}
               value={pwd}
+              autoComplete="current-password"
               required
             />
+            <button
+              type="button"
+              className="absolute right-0 top-11 flex items-center px-4 text-gray-600"
+              onClick={() => setIsVisible((prev) => !prev)}
+            >
+              {isVisible ? <Show /> : <Hide />}
+            </button>
           </label>
         </div>
 
