@@ -1,4 +1,8 @@
-import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
+import {
+  BsArrowReturnLeft as ReturnLeft,
+  BsEyeSlash as Hide,
+  BsEye as Show,
+} from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 
 import { SignInUpWrapper } from "../layout";
@@ -40,10 +44,12 @@ function Sign_Up_Student() {
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
+  const [isPwdVisible, setIsPwdVisible] = useState(false);
 
   const [matchPwd, setMatchPwd] = useState("");
   const [validMatchPwd, setValidMatchPwd] = useState(false);
   const [matchPwdFocus, setMatchPwdFocus] = useState(false);
+  const [isMatchVisible, setIsMatchVisible] = useState(false);
 
   //auto focus on the first name field on load
   useEffect(() => {
@@ -53,32 +59,24 @@ function Sign_Up_Student() {
   //first name check
   useEffect(() => {
     const result = NAME_REGEX.test(firstName);
-    console.log(result);
-    console.log(firstName);
     setValidFirstName(result);
   }, [firstName]);
 
   //last name check
   useEffect(() => {
     const result = NAME_REGEX.test(lastName);
-    console.log(result);
-    console.log(lastName);
     setValidLastName(result);
   }, [lastName]);
 
   //email check
   useEffect(() => {
     const result = EMAIL_REGEX.test(email);
-    console.log(result);
-    console.log(email);
     setValidEmail(result);
   }, [email]);
 
   //here we check the password and the confirm field togather
   useEffect(() => {
     const result = PWD_REGEX.test(pwd);
-    console.log(result);
-    console.log(pwd);
     setValidPwd(result);
     const match = pwd === matchPwd;
     setValidMatchPwd(match);
@@ -133,7 +131,7 @@ function Sign_Up_Student() {
   const labelStyle =
     "flex flex-col gap-2 text-[20px] tracking-tighter  leading-l relative w-[340px]";
   const inputStyle =
-    "p-[10px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark transition-all duration-1000 ease-in-out-back";
+    "p-[10px] pr-[50px] rounded-[4px] placeholder-dark/50 dark:placeholder-light/50 bg-light dark:bg-dark transition-all duration-1000 ease-in-out-back";
   const notes =
     "p-4 bg-accent rounded-2xl text-light absolute z-10 w-[300px] right-0";
 
@@ -252,7 +250,7 @@ function Sign_Up_Student() {
                   ? "text-accent dark:text-accent-dark"
                   : "text-dark dark:text-light"
               }`}
-              type="Password"
+              type={isPwdVisible ? "text" : "password"}
               placeholder="********"
               onChange={(e) => setPwd(e.target.value)}
               required
@@ -260,6 +258,7 @@ function Sign_Up_Student() {
               onBlur={() => setPwdFocus(false)}
               aria-invalid={validPwd ? "false" : "true"}
               aria-describedby="pwdnote"
+              autoComplete="new-password"
             />
             <p
               id="pwdnote"
@@ -280,6 +279,13 @@ function Sign_Up_Student() {
               <span aria-label="dollar sign">$</span>{" "}
               <span aria-label="percent">%</span> are allowed!
             </p>
+            <button
+              type="button"
+              className="absolute right-0 top-11 flex items-center px-4 text-gray-600"
+              onClick={() => setIsPwdVisible((prev) => !prev)}
+            >
+              {isPwdVisible ? <Show /> : <Hide />}
+            </button>
           </label>
 
           <label className={`${labelStyle}`}>
@@ -290,7 +296,7 @@ function Sign_Up_Student() {
                   ? "text-accent dark:text-accent-dark"
                   : "text-dark dark:text-light"
               }`}
-              type="Password"
+              type={isMatchVisible ? "text" : "password"}
               placeholder="********"
               onChange={(e) => setMatchPwd(e.target.value)}
               required
@@ -298,6 +304,7 @@ function Sign_Up_Student() {
               onBlur={() => setMatchPwdFocus(false)}
               aria-invalid={validMatchPwd ? "false" : "true"}
               aria-describedby="confirmnote"
+              autoComplete="new-password"
             />
             <p
               id="confirmnote"
@@ -309,6 +316,13 @@ function Sign_Up_Student() {
             >
               Must match the password
             </p>
+            <button
+              type="button"
+              className="absolute right-0 top-11 flex items-center px-4 text-gray-600"
+              onClick={() => setIsMatchVisible((prev) => !prev)}
+            >
+              {isMatchVisible ? <Show /> : <Hide />}
+            </button>
           </label>
         </div>
 
