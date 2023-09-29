@@ -45,8 +45,13 @@ app.use("/AcademicCompass/search",require("./Routes/Students/search/search"));
 app.use("/AcademicCompass/course",require("./Routes/course/course"));
 
 //show video
-
 app.use("/AcademicCompass/video", require("./Routes/course/video"));
+
+// show Article
+app.use("/AcademicCompass/article" , require("./Routes/course/Article"));
+
+// show review
+app.use("/AcademicCompass/review" , require("./Routes/course/review"));
 
 // Register routes to Lucturer
 app.use("/AcademicCompass/auth2", require("./Routes/lecturer/register/jwtAuth"));
