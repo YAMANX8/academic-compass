@@ -13,6 +13,14 @@
         if (!hasAccess) {
           return res.status(403).json("Access denied");
         }
+        const checkEnrollmentQuery = `
+      SELECT course_id, enrollment_id
+      FROM enrollment
+      WHERE course_id = '${courseId}' AND enrollment_id = '${enrollId}';
+      `;
+    const { rows } = await db.query(checkEnrollmentQuery);
+    console.log(rows)
+    if (rows.length !== 0) {
         const query1 = `
     SELECT 
     Topic_Level_1.topic_level1_id,
@@ -51,9 +59,11 @@ LEFT JOIN (
 WHERE course.course_id = $2`;
         const query2 = `
     SELECT 
-    v.video_path
-    FROM video v
-    WHERE item_id=$1
+    items.item_title,
+    Video.video_path
+    FROM items 
+    join Video ON items.item_id = Video.item_id
+    WHERE items.item_id= $1;
     `;
         const values1 = [studentId, courseId, enrollId];
         const values2 = [itemId];
@@ -123,6 +133,8 @@ WHERE course.course_id = $2`;
           is_enrolled:result1.rows[0].is_enroll,
           response
         });
+      }else {
+        return res.status(401).json({ message: "Access Denied" });}
       } catch (err) {
         console.error("Error retrieving course information:", err);
         res.status(500).json({ error: "Server Error" });
