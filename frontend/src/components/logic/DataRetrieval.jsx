@@ -7,7 +7,7 @@ const SETTINGS_URL = "/student/setting";
 import moment from "moment";
 const DataRetrieval = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { auth, setAuth } = useAuth();
+  const { isAuth, setAuth } = useAuth();
   useEffect(() => {
     const getAndSetData = async () => {
       try {
@@ -38,7 +38,7 @@ const DataRetrieval = () => {
       }
     };
 
-    if (!auth?.firstName) {
+    if (isAuth) {
       getAndSetData();
     } else setIsLoading(false);
   }, []);
