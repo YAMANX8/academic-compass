@@ -44,7 +44,6 @@ const LevelOne = () => {
       // setLevelOne(response.data.topics);
       //consider if the user is not loged in so, I put "|| []"
       const progress = (await response.data.progress) || [];
-      console.log(response.data);
 
       const mergedData = await response.data.topics.map((topic) => {
         const matchingProgress = progress.find(
@@ -150,7 +149,6 @@ const LevelOne = () => {
           },
         }
       );
-      // console.log(res.data.status);
       setCountUpdate((prev) => prev + 1);
       setIsOpen(false);
       toast.success(`topic state is updated successfully (${countUpdate})`);
@@ -205,7 +203,7 @@ const LevelOne = () => {
           </button>
           <button
             className={`${style} border-advance`}
-            onClick={() => handleState(4)}
+            onClick={() => handleState(1)}
           >
             Skip it
           </button>

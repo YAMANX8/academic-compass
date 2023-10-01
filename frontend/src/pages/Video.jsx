@@ -1,138 +1,77 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
-import V from "../assets/V.mp4";
-import { MdVideoLibrary as Library } from "react-icons/md";
+import axios from "../apis/axios";
+import { BsPlayCircleFill as Library } from "react-icons/bs";
 import { Button, CourseContent } from "../components";
+import useAuth from "../hooks/useAuth";
+import { useParams } from "react-router-dom";
+
+const VIDEO_URL = "/course/video";
+
 function Video() {
-  const courseContent = [
-    {
-      id: 1,
-      topicTitle: "وهي لعيونك",
-      subTopics: [
-        {
-          id: 1,
-          title: "webpack",
-          items: [
-            {
-              id: 1,
-              title: "video intro",
-              order: 1,
-              type: "video",
-              complete: true
-            },
-            {
-              id: 2,
-              title: "An Article",
-              order: 2,
-              type: "article",
-              complete: true
-            },
-            {
-              id: 3,
-              title: "An Quiz",
-              order: 3,
-              type: "quiz",
-              complete: false
-            },
-          ],
+  const { auth } = useAuth();
+  const { id, itemId } = useParams();
+
+  const [courseContent, setCourseContent] = useState({
+    video: "",
+    courseContent: [
+      {
+        id: 1,
+        topicTitle: "وهي لعيونك",
+        subTopics: [
+          {
+            id: 1,
+            title: "webpack",
+            items: [
+              {
+                id: 1,
+                title: "video intro",
+                order: 1,
+                type: "video",
+                complete: true,
+              },
+              {
+                id: 2,
+                title: "An Article",
+                order: 2,
+                type: "article",
+                complete: true,
+              },
+              {
+                id: 3,
+                title: "An Quiz",
+                order: 3,
+                type: "quiz",
+                complete: false,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+
+  const getData = async () => {
+    try {
+      const response = await axios.get(`${VIDEO_URL}/${id}/${itemId}`, {
+        headers: {
+          token: auth.accessToken,
         },
-        {
-          id: 2,
-          title: "يا ويل قلبي",
-          items: [
-            {
-              id: 4,
-              title: "A Lecture",
-              order: 1,
-              type: "video",
-              complete: false
-            },
-            {
-              id: 5,
-              title: "An Article",
-              order: 2,
-              type: "article",
-              complete: false
-            },
-            {
-              id: 6,
-              title: "A Quiz",
-              order: 3,
-              type: "quiz",
-              complete: false
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 3,
-      topicTitle: "لك ولييييي",
-      subTopics: [
-        {
-          id: 3,
-          title: "Topic level N",
-          items: [
-            {
-              id: 7,
-              title: "A Lecture",
-              order: 1,
-              type: "video",
-              complete: false
-            },
-            {
-              id: 8,
-              title: "An Article",
-              order: 2,
-              type: "article",
-              complete: false
-            },
-            {
-              id: 9,
-              title: "A Quiz",
-              order: 3,
-              type: "quiz",
-              complete: false
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 4,
-      topicTitle: "الشغل اللاوي",
-      subTopics: [
-        {
-          id: 3,
-          title: "Topic level N",
-          items: [
-            {
-              id: 7,
-              title: "A Lecture",
-              order: 1,
-              type: "video",
-              complete: false
-            },
-            {
-              id: 8,
-              title: "An Article",
-              order: 2,
-              type: "article",
-              complete: false
-            },
-            {
-              id: 9,
-              title: "A Quiz",
-              order: 3,
-              type: "quiz",
-              complete: false
-            },
-          ],
-        },
-      ],
-    },
-  ];
+      });
+
+      setCourseContent(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+  const handleCompletion = () => {
+    console.log("تم انتهاء");
+  };
+
   return (
     <>
       <section className="w-full">
@@ -140,48 +79,38 @@ function Video() {
           <div className="flex-1 flex justify-center">
             <div>
               <div>
-                <span className=" font-semibold  text-[48px]">Item Title</span>
+                <span className="font-semibold text-[48px]">Item title</span>
               </div>
               <div className="mt-[48px] mb-[32px]">
-                
-                  {/* <div className="absolute inset-0 bg-black opacity-50"></div>
-                  <div className="bg-white p-[30px] rounded-full z-10 hover:bg-slate-500 group">
-                    <Library
-                      size={50}
-                      className="text-black group-hover:text-white "
-                    />
-                  </div> */}
-                  <ReactPlayer
-                    url={V}
-                    style={{ 
-                      backgroundColor: "#0D1832",
-                      borderRadius: "15px",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.8)",
-                     cursor:"pointer"
+                <ReactPlayer
+                  url={courseContent.video}
+                  style={{
+                    backgroundColor: "#0D1832",
+                    borderRadius: "15px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.8)",
+                    cursor: "pointer",
                   }}
-                    width="800px"
-                    height="450px"
-                    controls={true}
-                    playing
-                    playIcon={<Library size={100} className="text-light" />}
-                    light={true}
-                    config={{
-                      youtube: {
-                        playerVars: { showinfo: 1 },
-                      },
-                    }}
-                  />
-                
+                  width="800px"
+                  height="450px"
+                  controls={true}
+                  playing
+                  playIcon={<Library size={100} className="text-light" />}
+                  light={true}
+                  config={{
+                    youtube: {
+                      playerVars: { showinfo: 1 },
+                    },
+                  }}
+                />
                 <div className="ml-[500px] py-[20px]">
-                  <Button> Completion Flag</Button>
+                  <Button onClick={handleCompletion}>Completion Flag</Button>
                 </div>
               </div>
             </div>
           </div>
-
           <div>
             <div className="bg-secondary dark:bg-secondary-dark h-full w-[400px] transition-all duration-1000 ease-in-out-back">
-              <CourseContent courseContent={courseContent} />
+              <CourseContent courseContent={courseContent.courseContent} />
             </div>
           </div>
         </div>
