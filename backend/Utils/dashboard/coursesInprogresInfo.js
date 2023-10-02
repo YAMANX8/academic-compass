@@ -36,29 +36,29 @@ const completionPercentage = async (student_id) => {
       },
     };
   } catch (error) {
-    console.error("Error Get TotalPoint", error);
+    console.error("Error", error);
     return {
       status: "error",
-      message: "Get Total Point is Filed",
+      message: "Filed",
     };
   }
 };
-const starsNumber = async (student_id) => {
+const starsNumber = async (course_Id) => {
   try {
     const query = `
-     SELECT
-        c.course_id,
-        r.stars_number
-    FROM "course" c
-    JOIN "enrollment" e ON c.course_id = e.course_id
-    LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
-    WHERE
+    SELECT
+    c.course_id,
+    ROUND(AVG(r.stars_number), 1) AS avg_rating
+FROM "course" c
+JOIN "enrollment" e ON c.course_id = e.course_id
+LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
+WHERE
     (e.progress_state IS NULL OR e.progress_state <= c.items_count)
-    AND e.student_id = $1
-    AND (e.progress_state != c.items_count OR e.progress_state IS NULL)
-    ORDER BY c.course_title
+    AND c.course_id = $1
+GROUP BY c.course_id
+ORDER BY c.course_title;
     `;
-    const values = [student_id];
+    const values = [course_Id];
     const result = await db.query(query, values);
     return {
       status: "success",
@@ -68,10 +68,10 @@ const starsNumber = async (student_id) => {
       },
     };
   } catch (error) {
-    console.error("Error Get TotalPoint", error);
+    console.error("Error", error);
     return {
       status: "error",
-      message: "Get Total Point is Filed",
+      message: "Filed",
     };
   }
 };

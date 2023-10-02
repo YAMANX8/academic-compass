@@ -137,7 +137,7 @@ VALUES ('Introduction to Loops', 'Understanding the concept of loops in programm
        ('Object-Oriented Programming Concepts', 'Understanding the concept of loops in programming', 7, 11, 21),
        ('Object-Oriented Programming Concepts', 'Exploring the fundamentals of OOP', 10, 2, NULL);
 --
-INSERT INTO rating(stars_number,enrollment_id) VALUES(4.5,11),(5,12),(5,13),(5,14),(5,15);
+INSERT INTO rating(stars_number,review,enrollment_id) VALUES(1,'bad',16),(5,12),(5,13),(5,14),(5,15);
 --
 INSERT INTO Quiz (quiz_points, item_id)
 VALUES (20, 3), (30, 4);
@@ -2136,3 +2136,57 @@ GROUP BY
     Users.last_name,
     Levels.level_name,
     course.course_description;
+
+
+SELECT
+  course.course_thumnail,
+  course.course_title,
+  course.subtitle,
+  ROUND(COALESCE(AVG(Rating.stars_number), 0), 0) AS average_rating,
+  COUNT(DISTINCT Rating.enrollment_id) AS rating_count,
+  course.course_duration,
+  course.items_count,
+  Levels.level_name,
+  Users.first_name,
+  Users.last_name,
+  item_counts.article_count,  -- Include these columns in the GROUP BY clause
+  item_counts.video_count,    -- Include these columns in the GROUP BY clause
+  item_counts.quiz_count ,     -- Include these columns in the GROUP BY clause
+  course.course_description,
+  COALESCE(IS_ENROLLED.is_enrolled, 0) AS is_enrolled
+FROM
+  course
+  JOIN Levels ON course.course_level = Levels.level_id
+  JOIN Users ON course.instructor_id = Users.user_id
+  LEFT JOIN Enrollment ON course.course_id = Enrollment.course_id
+  LEFT JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id
+  LEFT JOIN (
+    SELECT course_id,
+           COUNT(CASE WHEN item_type = 1 THEN 1 END) AS article_count,
+           COUNT(CASE WHEN item_type = 2 THEN 1 END) AS video_count,
+           COUNT(CASE WHEN item_type = 3 THEN 1 END) AS quiz_count
+    FROM items
+    GROUP BY course_id
+  ) AS item_counts ON course.course_id = item_counts.course_id
+  LEFT JOIN (
+    SELECT course_id,
+           MAX(CASE WHEN student_id = 9 THEN 1 ELSE 0 END) AS is_enrolled
+    FROM Enrollment
+    GROUP BY course_id
+  ) AS IS_ENROLLED ON course.course_id = IS_ENROLLED.course_id
+WHERE
+  course.course_id = 12
+GROUP BY
+  course.course_thumnail,
+  course.course_title,
+  course.subtitle,
+  course.course_duration,
+  course.items_count,
+  Users.first_name,
+  Users.last_name,
+  Levels.level_name,
+  course.course_description,
+  IS_ENROLLED.is_enrolled,
+  item_counts.article_count,  -- Include these columns in the GROUP BY clause
+  item_counts.video_count,    -- Include these columns in the GROUP BY clause
+  item_counts.quiz_count;     -- Include these columns in the GROUP BY clause

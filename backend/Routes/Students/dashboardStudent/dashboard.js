@@ -8,10 +8,11 @@ const MyRoadmaps=require("../../../Utils/dashboard/MyRoadmaps");
 const bringdataQuizETS =require("../../../Utils/dashboard/bringdataQuizETS");
 const bring_All_Courses_Number =require("../../../Utils/dashboard/bring_All_Courses_Number");
 const checkPermission = require("../../../middleware/checkPermissions");
-router.get("/", authorization, async (req, res, next) => {
+router.get("/:course_id", authorization, async (req, res, next) => {
   try {
     const Id = req.user.userId;
-    console.log(Id);
+    const course_Id = req.params.course_id; 
+    console.log(course_Id);
     const hasAccess = await checkPermission(Id, "dashboard_access");
     if (!hasAccess) {
         return res.status(403).json("Access denied");
@@ -30,7 +31,7 @@ router.get("/", authorization, async (req, res, next) => {
     // get completionPercentage
     const completionPercentage = await inprogresInfo.completionPercentage(Id);
     // get stars Number
-    const strs = await inprogresInfo.starsNumber(Id);
+    const strs = await inprogresInfo.starsNumber(course_Id);
     // get GetCompletedCourse
     const GetCompletedCourse = await completCourseInfo.GetCompletedCourse(Id);
     // get Student Roadmap .
