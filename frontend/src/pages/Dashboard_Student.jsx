@@ -155,7 +155,7 @@ function Dashboard_Student() {
                   title={course.title}
                   subtitle={course.subtitle}
                   progress={course.progress[index].completion_percentage}
-                  stars={course.rating[index].stars_number}
+                  stars={course.rating[index].avg_rating}
                 />
               ))
             ) : (
@@ -182,7 +182,7 @@ function Dashboard_Student() {
                   >
                     {roadmap.title}
                   </span>
-                  <Button page="/student/roadmaps">
+                  <Button page={`/student/roadmaps/${roadmap.id}`}>
                     View
                     <ReturnLeft className="text-[20px]" />
                   </Button>
