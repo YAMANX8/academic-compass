@@ -7,10 +7,10 @@ import {
 } from "react-icons/bs";
 import { Button } from "../index";
 const transition = "transition-colors duration-1000 ease-in-out-back";
-const CourseCard = ({ image, title, subtitle, progress = -1, stars = -1 }) => {
+const CourseCard = ({ id, image, title, subtitle, progress = -1, stars = -1 }) => {
   return progress > -1 ? (
     <div
-      className={`${transition} min-w-[340px] max-w-[340px] rounded-[15px] shadow-[0_0_10px] shadow-black/25`}
+      className={`${transition} flex flex-col min-h-[568px] min-w-[340px] max-w-[340px] rounded-[15px] shadow-[0_0_10px] shadow-black/25`}
     >
       <div
         className={`${transition} bg-secondary dark:bg-secondary-dark rounded-tl-[15px] rounded-tr-[15px] w-full overflow-hidden aspect-video`}
@@ -18,7 +18,7 @@ const CourseCard = ({ image, title, subtitle, progress = -1, stars = -1 }) => {
         <img src={image} alt="Course" />
       </div>
       <div
-        className={`${transition} text-dark dark:text-light bg-light dark:bg-dark rounded-bl-[15px] rounded-br-[15px] p-4 text-[20px] pb-8`}
+        className={`${transition} flex-1 flex flex-col justify-between text-dark dark:text-light bg-light dark:bg-dark rounded-bl-[15px] rounded-br-[15px] p-4 text-[20px] pb-8`}
       >
         <div className="mb-16">
           <p className=" tracking-tight font-semibold mb-2">{title}</p>
@@ -29,17 +29,17 @@ const CourseCard = ({ image, title, subtitle, progress = -1, stars = -1 }) => {
           </p>
         </div>
 
-        <div className="mb-8">
+        <div className="flex flex-col gap-4">
           <div
-            className={`${transition} bg-secondary dark:bg-secondary-dark h-[10px] w-full rounded-full mb-4`}
+            className={`${transition} bg-secondary dark:bg-secondary-dark h-[10px] w-full rounded-full`}
           >
             <div
-              className="bg-blue-500 h-full rounded-lg mt-[25px]"
+              className="bg-blue-500 h-full rounded-lg"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-4">
             <p className="font-thin tracking-tight">{progress}% Complete</p>
             <div className="flex gap-[5px] ">
               {[...Array(Math.floor(stars))].map((_, index) => (
@@ -53,11 +53,12 @@ const CourseCard = ({ image, title, subtitle, progress = -1, stars = -1 }) => {
               ))}
             </div>
           </div>
+
+          <Button page={`/student/courseview/${id}`}>
+            Resume
+            <ReturnLeft className="text-[20px]" />
+          </Button>
         </div>
-        <Button page={"/student/roadmaps"}>
-          Resume
-          <ReturnLeft className="text-[20px]" />
-        </Button>
       </div>
     </div>
   ) : (

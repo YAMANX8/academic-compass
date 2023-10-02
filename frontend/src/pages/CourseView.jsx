@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   BsStarHalf as Half,
   BsFillStarFill as Full,
@@ -15,6 +15,7 @@ import Profile from "../assets/images/profile.png";
 import { CourseContent, ReviewCards } from "../components";
 import axios from "../apis/axios";
 import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const SectionWrapper = ({ title, children }) => {
   return (
@@ -27,10 +28,13 @@ const SectionWrapper = ({ title, children }) => {
 
 const CourseView = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { auth } = useAuth();
   const [course, setCourse] = useState({
     course_thumnail: Card,
-    course_title: "Learn Api basics, and learn how to integrate with the backend",
+    course_title:
+      "Learn Api basics, and learn how to integrate with the backend",
     subtitle:
       "Fetch api: Explore how to connect to various web APIs using JavaScript fetch. Use the returned data JSON data within you Code.",
     stars: 4.5,
@@ -247,14 +251,38 @@ const CourseView = () => {
             "Content-Type": "application/json",
           },
         });
-        setCourse(res.data)
+        setCourse(res.data);
       } catch (error) {
         console.log(error);
       }
     };
     getCourse();
   }, []);
-
+  const handleEnroll = async () => {
+    try {
+      const res = await axios.post(
+        `/course/enroll`,
+        JSON.stringify({
+          courseId: id,
+        }),
+        {
+          headers: {
+            token: auth.accessToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toast.success("You enrolled successfully!");
+      navigate("/student/dashboard");
+    } catch (error) {
+      if (error.response?.status === 401)
+        toast.error(error.response.data.message);
+      else {
+        navigate("/student/login", { state: { from: location } });
+        toast.error("You are not logged in.\nPlease login first!");
+      }
+    }
+  };
   return (
     <section className="w-[1200px]">
       <div className="  bg-secondary dark:bg-secondary-dark  shadow-[0px_-1000px_0px_1000px] dark:shadow-secondary-dark shadow-secondary text-dark dark:text-light duration-1000 ease-in-out-back">
@@ -262,7 +290,7 @@ const CourseView = () => {
           <div className="flex min-w-[400px] aspect-video">
             <img className="object-contain" src={course.course_thumnail} />
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col flex-1 gap-4">
             <h1 className="font-bold text-[32px] leading-[39px] tracking-tight">
               {course.course_title}
             </h1>
@@ -293,8 +321,8 @@ const CourseView = () => {
 
             <div className="text-accent dark:text-accent-dark flex justify-between duration-1000 ease-in-out-back">
               <span>
-                duration {course.courseDuration} hr • {course.itemsCount} items • for{" "}
-                {course.levelName}
+                duration {course.courseDuration} hr • {course.itemsCount} items
+                • for {course.levelName}
               </span>
               <cite>Created By: {course.instructor}</cite>
             </div>
@@ -320,9 +348,21 @@ const CourseView = () => {
               {course.article_count} Articles
             </div>
           </div>
-          <Link className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">
-            Enroll in This Course
-          </Link>
+          {!course?.is_enrolled ? (
+            <Link
+              onClick={handleEnroll}
+              className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+            >
+              Enroll in This Course
+            </Link>
+          ) : (
+            <Link
+              to={`review`}
+              className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+            >
+              Review this course
+            </Link>
+          )}
         </div>
       </div>
 

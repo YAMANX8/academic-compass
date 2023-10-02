@@ -149,12 +149,13 @@ function Dashboard_Student() {
             {progressCourses.length !== 0 ? (
               progressCourses.map((course, index) => (
                 <CourseCard
-                  key={index}
+                  key={course.id}
+                  id={course.id}
                   image={course.image}
                   title={course.title}
                   subtitle={course.subtitle}
                   progress={course.progress[index].completion_percentage}
-                  stars={course.rating[index].stars_number}
+                  stars={course.rating[index].avg_rating}
                 />
               ))
             ) : (
@@ -181,7 +182,7 @@ function Dashboard_Student() {
                   >
                     {roadmap.title}
                   </span>
-                  <Button page="/student/roadmaps">
+                  <Button page={`/student/roadmaps/${roadmap.id}`}>
                     View
                     <ReturnLeft className="text-[20px]" />
                   </Button>
