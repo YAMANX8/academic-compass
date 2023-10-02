@@ -137,7 +137,7 @@ VALUES ('Introduction to Loops', 'Understanding the concept of loops in programm
        ('Object-Oriented Programming Concepts', 'Understanding the concept of loops in programming', 7, 11, 21),
        ('Object-Oriented Programming Concepts', 'Exploring the fundamentals of OOP', 10, 2, NULL);
 --
-INSERT INTO rating(stars_number,enrollment_id) VALUES(4.5,11),(5,12),(5,13),(5,14),(5,15);
+INSERT INTO rating(stars_number,review,enrollment_id) VALUES(1,'bad',16),(5,12),(5,13),(5,14),(5,15);
 --
 INSERT INTO Quiz (quiz_points, item_id)
 VALUES (20, 3), (30, 4);
