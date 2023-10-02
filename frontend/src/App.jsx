@@ -15,6 +15,7 @@ import {
   LevelN,
   Video,
   Article,
+  Review,
 } from "./pages";
 import { Layout, RoadmapLayout } from "./layout";
 import { RequireAuth, PersistLogin, DataRetrieval } from "./components";
@@ -70,6 +71,10 @@ const App = () => {
                   <Route
                     path="courseview/:id/article/:itemId"
                     element={<Article />}
+                  />
+                  <Route
+                    path="courseview/:id/review"
+                    element={<Review />}
                   />
 
                   {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}

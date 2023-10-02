@@ -12,7 +12,8 @@ import LevelZero from "./student interfaces/LevelZero";
 import LevelOne from "./student interfaces/LevelOne";
 import LevelN from "./student interfaces/LevelN";
 import Video from "./Video";
-import Article from "./Article"
+import Article from "./Article";
+import Review from "./student interfaces/Review";
 export {
   Login_Student,
   Sign_Up_Instructor,
@@ -29,4 +30,5 @@ export {
   LevelN,
   Video,
   Article,
+  Review,
 };

@@ -149,7 +149,8 @@ function Dashboard_Student() {
             {progressCourses.length !== 0 ? (
               progressCourses.map((course, index) => (
                 <CourseCard
-                  key={index}
+                  key={course.id}
+                  id={course.id}
                   image={course.image}
                   title={course.title}
                   subtitle={course.subtitle}

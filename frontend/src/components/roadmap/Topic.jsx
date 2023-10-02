@@ -44,7 +44,7 @@ const Topic = ({
         } ${
           progressState == "In Progress" &&
           "underline contrast-200 brightness-200"
-        } ${progressState == "skip it" && "line-through blur-[3px]"}
+        } ${progressState == "skip it" && "line-through blur-[2px]"}
         transition-all ease-in-out-back duration-1000`}
       >
         {topicTitle}
