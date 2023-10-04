@@ -18,7 +18,7 @@ router.get("/", authorization, async (req, res, next) => {
     //get information to student
     const studentInfo = await pool.query(
       "SELECT * FROM student WHERE student_id = $1",
-      [Id]
+      [Id]  
     );
     // get Info about courses count to student
     const countData = await count.GetCoursesNumberInfo(Id); //
