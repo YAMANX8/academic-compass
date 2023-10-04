@@ -1197,6 +1197,7 @@ SELECT DISTINCT
     c.course_duration,
     c.items_count,
     c.course_thumnail,
+    c.course_status,
     l.level_name,
     u.first_name,
     u.last_name,
@@ -1233,10 +1234,14 @@ LEFT JOIN
     Topic_level_N TLN ON i.topic_id = TLN.topic_id
     WHERE
     RC.course_rank > ((1 - 1) * 4)
-    AND RC.course_rank <= (1 * 4);
+    AND RC.course_rank <= (1 * 4)
+    AND c.course_status='Active';
 ORDER BY
     RC.roadmap_id,
     RC.course_rank;
+    --
+    UPDATE course
+SET course_status ='InActive' WHERE course_id=12;
     ---------
 -- searsh by topic
 WITH RankedCourses AS (

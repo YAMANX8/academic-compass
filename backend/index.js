@@ -54,7 +54,7 @@ app.use("/AcademicCompass/article" , require("./Routes/course/Article"));
 app.use("/AcademicCompass/review" , require("./Routes/course/review"));
 
 // Register routes to instructor
-app.use("/AcademicCompass/auth2", require("./Routes/lecturer/register/jwtAuth"));
+app.use("/AcademicCompass/auth2", require("./Routes/instructor/register"));
 
 // setting routes to instructor
 app.use("/AcademicCompass/instructor/setting", require("./Routes/instructor/settings/setting"));
