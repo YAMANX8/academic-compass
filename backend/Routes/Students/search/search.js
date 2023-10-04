@@ -193,6 +193,7 @@ LEFT JOIN
     Topic_level_N TLN ON i.topic_id = TLN.topic_id
     WHERE
    ${condition6}
+   AND c.course_status='Active'
 `;
 const result = await pool.query(query, values);
     const courses = [];

@@ -1197,6 +1197,7 @@ SELECT DISTINCT
     c.course_duration,
     c.items_count,
     c.course_thumnail,
+    c.course_status,
     l.level_name,
     u.first_name,
     u.last_name,
@@ -1233,10 +1234,14 @@ LEFT JOIN
     Topic_level_N TLN ON i.topic_id = TLN.topic_id
     WHERE
     RC.course_rank > ((1 - 1) * 4)
-    AND RC.course_rank <= (1 * 4);
+    AND RC.course_rank <= (1 * 4)
+    AND c.course_status='Active';
 ORDER BY
     RC.roadmap_id,
     RC.course_rank;
+    --
+    UPDATE course
+SET course_status ='InActive' WHERE course_id=12;
     ---------
 -- searsh by topic
 WITH RankedCourses AS (
@@ -2189,4 +2194,76 @@ GROUP BY
   IS_ENROLLED.is_enrolled,
   item_counts.article_count,  -- Include these columns in the GROUP BY clause
   item_counts.video_count,    -- Include these columns in the GROUP BY clause
-  item_counts.quiz_count;     -- Include these columns in the GROUP BY clause
+  item_counts.quiz_count;  
+    --
+  --instructorDashboard
+    --1 total enrollments لكورس محدد
+    SELECT COUNT(DISTINCT Course.course_id) AS total_enrollments
+        FROM Course
+        JOIN Enrollment ON Course.course_id = Enrollment.course_id
+        WHERE Enrollment.course_id = 16;
+    -- لكل الكورسات هذا الصحيح
+    SELECT SUM(total_enrollments) AS total
+        FROM (
+        SELECT Course.course_id, COUNT(Enrollment.course_id) AS total_enrollments
+        FROM Course
+        LEFT JOIN Enrollment ON Course.course_id = Enrollment.course_id
+        WHERE Course.instructor_id = 1
+        GROUP BY Course.course_id
+        ) subquery
+        WHERE total_enrollments > 0;
+
+
+    --2 total reviews لكورس محدد
+        SELECT COUNT(DISTINCT r.rating_id) AS total_reviews
+        FROM Rating r
+        JOIN Enrollment ON r.enrollment_id = Enrollment.enrollment_id
+        WHERE Enrollment.course_id = 12;
+        --لكل الكورسات
+           SELECT SUM(total_reviews) AS total
+            FROM (
+            SELECT Course.course_id, COUNT(rating.rating_id) AS total_reviews
+            FROM Course
+            LEFT JOIN Enrollment e ON Course.course_id = e.course_id
+            LEFT JOIN rating ON e.enrollment_id = rating.enrollment_id
+            WHERE Course.instructor_id = 1
+            GROUP BY Course.course_id
+            ) subquery
+            WHERE total_reviews > 0;
+    --3 total courses
+       SELECT SUM(total_courses) AS total
+            FROM (
+            SELECT  COUNT(Course.course_id) AS total_courses
+            FROM Course
+            WHERE Course.instructor_id = 1
+            GROUP BY Course.course_id
+            ) subquery
+            WHERE total_courses > 0;
+    --4 total students **
+           SELECT SUM(total_courses) AS total
+            FROM (
+            SELECT  COUNT(Course.course_id) AS total_students
+            FROM Course
+            WHERE Course.instructor_id = 1
+            GROUP BY Course.course_id
+            ) subquery
+            WHERE total_courses > 0;
+    -- my topics
+     INSERT INTO Assigning_Topics (instructor_id,topic_level1_id)
+     VALUES (1,2);
+     -- query
+     SELECT Assigning_Topics.topic_level1_id,Topic_Level_1.topic_title
+        FROM Assigning_Topics 
+        LEFT JOIN Topic_Level_1  ON Assigning_Topics.topic_level1_id = Topic_Level_1.topic_level1_id
+        WHERE Assigning_Topics.instructor_id = 1;
+    --Ratings in average
+          SELECT avg(average) AS avg
+            FROM (
+            SELECT avg(rating.stars_number) AS average
+            FROM Course
+            LEFT JOIN Enrollment e ON Course.course_id = e.course_id
+            LEFT JOIN rating ON e.enrollment_id = rating.enrollment_id
+            WHERE Course.instructor_id = 1
+            GROUP BY Course.course_id
+                  ) subquery
+            WHERE average > 0;   -- Include these columns in the GROUP BY clause
