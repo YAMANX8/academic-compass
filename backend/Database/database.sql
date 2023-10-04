@@ -2267,3 +2267,18 @@ GROUP BY
             GROUP BY Course.course_id
                   ) subquery
             WHERE average > 0;   -- Include these columns in the GROUP BY clause
+
+
+SELECT
+-- * When We Write Api Remember Delete instructor_name .
+    Users.first_name AS instructor_name,
+    COUNT(DISTINCT Enrollment.student_id) AS enrolled_students_count
+FROM
+    Course
+JOIN
+    Users ON Course.instructor_id = Users.user_id
+JOIN
+    Enrollment ON Course.course_id = Enrollment.course_id
+    where user_id = 2
+GROUP BY
+    Users.first_name;
