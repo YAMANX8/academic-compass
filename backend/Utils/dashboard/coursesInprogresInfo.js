@@ -53,11 +53,10 @@ FROM Student
 JOIN enrollment ON Student.student_id = Enrollment.student_id 
 JOIN course ON Enrollment.course_id = course.course_id
 WHERE student.student_id = '${Id}'`;
-console.log(courese_id);
 const query = `
 SELECT
     c.course_id,
-    ROUND(AVG(r.stars_number), 1) AS avg_rating
+    ROUND(AVG(r.stars_number), 1) AS rating
 FROM "course" c
 JOIN "enrollment" e ON c.course_id = e.course_id
 LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
@@ -68,14 +67,12 @@ WHERE
 GROUP BY c.course_id
 ORDER BY c.course_title;
 `;
-
-    // console.log(query)
     const result = await db.query(query);
     return {
       status: "success",
       results: result.rows.length,
       Data: {
-        data: result.rows,
+        data: result.rows[0].rating,
       },
     };
   } catch (error) {
