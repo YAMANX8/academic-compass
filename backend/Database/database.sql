@@ -2240,14 +2240,10 @@ GROUP BY
             ) subquery
             WHERE total_courses > 0;
     --4 total students **
-           SELECT SUM(total_courses) AS total
-            FROM (
-            SELECT  COUNT(Course.course_id) AS total_students
-            FROM Course
-            WHERE Course.instructor_id = 1
-            GROUP BY Course.course_id
-            ) subquery
-            WHERE total_courses > 0;
+             SELECT  COUNT( DISTINCT Enrollment.student_id) AS total_student
+        FROM Course
+        LEFT JOIN Enrollment ON Course.course_id = Enrollment.course_id
+        WHERE Course.instructor_id = 1;
     -- my topics
      INSERT INTO Assigning_Topics (instructor_id,topic_level1_id)
      VALUES (1,2);
@@ -2256,7 +2252,7 @@ GROUP BY
         FROM Assigning_Topics 
         LEFT JOIN Topic_Level_1  ON Assigning_Topics.topic_level1_id = Topic_Level_1.topic_level1_id
         WHERE Assigning_Topics.instructor_id = 1;
-    --Ratings in average
+    -- !Ratings in average
           SELECT avg(average) AS avg
             FROM (
             SELECT avg(rating.stars_number) AS average

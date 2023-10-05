@@ -59,6 +59,13 @@ app.use("/AcademicCompass/auth2", require("./Routes/instructor/register"));
 // setting routes to instructor
 app.use("/AcademicCompass/instructor/setting", require("./Routes/instructor/settings/setting"));
 
+//show infoto instructor dashboard
+
+app.use(
+  "/AcademicCompass/instructor/dashboard",
+  require("./Routes/instructor/dashboard/dashboard.js")
+);
+
 
 
 
