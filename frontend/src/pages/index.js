@@ -14,6 +14,7 @@ import LevelN from "./student interfaces/LevelN";
 import Video from "./Video";
 import Article from "./Article";
 import Review from "./student interfaces/Review";
+import Home_Instructor from "./Home_Instructor";
 export {
   Login_Student,
   Sign_Up_Instructor,
@@ -31,4 +32,5 @@ export {
   Video,
   Article,
   Review,
+  Home_Instructor,
 };
