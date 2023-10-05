@@ -17,6 +17,7 @@ import {
   Article,
   Review,
   Home_Instructor,
+  Dashboard_Instructor,
 } from "./pages";
 import { Layout, RoadmapLayout } from "./layout";
 import { RequireAuth, PersistLogin, DataRetrieval } from "./components";
@@ -84,6 +85,7 @@ const App = () => {
               <Route path="instructor">
                 <Route path="register" element={<Sign_Up_Instructor />} />
                 <Route path="home_instructor" element={<Home_Instructor />} />
+                <Route path="dashboard_instructor" element={< Dashboard_Instructor />} />
               </Route>
             </Route>
           </Route>

@@ -15,6 +15,7 @@ import Video from "./Video";
 import Article from "./Article";
 import Review from "./student interfaces/Review";
 import Home_Instructor from "./Home_Instructor";
+import  Dashboard_Instructor from "./Dashboard_Instructor";
 export {
   Login_Student,
   Sign_Up_Instructor,
@@ -33,4 +34,5 @@ export {
   Article,
   Review,
   Home_Instructor,
+  Dashboard_Instructor,
 };
