@@ -3,6 +3,8 @@ const pool = require("../../../Database/db");
 const authorization = require("../../../middleware/authorization");
 const getMyPerformanceNumber=require("../../../Utils/dashboardInstructor/myPerformance");
 const getMyProfile=require("../../../Utils/dashboardInstructor/MyProfile");
+const get_Non_completed_Courses=require("../../../Utils/dashboardInstructor/course/My Non-completed Courses");
+const get_Completed_Courses = require("../../../Utils/dashboardInstructor/course/completed Courses");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -19,11 +21,17 @@ router.get("/", async (req, res, next) => {
     const myPerformance = await getMyPerformanceNumber.GetALlPerformanceNumber(Id);
     // Get Genral Info About Instructor .
     const myProfile = await getMyProfile.myProfile(Id);
+    // Get My_Non_completed_Courses .
+    const My_Non_completed_Courses = await get_Non_completed_Courses.My_Non_completed_Courses(Id);
+    // Get Completed_Courses .
+    const Completed_Courses = await get_Completed_Courses.Completed_Courses(Id);
 
     //Response Our Date
     const responseData = {
       myPerformance,
-      myProfile
+      myProfile,
+      My_Non_completed_Courses,
+      Completed_Courses
     };
     res.status(200).json(responseData);
   } catch (err) {
