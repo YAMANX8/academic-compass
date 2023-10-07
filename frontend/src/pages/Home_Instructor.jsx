@@ -16,7 +16,7 @@ function Home_Instructor() {
             <h2 className="text-[48px] text-primary font-semibold tracking-tight leading-l mb-4 whitespace-nowrap ">
               Lecturers: Online Educators
             </h2>
-            <p className="  text-[32px] mb-4 max-w-[500px]  font-Medium leading-l dark:text-light   text-dark">
+            <p className="  text-[32px] mb-4 max-w-[500px]  font-Medium leading-l dark:text-light  text-dark">
               How they utilize their expertise and knowledge to enrich online
               learning experiences.
             </p>

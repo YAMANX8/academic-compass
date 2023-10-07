@@ -18,6 +18,8 @@ import {
   Review,
   Home_Instructor,
   Dashboard_Instructor,
+  Stepes,
+ 
 } from "./pages";
 import { Layout, RoadmapLayout } from "./layout";
 import { RequireAuth, PersistLogin, DataRetrieval } from "./components";
@@ -74,10 +76,7 @@ const App = () => {
                     path="courseview/:id/article/:itemId"
                     element={<Article />}
                   />
-                  <Route
-                    path="courseview/:id/review"
-                    element={<Review />}
-                  />
+                  <Route path="courseview/:id/review" element={<Review />} />
 
                   {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
                 </Route>
@@ -85,7 +84,9 @@ const App = () => {
               <Route path="instructor">
                 <Route path="register" element={<Sign_Up_Instructor />} />
                 <Route path="home_instructor" element={<Home_Instructor />} />
-                <Route path="dashboard_instructor" element={< Dashboard_Instructor />} />
+                <Route path="dashboard_instructor"element={<Dashboard_Instructor />} />
+                <Route path="stepes" element={<Stepes />} />
+              
               </Route>
             </Route>
           </Route>

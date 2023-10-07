@@ -15,7 +15,9 @@ import Video from "./Video";
 import Article from "./Article";
 import Review from "./student interfaces/Review";
 import Home_Instructor from "./Home_Instructor";
-import  Dashboard_Instructor from "./Dashboard_Instructor";
+import Dashboard_Instructor from "./Dashboard_Instructor";
+import Stepes from "./Create Coruse Instructor/Stepes";
+
 export {
   Login_Student,
   Sign_Up_Instructor,
@@ -35,4 +37,6 @@ export {
   Review,
   Home_Instructor,
   Dashboard_Instructor,
+  Stepes,
+ 
 };
