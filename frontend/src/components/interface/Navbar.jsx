@@ -72,7 +72,7 @@ const Navbar = () => {
         <Link to="/student/roadmaps" className="font-semibold">
           Roadmaps{" "}
         </Link>
-        <Link to="/instructor/register" className="font-semibold">
+        <Link to="/instructor/home" className="font-semibold">
         Become part of Academic compass
         </Link>
         {!isAuth ? (
@@ -96,7 +96,7 @@ const Navbar = () => {
           <div className="flex justify-between gap-4 items-center">
             <div className="w-[1px] bg-dark dark:bg-light self-stretch transition-all duration-1000 ease-in-out-back rounded-full"></div>
             <Link
-              to="/student/dashboard"
+              to={auth.role == 2 ? `/student/dashboard` : `/instructor/dashboard`}
               className="flex justify-center items-center w-[45px] overflow-clip aspect-square rounded-full bg-primary text-light"
             >
               {userInfo.imagePath ? (
