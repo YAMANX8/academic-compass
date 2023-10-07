@@ -40,6 +40,7 @@ const Completed_Courses = async (instructoer_id) => {
             COUNT(DISTINCT CASE WHEN q.item_id IS NOT NULL THEN I.item_id END) >= 1
           );
       `;
+      
       const result = await db.query(query, value);
       console.log(result);
         return {
