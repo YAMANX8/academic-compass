@@ -30,7 +30,7 @@ function EditCourse_Instructor() {
           Course Info
         </label>
         <div className="h-[80px] w-[2px]   bg-gray-400"></div>
-        <label className="py-[20px] text-dark font-medium text-[32px] tracking-tight">
+        <label className="py-[20px] text-dark font-medium text-[32px] tracking-tight dark:text-light">
           Course Content
         </label>
       </div>
@@ -41,7 +41,7 @@ function EditCourse_Instructor() {
         <div className="flex flex-col gap-4 ">
           <div className="flex gap-[48px]">
             <div className="flex flex-col gap-2 mb-[48px]">
-              <h2 className="text-[32px] text-dark font-semibold">Course title</h2>
+              <h2 className="text-[32px] text-dark font-semibold dark:text-light">Course title</h2>
               <input
                 type="text"
                 placeholder="Ex: Learn the basics of ..."
@@ -49,7 +49,7 @@ function EditCourse_Instructor() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <h2 className="text-[32px] text-dark font-semibold">Course subtitle</h2>
+              <h2 className="text-[32px] text-dark font-semibold dark:text-light">Course subtitle</h2>
               <input
                 type="text"
                 placeholder="Ex: improve your skills..."
@@ -60,7 +60,7 @@ function EditCourse_Instructor() {
 
           <div className="flex gap-[48px]">
             <div className="flex flex-col gap-2">
-              <h2 className="text-[32px] text-dark font-semibold">Select course Level</h2>
+              <h2 className="text-[32px] text-dark font-semibold dark:text-light">Select course Level</h2>
               <div className="flex relative">
                 <input
                   type="text"
@@ -91,7 +91,7 @@ function EditCourse_Instructor() {
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <h2 className="text-[32px] text-dark font-semibold">Select course type</h2>
+              <h2 className="text-[32px] text-dark font-semibold dark:text-light">Select course type</h2>
               <div className="flex relative">
                 <input
                   type="text"
@@ -126,7 +126,7 @@ function EditCourse_Instructor() {
         </div>
 
         <div className="mt-[100px]">
-          <h2 className="text-[32px] text-dark py-4 font-semibold"> Course description</h2>
+          <h2 className="text-[32px] text-dark py-4 font-semibold dark:text-light"> Course description</h2>
           <textarea
             placeholder=" insert your course description here"
             id=""
@@ -137,7 +137,7 @@ function EditCourse_Instructor() {
         </div>
 
         <div className="py-[20px]">
-          <h1 className="text-[32px] py-[16px] text-dark font-semibold">
+          <h1 className="text-[32px] py-[16px] text-dark font-semibold dark:text-light">
             {" "}
             Whate is taught in your course?
           </h1>
@@ -147,14 +147,14 @@ function EditCourse_Instructor() {
             className=" w-full border text-[20px] rounded-[5px] border-gray-300 p-[10px] bg-light"
           />
           <div className="">
-            <button className="mt-[25px] p-[10px] border border-accent rounded-[5px] text-primary flex items-center">
+            <button className="mt-[25px] p-[10px] border border-accent dark:bg-light rounded-[5px] text-primary flex items-center">
               <Add />
               <span className="ml-2">insert one more item</span>
             </button>
           </div>
         </div>
         <div className="py-[20px]">
-          <h1 className="text-[32px] py-[16px] text-dark font-semibold">
+          <h1 className="text-[32px] py-[16px] text-dark font-semibold dark:text-light">
             {" "}
             Who is the intended audience for this course?
           </h1>
@@ -164,14 +164,14 @@ function EditCourse_Instructor() {
             className=" w-full border text-[20px] rounded-[5px] border-gray-300 p-[10px] bg-light"
           />
           <div className="">
-            <button className="mt-[25px] p-[10px] border border-accent rounded-[5px] text-primary flex items-center">
+            <button className="mt-[25px] p-[10px] border border-accent dark:bg-light rounded-[5px] text-primary flex items-center">
               <Add />
               <span className="ml-2">insert one more item</span>
             </button>
           </div>
         </div>
         <div className="py-[20px]">
-          <h1 className="text-[32px] py-[16px] text-dark font-semibold ">
+          <h1 className="text-[32px] py-[16px] text-dark font-semibold dark:text-light ">
             {" "}
             Whate are the prerequisites for your course ?
           </h1>
@@ -181,7 +181,7 @@ function EditCourse_Instructor() {
             className=" w-full border text-[20px] rounded-[5px] border-gray-300 p-[10px] bg-light"
           />
           <div className="">
-            <button className="mt-[25px] p-[10px] border border-accent rounded-[5px] text-primary flex items-center">
+            <button className="mt-[25px] p-[10px] border border-accent dark:bg-light rounded-[5px] text-primary flex items-center">
               <Add />
               <span className="ml-2">insert one more item</span>
             </button>
@@ -189,12 +189,12 @@ function EditCourse_Instructor() {
         </div>
 
         <div className="py-[20px]">
-        <h1 className="text-[32px] py-[16px] text-dark font-semibold ">
+        <h1 className="text-[32px] py-[16px] text-dark font-semibold dark:text-light">
          Would you like to publish your course ?
           </h1>
           <div className="flex gap-4 py-[16px] mb-[40px]">
             <Button>Activate the course</Button>
-            <button className="border border-accent p-[10px]  rounded-[5px] font-semibold text-primary">Inactivate the course</button>
+            <button className="border border-accent p-[10px]  dark:bg-light rounded-[5px] font-semibold text-primary">Inactivate the course</button>
           </div>
              </div>
              
