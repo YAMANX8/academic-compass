@@ -32,6 +32,10 @@ import { RequireAuth, PersistLogin, StudentDataRetrieval } from "./components";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const Roles = {
+  instructor: 1,
+  student: 2,
+};
 const App = () => {
   return (
     <>
@@ -70,7 +74,7 @@ const App = () => {
                 </Route>
 
                 {/* protected to students only */}
-                <Route element={<RequireAuth />}>
+                <Route element={<RequireAuth allowedUser={Roles.student} />}>
                   <Route path="dashboard" element={<StudentDashboard />} />
                   <Route path="settings" element={<StudentSettings />} />
 
@@ -98,13 +102,15 @@ const App = () => {
               <Route path="register" element={<RegisterInstructor />} />
               <Route element={<PersistLogin />}>
                 <Route element={<StudentDataRetrieval />}>
-                  <Route path="home" element={<InstructorHome />} />
-                  <Route path="dashboard" element={<InstructorDashboard />} />
-                  <Route path="settings" element={<Settings />} />
-                  <Route path="edit-course" element={<EditCourse />} />
-                  <Route path="create-course" element={<CreateCourse />} />
-                  <Route path="course-info" element={<CourseInfo />} />
-                  <Route path="student-profile" element={<ShowProfile />} />
+                  <Route element={<RequireAuth allowedUser={Roles.instructor} />}>
+                    <Route path="home" element={<InstructorHome />} />
+                    <Route path="dashboard" element={<InstructorDashboard />} />
+                    <Route path="settings" element={<Settings />} />
+                    <Route path="edit-course" element={<EditCourse />} />
+                    <Route path="create-course" element={<CreateCourse />} />
+                    <Route path="course-info" element={<CourseInfo />} />
+                    <Route path="student-profile" element={<ShowProfile />} />
+                  </Route>
                 </Route>
               </Route>
             </Route>

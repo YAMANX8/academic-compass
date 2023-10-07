@@ -21,6 +21,7 @@ const StudentDataRetrieval = () => {
         await setAuth((prev) => ({
           ...prev,
           accessToken: localStorage.token,
+          role: localStorage.role,
           firstName: response.firstName,
           lastName: response.lastName,
           education: response.education,
