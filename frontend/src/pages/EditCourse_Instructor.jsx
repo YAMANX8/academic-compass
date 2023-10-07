@@ -35,7 +35,7 @@ function EditCourse_Instructor() {
         </label>
       </div>
       <div
-        className=" mt-[43px]  w-full p-[32px] rounded-[3px]" 
+        className=" mt-[43px]  w-full p-[32px] rounded-[3px] dark:border " 
         style={{ boxShadow: "0px 0px 15px 5px rgba(0, 0, 0, 0.2)" }}
       >
         <div className="flex flex-col gap-4 ">
@@ -65,7 +65,7 @@ function EditCourse_Instructor() {
                 <input
                   type="text"
                   placeholder="All level"
-                  className="px-[10px] pr-[50px] w-[400px] bg-light rounded-[5px] border border-gray-400 text-[30px] tracking-tight"
+                  className="px-[10px] pr-[50px] w-[400px] bg-light rounded-[5px] border dark:border-light border-gray-400 text-[30px] tracking-tight"
                   onClick={() => toggleDropdown("level")}
                 />
                 {isOpen && activeField === "level" && (
@@ -85,7 +85,7 @@ function EditCourse_Instructor() {
                   </div>
                 )}
                 <DownSquareFill
-                  className="absolute mx-[352px] text-5xl cursor-pointer"
+                  className="absolute mx-[352px] text-5xl cursor-pointer dark:text-dark "
                   onClick={() => toggleDropdown("level")}
                 />
               </div>
@@ -97,7 +97,7 @@ function EditCourse_Instructor() {
                   type="text"
                   value={selectedProject}
                   placeholder="Project Based"
-                  className="px-[10px] pr-[50px] w-[400px] bg-light rounded-[5px] border border-gray-400 text-[30px] tracking-tight"
+                  className="px-[10px] pr-[50px] w-[400px]  dark:border-light  bg-light rounded-[5px] border border-gray-400 text-[30px] tracking-tight"
                   onClick={() => toggleDropdown("project")}
                 />
                 {isOpen && activeField === "project" && (
@@ -117,7 +117,7 @@ function EditCourse_Instructor() {
                   </div>
                 )}
                 <DownSquareFill
-                  className="absolute mx-[352px] text-5xl cursor-pointer"
+                  className="absolute mx-[352px] text-5xl cursor-pointer dark:text-dark "
                   onClick={() => toggleDropdown("project")}
                 />
               </div>
