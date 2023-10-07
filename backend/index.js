@@ -19,7 +19,6 @@ app.use("/image", express.static("Upload/Images"));
 app.use("/AcademicCompass/home", require("./Routes/Students/home/home"));
 
 // Register and login routes to Student
-
 app.use("/AcademicCompass/auth", require("./Routes/Students/register/jwtAuth"));
 
 // dashboard route to student
@@ -30,7 +29,6 @@ app.use("/AcademicCompass/student/setting", require("./Routes/Students/settings/
 
 // get Roadmap(all&&specific map)
 app.use("/AcademicCompass/roadmap", require("./Routes/Roadmap/Roadmap"));
-
 
 // add roadmap
  app.use("/AcademicCompass/addroadmap",require("./Routes/Roadmap/addRoadmap"));
@@ -58,6 +56,17 @@ app.use("/AcademicCompass/auth2", require("./Routes/instructor/register"));
 
 // setting routes to instructor
 app.use("/AcademicCompass/instructor/setting", require("./Routes/instructor/settings/setting"));
+
+//show instructor dashboard
+app.use("/AcademicCompass/instructor/dashboard",require("./Routes/instructor/dashboard/dashboard"));
+
+//Create Course
+app.use("/AcademicCompass/instructor/createCourse",require("./Routes/instructor/createCourse/createCourse"));
+
+//Create Course
+app.use(
+  "/AcademicCompass/instructor/studentProfile", require("./Routes/instructor/showingStudentProfile/studentProfile")
+);
 
 
 
