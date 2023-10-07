@@ -10,8 +10,8 @@ import {
   BsSun as Sun,
 } from "react-icons/bs";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { Switcher } from "./index";
-import useAuth from "../hooks/useAuth";
+import { Switcher } from "../index";
+import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const Navbar = () => {

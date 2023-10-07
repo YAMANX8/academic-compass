@@ -5,15 +5,15 @@ import {
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 
-import { SignInUpWrapper } from "../layout";
+import { SignInUpWrapper } from "../../layout";
 import { useNavigate, Link } from "react-router-dom";
 
 // import { Alert } from "../components/index";
 import { toast } from "react-toastify";
 
-import axios from "../apis/axios";
+import axios from "../../apis/axios";
 
-import useAuth from "../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
@@ -22,7 +22,7 @@ const PWD_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;
 
 const REGITER_URL = "/auth/student/register";
-function Sign_Up_Student() {
+function RegisterStudent() {
   const navigate = useNavigate();
 
   const nameRef = useRef();
@@ -353,4 +353,4 @@ function Sign_Up_Student() {
   );
 }
 
-export default Sign_Up_Student;
+export default RegisterStudent;

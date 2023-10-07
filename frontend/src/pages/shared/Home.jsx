@@ -1,10 +1,10 @@
 import { FaRegMap as Map } from "react-icons/fa";
-import Hero from "../assets/images/hero.svg";
+import Hero from "../../assets/images/hero.svg";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { RoadmapCard } from "../components/index.js";
+import { RoadmapCard } from "../../components/index.js";
 
-import axios from "../apis/axios.js";
+import axios from "../../apis/axios.js";
 function Home() {
   // style variables
   const heading = "text-[3rem] font-semibold tracking-tight leading-[125%]";

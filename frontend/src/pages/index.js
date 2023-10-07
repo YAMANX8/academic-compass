@@ -1,34 +1,58 @@
-import Login_Student from "./Login_Student";
-import Sign_Up_Instructor from "./Sign_Up_Instructor";
-import Sign_Up_Student from "./Sign_Up_Student";
-import Roadmaps from "./Roadmaps";
-import Home from "./Home";
-import Dashboard_Student from "./Dashboard_Student";
-import Settings_Student from "./Settings_Student";
-import NotFound from "./NotFound";
-import CourseView from "./CourseView";
-import Search from "./Search";
-import LevelZero from "./student interfaces/LevelZero";
-import LevelOne from "./student interfaces/LevelOne";
-import LevelN from "./student interfaces/LevelN";
-import Video from "./Video";
-import Article from "./Article";
+// shared pages
+import Home from "./shared/Home";
+import NotFound from "./shared/NotFound";
+import NotAuthorized from "./shared/NotAuthorized";
+import Search from "./shared/Search";
+import Roadmaps from "./shared/Roadmaps";
+import LevelZero from "./shared/roadmap pages/LevelZero";
+import LevelOne from "./shared/roadmap pages/LevelOne";
+import LevelN from "./shared/roadmap pages/LevelN";
+// student pages
+import LoginStudent from "./student interfaces/LoginStudent";
+import RegisterStudent from "./student interfaces/RegisterStudent";
+import StudentSettings from "./student interfaces/StudentSettings";
+import StudentDashboard from "./student interfaces/StudentDashboard";
+import CourseView from "./student interfaces/CourseView";
 import Review from "./student interfaces/Review";
+import Article from "./student interfaces/course content pages/Article";
+import Video from "./student interfaces/course content pages/Video";
+import Quiz from "./student interfaces/course content pages/Quiz";
+// instructor pages
+import LoginInstructor from "./instructor interfaces/LoginInstructor";
+import RegisterInstructor from "./instructor interfaces/RegisterInstructor";
+import InstructorDashboard from "./instructor interfaces/InstructorDashboard";
+import InstructorHome from "./instructor interfaces/InstructorHome";
+import Settings from "./instructor interfaces/Settings";
+import EditCourse from "./instructor interfaces/EditCourse";
+import CreateCourse from "./instructor interfaces/CreateCourse";
+import CourseInfo from "./instructor interfaces/CourseInfo";
+import ShowProfile from "./instructor interfaces/ShowProfile";
+
 export {
-  Login_Student,
-  Sign_Up_Instructor,
-  Sign_Up_Student,
-  Roadmaps,
   Home,
-  Dashboard_Student,
-  Settings_Student,
   NotFound,
-  CourseView,
+  NotAuthorized,
   Search,
+  Roadmaps,
   LevelZero,
   LevelOne,
   LevelN,
-  Video,
-  Article,
+  LoginStudent,
+  RegisterStudent,
+  StudentSettings,
+  StudentDashboard,
+  CourseView,
   Review,
+  Article,
+  Video,
+  Quiz,
+  LoginInstructor,
+  RegisterInstructor,
+  InstructorDashboard,
+  InstructorHome,
+  Settings,
+  EditCourse,
+  CreateCourse,
+  CourseInfo,
+  ShowProfile,
 };

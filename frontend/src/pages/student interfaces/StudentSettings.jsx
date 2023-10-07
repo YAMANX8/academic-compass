@@ -4,15 +4,15 @@ import { IoIosInformationCircleOutline as InformationIcon } from "react-icons/io
 import { MdOutlineSecurity as SecurityIcon } from "react-icons/md";
 import { BsPerson as Person } from "react-icons/bs";
 
-import { General, Security, Account } from "../components";
+import { General, Security, Account } from "../../components";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
-import axios from "../apis/axios";
-import useAuth from "../hooks/useAuth";
+import axios from "../../apis/axios";
+import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const SETTINGS_URL = "/student/setting";
 
-function Setting_Student() {
+function StudentSettings() {
   const navigate = useNavigate();
   const { auth } = useAuth();
   const [selectedLink, setSelectedLink] = useState("general");
@@ -171,4 +171,4 @@ function Setting_Student() {
   );
 }
 
-export default Setting_Student;
+export default StudentSettings;

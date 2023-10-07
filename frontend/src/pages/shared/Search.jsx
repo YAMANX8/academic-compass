@@ -7,13 +7,13 @@ import {
   BsChevronUp as ChevronUp,
   BsChevronDown as ChevronDown,
 } from "react-icons/bs";
-import Card from "../assets/images/Rectangle 63.png";
-import axios from "../apis/axios";
+import Card from "../../assets/images/Rectangle 63.png";
+import axios from "../../apis/axios";
 
 // An array containing possible ratings
 const ratingsList = ["4.5", "4.0", "3.5", "3.0"];
 
-const SearchStudent = () => {
+const Search = () => {
   const location = useLocation();
   console.log("state: byText - ", location?.state.byText);
 
@@ -458,7 +458,7 @@ const SearchStudent = () => {
   );
 };
 
-export default SearchStudent;
+export default Search;
 
 // course card component
 const CourseCard = ({

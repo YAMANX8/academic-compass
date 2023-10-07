@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import NotFoundImg from "../assets/images/404.svg";
+import NotFoundImg from "../../assets/images/404.svg";
 const NotFound = () => {
   const navigate = useNavigate();
   return (

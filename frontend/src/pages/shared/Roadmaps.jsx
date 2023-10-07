@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { RoadmapCard } from "../components/index.js";
-import axios from "../apis/axios.js";
+import { RoadmapCard } from "../../components/index.js";
+import axios from "../../apis/axios.js";
 
 function Roadmaps() {
   const [roadCards, setRoadCards] = useState([]);

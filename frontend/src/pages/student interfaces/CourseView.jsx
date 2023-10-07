@@ -9,12 +9,12 @@ import {
   BsBook as Articles,
 } from "react-icons/bs";
 
-import Card from "../assets/images/Rectangle 63.png";
-import Profile from "../assets/images/profile.png";
+import Card from "../../assets/images/Rectangle 63.png";
+import Profile from "../../assets/images/profile.png";
 
-import { CourseContent, ReviewCards } from "../components";
-import axios from "../apis/axios";
-import useAuth from "../hooks/useAuth";
+import { CourseContent, ReviewCards } from "../../components";
+import axios from "../../apis/axios";
+import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const SectionWrapper = ({ title, children }) => {

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
-import axios from "../apis/axios";
+import axios from "../../../apis/axios";
 import { BsPlayCircleFill as Library } from "react-icons/bs";
-import { Button, CourseContent } from "../components";
-import useAuth from "../hooks/useAuth";
+import { Button, CourseContent } from "../../../components";
+import useAuth from "../../../hooks/useAuth";
 import { useParams } from "react-router-dom";
 
 const VIDEO_URL = "/course/video";

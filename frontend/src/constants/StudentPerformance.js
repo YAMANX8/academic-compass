@@ -1,4 +1,4 @@
-export const performance = [
+export const StudentPerformance = [
   {
     id: 1,
     title: "Enrollments",

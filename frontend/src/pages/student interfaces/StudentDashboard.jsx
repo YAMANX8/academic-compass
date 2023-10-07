@@ -5,20 +5,20 @@ import {
   PerformanceCard,
   CourseCard,
   Button,
-} from "../components/index.js";
-import { DashboardWrapper } from "../layout/index.js";
+} from "../../components/index.js";
+import { DashboardWrapper } from "../../layout/index.js";
 import { FaRegMap as Map } from "react-icons/fa";
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
-import axios from "../apis/axios";
-import { performance } from "../performance.js";
-import useAuth from "../hooks/useAuth.jsx";
+import axios from "../../apis/axios.js";
+import { StudentPerformance } from "../../constants/StudentPerformance.js";
+import useAuth from "../../hooks/useAuth.jsx";
 
 const DASHBOARD_URL = "/studentDashboard";
 
 const cardColor = ["bg-primary", "bg-accent", "bg-green"];
 const cardTitle = ["Completed Courses", "In Progress Courses", "Total Points"];
 
-function Dashboard_Student() {
+function StudentDashboard() {
   const { auth } = useAuth();
   const [profileData, setProfileData] = useState([]);
 
@@ -46,12 +46,12 @@ function Dashboard_Student() {
   }, []);
 
   let data = {
-    labels: performance.map((item) => item.title),
+    labels: StudentPerformance.map((item) => item.title),
     datasets: [
       {
         label: "performance",
         data: performanceData.map((item) => item.count + 0.1),
-        backgroundColor: performance.map((item) => item.color),
+        backgroundColor: StudentPerformance.map((item) => item.color),
         borderColor: "#EEEFFC",
       },
     ],
@@ -133,8 +133,8 @@ function Dashboard_Student() {
             {performanceData.map((item, index) => (
               <PerformanceCard
                 key={item.id}
-                title={performance[index].title}
-                color={performance[index].color}
+                title={StudentPerformance[index].title}
+                color={StudentPerformance[index].color}
                 count={item.count}
               />
             ))}
@@ -155,7 +155,7 @@ function Dashboard_Student() {
                   title={course.title}
                   subtitle={course.subtitle}
                   progress={course.progress[index].completion_percentage}
-                  stars={course.rating[index].avg_rating}
+                  stars={course.rating}
                 />
               ))
             ) : (
@@ -222,4 +222,4 @@ function Dashboard_Student() {
   );
 }
 
-export default Dashboard_Student;
+export default StudentDashboard;

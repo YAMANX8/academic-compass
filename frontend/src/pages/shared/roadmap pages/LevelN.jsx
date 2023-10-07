@@ -8,15 +8,15 @@ import {
   EndLineLeft,
   Topic,
   Modal,
-} from "../../components";
+} from "../../../components";
 import {
   useOutletContext,
   useNavigate,
   useParams,
   useLocation,
 } from "react-router-dom";
-import axios from "../../apis/axios";
-import useAuth from "../../hooks/useAuth";
+import axios from "../../../apis/axios";
+import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const LevelN = () => {

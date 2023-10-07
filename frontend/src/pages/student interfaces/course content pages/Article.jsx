@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-import { CourseContent } from "../components";
+import { CourseContent } from "../../../components";
 function Article() {
   const [data, setData] = useState({
     article: {

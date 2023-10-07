@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 import { Preloader } from "../index";
 const SETTINGS_URL = "/student/setting";
 import moment from "moment";
-const DataRetrieval = () => {
+const StudentDataRetrieval = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { isAuth, setAuth } = useAuth();
   useEffect(() => {
@@ -45,4 +45,4 @@ const DataRetrieval = () => {
   return <>{isLoading ? <Preloader /> : <Outlet />}</>;
 };
 
-export default DataRetrieval;
+export default StudentDataRetrieval;

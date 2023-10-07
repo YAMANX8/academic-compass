@@ -1,24 +1,34 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import {
-  Login_Student,
-  Sign_Up_Student,
-  Roadmaps,
-  Sign_Up_Instructor,
   Home,
-  Dashboard_Student,
-  Settings_Student,
   NotFound,
-  CourseView,
+  NotAuthorized,
   Search,
+  Roadmaps,
   LevelZero,
   LevelOne,
   LevelN,
-  Video,
-  Article,
+  LoginStudent,
+  RegisterStudent,
+  StudentSettings,
+  StudentDashboard,
+  CourseView,
   Review,
+  Article,
+  Video,
+  Quiz,
+  LoginInstructor,
+  RegisterInstructor,
+  InstructorDashboard,
+  InstructorHome,
+  Settings,
+  EditCourse,
+  CreateCourse,
+  CourseInfo,
+  ShowProfile,
 } from "./pages";
 import { Layout, RoadmapLayout } from "./layout";
-import { RequireAuth, PersistLogin, DataRetrieval } from "./components";
+import { RequireAuth, PersistLogin, StudentDataRetrieval } from "./components";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -28,12 +38,12 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/student" />} />
-          <Route path="student/login" element={<Login_Student />} />
-          <Route path="student/register" element={<Sign_Up_Student />} />
+          <Route path="student/login" element={<LoginStudent />} />
+          <Route path="student/register" element={<RegisterStudent />} />
 
           {/* student pages path */}
           <Route element={<PersistLogin />}>
-            <Route element={<DataRetrieval />}>
+            <Route element={<StudentDataRetrieval />}>
               <Route path="student">
                 <Route index element={<Home />} />
 
@@ -61,8 +71,8 @@ const App = () => {
 
                 {/* protected to students only */}
                 <Route element={<RequireAuth />}>
-                  <Route path="dashboard" element={<Dashboard_Student />} />
-                  <Route path="settings" element={<Settings_Student />} />
+                  <Route path="dashboard" element={<StudentDashboard />} />
+                  <Route path="settings" element={<StudentSettings />} />
 
                   <Route
                     path="courseview/:id/video/:itemId"
@@ -73,19 +83,34 @@ const App = () => {
                     element={<Article />}
                   />
                   <Route
-                    path="courseview/:id/review"
-                    element={<Review />}
+                    path="courseview/:id/quiz/:itemId"
+                    element={<Quiz />}
                   />
+                  <Route path="courseview/:id/review" element={<Review />} />
 
                   {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
                 </Route>
               </Route>
-              <Route path="instructor">
-                <Route path="register" element={<Sign_Up_Instructor />} />
+            </Route>
+
+            <Route path="instructor">
+              <Route path="login" element={<LoginInstructor />} />
+              <Route path="register" element={<RegisterInstructor />} />
+              <Route element={<PersistLogin />}>
+                <Route element={<StudentDataRetrieval />}>
+                  <Route path="home" element={<InstructorHome />} />
+                  <Route path="dashboard" element={<InstructorDashboard />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="edit-course" element={<EditCourse />} />
+                  <Route path="create-course" element={<CreateCourse />} />
+                  <Route path="course-info" element={<CourseInfo />} />
+                  <Route path="student-profile" element={<ShowProfile />} />
+                </Route>
               </Route>
             </Route>
           </Route>
           <Route path="*" element={<NotFound />} />
+          <Route path="/not-authorized" element={<NotAuthorized />} />
         </Route>
       </Routes>
       <ToastContainer

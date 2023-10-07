@@ -3,16 +3,16 @@ import {
   BsEyeSlash as Hide,
   BsEye as Show,
 } from "react-icons/bs";
-import { SignInUpWrapper } from "../layout";
+import { SignInUpWrapper } from "../../layout";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import axios from "../apis/axios";
+import axios from "../../apis/axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 
 const LOGIN_URL = "/auth/student/login";
 
-function Login_Student() {
+function LoginStudent() {
   const { setIsAuth } = useAuth();
 
   const navigate = useNavigate();
@@ -121,4 +121,4 @@ function Login_Student() {
   );
 }
 
-export default Login_Student;
+export default LoginStudent;

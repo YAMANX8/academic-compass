@@ -24,6 +24,7 @@ export default {
       },
       gridTemplateRows: {
         8: "repeat(8, minmax(0, auto))",
+        9: "repeat(9, minmax(0, 167.5px))",
       },
       transitionTimingFunction: {
         "in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",
