@@ -2418,3 +2418,50 @@ VALUES
 INSERT INTO Course (course_title, instructor_id, course_level, course_type)
 VALUES
   ('html', 1, 1, 2);
+
+  
+-- Totle item for instructor
+SELECT
+    SUM(course_item_counts.item_count) AS total_item_count
+FROM (
+    SELECT
+        COUNT(items.item_id) AS item_count
+    FROM
+        Users
+    JOIN
+        Course ON Users.user_id = course.instructor_id
+    JOIN
+        items ON course.course_id = items.course_id
+    WHERE
+        Users.user_id = 1
+) AS course_item_counts;
+
+
+-- All review for instructor 
+SELECT 
+Rating.rating_id,
+Student.first_name, 
+Student.last_name, 
+Student.picture, 
+Rating.stars_number,
+Rating.review 
+FROM Users
+LEFT JOIN course ON Users.user_id = course.instructor_id
+JOIN enrollment ON course.course_id = enrollment.course_id
+JOIN student ON enrollment.student_id = Student.student_id
+JOIN rating ON enrollment.enrollment_id = rating.enrollment_id
+where Users.user_id = 2;
+
+-- All enrollment for instructor  
+SELECT 
+Student.first_name, 
+Student.last_name, 
+Student.picture,    
+Student.country,
+course.course_title  
+FROM Users
+LEFT JOIN course ON Users.user_id = course.instructor_id
+JOIN enrollment ON course.course_id = enrollment.course_id
+JOIN student ON enrollment.student_id = Student.student_id
+WHERE users.user_id =1;
+ 
