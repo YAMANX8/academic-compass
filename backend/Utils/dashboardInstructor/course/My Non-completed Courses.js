@@ -6,9 +6,9 @@ const My_Non_completed_Courses = async (instructoer_id) => {
         const value = [instructoer_id];
 
         const query = `
-        SELECT course_id, course_title, rules
-        FROM (
-          SELECT c.course_id, c.course_title,
+        SELECT course_id, course_title,course_thumnail, progress
+          FROM (
+            SELECT c.course_id, c.course_title,c.course_thumnail,
             CASE
               WHEN c.subtitle IS NOT NULL THEN 1 ELSE 0 END +
             CASE
@@ -32,7 +32,7 @@ const My_Non_completed_Courses = async (instructoer_id) => {
                 COUNT(DISTINCT CASE WHEN v.item_id IS NOT NULL THEN I.item_id END) >= 1
                 AND COUNT(DISTINCT CASE WHEN a.item_id IS NOT NULL THEN I.item_id END) >= 1
                 AND COUNT(DISTINCT CASE WHEN q.item_id IS NOT NULL THEN I.item_id END) >= 1
-              ) THEN 1 ELSE 0 END AS rules
+              ) THEN 1 ELSE 0 END AS progress
           FROM Course c
           JOIN Course_Lists cl ON c.course_id = cl.course_id
           JOIN List_Type lt ON cl.list_type = lt.type_id
@@ -43,8 +43,8 @@ const My_Non_completed_Courses = async (instructoer_id) => {
           WHERE c.instructor_id = $1
           GROUP BY c.course_id, c.course_title
         ) AS subquery
-        WHERE rules < 10;
-      `
+        WHERE progress < 10;
+      `;
       const result = await db.query(query, value);
       console.log(result);
         return {

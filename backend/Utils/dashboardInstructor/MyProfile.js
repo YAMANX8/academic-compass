@@ -6,7 +6,7 @@ const myProfile = async (instructoer_id) => {
     const value = [instructoer_id];
 
     // Bring Instructoer Infor .
-    const query1 = `select Users.first_name , Users.last_name , Users.picture , Users.country , Users.city from Users WHERE user_id = $1`
+    const query1 = `select Users.first_name , Users.last_name , Users.picture , Users.country , Users.city from Users WHERE user_id = $1`;
     const result1 = await db.query(query1, value);
 
     // Bring Avg Stra .
@@ -20,15 +20,15 @@ const myProfile = async (instructoer_id) => {
       GROUP BY Course.course_id
     ) subquery
     WHERE average > 0;
-    `
+    `;
     const result2 = await db.query(query2, value);
     return {
       status: "success",
       Data: {
         Instructoer_info: result1.rows[0],
         Instructoer_Rating: result2.rows[0],
-      }
-    }
+      },
+    };
   } catch (err) {
     console.error("Error: ", err);
     return {
@@ -36,7 +36,7 @@ const myProfile = async (instructoer_id) => {
       message: "Field",
     };
   }
-}
+};
 module.exports = {
-  myProfile
+  myProfile,
 };
