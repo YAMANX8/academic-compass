@@ -6,7 +6,7 @@ const Completed_Courses = async (instructoer_id) => {
         const value = [instructoer_id];
 
         const query = `
-        SELECT c.course_id, c.course_title,c.subtitle
+        SELECT c.course_id, c.course_title,c.subtitle,course_thumnail
         FROM Course c
         JOIN Course_Lists cl ON c.course_id = cl.course_id
         JOIN List_Type lt ON cl.list_type = lt.type_id
@@ -40,6 +40,7 @@ const Completed_Courses = async (instructoer_id) => {
             COUNT(DISTINCT CASE WHEN q.item_id IS NOT NULL THEN I.item_id END) >= 1
           );
       `;
+      
       const result = await db.query(query, value);
       console.log(result);
         return {
