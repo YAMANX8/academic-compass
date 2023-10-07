@@ -60,6 +60,14 @@ app.use("/AcademicCompass/instructor/setting", require("./Routes/instructor/sett
 //show instructor dashboard
 app.use("/AcademicCompass/instructor/dashboard",require("./Routes/instructor/dashboard/dashboard"));
 
+//Create Course
+app.use("/AcademicCompass/instructor/createCourse",require("./Routes/instructor/createCourse/createCourse"));
+
+//Create Course
+app.use(
+  "/AcademicCompass/instructor/studentProfile", require("./Routes/instructor/showingStudentProfile/studentProfile")
+);
+
 
 
 

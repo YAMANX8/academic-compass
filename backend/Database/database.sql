@@ -2413,3 +2413,8 @@ VALUES
   ('AI Base', 1, 3, 15),
   ('for student', 2, 2, 15), 
   ('Ai', 3, 1, 15);
+--CreateCourse
+
+INSERT INTO Course (course_title, instructor_id, course_level, course_type)
+VALUES
+  ('html', 1, 1, 2);
