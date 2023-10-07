@@ -20,27 +20,27 @@ import useAuth from "../hooks/useAuth.jsx";
 function Dashboard_Instructor() {
   const { auth } = useAuth();
   const json = {
-    instructor_rating: 4.5,
+    instructor_rating: 2.5,
     performance: [
       {
         id: 1,
         title: "Total Enrollments",
-        count: 10, // هون العدد اللي بيطلع بالدائرة
+        count: 20,
       },
       {
         id: 2,
         title: "Total Reviews",
-        count: 20, // هون العدد اللي بيطلع بالدائرة
+        count: 30,
       },
       {
         id: 3,
         title: "Total Courses",
-        count: 30, // هون العدد اللي بيطلع بالدائرة
+        count: 10, 
       },
       {
         id: 4,
         title: "Total Students",
-        count: 10, // هون العدد اللي بيطلع بالدائرة
+        count: 40, 
       },
     ],
     topics: [
@@ -253,7 +253,7 @@ function Dashboard_Instructor() {
                     Ratings in average
                   </p>
                   <div className="flex flex-col items-center justify-center">
-                    <span className="text-[48px]  font-semibold tracking-tight dark:text-da">
+                    <span className="text-[48px]  font-semibold tracking-tight dark:text-dark">
                       {json.instructor_rating}
                     </span>
                     <div className="flex gap-[8px]">
