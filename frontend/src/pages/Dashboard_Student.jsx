@@ -155,7 +155,7 @@ function Dashboard_Student() {
                   title={course.title}
                   subtitle={course.subtitle}
                   progress={course.progress[index].completion_percentage}
-                  stars={course.rating[index].avg_rating}
+                  stars={course.rating}
                 />
               ))
             ) : (
