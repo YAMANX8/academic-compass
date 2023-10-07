@@ -73,7 +73,7 @@ const Navbar = () => {
           Roadmaps{" "}
         </Link>
         <Link to="/instructor/home" className="font-semibold">
-        Become part of Academic compass
+          Become part of Academic compass
         </Link>
         {!isAuth ? (
           <>
@@ -96,7 +96,9 @@ const Navbar = () => {
           <div className="flex justify-between gap-4 items-center">
             <div className="w-[1px] bg-dark dark:bg-light self-stretch transition-all duration-1000 ease-in-out-back rounded-full"></div>
             <Link
-              to={auth.role == 2 ? `/student/dashboard` : `/instructor/dashboard`}
+              to={
+                auth.role == 2 ? `/student/dashboard` : `/instructor/dashboard`
+              }
               className="flex justify-center items-center w-[45px] overflow-clip aspect-square rounded-full bg-primary text-light"
             >
               {userInfo.imagePath ? (
@@ -139,7 +141,8 @@ const Navbar = () => {
                     <li
                       className={`${meunItemStyle}`}
                       onClick={() => {
-                        navigate("/student/settings");
+                        if (auth.role == 2) navigate("/student/settings");
+                        else navigate("/instructor/settings");
                         setIsOpen(false);
                       }}
                     >
