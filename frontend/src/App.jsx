@@ -19,7 +19,7 @@ import {
   Home_Instructor,
   Dashboard_Instructor,
   Stepes,
- 
+  EditCourse_Instructor,
 } from "./pages";
 import { Layout, RoadmapLayout } from "./layout";
 import { RequireAuth, PersistLogin, DataRetrieval } from "./components";
@@ -86,6 +86,7 @@ const App = () => {
                 <Route path="home_instructor" element={<Home_Instructor />} />
                 <Route path="dashboard_instructor"element={<Dashboard_Instructor />} />
                 <Route path="stepes" element={<Stepes />} />
+                <Route path="editcourse_instructor" element={<EditCourse_Instructor />} />
               
               </Route>
             </Route>

@@ -17,6 +17,7 @@ import Review from "./student interfaces/Review";
 import Home_Instructor from "./Home_Instructor";
 import Dashboard_Instructor from "./Dashboard_Instructor";
 import Stepes from "./Create Coruse Instructor/Stepes";
+import EditCourse_Instructor from "./EditCourse_Instructor";
 
 export {
   Login_Student,
@@ -38,5 +39,5 @@ export {
   Home_Instructor,
   Dashboard_Instructor,
   Stepes,
- 
+  EditCourse_Instructor,
 };
