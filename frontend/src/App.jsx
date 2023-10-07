@@ -106,10 +106,10 @@ const App = () => {
                     <Route path="home" element={<InstructorHome />} />
                     <Route path="dashboard" element={<InstructorDashboard />} />
                     <Route path="settings" element={<Settings />} />
-                    <Route path="edit-course" element={<EditCourse />} />
+                    <Route path="edit-course/:id" element={<EditCourse />} />
                     <Route path="create-course" element={<CreateCourse />} />
-                    <Route path="course-info" element={<CourseInfo />} />
-                    <Route path="student-profile" element={<ShowProfile />} />
+                    <Route path="course-info/:id" element={<CourseInfo />} />
+                    <Route path="student-profile/:id" element={<ShowProfile />} />
                   </Route>
                 </Route>
               </Route>

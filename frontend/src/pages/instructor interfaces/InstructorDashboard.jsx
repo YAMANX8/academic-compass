@@ -20,7 +20,7 @@ import useAuth from "../../hooks/useAuth.jsx";
 function InstructorDashboard() {
   const { auth } = useAuth();
   const json = {
-    instructor_rating: 2.5,
+    instructor_rating: 4.5,
     performance: [
       {
         id: 1,
@@ -64,20 +64,6 @@ function InstructorDashboard() {
         thumnail: "url_to_image.png",
       },
       {
-        id: 1,
-        title:
-          "course title goes here course title goes here course title goes here",
-        progress: 10, //  هون إذا بدك بعات نسبة مئوية أو عدد الشروط اللي مخلصها الكورس من ال9 شروط إذا بدك ما بتفرق
-        thumnail: "url_to_image.png",
-      },
-      {
-        id: 1,
-        title:
-          "course title goes here course title goes here course title goes here",
-        progress: 10, //  هون إذا بدك بعات نسبة مئوية أو عدد الشروط اللي مخلصها الكورس من ال9 شروط إذا بدك ما بتفرق
-        thumnail: "url_to_image.png",
-      },
-      {
         id: 2,
         title:
           "course title goes here course title goes here course title goes here",
@@ -105,25 +91,7 @@ function InstructorDashboard() {
     ],
   };
   const [performanceData, setPerformanceData] = useState([]);
-  //   const [courses, setCourses] = useState([]);
 
-  // //   useEffect(() => {
-  //     axios.get('/path_to_api/courses')
-  //     .then(response => setCourses(response.data))
-  //     .catch(error => console.error('Error fetching courses:', error));
-  // }, []);
-
-  //   const [userInfo, setUserInfo] = useState({});
-
-  //   useEffect(() => {
-  //     async function fetchData() {
-  //       const response = await fetch('/path');
-  //       const data = await response.json();
-  //       setUserInfo(data);
-  //     }
-
-  //     fetchData();
-  //   }, []);
   useEffect(() => {
     setPerformanceData(PerformanceInstructor);
   }, []);
@@ -140,83 +108,12 @@ function InstructorDashboard() {
       },
     ],
   };
-
-  const course = [
-    {
-      id: 1,
-      title:
-        "course title goes here course title goes here course title goes here",
-      subtitle:
-        "course title goes herecourse title goes herecourse title goes herecourse title goes herecourse title goes herecourse tit",
-      progress: 70, // بدك هون بعات نسبة مئوية أو عدد الشروط اللي مخلصها الكورس من ال9 شروط
-      image: "url_to_image1.jpg",
-    },
-    {
-      id: 2,
-      title:
-        "course title goes here course title goes here course title goes here",
-      subtitle:
-        "course title goes herecourse title goes herecourse title goes herecourse title goes herecourse title goes herecourse tit",
-      progress: 70, // بدك هون بعات نسبة مئوية أو عدد الشروط اللي مخلصها الكورس من ال9 شروط
-      image: "url_to_image2.jpg",
-    },
-    {
-      id: 3,
-      title:
-        "course title goes here course title goes here course title goes here",
-      subtitle:
-        "course title goes herecourse title goes herecourse title goes herecourse title goes herecourse title goes herecourse tit",
-      progress: 70, // بدك هون بعات نسبة مئوية أو عدد الشروط اللي مخلصها الكورس من ال9 شروط
-      image: "url_to_image3.jpg",
-    },
-    {
-      id: 5,
-      title:
-        "course title goes here course title goes here course title goes here",
-      subtitle:
-        "course title goes herecourse title goes herecourse title goes herecourse title goes herecourse title goes herecourse tit",
-      progress: 32,
-      image: "url_to_image3.jpg",
-    },
-    {
-      id: 6,
-      title:
-        "course title goes here course title goes here course title goes here",
-      progress: 20,
-      image: "url_to_image3.jpg",
-    },
-  ];
-  const data = {
-    firstName: "Ahmad",
-    lastName: "Omar",
-    city: "Damascus",
-    country: "Syria",
-    imagePath: null,
-    rating: "2.5",
+  const userInfo = {
+    firstName: auth.firstName == null ? "" : auth.firstName,
+    lastName: auth.lastName == null ? "" : auth.lastName,
+    imagePath:
+      auth.image == "http://localhost:5000/image/null" ? "" : auth.image,
   };
-  const MyTopics = [
-    {
-      id: 1,
-      title: "HTML",
-    },
-    {
-      id: 2,
-      title: "CSS",
-    },
-    {
-      id: 3,
-      title: "React.js",
-    },
-    {
-      id: 4,
-      title: "Node.js",
-    },
-    {
-      id: 5,
-      title: "Databases and SQL",
-    },
-  ];
-
   return (
     <section className="max-w-[1200px] grid grid-cols-12 gap-[20px] grid-rows-9">
       <div className=" col-span-8 row-start-1 row-span-2">
@@ -227,15 +124,15 @@ function InstructorDashboard() {
           <div className="flex gap-8 mt-auto">
             <div className="flex flex-col gap-4 text-center justify-center">
               <div className="w-[167px] aspect-square overflow-hidden rounded-full bg-primary text-light flex justify-center items-center text-3xl">
-                {auth.image ? (
+                {userInfo.image ? (
                   <img
-                    src={auth.image}
+                    src={userInfo.image}
                     className="object-cover"
                     alt="profile picture"
                   />
                 ) : (
                   <span>
-                    {auth.firstName.charAt(0)} {auth.lastName.charAt(0)}
+                    {userInfo.firstName.charAt(0)} {userInfo.lastName.charAt(0)}
                   </span>
                 )}
               </div>
@@ -280,7 +177,7 @@ function InstructorDashboard() {
                   </div>
                 </div>
               </div>
-              <Button>
+              <Button page={`/instructor/create-course`}>
                 Create a course <Add className="text-3xl" />
               </Button>
             </div>
@@ -335,7 +232,7 @@ function InstructorDashboard() {
                         ></div>
                       </div>
                       <div className="">
-                        <Button>
+                        <Button page={`/instructor/edit-course/${course.id}`}>
                           Continue Editing <Continue className="text-2xl" />
                         </Button>
                       </div>
@@ -396,12 +293,12 @@ function InstructorDashboard() {
 
                   <div className="flex gap-4">
                     <div className="flex-1">
-                      <Button page="/">
+                      <Button page={`/instructor/edit-course/${course.id}`}>
                         Edit Again <Continue className="text-2xl" />
                       </Button>
                     </div>
                     <div className="flex-1">
-                      <Button page="/">
+                      <Button page={`/instructor/course-info/${course.id}`}>
                         Show Course Info <ReturnLeft className="text-2xl" />
                       </Button>
                     </div>
