@@ -110,8 +110,10 @@ function RegisterStudent() {
         }
       );
       const accessToken = response?.data?.token;
+      const role = response?.data?.role_id;
 
       localStorage.setItem("token", accessToken);
+      localStorage.setItem("role", role);  
       toast.success("Registration Completed Successfully");
       navigate("/student/dashboard");
     } catch (error) {

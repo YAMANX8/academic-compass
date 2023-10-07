@@ -28,6 +28,7 @@ const Navbar = () => {
   const handleLogout = () => {
     // إزالة الرمز من المتصفح
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     // إعادة تعيين حالة المصادقة
     setIsAuth(false);
     setAuth({});

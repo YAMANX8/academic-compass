@@ -45,8 +45,9 @@ function LoginStudent() {
         }
       );
       const accessToken = response?.data?.token;
-      // const roles = response?.data?.roles;
+      const role = response?.data?.role_id;
       localStorage.setItem("token", accessToken);
+      localStorage.setItem("role", role);
       // setAuth({ email, pwd, accessToken });
       setIsAuth(true);
       toast.success("Login successfully");
