@@ -2240,23 +2240,19 @@ GROUP BY
             ) subquery
             WHERE total_courses > 0;
     --4 total students **
-           SELECT SUM(total_courses) AS total
-            FROM (
-            SELECT  COUNT(Course.course_id) AS total_students
-            FROM Course
-            WHERE Course.instructor_id = 1
-            GROUP BY Course.course_id
-            ) subquery
-            WHERE total_courses > 0;
+             SELECT  COUNT( DISTINCT Enrollment.student_id) AS total_student
+        FROM Course
+        LEFT JOIN Enrollment ON Course.course_id = Enrollment.course_id
+        WHERE Course.instructor_id = 1;
     -- my topics
      INSERT INTO Assigning_Topics (instructor_id,topic_level1_id)
      VALUES (1,2);
      -- query
-     SELECT Assigning_Topics.topic_level1_id,Topic_Level_1.topic_title
+     SELECT Assigning_Topics.topic_level1_id,Topic_Level_1.topic_title,Topic_Level_1.roadmap_id,Topic_Level_1.topic_level1_id
         FROM Assigning_Topics 
         LEFT JOIN Topic_Level_1  ON Assigning_Topics.topic_level1_id = Topic_Level_1.topic_level1_id
         WHERE Assigning_Topics.instructor_id = 1;
-    --Ratings in average
+    -- Ratings in average
           SELECT avg(average) AS avg
             FROM (
             SELECT avg(rating.stars_number) AS average
@@ -2267,3 +2263,153 @@ GROUP BY
             GROUP BY Course.course_id
                   ) subquery
             WHERE average > 0;   -- Include these columns in the GROUP BY clause
+
+
+SELECT
+-- * When We Write Api Remember Delete instructor_name .
+    Users.first_name AS instructor_name,
+    COUNT(DISTINCT Enrollment.student_id) AS enrolled_students_count
+FROM
+    Course
+JOIN
+    Users ON Course.instructor_id = Users.user_id
+JOIN
+    Enrollment ON Course.course_id = Enrollment.course_id
+    where user_id = 2
+GROUP BY
+    Users.first_name;
+        --  rules for instructor courses
+-- 1 تحديد متطلب على الاقل(course list):
+-- courseList.length>1
+--SELECT length('w3resource')
+-- AS "Length of a String";
+Length of a String
+------------------
+                 10
+(1 row)
+-- 2 تحديد هدفين على الاقل(in this course)
+-- 3 who this course 
+
+-- 4 على الاقل يكون في 3 item ويكون الهن محتوى:
+-- لازم يكوون لكل كورس أقل شي 3 tem مرتبطين فيه
+
+-- 5 لازم يكون في وصف 
+-- 6 لازم يكون في subtitle 
+-- 7 تحديد نوع الكورس 
+-- 8 تحديد مستوى الكورس
+-- 9 تحميل صور للكورس
+
+            --
+SELECT c.course_id, c.course_title
+FROM Course c
+JOIN Course_Lists cl ON c.course_id = cl.course_id
+JOIN List_Type lt ON cl.list_type = lt.type_id
+JOIN Items I ON c.course_id = I.course_id
+JOIN Courses_Type ON c.course_type = Courses_Type.type_id
+JOIN Levels ON c.course_level = Levels.level_id
+LEFT JOIN Video v ON I.item_id = v.item_id
+LEFT JOIN Article a ON I.item_id = a.item_id
+LEFT JOIN Quiz q ON I.item_id = q.item_id
+WHERE c.instructor_id = 1
+GROUP BY c.course_id, c.course_title
+HAVING
+  COUNT(CASE WHEN lt.type_name = 'In this course you will learn the following' THEN cl.list_id END) >= 1
+  AND
+  COUNT(CASE WHEN lt.type_name = 'Who this course is for:' THEN cl.list_id END) >= 1
+  AND
+  COUNT(CASE WHEN lt.type_name = 'Requirements' THEN cl.list_id END) >= 1
+  AND
+  COUNT(DISTINCT I.item_id) >= 3
+  AND
+  (
+    COUNT(DISTINCT CASE WHEN v.item_id IS NOT NULL THEN I.item_id END) >= 1
+    OR
+    COUNT(DISTINCT CASE WHEN a.item_id IS NOT NULL THEN I.item_id END) >= 1
+    OR
+    COUNT(DISTINCT CASE WHEN q.item_id IS NOT NULL THEN I.item_id END) >= 1
+  );
+  --my courses
+SELECT c.course_id, c.course_title,c.subtitle
+FROM Course c
+JOIN Course_Lists cl ON c.course_id = cl.course_id
+JOIN List_Type lt ON cl.list_type = lt.type_id
+JOIN Items I ON c.course_id = I.course_id
+JOIN Courses_Type ON c.course_type = Courses_Type.type_id
+JOIN Levels ON c.course_level = Levels.level_id
+LEFT JOIN Video v ON I.item_id = v.item_id
+LEFT JOIN Article a ON I.item_id = a.item_id
+LEFT JOIN Quiz q ON I.item_id = q.item_id
+WHERE c.instructor_id = 1
+AND c.subtitle IS NOT NULL
+AND c.course_description IS NOT NULL
+AND c.course_level IS NOT NULL
+AND c.course_type IS NOT NULL
+AND c.course_thumnail IS NOT NULL
+GROUP BY c.course_id, c.course_title
+HAVING
+  COUNT(CASE WHEN lt.type_name = 'In this course you will learn the following' THEN cl.list_id END) >= 1
+  AND
+  COUNT(CASE WHEN lt.type_name = 'Who this course is for:' THEN cl.list_id END) >= 1
+  AND
+  COUNT(CASE WHEN lt.type_name = 'Requirements' THEN cl.list_id END) >= 1
+  AND
+  COUNT(DISTINCT I.item_id) >= 3
+  AND
+  (
+    COUNT(DISTINCT CASE WHEN v.item_id IS NOT NULL THEN I.item_id END) >= 1
+    AND
+    COUNT(DISTINCT CASE WHEN a.item_id IS NOT NULL THEN I.item_id END) >= 1
+    AND
+    COUNT(DISTINCT CASE WHEN q.item_id IS NOT NULL THEN I.item_id END) >= 1
+  );
+  --- my non-completed courses
+SELECT course_id, course_title,course_thumnail, progress
+FROM (
+  SELECT c.course_id, c.course_title,c.course_thumnail,
+    CASE
+      WHEN c.subtitle IS NOT NULL THEN 1 ELSE 0 END +
+    CASE
+      WHEN c.course_description IS NOT NULL THEN 1 ELSE 0 END +
+    CASE
+      WHEN c.course_level IS NOT NULL THEN 1 ELSE 0 END +
+    CASE
+      WHEN c.course_type IS NOT NULL THEN 1 ELSE 0 END +
+    CASE
+      WHEN c.course_thumnail IS NOT NULL THEN 1 ELSE 0 END +
+    CASE
+      WHEN COUNT(CASE WHEN lt.type_name = 'In this course you will learn the following' THEN cl.list_id END) >= 1 THEN 1 ELSE 0 END +
+    CASE
+      WHEN COUNT(CASE WHEN lt.type_name = 'Who this course is for:' THEN cl.list_id END) >= 1 THEN 1 ELSE 0 END +
+    CASE
+      WHEN COUNT(CASE WHEN lt.type_name = 'Requirements' THEN cl.list_id END) >= 1 THEN 1 ELSE 0 END +
+    CASE
+      WHEN COUNT(DISTINCT I.item_id) >= 3 THEN 1 ELSE 0 END +
+    CASE
+      WHEN (
+        COUNT(DISTINCT CASE WHEN v.item_id IS NOT NULL THEN I.item_id END) >= 1
+        AND COUNT(DISTINCT CASE WHEN a.item_id IS NOT NULL THEN I.item_id END) >= 1
+        AND COUNT(DISTINCT CASE WHEN q.item_id IS NOT NULL THEN I.item_id END) >= 1
+      ) THEN 1 ELSE 0 END AS progress
+  FROM Course c
+  JOIN Course_Lists cl ON c.course_id = cl.course_id
+  JOIN List_Type lt ON cl.list_type = lt.type_id
+  JOIN Items I ON c.course_id = I.course_id
+  LEFT JOIN Video v ON I.item_id = v.item_id
+  LEFT JOIN Article a ON I.item_id = a.item_id
+  LEFT JOIN Quiz q ON I.item_id = q.item_id
+  WHERE c.instructor_id = 1
+  GROUP BY c.course_id, c.course_title
+) AS subquery
+WHERE progress != 10;
+
+
+---
+UPDATE course
+SET course_thumnail =NULL WHERE course_id=12;
+
+  --insert to course list
+  INSERT INTO Course_Lists (item_body, item_order, list_type, course_id)
+VALUES
+  ('AI Base', 1, 3, 15),
+  ('for student', 2, 2, 15), 
+  ('Ai', 3, 1, 15);
