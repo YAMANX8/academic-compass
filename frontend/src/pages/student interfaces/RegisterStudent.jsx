@@ -51,7 +51,7 @@ function RegisterStudent() {
   const [matchPwdFocus, setMatchPwdFocus] = useState(false);
   const [isMatchVisible, setIsMatchVisible] = useState(false);
 
-  //auto focus on the first name field on load
+  // التركيز التلقائي على حقل الاسم الأول عند التحميل.
   useEffect(() => {
     nameRef.current.focus();
   }, []);
@@ -74,7 +74,7 @@ function RegisterStudent() {
     setValidEmail(result);
   }, [email]);
 
-  //here we check the password and the confirm field togather
+  // هنا نتحقق من حقل كلمة المرور وحقل التأكيد معًا.
   useEffect(() => {
     const result = PWD_REGEX.test(pwd);
     setValidPwd(result);
@@ -85,7 +85,7 @@ function RegisterStudent() {
   //send data to the backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //we check again because if the user play with the console and change something and enables the submit btn
+    // نتحقق مرة أخرى لأنه إذا قام المستخدم بالتلاعب بالوحدة النمطية وغير شيئًا وفعّل زر الإرسال.
     if (
       !NAME_REGEX.test(firstName) ||
       !NAME_REGEX.test(lastName) ||
@@ -113,7 +113,7 @@ function RegisterStudent() {
       const role = response?.data?.role_id;
 
       localStorage.setItem("token", accessToken);
-      localStorage.setItem("role", role);  
+      localStorage.setItem("role", role);
       toast.success("Registration Completed Successfully");
       navigate("/student/dashboard");
     } catch (error) {
@@ -125,7 +125,8 @@ function RegisterStudent() {
         toast.error("Registration Failed");
       }
 
-      //and this line for screen readers
+      // وهذا السطر مخصص لقراء الشاشة.
+
       errRef.current.focus();
     }
   };

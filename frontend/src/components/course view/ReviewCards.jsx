@@ -7,14 +7,14 @@ import {
 import { Modal } from "../index";
 
 const ReviewCards = ({ reviews }) => {
-  //this block of code is for knowing if the comment is overflowing or not
+  // هذه الجزء من الكود مُعد لمعرفة ما إذا كان التعليق يتجاوز الحد المحدد أم لا.
   const containerRefs = useRef([]);
   const [overflowStatus, setOverflowStatus] = useState([]);
   useEffect(() => {
     const newOverflowStatus = [];
     containerRefs.current.forEach((container, index) => {
       if (container) {
-        // Check if the paragraph overflows verticaly
+        // تحقق إذا كان الفقرة يتجاوز عموديًا.
         newOverflowStatus[index] =
           container.scrollHeight > container.clientHeight;
       } else {
@@ -23,7 +23,7 @@ const ReviewCards = ({ reviews }) => {
     });
     setOverflowStatus(newOverflowStatus);
   }, []);
-  //this code is for knowing if the model is opened or not
+  // هذا الكود مُعد لمعرفة ما إذا كان النموذج مفتوحًا أم لا.
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
   return (

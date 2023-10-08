@@ -1,4 +1,4 @@
-//here we use topic level n to get the data
+// هنا نستخدم مستوى موضوع n للحصول على بيانات
 import { useEffect, useState } from "react";
 import {
   RightLine,
@@ -25,7 +25,7 @@ const LevelN = () => {
   const { roadmapId, topicL1Id, topicLnId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  //a state for holding the response message when changing the topics state!
+  // حالة لحفظ رسالة الرد عند تغيير حالة الموضوعات!
   const [countUpdate, setCountUpdate] = useState(1);
   //the actual roadmap data
   const [mergedData, setMergedData] = useState([]);
@@ -68,7 +68,7 @@ const LevelN = () => {
     getData();
   }, [countUpdate]);
 
-  //to know if the topic is in the last level
+  // لمعرفة إذا كان الموضوع في المستوى الأخير.
   const [isLast, setIsLast] = useState(false);
   // const [levelN, setLevelN] = useState([
   //   {
@@ -125,7 +125,7 @@ const LevelN = () => {
   const important = "bg-gradient-to-r from-primary to-accent text-light";
 
   //for the modal:
-  //the first is for the opening state of the modal
+  // الأولى تتعلق بحالة فتح النافذة المنبثقة.
   const [isOpen, setIsOpen] = useState(false);
   //modal data
   const [modalData, setModalData] = useState({
@@ -135,7 +135,7 @@ const LevelN = () => {
     deeper: "/",
     search: "/",
   });
-  //handling the states of the topics
+  // التعامل مع حالات الموضوعات.
   const handleState = async (state) => {
     try {
       const res = await axios.post(
@@ -180,7 +180,7 @@ const LevelN = () => {
     }
   };
 
-  //and this variable is for the markup inside the modal
+  // وهذا المتغير مخصص للترميز داخل النافذة المنبثقة.
   let modalTemplate = (
     <div className="flex flex-col text-[20px] gap-6">
       <div>
@@ -245,7 +245,7 @@ const LevelN = () => {
   return (
     <>
       {mergedData.map((topic, index) => {
-        //if there is just one topic
+        // إذا كان هناك موضوع واحد فقط.
         if (mergedData.length == 1) {
           return (
             <div key={topic.topic_id} className="w-full">
@@ -266,7 +266,7 @@ const LevelN = () => {
             </div>
           );
         }
-        //the first topic rendering
+        // عرض الموضوع الأول.
         else if (index == 0) {
           return (
             <div key={topic.topic_id} className="w-full">
@@ -286,9 +286,9 @@ const LevelN = () => {
               <RightLine />
             </div>
           );
-          //the last topic rendering
+          // عرض الموضوع الأخير.
         } else if (index == mergedData.length - 1) {
-          //checking if the last topic is even (Means that the topic is in the right side)
+          // التحقق مما إذا كان الموضوع الأخير زوجي (وهذا يعني أن الموضوع على الجانب الأيمن).
           if (index % 2 == 0)
             return (
               <div key={topic.topic_id} className="w-full">
@@ -307,7 +307,7 @@ const LevelN = () => {
                 <EndLineRight />
               </div>
             );
-          //if its not, so it is in left side
+          // إذا لم يكن كذلك، فهو على الجانب الأيسر.
           else
             return (
               <div key={topic.topic_id} className="w-full">
@@ -327,7 +327,7 @@ const LevelN = () => {
                 <EndLineLeft />
               </div>
             );
-          //the even topic rendering (right side)
+          // عرض الموضوع الزوجي (الجانب الأيمن).
         } else if (index % 2 == 0) {
           return (
             <div key={topic.topic_id} className="w-full">
@@ -346,7 +346,7 @@ const LevelN = () => {
               <RightLine />
             </div>
           );
-          //the final case is the left side topic rendering
+          // الحالة النهائية هي عرض الموضوع على الجانب الأيسر.
         } else {
           return (
             <div key={topic.topic_id} className="w-full">
