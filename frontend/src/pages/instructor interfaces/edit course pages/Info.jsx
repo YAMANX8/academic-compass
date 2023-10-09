@@ -60,6 +60,7 @@ const Info = () => {
         <div className="relative">
           <input
             type="text"
+            value={selectedValue}
             placeholder="All level"
             className={inputs}
             onClick={() => toggleDropdown("level")}
@@ -180,7 +181,7 @@ const Info = () => {
         </div>
       </div>
       <div className="flex flex-row-reverse col-span-2">
-        <button>Sava</button>
+        <button className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">Sava</button>
       </div>
     </form>
   );
