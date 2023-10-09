@@ -17,6 +17,7 @@ router.get("/", authorization, async (req, res) => {
     }
     const show_review_query = `
             SELECT 
+            Student.student_id AS id,
             Rating.rating_id,
             Student.first_name, 
             Student.last_name, 
@@ -34,6 +35,17 @@ router.get("/", authorization, async (req, res) => {
       show_review_query,
       instructorId
     );
+    const date = "05-05-2023";
+    const Data = show_review_reuslt.rows.map((row) => ({
+      id: row.id,
+      fname: row.first_name,
+      lname: row.last_name,
+      stars: row.stars_number,
+      img: row.picture,
+      data: date,
+      comment: row.review,
+    }));
+    res.status(200).json(Data);
   } catch (err) {
     console.log(err.message);
     res.status(500).json("Sever Error");

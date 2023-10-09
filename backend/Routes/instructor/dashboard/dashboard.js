@@ -10,6 +10,7 @@ router.get("/", authorization, async (req, res, next) => {
   try {
     const Id = req.user.userId;
     const roleId = req.user.roleId;
+    console.log(roleId);
     //permission
     const hasAccess = await checkPermission(
       Id,
