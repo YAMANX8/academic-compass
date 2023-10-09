@@ -12,7 +12,12 @@ import {
 import Card from "../../assets/images/Rectangle 63.png";
 import Profile from "../../assets/images/profile.png";
 
-import { CourseContent, ReviewCards } from "../../components";
+import {
+  CourseContent,
+  ReviewCards,
+  ReviewForm,
+  Modal,
+} from "../../components";
 import axios from "../../apis/axios";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
@@ -237,9 +242,10 @@ const CourseView = () => {
       },
     ],
   });
-
-  const text =
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur consequatur nesciunt eaqueLorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur consequatur nesciunt eaque recusandae fugit perferendis aperiam atque ipsam dolorem harum! Dolores est amet hic impedit aperiam minima assumenda omnis ut.";
+  // for the modal
+  const [isOpen, setIsOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState("");
 
   const descriptionArray = course.course_description.split("<br> <br>");
   useEffect(() => {
@@ -282,6 +288,10 @@ const CourseView = () => {
         toast.error("You are not logged in.\nPlease login first!");
       }
     }
+  };
+  const handleReview = (e) => {
+    e.preventDefault();
+    toast.success(`your rating: ${rating}, your review: ${review}`);
   };
   return (
     <section className="w-[1200px]">
@@ -356,12 +366,14 @@ const CourseView = () => {
               Enroll in This Course
             </Link>
           ) : (
-            <Link
-              to={`review`}
+            <button
+              onClick={() => {
+                setIsOpen(true);
+              }}
               className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
             >
               Review this course
-            </Link>
+            </button>
           )}
         </div>
       </div>
@@ -436,6 +448,20 @@ const CourseView = () => {
           <button>Load more reviews</button>
         </div>
       </SectionWrapper>
+      <Modal
+        isOpen={isOpen}
+        content={
+          <ReviewForm
+            rating={rating}
+            setRating={setRating}
+            review={review}
+            setReview={setReview}
+            handleSubmit={handleReview}
+          />
+        }
+        title={`Leave a review:`}
+        close={() => setIsOpen(false)}
+      />
     </section>
   );
 };
