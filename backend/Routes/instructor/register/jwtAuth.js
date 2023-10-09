@@ -61,7 +61,6 @@ router.post("/instructor/login", validInfo, async (req, res) => {
       return res.status(401).json("Password or Email is incorrect");
     }
     // 3. check if incoming password is the same the database password
-
     const validPassword = await bcrypt.compare(
       password,
       instructor.rows[0].password

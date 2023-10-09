@@ -11,7 +11,8 @@ module.exports = function (req, res, next) {
     }
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
     req.user = {
-      userId: payload.userId
+      userId: payload.userId,
+      roleId: payload.roleId,
     };
   } catch (error) {
     console.error(error.message);
