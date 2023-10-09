@@ -23,6 +23,7 @@ const PWD_REGEX =
 
 const REGITER_URL = "/auth2/instructor/register";
 function RegisterInstructor() {
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
 
   const nameRef = useRef();
@@ -113,7 +114,8 @@ function RegisterInstructor() {
       const role = response?.data?.role_id;
 
       localStorage.setItem("token", accessToken);
-      localStorage.setItem("role", role);  
+      localStorage.setItem("role", role);
+      setAuth({ role: role });
       toast.success("Registration Completed Successfully");
       navigate("/instructor/dashboard");
     } catch (error) {

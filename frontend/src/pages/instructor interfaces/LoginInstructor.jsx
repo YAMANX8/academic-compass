@@ -13,7 +13,7 @@ import useAuth from "../../hooks/useAuth";
 const LOGIN_URL = "/auth2/instructor/login";
 
 function LoginInstructor() {
-  const { setIsAuth } = useAuth();
+  const { setIsAuth, setAuth } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,6 +50,7 @@ function LoginInstructor() {
       localStorage.setItem("role", role);
       // setAuth({ email, pwd, accessToken });
       setIsAuth(true);
+      setAuth({ role: role });
       toast.success("Login successfully");
       setEmail("");
       setPwd("");
