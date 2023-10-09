@@ -1,6 +1,7 @@
 // course view components
 import CourseContent from "./course view/CourseContent";
 import ReviewCards from "./course view/ReviewCards";
+import ReviewForm from "./course view/ReviewForm";
 // dashboard components
 import ProfileCard from "./dashboard/ProfileCard";
 import PerformanceChart from "./dashboard/PerformanceChart";
@@ -58,4 +59,5 @@ export {
   StartLineLeft,
   StudentDataRetrieval,
   Topic,
+  ReviewForm,
 };
