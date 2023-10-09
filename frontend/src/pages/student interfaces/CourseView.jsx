@@ -32,6 +32,10 @@ const SectionWrapper = ({ title, children }) => {
 };
 
 const CourseView = () => {
+  const [data, setData] = useState({
+    rating: 0,
+    review: "",
+  })
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();

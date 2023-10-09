@@ -1,9 +1,18 @@
-import React from 'react'
+import { useState } from "react";
 
 const ShowProfile = () => {
-  return (
-    <div>ShowProfile</div>
-  )
-}
+  const [data, setData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    education: "",
+    country: "",
+    city: "",
+    birth_date: "00-00-0000",
+    bio: "",
+    picture: "",
+  });
+  return <div>ShowProfile</div>;
+};
 
-export default ShowProfile
+export default ShowProfile;
