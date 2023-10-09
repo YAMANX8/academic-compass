@@ -2464,4 +2464,37 @@ LEFT JOIN course ON Users.user_id = course.instructor_id
 JOIN enrollment ON course.course_id = enrollment.course_id
 JOIN student ON enrollment.student_id = Student.student_id
 WHERE users.user_id =1;
- 
+ --permissions
+DELETE FROM Permission WHERE permission_id=8;
+
+UPDATE Permission
+SET permission_name ='dashboardAccessToStudent' WHERE permission_id=1;
+
+UPDATE Permission
+SET permission_name ='updateSttingToStudent' WHERE permission_id=2;
+
+INSERT INTO permission (permission_name)
+VALUES
+  ('enrollToCourse'),
+  ('addReview'),
+  ('dashboardAccessToInstructor'),
+  ('showCourseInfoPage'),
+  ('createCourse'),
+  ('updateSttingToInstructor'),
+  ('showStudentProfile'),
+  ('addProgressState')
+
+ INSERT INTO Role_Permission (role_id,permission_id)
+ VALUES (1,3),
+  (1,4),
+  (1,10),
+  (1,11),
+  (1,12),
+  (1,13),
+  (1,14),
+  (2,15),
+  (2,16),
+  (2,9);
+
+  ALTER TABLE users
+ALTER COLUMN password TYPE character varying(150);

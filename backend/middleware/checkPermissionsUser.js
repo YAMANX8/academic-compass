@@ -1,7 +1,14 @@
 const pool = require("../Database/db");
-// todo this function to student
-const checkPermission = async (userId, permissionName) => {
-  const userRoleQuery = "SELECT role_id FROM users WHERE user_id = $1";
+const checkPermission = async (userId, permissionName, roleid) => {
+  let userRoleQuery = "";
+  //instructor
+  if (roleid === 1) {
+    userRoleQuery = "SELECT role_id FROM users WHERE user_id = $1";
+  }
+  //student
+  else if (roleid === 2) {
+    userRoleQuery = "SELECT role_id FROM student WHERE student_id = $1";
+  }
   //* get role_name(ex:student,role_id:1)
   const userRole = await pool.query(userRoleQuery, [userId]);
 

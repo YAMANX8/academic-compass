@@ -1,22 +1,24 @@
 const router = require("express").Router();
-const pool = require("../../../Database/db");
 const authorization = require("../../../middleware/authorization");
-const getMyPerformanceNumber=require("../../../Utils/dashboardInstructor/myPerformance");
-const getMyProfile=require("../../../Utils/dashboardInstructor/MyProfile");
-const get_Non_completed_Courses=require("../../../Utils/dashboardInstructor/course/My Non-completed Courses");
+const checkPermission = require("../../../middleware/checkPermissions");
+const getMyPerformanceNumber = require("../../../Utils/dashboardInstructor/myPerformance");
+const getMyProfile = require("../../../Utils/dashboardInstructor/MyProfile");
+const get_Non_completed_Courses = require("../../../Utils/dashboardInstructor/course/My Non-completed Courses");
 const get_Completed_Courses = require("../../../Utils/dashboardInstructor/course/completed Courses");
-const getMyTopics=require("../../../Utils/dashboardInstructor/myTopics");
-router.get("/", async (req, res, next) => {
+const getMyTopics = require("../../../Utils/dashboardInstructor/myTopics");
+router.get("/", authorization, async (req, res, next) => {
   try {
-    //* here use Id=1 Temporarily
-    // const Id = req.user.userId;
-    const Id = 1;
-
-    //* function for permission not completed
-    // const hasAccess = await checkPermission(Id, "dashboard_access");
-    // if (!hasAccess) {
-    //   return res.status(403).json("Access denied");
-    // }
+    const Id = req.user.userId;
+    const roleId = req.user.roleId;
+    //permission
+    const hasAccess = await checkPermission(
+      Id,
+      "dashboardAccessToInstructor",
+      roleId
+    );
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
     // get my performance number
     const myPerformance = await getMyPerformanceNumber.GetALlPerformanceNumber(
       Id
@@ -30,7 +32,7 @@ router.get("/", async (req, res, next) => {
     const Completed_Courses = await get_Completed_Courses.Completed_Courses(Id);
     //Get My topics
     const myTopics = await getMyTopics.GetMyTopics(Id);
-    
+
     // Response data
     const formattedData = {
       instructor_rating: parseFloat(myProfile.Data.Instructoer_Rating.avg),

@@ -4,21 +4,27 @@ const authorization = require("../../../middleware/authorization");
 const count = require("../../../Utils/dashboard/countDashboardS");
 const inprogresInfo = require("../../../Utils/dashboard/coursesInprogresInfo");
 const completCourseInfo = require("../../../Utils/dashboard/CompletedCourse");
-const MyRoadmaps=require("../../../Utils/dashboard/MyRoadmaps");
-const bringdataQuizETS =require("../../../Utils/dashboard/bringdataQuizETS");
-const bring_All_Courses_Number =require("../../../Utils/dashboard/bring_All_Courses_Number");
+const MyRoadmaps = require("../../../Utils/dashboard/MyRoadmaps");
+const bringdataQuizETS = require("../../../Utils/dashboard/bringdataQuizETS");
+const bring_All_Courses_Number = require("../../../Utils/dashboard/bring_All_Courses_Number");
 const checkPermission = require("../../../middleware/checkPermissions");
 router.get("/", authorization, async (req, res, next) => {
   try {
     const Id = req.user.userId;
-    const hasAccess = await checkPermission(Id, "dashboard_access");
+    const roleId = req.user.roleId;
+    //permission
+    const hasAccess = await checkPermission(
+      Id,
+      "dashboardAccessToStudent",
+      roleId
+    );
     if (!hasAccess) {
-        return res.status(403).json("Access denied");
-      }
+      return res.status(403).json("Access denied");
+    }
     //get information to student
     const studentInfo = await pool.query(
       "SELECT * FROM student WHERE student_id = $1",
-      [Id]  
+      [Id]
     );
     // get Info about courses count to student
     const countData = await count.GetCoursesNumberInfo(Id); //
@@ -49,13 +55,11 @@ router.get("/", authorization, async (req, res, next) => {
       counts: [
         {
           id: 1,
-          count:
-            countData.Data.data[0]?.completed_courses || 0,
+          count: countData.Data.data[0]?.completed_courses || 0,
         },
         {
           id: 2,
-          count:
-            countData.Data.data[0]?.incomplete_courses || 0,
+          count: countData.Data.data[0]?.incomplete_courses || 0,
         },
         {
           id: 3,
@@ -67,8 +71,7 @@ router.get("/", authorization, async (req, res, next) => {
     const performance = [
       {
         id: 1,
-        count:
-          Get_All_Courses_Number.Data.data.total_enrollments || 0,
+        count: Get_All_Courses_Number.Data.data.total_enrollments || 0,
       },
       {
         id: 2,
