@@ -1,17 +1,20 @@
-
 import React, { useState } from "react";
 import {
   BsCaretDownSquareFill as DownSquareFill,
   BsPlus as Add,
 } from "react-icons/bs";
- import { Button } from "../../components";
+import { Button } from "../../components";
 function EditCourse() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeField, setActiveField] = useState(null);
   const [selectedValue, setSelectedValue] = useState("");
 
-  const levels = ["All Level", "Level 1", "Level n"];
-  const project = ["Beginner", "Intermediate", "experienced learners"];
+  const levels = ["Beginner", "Intermediate", "Expert"];
+  const project = [
+    "project based",
+    "beginner|advanced",
+    "observational learn",
+  ];
   const [selectedLevel, setSelectedLevel] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
   const toggleDropdown = (field) => {
@@ -35,13 +38,15 @@ function EditCourse() {
         </label>
       </div>
       <div
-        className=" mt-[43px]  w-full p-[32px] rounded-[3px] dark:border " 
+        className=" mt-[43px]  w-full p-[32px] rounded-[3px] dark:border "
         style={{ boxShadow: "0px 0px 15px 5px rgba(0, 0, 0, 0.2)" }}
       >
         <div className="flex flex-col gap-4 ">
           <div className="flex gap-[48px]">
             <div className="flex flex-col gap-2 mb-[48px]">
-              <h2 className="text-[32px] text-dark font-semibold dark:text-light">Course title</h2>
+              <h2 className="text-[32px] text-dark font-semibold dark:text-light">
+                Course title
+              </h2>
               <input
                 type="text"
                 placeholder="Ex: Learn the basics of ..."
@@ -49,7 +54,9 @@ function EditCourse() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <h2 className="text-[32px] text-dark font-semibold dark:text-light">Course subtitle</h2>
+              <h2 className="text-[32px] text-dark font-semibold dark:text-light">
+                Course subtitle
+              </h2>
               <input
                 type="text"
                 placeholder="Ex: improve your skills..."
@@ -60,7 +67,9 @@ function EditCourse() {
 
           <div className="flex gap-[48px]">
             <div className="flex flex-col gap-2">
-              <h2 className="text-[32px] text-dark font-semibold dark:text-light">Select course Level</h2>
+              <h2 className="text-[32px] text-dark font-semibold dark:text-light">
+                Select course Level
+              </h2>
               <div className="flex relative">
                 <input
                   type="text"
@@ -91,7 +100,9 @@ function EditCourse() {
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <h2 className="text-[32px] text-dark font-semibold dark:text-light">Select course type</h2>
+              <h2 className="text-[32px] text-dark font-semibold dark:text-light">
+                Select course type
+              </h2>
               <div className="flex relative">
                 <input
                   type="text"
@@ -126,7 +137,10 @@ function EditCourse() {
         </div>
 
         <div className="mt-[100px]">
-          <h2 className="text-[32px] text-dark py-4 font-semibold dark:text-light"> Course description</h2>
+          <h2 className="text-[32px] text-dark py-4 font-semibold dark:text-light">
+            {" "}
+            Course description
+          </h2>
           <textarea
             placeholder=" insert your course description here"
             id=""
@@ -189,18 +203,20 @@ function EditCourse() {
         </div>
 
         <div className="py-[20px]">
-        <h1 className="text-[32px] py-[16px] text-dark font-semibold dark:text-light">
-         Would you like to publish your course ?
+          <h1 className="text-[32px] py-[16px] text-dark font-semibold dark:text-light">
+            Would you like to publish your course ?
           </h1>
           <div className="flex gap-4 py-[16px] mb-[40px]">
             <Button>Activate the course</Button>
-            <button className="border border-accent p-[10px]  dark:bg-light rounded-[5px] font-semibold text-primary">Inactivate the course</button>
+            <button className="border border-accent p-[10px]  dark:bg-light rounded-[5px] font-semibold text-primary">
+              Inactivate the course
+            </button>
           </div>
-             </div>
-             
-             <div className="flex flex-row-reverse">
-        <Button>Sava</Button>
-             </div>
+        </div>
+
+        <div className="flex flex-row-reverse">
+          <Button>Sava</Button>
+        </div>
       </div>
     </section>
   );
