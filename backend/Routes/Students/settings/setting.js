@@ -43,11 +43,16 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
       verifyNewPassword,
     } = req.body;
     const student_id = req.user.userId;
+    const roleId = req.user.roleId;
     //permission
-    const hasAccess = await checkPermission(student_id, "update_stting");
+    const hasAccess = await checkPermission(
+      student_id,
+      "updateSttingToStudent",
+      roleId
+    );
     if (!hasAccess) {
-        return res.status(403).json("Access denied");
-      }
+      return res.status(403).json("Access denied");
+    }
     let query = "";
     let imageFilePath = null;
 

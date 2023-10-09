@@ -10,7 +10,7 @@ router.get("/:courseId", async (req, res) => {
     const courseId = req.params.courseId;
     const jwtToken = req.header("token");
     let Course_info;
-    let values=[];
+    let values = [];
     if (!jwtToken) {
       Course_info = `
       SELECT
@@ -66,16 +66,21 @@ router.get("/:courseId", async (req, res) => {
       // Extract student ID from the token and proceed with your logic
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
       const studentId = payload.userId;
-      //permission
+      const roleId = payload.roleId;
       try {
-        const hasAccess = await checkPermission(studentId,"show_course");
+        //permission
+        const hasAccess = await checkPermission(
+          studentId,
+          "show_course",
+          roleId
+        );
         if (!hasAccess) {
           return res.status(403).json("Access denied");
         }
       } catch (error) {
         console.log(error);
       }
-      Course_info=`
+      Course_info = `
       SELECT
         course.course_thumnail,
         course.course_title,
@@ -133,7 +138,7 @@ router.get("/:courseId", async (req, res) => {
       `;
       values = [studentId, courseId];
     }
-    const Get_Course_info=`${Course_info}`;
+    const Get_Course_info = `${Course_info}`;
     const Get_Topic_content =
       "SELECT Topic_Level_1.topic_level1_id, Topic_Level_1.topic_title AS tl1, Topic_Level_n.topic_id, Topic_Level_n.topic_title AS tln, Items.item_id, Items.item_title, Items.item_no, Items_Types.type_name FROM course JOIN items ON course.course_id= items.course_id JOIN Items_Types ON Items.item_type= Items_Types.type_id join Topic_Level_N ON items.topic_id= Topic_Level_N.topic_id join Topic_Level_1 ON Topic_Level_N.topic_level1_id= Topic_Level_1.topic_level1_id WHERE course.course_id = $1";
     const Part_2From_Course_info =
@@ -262,12 +267,16 @@ router.get("/:courseId", async (req, res) => {
 router.post("/enroll", authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;
+    const roleId = req.user.roleId;
     //permission
-    // todo نضيق صلاحية لإضافة كورس للطالب
-    // const hasAccess = await checkPermission(studentId, "update_stting");
-    // if (!hasAccess) {
-    //   return res.status(403).json("Access denied");
-    // }
+    const hasAccess = await checkPermission(
+      studentId,
+      "enrollToCourse",
+      roleId
+    );
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
     const { courseId } = req.body;
     const progress = 0;
     const startDate = new Date();
@@ -500,4 +509,4 @@ module.exports = router;
       },
     ],
   }
-        `
+        `;

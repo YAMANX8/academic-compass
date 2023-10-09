@@ -2,17 +2,15 @@ const router = require("express").Router();
 const db = require("../../Database/db");
 const pool = require("../../Database/db");
 const authorization = require("../../middleware/authorization");
-const checkPermission = require("../../middleware/checkPermissions")
-
+const checkPermission = require("../../middleware/checkPermissions");
 
 router.get("/", authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;
+    const roleId = req.user.roleId;
     const { enrollId, courseId, itemId } = req.body;
-    console.log(studentId);
     //permission
-    // ! here i edit to article
-    const hasAccess = await checkPermission(studentId, "show_article");
+    const hasAccess = await checkPermission(studentId, "show_article", roleId);
     if (!hasAccess) {
       return res.status(403).json("Access denied");
     }
@@ -22,7 +20,7 @@ router.get("/", authorization, async (req, res) => {
       WHERE course_id = '${courseId}' AND enrollment_id = '${enrollId}';
       `;
     const { rows } = await db.query(checkEnrollmentQuery);
-    console.log(rows)
+    console.log(rows);
     if (rows.length !== 0) {
       const query1 = `
     SELECT 
@@ -73,7 +71,7 @@ WHERE items.item_id=$1
       const values2 = [itemId];
       const result1 = await pool.query(query1, values1);
       const result2 = await pool.query(query2, values2);
-      const article_body = result2.rows[0].article_body
+      const article_body = result2.rows[0].article_body;
 
       // Process the course content data
       const courseContent = [];
@@ -103,9 +101,7 @@ WHERE items.item_id=$1
 
         // التحقق مما إذا كان subTopicId تم استخدامه بالفعل
         if (
-          !currentTopic.subTopics.find(
-            (subTopic) => subTopic.id === subTopicId
-          )
+          !currentTopic.subTopics.find((subTopic) => subTopic.id === subTopicId)
         ) {
           currentTopic.subTopics.push({
             id: subTopicId,
@@ -134,7 +130,7 @@ WHERE items.item_id=$1
       };
       res.status(200).json({
         is_enrolled: result1.rows[0].is_enroll,
-        response
+        response,
       });
     } else {
       return res.status(401).json({ message: "Access Denied" });
@@ -166,4 +162,3 @@ router.post("/Completed", authorization, async (req, res) => {
 });
 
 module.exports = router;
-

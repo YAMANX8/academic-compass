@@ -1,12 +1,22 @@
 const router = require("express").Router();
 const pool = require("../../../Database/db");
-
-router.get("/", async (req, res) => {
-    try {
-        const instructorId = 1;
-        // ! First qurey
-        const totle_item_query =
-            `
+const checkPermission = require("../../../middleware/checkPermissions");
+const authorization = require("../../../middleware/authorization");
+router.get("/", authorization, async (req, res) => {
+  try {
+    const instructorId = req.user.userId;
+    const roleId = req.user.roleId;
+    //permission
+    const hasAccess = await checkPermission(
+      instructorId,
+      "showCourseInfoPage",
+      roleId
+    );
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
+    // ! First qurey
+    const totle_item_query = `
         SELECT
         SUM(course_item_counts.item_count) AS total_item_count
     FROM (
@@ -22,11 +32,10 @@ router.get("/", async (req, res) => {
             Users.user_id = $1
     ) AS course_item_counts;
     `;
-        const totle_item_result = await pool.query(totle_item_query, instructorId);
+    const totle_item_result = await pool.query(totle_item_query, instructorId);
 
-        // ! Scound qurey
-        const totle_enrollment_query =
-            `
+    // ! Scound qurey
+    const totle_enrollment_query = `
         SELECT SUM(total_enrollments) AS total
         FROM (
         SELECT Course.course_id, COUNT(Enrollment.course_id) AS total_enrollments
@@ -37,11 +46,13 @@ router.get("/", async (req, res) => {
         ) subquery
         WHERE total_enrollments > 0;
         `;
-        const totle_enrollment_result = await pool.query(totle_enrollment_query, instructorId);
+    const totle_enrollment_result = await pool.query(
+      totle_enrollment_query,
+      instructorId
+    );
 
-        // ! Therd query
-        const totle_review_query =
-            `
+    // ! Therd query
+    const totle_review_query = `
         SELECT SUM(total_reviews) AS total
         FROM (
         SELECT Course.course_id, COUNT(rating.rating_id) AS total_reviews
@@ -53,10 +64,12 @@ router.get("/", async (req, res) => {
         ) subquery
         WHERE total_reviews > 0;
         `;
-        const totle_review_result = await pool.query(totle_review_query, instructorId);
-
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).json("Sever Error");
-    }
-})
+    const totle_review_result = await pool.query(
+      totle_review_query,
+      instructorId
+    );
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json("Sever Error");
+  }
+});

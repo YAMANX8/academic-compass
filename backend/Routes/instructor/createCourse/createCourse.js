@@ -1,10 +1,21 @@
 const router = require("express").Router();
 const pool = require("../../../Database/db");
-
-router.post("/", async (req, res) => {
+const checkPermission = require("../../../middleware/checkPermissions");
+const authorization = require("../../../middleware/authorization");
+router.post("/", authorization, async (req, res) => {
   try {
-      const { title, levelId, typeId } = req.body;
-      const instructorId = 1;
+    const { title, levelId, typeId } = req.body;
+    const instructorId = req.user.userId;
+    const roleId = req.user.roleId;
+    //permission
+    const hasAccess = await checkPermission(
+      instructorId,
+      "createCourse",
+      roleId
+    );
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
     const query = `INSERT INTO Course (course_title, instructor_id, course_level, course_type)
     VALUES ($1, $2, $3, $4) RETURNING * `;
     const value = [title, instructorId, levelId, typeId];
@@ -31,4 +42,4 @@ roadmap=# SELECT * FROM Courses_Type;
        1 | project based       | A Project-Based Course is an educational program that revolves around active and practical learning.
        2 | beginner|advanced   | Beginner Course: Suitable for individuals who are new to the subject Advanced Course: Geared towards individuals who possess a solid understanding of the subject matter.
        3 | observational learn | The Observational Learning Course is designed to enhance understanding and skill acquisition by emphasizing the power of observation
-(3 rows)`
+(3 rows)`;

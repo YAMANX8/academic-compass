@@ -1,9 +1,16 @@
 const router = require("express").Router();
 const pool = require("../../../Database/db");
-
-router.get("/:studentId", async (req, res) => {
+const checkPermission = require("../../../middleware/checkPermissions");
+const authorization = require("../../../middleware/authorization");
+router.get("/:studentId", authorization, async (req, res) => {
   try {
-    const Id=req.params.studentId
+    const Id = req.params.studentId;
+    const roleId = req.user.roleId;
+    //permission
+    const hasAccess = await checkPermission(Id, "showStudentProfile", roleId);
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
     const query = `SELECT * FROM student WHERE student_id =$1 `;
     const value = [Id];
     const result = await pool.query(query, value);

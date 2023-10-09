@@ -32,7 +32,10 @@ router.post("/instructor/register", validInfo, async (req, res) => {
     );
 
     // 5.generating our jwt token
-    const { token } = jwtGenerator(newInstructor.rows[0].user_id);
+    const { token } = jwtGenerator(
+      newInstructor.rows[0].user_id,
+      newInstructor.rows[0].role_id
+    );
 
     res.status(200).json({ token, role_id });
   } catch (error) {
@@ -48,7 +51,7 @@ router.post("/instructor/login", validInfo, async (req, res) => {
     // 1. destructure req.body
 
     const { email, password } = req.body;
-    const role_id = 3;
+    const role_id = 1;
     // 2. check student doesn't exist (if not then throw error)
     const instructor = await pool.query("SELECT * FROM Users WHERE email=$1", [
       email,
@@ -69,7 +72,10 @@ router.post("/instructor/login", validInfo, async (req, res) => {
 
     // 4. give them the jwt token
     else if (validPassword) {
-      const { token } = jwtGenerator(instructor.rows[0].user_id);
+      const { token } = jwtGenerator(
+        instructor.rows[0].user_id,
+        instructor.rows[0].role_id
+      );
       return res.status(200).json({ token, role_id });
     }
   } catch (error) {

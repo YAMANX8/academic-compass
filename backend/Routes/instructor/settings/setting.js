@@ -44,9 +44,13 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
       verifyNewPassword,
     } = req.body;
     const instructor_id = req.user.userId;
-    //permission 
-    // مكتوبة غلط ب database
-    const hasAccess = await checkPermission(instructor_id, "update_stting");
+    const roleId = req.user.roleId;
+    //permission
+    const hasAccess = await checkPermission(
+      instructor_id,
+      "updateSttingToInstructor",
+      roleId
+    );
     if (!hasAccess) {
       return res.status(403).json("Access denied");
     }
@@ -115,10 +119,9 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
           last_name = '${last_name}',
           email = '${email}',
           education = '${education}',
-          bio = '${bio}',
           country = '${country}', 
           city = '${city}'
-        WHERE user_id = '${student_id}';`;
+        WHERE user_id = '${instructor_id}';`;
 
     await pool.query(query);
 

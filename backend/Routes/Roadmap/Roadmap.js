@@ -35,7 +35,9 @@ router.get("/student/:id", async (req, res) => {
   try {
     const roadmapId = req.params.id;
     const jwtToken = req.header("token");
-    if (!jwtToken) {
+    const payload = jwt.verify(jwtToken, process.env.jwtSecret);
+    const role_id = payload.roleId;
+    if (!jwtToken || role_id === 1) {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
       return res.redirect(
@@ -43,10 +45,13 @@ router.get("/student/:id", async (req, res) => {
       );
     } else {
       // Extract student ID from the token and proceed with your logic
-      const payload = jwt.verify(jwtToken, process.env.jwtSecret);
       const studentId = payload.userId;
       //permission
-      const hasAccess = await checkPermission(studentId, "show_roadmap");
+      const hasAccess = await checkPermission(
+        studentId,
+        "show_roadmap",
+        role_id
+      );
       if (!hasAccess) {
         return res.status(403).json("Access denied");
       }
@@ -202,7 +207,10 @@ router.get("/student/topic/:id", async (req, res) => {
   try {
     const jwtToken = req.header("token");
     const topic_level1_id = req.params.id;
-    if (!jwtToken) {
+    const payload = jwt.verify(jwtToken, process.env.jwtSecret);
+    const role_id = payload.roleId;
+    console.log(role_id);
+    if (!jwtToken || role_id === 1) {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
       return res.redirect(
@@ -210,8 +218,16 @@ router.get("/student/topic/:id", async (req, res) => {
       );
     } else {
       // Extract student ID from the token and proceed with your logic
-      const payload = jwt.verify(jwtToken, process.env.jwtSecret);
       const studentId = payload.userId;
+      //permission
+      const hasAccess = await checkPermission(
+        studentId,
+        "show_roadmap",
+        role_id
+      );
+      if (!hasAccess) {
+        return res.status(403).json("Access denied");
+      }
       const query = `
      SELECT
    TLN.topic_id AS topic_id_lN,
@@ -344,7 +360,9 @@ router.get("/student/topicN/:id", async (req, res) => {
   try {
     const jwtToken = req.header("token");
     const topic_levelN_id = req.params.id;
-    if (!jwtToken) {
+    const payload = jwt.verify(jwtToken, process.env.jwtSecret);
+    const role_id = payload.roleId;
+    if (!jwtToken || role_id === 1) {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
       return res.redirect(
@@ -352,8 +370,16 @@ router.get("/student/topicN/:id", async (req, res) => {
       );
     } else {
       // Extract student ID from the token and proceed with your logic
-      const payload = jwt.verify(jwtToken, process.env.jwtSecret);
       const studentId = payload.userId;
+      //permission
+      const hasAccess = await checkPermission(
+        studentId,
+        "show_roadmap",
+        role_id
+      );
+      if (!hasAccess) {
+        return res.status(403).json("Access denied");
+      }
       const query = `
   SELECT
    TLN.topic_id AS topic_id_lN,
