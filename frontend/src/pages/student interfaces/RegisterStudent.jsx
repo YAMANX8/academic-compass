@@ -23,6 +23,7 @@ const PWD_REGEX =
 
 const REGITER_URL = "/auth/student/register";
 function RegisterStudent() {
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
 
   const nameRef = useRef();
@@ -114,6 +115,7 @@ function RegisterStudent() {
 
       localStorage.setItem("token", accessToken);
       localStorage.setItem("role", role);
+      setAuth({ role: role });
       toast.success("Registration Completed Successfully");
       navigate("/student/dashboard");
     } catch (error) {
