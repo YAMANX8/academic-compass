@@ -28,7 +28,13 @@ import {
   ShowProfile,
 } from "./pages";
 import { Layout, RoadmapLayout } from "./layout";
-import { RequireAuth, PersistLogin, StudentDataRetrieval } from "./components";
+import {
+  RequireAuth,
+  PersistLogin,
+  StudentDataRetrieval,
+  InstructorDataRetrieval,
+  InstructorPersistLogin,
+} from "./components";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -46,8 +52,24 @@ const App = () => {
           <Route path="student/register" element={<RegisterStudent />} />
 
           {/* student pages path */}
-          <Route element={<PersistLogin />}>
-            <Route element={<StudentDataRetrieval />}>
+          <Route
+            element={
+              localStorage.role == Roles.student ? (
+                <PersistLogin />
+              ) : (
+                <InstructorPersistLogin />
+              )
+            }
+          >
+            <Route
+              element={
+                localStorage.role == Roles.student ? (
+                  <StudentDataRetrieval />
+                ) : (
+                  <InstructorDataRetrieval />
+                )
+              }
+            >
               <Route path="student">
                 <Route index element={<Home />} />
 
@@ -96,22 +118,40 @@ const App = () => {
                 </Route>
               </Route>
             </Route>
+          </Route>
 
-            <Route path="instructor">
-              <Route path="login" element={<LoginInstructor />} />
-              <Route path="register" element={<RegisterInstructor />} />
-              <Route element={<PersistLogin />}>
-                <Route element={<StudentDataRetrieval />}>
-                  <Route element={<RequireAuth allowedUser={Roles.instructor} />}>
-                    <Route path="home" element={<InstructorHome />} />
-                    <Route path="dashboard" element={<InstructorDashboard />} />
-                    <Route path="settings" element={<Settings />} />
-                    <Route path="edit-course/:id" element={<EditCourse />} />
-                    <Route path="create-course" element={<CreateCourse />} />
-                    <Route path="course-info/:id" element={<CourseInfo />} />
-                    <Route path="student-profile/:id" element={<ShowProfile />} />
-                  </Route>
-                </Route>
+          <Route path="instructor">
+            <Route path="login" element={<LoginInstructor />} />
+            <Route path="register" element={<RegisterInstructor />} />
+            <Route
+              element={
+                localStorage.role == Roles.instructor ? (
+                  <InstructorPersistLogin />
+                ) : (
+                  <PersistLogin />
+                )
+              }
+            >
+              <Route
+                element={
+                  localStorage.role == Roles.instructor ? (
+                    <InstructorDataRetrieval />
+                  ) : (
+                    <StudentDataRetrieval />
+                  )
+                }
+              >
+                <Route index element={<Navigate to="/student" />} />
+
+                <Route path="home" element={<InstructorHome />} />
+                {/* <Route element={<RequireAuth allowedUser={Roles.instructor} />}> */}
+                  <Route path="dashboard" element={<InstructorDashboard />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="edit-course/:id" element={<EditCourse />} />
+                  <Route path="create-course" element={<CreateCourse />} />
+                  <Route path="course-info/:id" element={<CourseInfo />} />
+                  <Route path="student-profile/:id" element={<ShowProfile />} />
+                {/* </Route> */}
               </Route>
             </Route>
           </Route>

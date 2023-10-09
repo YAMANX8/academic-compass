@@ -1,6 +1,7 @@
 // course view components
 import CourseContent from "./course view/CourseContent";
 import ReviewCards from "./course view/ReviewCards";
+import ReviewForm from "./course view/ReviewForm";
 // dashboard components
 import ProfileCard from "./dashboard/ProfileCard";
 import PerformanceChart from "./dashboard/PerformanceChart";
@@ -17,6 +18,8 @@ import Switcher from "./interface/Switcher";
 import RequireAuth from "./logic/RequireAuth";
 import PersistLogin from "./logic/PersistLogin";
 import StudentDataRetrieval from "./logic/StudentDataRetrieval";
+import InstructorDataRetrieval from "./logic/InstructorDataRetrieval";
+import InstructorPersistLogin from "./logic/InstructorPersistLogin";
 // roadmap components
 import RoadmapCard from "./roadmap/RoadmapCard";
 import RightLine from "./roadmap/RightLine";
@@ -58,4 +61,7 @@ export {
   StartLineLeft,
   StudentDataRetrieval,
   Topic,
+  ReviewForm,
+  InstructorDataRetrieval,
+  InstructorPersistLogin,
 };
