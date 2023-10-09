@@ -27,7 +27,16 @@ import EditCourse from "./instructor interfaces/EditCourse";
 import CreateCourse from "./instructor interfaces/CreateCourse";
 import CourseInfo from "./instructor interfaces/CourseInfo";
 import ShowProfile from "./instructor interfaces/ShowProfile";
-
+// instructor custom pages
+import Content from "./instructor interfaces/edit course pages/Content";
+import Info from "./instructor interfaces/edit course pages/Info";
+import Enrollments from "./instructor interfaces/course info pages/Enrollments";
+import Reviews from "./instructor interfaces/course info pages/Reviews";
+import Status from "./instructor interfaces/course info pages/Status";
+import FirstStep from "./instructor interfaces/create course pages/FirstStep";
+import SecondStep from "./instructor interfaces/create course pages/SecondStep";
+import ThirdStep from "./instructor interfaces/create course pages/ThirdStep";
+// student
 export {
   Home,
   NotFound,
@@ -55,4 +64,12 @@ export {
   CreateCourse,
   CourseInfo,
   ShowProfile,
+  Content,
+  Info,
+  Enrollments,
+  Reviews,
+  Status,
+  FirstStep,
+  SecondStep,
+  ThirdStep,
 };

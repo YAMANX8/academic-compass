@@ -87,6 +87,7 @@ const Content = () => {
       ],
     },
   ]);
+  console.table(data)
   return <div>Content</div>;
 };
 
