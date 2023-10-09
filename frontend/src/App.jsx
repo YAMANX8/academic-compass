@@ -144,14 +144,14 @@ const App = () => {
                 <Route index element={<Navigate to="/student" />} />
 
                 <Route path="home" element={<InstructorHome />} />
-                <Route element={<RequireAuth allowedUser={Roles.instructor} />}>
+                {/* <Route element={<RequireAuth allowedUser={Roles.instructor} />}> */}
                   <Route path="dashboard" element={<InstructorDashboard />} />
                   <Route path="settings" element={<Settings />} />
                   <Route path="edit-course/:id" element={<EditCourse />} />
                   <Route path="create-course" element={<CreateCourse />} />
                   <Route path="course-info/:id" element={<CourseInfo />} />
                   <Route path="student-profile/:id" element={<ShowProfile />} />
-                </Route>
+                {/* </Route> */}
               </Route>
             </Route>
           </Route>
