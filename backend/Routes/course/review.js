@@ -67,13 +67,6 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
 router.get("/show_review/:course_id",authorization, async (req, res) => {
   try {
     const course_id = req.params.course_id;
-    const studentId = req.user.userId;
-      const roleId = req.user.roleId;
-      //permission
-      const hasAccess = await checkPermission(studentId, "addReview", roleId);
-      if (!hasAccess) {
-        return res.status(403).json("Access denied");
-      }
     const show_review = `
       SELECT 
         Rating.stars_number AS rating, 
@@ -111,8 +104,6 @@ router.get("/show_review/:course_id",authorization, async (req, res) => {
 // * Delete Rview
 router.delete("/delete_review/:course_id", authorization, async (req, res) => {
   try {
-    // ? Did Here We Need checkPermission ?
-    // * It doesn't make any difference but I'll put it up
     const studentId = req.user.userId;
     const courseId = req.params.course_id;
     const roleId = req.user.roleId;
