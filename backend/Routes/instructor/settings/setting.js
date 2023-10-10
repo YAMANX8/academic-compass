@@ -36,7 +36,6 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
       email,
       education,
       birth_date,
-      bio,
       country,
       city,
       currentPassword,
@@ -134,12 +133,13 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
   }
 });
 
-// get student data
+// get instructor data
 router.get("/", authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
+     const roleId = req.user.roleId;
     //permission
-    const hasAccess = await checkPermission(Id, "update_stting");
+    const hasAccess = await checkPermission(Id, "updateSttingToInstructor",roleId);
     if (!hasAccess) {
       return res.status(403).json("Access denied");
     }
@@ -152,7 +152,6 @@ router.get("/", authorization, async (req, res) => {
       lastName: row.last_name,
       education: row.education,
       email: row.email,
-      bio: row.bio,
       birthDate: row.birth_date,
       country: row.country,
       city: row.city,
