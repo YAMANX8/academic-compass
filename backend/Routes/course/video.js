@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const pool = require("../../Database/db");
+const db = require("../../Database/db");
 const authorization = require("../../middleware/authorization");
 const checkPermission = require("../../middleware/checkPermissions");
 
@@ -67,8 +67,8 @@ WHERE course.course_id = $2`;
     `;
       const values1 = [studentId, courseId, enrollId];
       const values2 = [itemId];
-      const result1 = await pool.query(query1, values1);
-      const result2 = await pool.query(query2, values2);
+      const result1 = await db.query(query1, values1);
+      const result2 = await db.query(query2, values2);
       const videoPath = result2.rows[0].video_path;
 
       // Process the course content data
@@ -150,7 +150,7 @@ router.post("/Completed", authorization, async (req, res) => {
 
     const values = [itemId, enrollmentId];
 
-    const result = await pool.query(query, values);
+    const result = await db.query(query, values);
 
     res.json("The item has been added");
   } catch (err) {
