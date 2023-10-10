@@ -138,13 +138,8 @@ router.put("/", authorization, upload.single("image"), async (req, res) => {
 router.get("/", authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
-     const roleId = req.user.roleId;
     //permission
-    const hasAccess = await checkPermission(
-      Id,
-      "updateSttingToStudent",
-      roleId
-    );
+    const hasAccess = await checkPermission(Id, "update_stting");
     if (!hasAccess) {
       return res.status(403).json("Access denied");
     }

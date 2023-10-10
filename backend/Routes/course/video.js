@@ -141,6 +141,7 @@ WHERE course.course_id = $2`;
 });
 
 // complete item
+// * هل نحتاج إضافة صلاحية هنا أم لا
 router.post("/Completed", authorization, async (req, res) => {
   try {
     const { itemId, enrollmentId } = req.body;

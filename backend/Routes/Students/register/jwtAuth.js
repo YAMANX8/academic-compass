@@ -33,8 +33,7 @@ router.post("/student/register", validInfo, async (req, res) => {
 
     // 5.generating our jwt token
     const { token } = jwtGenerator(
-      newStudent.rows[0].student_id,
-      newStudent.rows[0].role_id
+      newStudent.rows[0].student_id
     );
 
     res.status(200).json({ token, role_id });
@@ -73,8 +72,7 @@ router.post("/student/login", validInfo, async (req, res) => {
     // 4. give them the jwt token
     else if (validPassword) {
       const { token } = jwtGenerator(
-        student.rows[0].student_id,
-        student.rows[0].role_id,
+        student.rows[0].student_id
       );
       return res.status(200).json({ token,role_id });
     }
