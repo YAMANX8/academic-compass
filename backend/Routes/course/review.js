@@ -8,10 +8,14 @@ const checkPermission = require("../../middleware/checkPermissions");
 router.post('/edit_review/:course_id', authorization, async (req, res) => {
   try {
     const { stars_number, review} = req.body;
-    console.log('Stars number:', stars_number);
-    console.log('Review:', review);
     const courseId = req.params.course_id
     const studentId = req.user.userId;
+    const roleId = req.user.roleId;
+    //permission
+    const hasAccess = await checkPermission(studentId, "addReview", roleId);
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
     // Get Enrollment_id.
     const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
     const enrollmentValues = [studentId, courseId];
@@ -100,6 +104,7 @@ router.get("/show_review/:course_id", async (req, res) => {
 // ! Delete Rview
 router.delete("/delete_review/:course_id", authorization, async (req, res) => {
   try {
+    // ? Did Here We Need checkPermission ?
     const studentId = req.user.userId;
     const courseId = req.params.course_id;
 
