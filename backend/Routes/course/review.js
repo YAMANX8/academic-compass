@@ -4,7 +4,7 @@ const authorization = require("../../middleware/authorization");
 const checkPermission = require("../../middleware/checkPermissions");
 
 
-// ! Insert And Update 
+// * Insert And Update 
 router.post('/edit_review/:course_id', authorization, async (req, res) => {
   try {
     const { stars_number, review} = req.body;
@@ -63,10 +63,17 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
 
 
 
-// ! Show Review
-router.get("/show_review/:course_id", async (req, res) => {
+// * Show Review
+router.get("/show_review/:course_id",authorization, async (req, res) => {
   try {
     const course_id = req.params.course_id;
+    const studentId = req.user.userId;
+      const roleId = req.user.roleId;
+      //permission
+      const hasAccess = await checkPermission(studentId, "addReview", roleId);
+      if (!hasAccess) {
+        return res.status(403).json("Access denied");
+      }
     const show_review = `
       SELECT 
         Rating.stars_number AS rating, 
@@ -101,13 +108,19 @@ router.get("/show_review/:course_id", async (req, res) => {
 
 
 
-// ! Delete Rview
+// * Delete Rview
 router.delete("/delete_review/:course_id", authorization, async (req, res) => {
   try {
     // ? Did Here We Need checkPermission ?
+    // * It doesn't make any difference but I'll put it up
     const studentId = req.user.userId;
     const courseId = req.params.course_id;
-
+    const roleId = req.user.roleId;
+    //permission
+    const hasAccess = await checkPermission(studentId, "addReview", roleId);
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
     const enrollmentQuery = `
       SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;
     `;
@@ -134,7 +147,12 @@ router.delete("/delete_review/:course_id", authorization, async (req, res) => {
 
         res.json({ status: "Success, Review Deleted" });
       } else {
-        res.status(500).json({ status: "error", message: "No rating found for this enrollment" });
+        res
+          .status(500)
+          .json({
+            status: "error",
+            message: "No rating found for this enrollment",
+          });
       }
     } else {
       res.status(401).json({ message: "You Didn't Enroll in This Course" });
