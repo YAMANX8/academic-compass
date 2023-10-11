@@ -7,7 +7,7 @@ const checkPermission = require("../../middleware/checkPermissions");
 // * Insert And Update 
 router.post('/edit_review/:course_id', authorization, async (req, res) => {
   try {
-    const { stars_number, review} = req.body;
+    const { stars_number, review } = req.body;
     const courseId = req.params.course_id
     const studentId = req.user.userId;
     const roleId = req.user.roleId;
@@ -64,7 +64,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
 
 
 // * Show Review
-router.get("/show_review/:course_id",authorization, async (req, res) => {
+router.get("/show_review/:course_id", authorization, async (req, res) => {
   try {
     const course_id = req.params.course_id;
     const studentId = req.user.userId;
@@ -87,10 +87,17 @@ router.get("/show_review/:course_id",authorization, async (req, res) => {
         JOIN rating ON enrollment.enrollment_id = rating.enrollment_id
       WHERE course.course_id = $1 AND enrollment.student_id = $2;
     `;
-    const values = [course_id , studentId];
+    const values = [course_id, studentId];
     const show_review_result = await db.query(show_review, values);
     const result = show_review_result.rows[0];
-
+    if (show_review_result.rows.length === 0) {
+      const jsonResult = {
+        rating: "",
+        review: "",
+      };
+      res.status(404).json(jsonResult);
+      return;
+    }
     const jsonResult = {
       rating: result.rating,
       review: result.review,
@@ -98,7 +105,6 @@ router.get("/show_review/:course_id",authorization, async (req, res) => {
       last_name: result.last_name,
       picture: result.picture
     };
-
     res.status(200).json(jsonResult);
   } catch (err) {
     console.log(err);
