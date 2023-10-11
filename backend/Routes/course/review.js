@@ -67,6 +67,13 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
 router.get("/show_review/:course_id",authorization, async (req, res) => {
   try {
     const course_id = req.params.course_id;
+    const studentId = req.user.userId;
+    const roleId = req.user.roleId;
+    //permission
+    const hasAccess = await checkPermission(studentId, "addReview", roleId);
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
     const show_review = `
       SELECT 
         Rating.stars_number AS rating, 
@@ -78,9 +85,9 @@ router.get("/show_review/:course_id",authorization, async (req, res) => {
         LEFT JOIN enrollment ON course.course_id = enrollment.course_id
         JOIN Student ON enrollment.student_id = Student.student_id
         JOIN rating ON enrollment.enrollment_id = rating.enrollment_id
-      WHERE course.course_id = $1;
+      WHERE course.course_id = $1 AND enrollment.student_id = $2;
     `;
-    const values = [course_id];
+    const values = [course_id , studentId];
     const show_review_result = await db.query(show_review, values);
     const result = show_review_result.rows[0];
 
@@ -155,3 +162,4 @@ router.delete("/delete_review/:course_id", authorization, async (req, res) => {
 });
 
 module.exports = router;
+
