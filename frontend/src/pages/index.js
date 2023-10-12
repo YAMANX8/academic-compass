@@ -13,7 +13,6 @@ import RegisterStudent from "./student interfaces/RegisterStudent";
 import StudentSettings from "./student interfaces/StudentSettings";
 import StudentDashboard from "./student interfaces/StudentDashboard";
 import CourseView from "./student interfaces/CourseView";
-import Review from "./student interfaces/Review";
 import Article from "./student interfaces/course content pages/Article";
 import Video from "./student interfaces/course content pages/Video";
 import Quiz from "./student interfaces/course content pages/Quiz";
@@ -51,7 +50,6 @@ export {
   StudentSettings,
   StudentDashboard,
   CourseView,
-  Review,
   Article,
   Video,
   Quiz,
