@@ -93,10 +93,10 @@ router.get("/show_review/:course_id", authorization, async (req, res) => {
     const result = show_review_result.rows[0];
     if (show_review_result.rows.length === 0) {
       const jsonResult = {
-        rating: "",
+        rating: null,
         review: "",
       };
-      res.status(404).json(jsonResult);
+      res.status(200).json(jsonResult);
       return;
     }
     const jsonResult = {
