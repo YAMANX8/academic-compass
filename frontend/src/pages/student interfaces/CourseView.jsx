@@ -32,10 +32,6 @@ const SectionWrapper = ({ title, children }) => {
 };
 
 const CourseView = () => {
-  const [data, setData] = useState({
-    rating: 0,
-    review: "",
-  })
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -293,10 +289,6 @@ const CourseView = () => {
       }
     }
   };
-  const handleReview = (e) => {
-    e.preventDefault();
-    toast.success(`your rating: ${rating}, your review: ${review}`);
-  };
   return (
     <section className="w-[1200px]">
       <div className="  bg-secondary dark:bg-secondary-dark  shadow-[0px_-1000px_0px_1000px] dark:shadow-secondary-dark shadow-secondary text-dark dark:text-light duration-1000 ease-in-out-back">
@@ -454,15 +446,7 @@ const CourseView = () => {
       </SectionWrapper>
       <Modal
         isOpen={isOpen}
-        content={
-          <ReviewForm
-            rating={rating}
-            setRating={setRating}
-            review={review}
-            setReview={setReview}
-            handleSubmit={handleReview}
-          />
-        }
+        content={<ReviewForm setIsOpen={setIsOpen} />}
         title={`Leave a review:`}
         close={() => setIsOpen(false)}
       />
