@@ -5,7 +5,6 @@ const checkPermission = require("../../middleware/checkPermissions");
 
 
 // * Insert And Update 
-
 router.post('/edit_review/:course_id', authorization, async (req, res) => {
   try {
     const { stars_number, review } = req.body;
@@ -101,10 +100,7 @@ router.get("/show_review/:course_id", authorization, async (req, res) => {
     }
     const jsonResult = {
       rating: result.rating,
-      review: result.review,
-      first_name: result.first_name,
-      last_name: result.last_name,
-      picture: result.picture
+      review: result.review
     };
     res.status(200).json(jsonResult);
   } catch (err) {
