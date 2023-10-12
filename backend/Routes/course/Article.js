@@ -3,17 +3,25 @@ const db = require("../../Database/db");
 const pool = require("../../Database/db");
 const authorization = require("../../middleware/authorization");
 const checkPermission = require("../../middleware/checkPermissions");
+const Completed_Items_import = require("../../Utils/course/Completed");
+
 
 router.get("/", authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;
     const roleId = req.user.roleId;
-    const { enrollId, courseId, itemId } = req.body;
+    const { courseId, itemId } = req.body;
     //permission
     const hasAccess = await checkPermission(studentId, "show_article", roleId);
     if (!hasAccess) {
       return res.status(403).json("Access denied");
     }
+
+    const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
+    const enrollmentValues = [studentId, courseId];
+    const enrollmentResult = await db.query(enrollmentQuery, enrollmentValues);
+    const enrollId = enrollmentResult.rows[0].enrollment_id;
+
     const checkEnrollmentQuery = `
       SELECT course_id, enrollment_id
       FROM enrollment
@@ -144,15 +152,9 @@ WHERE items.item_id=$1
 // complete item
 router.post("/Completed", authorization, async (req, res) => {
   try {
-    const { itemId, enrollmentId } = req.body;
-    const query = `
-    INSERT INTO Completed_Items(item_id,enrollment_id) VALUES($1,$2)
-`;
-
-    const values = [itemId, enrollmentId];
-
-    const result = await pool.query(query, values);
-
+    const Id = req.user.userId;
+    const { itemId } = req.body;
+    const post_completed = await Completed_Items_import.completed_items(itemId, Id)
     res.json("The item has been added");
   } catch (err) {
     console.error("Error insert item information", err);
