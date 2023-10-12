@@ -68,12 +68,12 @@ router.get("/show_review/:course_id", authorization, async (req, res) => {
   try {
     const course_id = req.params.course_id;
     const studentId = req.user.userId;
-    // const roleId = req.user.roleId;
-    // //permission
-    // const hasAccess = await checkPermission(studentId, "addReview", roleId);
-    // if (!hasAccess) {
-    //   return res.status(403).json("Access denied");
-    // }
+     const roleId = req.user.roleId;
+     //permission
+     const hasAccess = await checkPermission(studentId, "addReview", roleId);
+     if (!hasAccess) {
+       return res.status(403).json("Access denied");
+     }
     const show_review = `
       SELECT 
         Rating.stars_number AS rating, 
@@ -92,18 +92,15 @@ router.get("/show_review/:course_id", authorization, async (req, res) => {
     const result = show_review_result.rows[0];
     if (show_review_result.rows.length === 0) {
       const jsonResult = {
-        rating: "",
+        rating: null,
         review: "",
       };
-      res.status(404).json(jsonResult);
+      res.status(200).json(jsonResult);
       return;
     }
     const jsonResult = {
       rating: result.rating,
-      review: result.review,
-      first_name: result.first_name,
-      last_name: result.last_name,
-      picture: result.picture
+      review: result.review
     };
     res.status(200).json(jsonResult);
   } catch (err) {
