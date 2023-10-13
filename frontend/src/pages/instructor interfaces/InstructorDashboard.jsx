@@ -12,14 +12,14 @@ import {
   BsFillPencilFill as Continue,
   BsArrowReturnLeft as ReturnLeft,
 } from "react-icons/bs";
-import Course1 from "../../assets/images/Group 210 (1).png";
 import { DashboardWrapper } from "../../layout/index.js";
 import { PerformanceInstructor } from "../../constants/PerformanceInstructor.js";
 import useAuth from "../../hooks/useAuth.jsx";
+import axios from "../../apis/axios.js";
 
 function InstructorDashboard() {
   const { auth } = useAuth();
-  const json = {
+  const [json, setJson] = useState({
     instructor_rating: 4.5,
     performance: [
       {
@@ -35,67 +35,39 @@ function InstructorDashboard() {
       {
         id: 3,
         title: "Total Courses",
-        count: 10, 
+        count: 10,
       },
       {
         id: 4,
         title: "Total Students",
-        count: 40, 
+        count: 40,
       },
     ],
     topics: [
       {
-        id: 1,
-        roadmap_id: 18,
-        title: "HTML",
-      },
-      {
-        id: 2,
-        roadmap_id: 18,
-        title: "CSS",
+        id: 0,
+        roadmap_id: 0,
+        title: "",
       },
     ],
     non_completed_courses: [
       {
-        id: 1,
-        title:
-          "course title goes here course title goes here course title goes here",
-        progress: 10, //  هون إذا بدك بعات نسبة مئوية أو عدد الشروط اللي مخلصها الكورس من ال9 شروط إذا بدك ما بتفرق
-        thumnail: "url_to_image.png",
-      },
-      {
-        id: 2,
-        title:
-          "course title goes here course title goes here course title goes here",
-        progress: 50,
-        thumnail: "url_to_image.png",
+        id: 0,
+        title: "",
+        progress: 0, //  هون إذا بدك بعات نسبة مئوية أو عدد الشروط اللي مخلصها الكورس من ال10 شروط إذا بدك ما بتفرق
+        thumnail: "",
       },
     ],
     completed_courses: [
       {
-        id: 1,
-        title:
-          "course title goes here course title goes here course title goes here",
-        subtitle:
-          "course title goes herecourse title goes herecourse title goes herecourse title goes herecourse title goes herecourse tit",
-        thumnail: "url_to_image.png",
-      },
-      {
-        id: 2,
-        title:
-          "course title goes here course title goes here course title goes here",
-        subtitle:
-          "course title goes herecourse title goes herecourse title goes herecourse title goes herecourse title goes herecourse tit",
-        thumnail: "url_to_image.png",
+        id: 0,
+        title: "",
+        subtitle: "",
+        thumnail: "",
       },
     ],
-  };
+  });
   const [performanceData, setPerformanceData] = useState([]);
-
-  useEffect(() => {
-    setPerformanceData(PerformanceInstructor);
-  }, []);
-
   const Data1 = {
     labels: json.performance.map((item) => item.title),
     datasets: [
@@ -114,6 +86,18 @@ function InstructorDashboard() {
     imagePath:
       auth.image == "http://localhost:5000/image/null" ? "" : auth.image,
   };
+  useEffect(() => {
+    setPerformanceData(PerformanceInstructor);
+    const getData = async () => {
+      const res = await axios.get(`/instructor/dashboard`, {
+        headers: {
+          token: auth.accessToken,
+        },
+      });
+      setJson(res.data);
+    };
+    getData();
+  }, []);
   return (
     <section className="max-w-[1200px] grid grid-cols-12 gap-[20px] grid-rows-9">
       <div className=" col-span-8 row-start-1 row-span-2">
@@ -124,9 +108,9 @@ function InstructorDashboard() {
           <div className="flex gap-8 mt-auto">
             <div className="flex flex-col gap-4 text-center justify-center">
               <div className="w-[167px] aspect-square overflow-hidden rounded-full bg-primary text-light flex justify-center items-center text-3xl">
-                {userInfo.image ? (
+                {userInfo.imagePath ? (
                   <img
-                    src={userInfo.image}
+                    src={userInfo.imagePath}
                     className="object-cover"
                     alt="profile picture"
                   />
@@ -144,13 +128,13 @@ function InstructorDashboard() {
               </div>
             </div>
             <div className="flex flex-col gap-8 flex-1">
-              <div className="bg-light rounded-[20px]">
+              <div className="bg-light dark:bg-dark text-dark dark:text-light rounded-[20px] transition-colors duration-1000 ease-in-out-back">
                 <div className="p-4">
-                  <p className="text-dark text-center font-medium tracking-tight">
+                  <p className="text-center font-medium tracking-tight">
                     Ratings in average
                   </p>
                   <div className="flex flex-col items-center justify-center">
-                    <span className="text-[48px]  font-semibold tracking-tight dark:text-dark">
+                    <span className="text-[48px] font-semibold tracking-tight">
                       {json.instructor_rating}
                     </span>
                     <div className="flex gap-[8px]">
@@ -211,14 +195,18 @@ function InstructorDashboard() {
             {json.non_completed_courses.map((course) => (
               <div
                 key={course.id}
-                className="bg-light shadow-[0_0_10px] shadow-black/40 rounded-[10px]"
+                className="bg-light dark:bg-dark text-dark dark:text-light transition-colors duration-1000 ease-in-out-back shadow-[0_0_10px] shadow-black/40 rounded-[10px]"
               >
                 <div className="flex">
                   <div className="flex min-w-[50%] aspect-video bg-accent-dark rounded-bl-[10px] rounded-tl-[10px]">
-                    <img className="object-contain" src={Course1} />
+                    <img
+                      className="object-contain"
+                      src={course.thumnail}
+                      alt="course thumnail"
+                    />
                   </div>
                   <div className="flex-1 flex flex-col justify-between p-4">
-                    <label className="text-dark tracking-tight text-[24px] leading-[100%] font-semibold">
+                    <label className="tracking-tight text-[24px] leading-[100%] font-semibold">
                       {course.title}
                     </label>
                     <div>
@@ -276,14 +264,14 @@ function InstructorDashboard() {
             {json.completed_courses.map((course) => (
               <div
                 key={course.id}
-                className="flex bg-light shadow-[0_0_10px] shadow-black/40 rounded-[10px]"
+                className="flex bg-light dark:bg-dark text-dark dark:text-light transition-colors duration-1000 ease-in-out-back shadow-[0_0_10px] shadow-black/40 rounded-[10px]"
               >
                 <div className="flex min-w-[520px] aspect-video bg-accent-dark rounded-bl-[10px] rounded-tl-[10px]">
-                  <img className="object-contain" src={Course1} />
+                  <img className="object-contain" src={course.thumnail} />
                 </div>
                 <div className="flex flex-col justify-between flex-1 p-4">
                   <div>
-                    <p className="text-dark tracking-tight text-[24px] leading-l font-semibold">
+                    <p className="tracking-tight text-[24px] leading-l font-semibold">
                       {course.title}
                     </p>
                     <p className="text-gray-500 tracking-tight text-[24px] leading-l font-semibold">
