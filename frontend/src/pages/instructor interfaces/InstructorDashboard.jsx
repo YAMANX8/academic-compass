@@ -135,7 +135,7 @@ function InstructorDashboard() {
                   </p>
                   <div className="flex flex-col items-center justify-center">
                     <span className="text-[48px] font-semibold tracking-tight">
-                      {json.instructor_rating}
+                      {json?.instructor_rating ? json.instructor_rating : 0}
                     </span>
                     <div className="flex gap-[8px]">
                       {[...Array(Math.floor(json.instructor_rating))].map(
@@ -181,7 +181,7 @@ function InstructorDashboard() {
                 key={item.id}
                 title={item.title}
                 color={PerformanceInstructor[index].color}
-                count={item.count}
+                count={item?.count ? item.count : 0}
               />
             ))}
           </div>
@@ -191,45 +191,49 @@ function InstructorDashboard() {
       {/* My Non-completed Courses */}
       <div className="col-span-8 row-start-3 row-span-4">
         <DashboardWrapper heading="My Non-completed Courses">
-          <div className="flex flex-col overflow-y-auto p-4 gap-8">
-            {json.non_completed_courses.map((course) => (
-              <div
-                key={course.id}
-                className="bg-light dark:bg-dark text-dark dark:text-light transition-colors duration-1000 ease-in-out-back shadow-[0_0_10px] shadow-black/40 rounded-[10px]"
-              >
-                <div className="flex">
-                  <div className="flex min-w-[50%] aspect-video bg-accent-dark rounded-bl-[10px] rounded-tl-[10px]">
-                    <img
-                      className="object-contain"
-                      src={course.thumnail}
-                      alt="course thumnail"
-                    />
-                  </div>
-                  <div className="flex-1 flex flex-col justify-between p-4">
-                    <label className="tracking-tight text-[24px] leading-[100%] font-semibold">
-                      {course.title}
-                    </label>
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <span className="">{course.progress}%</span>
-                      </div>
-                      <div className="h-2 bg-gray-300 rounded mb-4">
-                        <div
-                          className="h-full bg-blue-500 rounded"
-                          style={{ width: `${course.progress}%` }}
-                        ></div>
-                      </div>
-                      <div className="">
-                        <Button page={`/instructor/edit-course/${course.id}`}>
-                          Continue Editing <Continue className="text-2xl" />
-                        </Button>
+          {json.non_completed_courses.length !== 0 ? (
+            <div className="flex flex-col overflow-y-auto p-4 gap-8">
+              {json.non_completed_courses.map((course) => (
+                <div
+                  key={course.id}
+                  className="bg-light dark:bg-dark text-dark dark:text-light transition-colors duration-1000 ease-in-out-back shadow-[0_0_10px] shadow-black/40 rounded-[10px]"
+                >
+                  <div className="flex">
+                    <div className="flex min-w-[50%] aspect-video bg-accent-dark rounded-bl-[10px] rounded-tl-[10px]">
+                      <img
+                        className="object-contain"
+                        src={course.thumnail}
+                        alt="course thumnail"
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col justify-between p-4">
+                      <label className="tracking-tight text-[24px] leading-[100%] font-semibold">
+                        {course.title}
+                      </label>
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="">{course.progress}%</span>
+                        </div>
+                        <div className="h-2 bg-gray-300 rounded mb-4">
+                          <div
+                            className="h-full bg-blue-500 rounded"
+                            style={{ width: `${course.progress}%` }}
+                          ></div>
+                        </div>
+                        <div className="">
+                          <Button page={`/instructor/edit-course/${course.id}`}>
+                            Continue Editing <Continue className="text-2xl" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="m-auto">You don't have any course under construction yet!</div>
+          )}
         </DashboardWrapper>
       </div>
 
@@ -260,41 +264,45 @@ function InstructorDashboard() {
       {/*  My Courses */}
       <div className="col-span-12 row-start-7 row-span-3">
         <DashboardWrapper heading={"My Courses"}>
-          <div className="overflow-y-auto p-4 flex flex-col gap-8">
-            {json.completed_courses.map((course) => (
-              <div
-                key={course.id}
-                className="flex bg-light dark:bg-dark text-dark dark:text-light transition-colors duration-1000 ease-in-out-back shadow-[0_0_10px] shadow-black/40 rounded-[10px]"
-              >
-                <div className="flex min-w-[520px] aspect-video bg-accent-dark rounded-bl-[10px] rounded-tl-[10px]">
-                  <img className="object-contain" src={course.thumnail} />
-                </div>
-                <div className="flex flex-col justify-between flex-1 p-4">
-                  <div>
-                    <p className="tracking-tight text-[24px] leading-l font-semibold">
-                      {course.title}
-                    </p>
-                    <p className="text-gray-500 tracking-tight text-[24px] leading-l font-semibold">
-                      {course.subtitle}
-                    </p>
+          {json.completed_courses.length !== 0 ? (
+            <div className="overflow-y-auto p-4 flex flex-col gap-8">
+              {json.completed_courses.map((course) => (
+                <div
+                  key={course.id}
+                  className="flex bg-light dark:bg-dark text-dark dark:text-light transition-colors duration-1000 ease-in-out-back shadow-[0_0_10px] shadow-black/40 rounded-[10px]"
+                >
+                  <div className="flex min-w-[520px] aspect-video bg-accent-dark rounded-bl-[10px] rounded-tl-[10px]">
+                    <img className="object-contain" src={course.thumnail} />
                   </div>
+                  <div className="flex flex-col justify-between flex-1 p-4">
+                    <div>
+                      <p className="tracking-tight text-[24px] leading-l font-semibold">
+                        {course.title}
+                      </p>
+                      <p className="text-gray-500 tracking-tight text-[24px] leading-l font-semibold">
+                        {course.subtitle}
+                      </p>
+                    </div>
 
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <Button page={`/instructor/edit-course/${course.id}`}>
-                        Edit Again <Continue className="text-2xl" />
-                      </Button>
-                    </div>
-                    <div className="flex-1">
-                      <Button page={`/instructor/course-info/${course.id}`}>
-                        Show Course Info <ReturnLeft className="text-2xl" />
-                      </Button>
+                    <div className="flex gap-4">
+                      <div className="flex-1">
+                        <Button page={`/instructor/edit-course/${course.id}`}>
+                          Edit Again <Continue className="text-2xl" />
+                        </Button>
+                      </div>
+                      <div className="flex-1">
+                        <Button page={`/instructor/course-info/${course.id}`}>
+                          Show Course Info <ReturnLeft className="text-2xl" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="m-auto">You don't have any completed course yet!</div>
+          )}
         </DashboardWrapper>
       </div>
     </section>
