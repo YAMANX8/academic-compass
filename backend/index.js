@@ -84,10 +84,16 @@ app.use(
   require("./Routes/instructor/createCourse/createCourse")
 );
 
-//Create Course
+// Show Student Profile
 app.use(
   "/AcademicCompass/instructor/studentProfile",
   require("./Routes/instructor/showingStudentProfile/studentProfile")
+);
+
+// edit course page
+app.use(
+  "/AcademicCompass/instructor/editeCourseInfo",
+  require("./Routes/instructor/editCoursePage/editCourseInfo")
 );
 
 const port = process.env.PORT || 5000;

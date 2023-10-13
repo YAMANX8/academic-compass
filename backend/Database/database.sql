@@ -2498,3 +2498,59 @@ VALUES
 
   ALTER TABLE users
 ALTER COLUMN password TYPE character varying(150);
+
+--edit Course page
+
+INSERT INTO course (course_title ,course_subtitle,course_description,course_level,course_type,course_thumnail)
+VALUES
+  ('manager'),
+  ('supervisor'),
+  ('AcademicManager');
+
+SELECT course_title , subtitle, course_level, course_type, course_description,course_thumnail FROM course WHERE course_id=12;
+
+  UPDATE course
+  SET
+    title = $1,
+    subtitle = $2,
+    level = $3,
+    type = $4,
+    description = $5
+  WHERE course_id =$6;
+  
+  SELECT item_body FROM Course_Lists WHERE course_id =12;
+--    else{
+--    insert date
+--    const insertQuery = `
+--      INSERT INTO course (course_title ,course_subtitle,course_description,course_level,course_type,course_thumnail)
+--      VALUES
+--      ($1),($2),($3),($4),($5),($6)
+--      `;
+--    const value = [title, subtitle, description, level, type, imageFilePath];
+--    const result = await pool.query(insertQuery, value);
+--  }
+
+  UPDATE Course_Lists
+  SET
+item_body
+  WHERE course_id =$1 AND list_id=$2;
+
+INSERT INTO Course_Lists (item_body,item_order,list_type,course_id)
+      VALUES
+      ("hhh",1,1,12) RETURNING *;
+
+      DELETE FROM Course_Lists WHERE list_id BETWEEN 41 AND 55;
+
+      SELECT course_title , subtitle, ct.type_name,l.level_name, course_type, course_description,course_thumnail
+       FROM course
+      JOIN Courses_Type ct ON course.course_type =ct.type_id
+      JOIN Levels l ON course.course_level =l.level_id
+
+       WHERE course_id=12
+       
+
+
+
+
+
+

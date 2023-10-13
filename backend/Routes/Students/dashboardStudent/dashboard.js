@@ -34,7 +34,7 @@ router.get("/", authorization, async (req, res, next) => {
     const InprogresInfo = await inprogresInfo.InProgresCourseInfo(Id);
     // get completionPercentage
     const completionPercentage = await inprogresInfo.completionPercentage(Id);
-    //! get stars Number
+    // get stars Number
     const strs = await inprogresInfo.starsNumber(Id);
     // get GetCompletedCourse
     const GetCompletedCourse = await completCourseInfo.GetCompletedCourse(Id);
