@@ -1,6 +1,6 @@
 import { BsCaretDownSquareFill as DownSquareFill } from "react-icons/bs";
 
-const ThirdStep = ({ courseData, handleChange }) => {
+const ThirdStep = ({ courseData, handleChange, list }) => {
   return (
     <div className="flex flex-col items-center justify-center gap-8">
       <h2 className="text-[32px] tracking-tight leading-l font-bold">
@@ -15,9 +15,11 @@ const ThirdStep = ({ courseData, handleChange }) => {
           className="appearance-none w-[300px] h-[45px] text-dark dark:text-light bg-light dark:bg-dark rounded-[6px] border border-dark/50 dark:border-light/50 transition-all duration-1000 ease-in-out-back tracking-tight leading-l p-[10px]"
         >
           <option value="">-- Select Level --</option>
-          <option value="Beginner">Beginner</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Expert">Expert</option>
+          {list.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.title}
+            </option>
+          ))}
         </select>
 
         <DownSquareFill
