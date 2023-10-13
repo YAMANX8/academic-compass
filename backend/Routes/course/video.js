@@ -5,7 +5,7 @@ const checkPermission = require("../../middleware/checkPermissions");
 const Completed_Items_import = require("../../Utils/course/Completed");
 
 
-router.get("/", authorization, async (req, res) => {
+router.post("/", authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;
     const {courseId, itemId } = req.body;
