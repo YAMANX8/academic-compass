@@ -87,8 +87,10 @@ app.use(
 //Create Course
 app.use(
   "/AcademicCompass/instructor/studentProfile",
-  require("./Routes/instructor/showingStudentProfile/studentProfile")
-);
+  require("./Routes/instructor/showingStudentProfile/studentProfile"));
+
+// Course Content
+app.use("/AcademicCompass/instructor/Course_Content", require("./Routes/instructor/Course Content/course_content"));
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
