@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import FirstStep from "./create course pages/FirstStep";
 import SecondStep from "./create course pages/SecondStep";
 import ThirdStep from "./create course pages/ThirdStep";
+import axios from "../../apis/axios";
+import useAuth from "../../hooks/useAuth";
 
 function CreateCourse() {
   const navigate = useNavigate();
+  const { auth } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [btn, setBtn] = useState({
     type: "button",
@@ -18,7 +21,7 @@ function CreateCourse() {
     courseType: "",
     courseLevel: "",
   });
-  const json = {
+  const [list, setList] = useState({
     levels: [
       {
         id: 1,
@@ -47,7 +50,7 @@ function CreateCourse() {
         title: "observational learn",
       },
     ],
-  };
+  });
   const handleChange = (event) => {
     const { name, value } = event.target;
     setCourseData((prevFormData) => {
@@ -84,9 +87,44 @@ function CreateCourse() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success("course created successfully");
-    navigate(`/instructor/dashboard`);
+
+    try {
+      if (courseData.title.length == 0)
+        throw new Error("Course title is required!");
+      if (courseData.title.length > 60)
+        throw new Error(
+          "Your course title should not exceed 60 characters in length"
+        );
+      const res = await axios.post(
+        `/instructor/createCourse`,
+        {
+          title: courseData.title,
+          levelId: courseData.courseType,
+          typeId: courseData.courseLevel,
+        },
+        {
+          headers: {
+            token: auth.accessToken,
+          },
+        }
+      );
+      toast.success("Course created successfully");
+      navigate(`/instructor/dashboard`);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      const res = axios.get(`/instructor/createCourse`, {
+        headers: {
+          token: auth.accessToken,
+        },
+      });
+    };
+    //just I need to call the api here <<<<----------------------------------------------------------
+  }, []);
   console.table(courseData);
 
   return (
@@ -111,11 +149,19 @@ function CreateCourse() {
           )}
           {/* القسم الثاتي */}
           {currentStep === 2 && (
-            <SecondStep courseData={courseData} handleChange={handleChange} />
+            <SecondStep
+              courseData={courseData}
+              handleChange={handleChange}
+              list={list.types}
+            />
           )}
           {/* القسم الثالث */}
           {currentStep === 3 && (
-            <ThirdStep courseData={courseData} handleChange={handleChange} />
+            <ThirdStep
+              courseData={courseData}
+              handleChange={handleChange}
+              list={list.levels}
+            />
           )}
         </div>
       </div>

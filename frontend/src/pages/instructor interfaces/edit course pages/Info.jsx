@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   BsCaretDownSquareFill as DownSquareFill,
   BsPlus as Add,
+  BsCloudUpload as Upload,
 } from "react-icons/bs";
+
 const Info = () => {
+  const photo = useRef();
   const [data, setData] = useState({
     title: "",
     subtitle: "",
@@ -16,10 +19,40 @@ const Info = () => {
     thumbnail: "",
     isActive: false,
   });
+  const [image, setImage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeField, setActiveField] = useState(null);
   const [selectedValue, setSelectedValue] = useState("");
-
+  const [list, setList] = useState({
+    levels: [
+      {
+        id: 1,
+        title: "Beginner",
+      },
+      {
+        id: 2,
+        title: "Intermediate",
+      },
+      {
+        id: 3,
+        title: "Expert",
+      },
+    ],
+    types: [
+      {
+        id: 1,
+        title: "project based",
+      },
+      {
+        id: 2,
+        title: "beginner|advanced",
+      },
+      {
+        id: 3,
+        title: "observational learn",
+      },
+    ],
+  });
   const levels = ["Beginner", "Intermediate", "Expert"];
   const project = ["project based", "beginner|advanced", "observational learn"];
   const [selectedProject, setSelectedProject] = useState("");
@@ -30,6 +63,15 @@ const Info = () => {
       setIsOpen(true);
       setActiveField(field);
     }
+  };
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setData((prevFormData) => {
+      return {
+        ...prevFormData,
+        [name]: value,
+      };
+    });
   };
   console.table(data);
   // styles
@@ -42,6 +84,9 @@ const Info = () => {
       <div className="flex flex-col gap-4">
         <h2 className={headings}>Course title</h2>
         <input
+          name="title"
+          value={data.title}
+          onChange={handleChange}
           type="text"
           placeholder="Ex: Learn the basics of ..."
           className={inputs}
@@ -50,6 +95,9 @@ const Info = () => {
       <div className="flex flex-col gap-4">
         <h2 className={headings}>Course subtitle</h2>
         <input
+          name="subtitle"
+          value={data.subtitle}
+          onChange={handleChange}
           type="text"
           placeholder="Ex: improve your skills..."
           className={inputs}
@@ -58,72 +106,56 @@ const Info = () => {
       <div className="flex flex-col gap-4">
         <h2 className={headings}>Select course Level</h2>
         <div className="relative">
-          <input
-            type="text"
-            value={selectedValue}
-            placeholder="All level"
-            className={inputs}
-            onClick={() => toggleDropdown("level")}
-          />
-          {isOpen && activeField === "level" && (
-            <div className={menu}>
-              {levels.map((level, index) => (
-                <div
-                  key={index}
-                  className="px-4 p-1 text-[20px] cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center"
-                  onClick={() => {
-                    setSelectedValue(level);
-                    setIsOpen(false);
-                  }}
-                >
-                  {level}
-                </div>
-              ))}
-            </div>
-          )}
+          <select
+            id="level"
+            value={data.level}
+            onChange={handleChange}
+            name="level"
+            className={`${inputs} appearance-none w-full h-[60px] text-dark dark:text-light bg-light dark:bg-dark rounded-[6px] border border-dark/50 dark:border-light/50 transition-all duration-1000 ease-in-out-back tracking-tight leading-l p-[10px]`}
+          >
+            <option value="">-- Select Level --</option>
+            {list.levels.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.title}
+              </option>
+            ))}
+          </select>
+
           <DownSquareFill
+            className="absolute top-0 right-0 pointer-events-none"
             size={60}
-            className={selects}
-            onClick={() => toggleDropdown("level")}
           />
         </div>
       </div>
       <div className="flex flex-col gap-4">
         <h2 className={headings}>Select course type</h2>
         <div className="relative">
-          <input
-            type="text"
-            value={selectedProject}
-            placeholder="Project Based"
-            className={inputs}
-            onClick={() => toggleDropdown("project")}
-          />
-          {isOpen && activeField === "project" && (
-            <div className={menu}>
-              {project.map((proj, index) => (
-                <div
-                  key={index}
-                  className="px-4 p-1 text-[20px] cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center"
-                  onClick={() => {
-                    setSelectedProject(proj);
-                    setIsOpen(false);
-                  }}
-                >
-                  {proj}
-                </div>
-              ))}
-            </div>
-          )}
+          <select
+            id="level"
+            value={data.type}
+            onChange={handleChange}
+            name="type"
+            className={`${inputs} appearance-none w-full h-[60px] text-dark dark:text-light bg-light dark:bg-dark rounded-[6px] border border-dark/50 dark:border-light/50 transition-all duration-1000 ease-in-out-back tracking-tight leading-l p-[10px]`}
+          >
+            <option value="">-- Select Type --</option>
+            {list.types.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.title}
+              </option>
+            ))}
+          </select>
+
           <DownSquareFill
+            className="absolute top-0 right-0 pointer-events-none"
             size={60}
-            className={selects}
-            onClick={() => toggleDropdown("project")}
           />
         </div>
       </div>
       <div className="flex flex-col gap-4 col-span-2">
         <h2 className={headings}>Course description</h2>
         <textarea
+          name="description"
+          onChange={handleChange}
           placeholder="Insert your course description here"
           cols="30"
           rows="5"
@@ -170,6 +202,49 @@ const Info = () => {
           <span>insert one more item</span>
         </button>
       </div>
+      <div className="flex flex-col gap-4 col-span-2">
+        <h2 className={headings}>
+          Who is the intended audience for this course?
+        </h2>
+        <div className="flex gap-8">
+          <div className="w-[600px] aspect-video flex justify-center items-center overflow-hidden">
+            <img
+              className="object-contain"
+              src={
+                typeof image == "string" ? image : URL.createObjectURL(image)
+              }
+              alt="course thumbnail"
+            />
+          </div>
+          <div className="flex-1 flex flex-col justify-between">
+            <div className="text-[32px]">
+              <h3 className="mb-4 font-medium text-accent/80 leading-[38.73px]">
+                Video Thumbnail Size
+              </h3>
+              <p className="leading-[39px]">
+                The thumbnail for your uploaded video should ideally be 600
+                pixels wide by 338 pixels tall, which corresponds to an aspect
+                ratio of 16:9
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => photo.current.click()}
+              className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+            >
+              <input
+                type="file"
+                name="image"
+                onChange={(e) => setImage(e.target.files[0])}
+                hidden
+                ref={photo}
+              />
+              Upload course thumbnail
+              <Upload />
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div className="flex flex-col gap-4 col-span-2">
         <h2 className={headings}>Would you like to publish your course ?</h2>
@@ -181,7 +256,9 @@ const Info = () => {
         </div>
       </div>
       <div className="flex flex-row-reverse col-span-2">
-        <button className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">Sava</button>
+        <button className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">
+          Sava
+        </button>
       </div>
     </form>
   );
