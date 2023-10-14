@@ -34,9 +34,9 @@ const My_Non_completed_Courses = async (instructoer_id) => {
                 AND COUNT(DISTINCT CASE WHEN q.item_id IS NOT NULL THEN I.item_id END) >= 1
               ) THEN 1 ELSE 0 END AS progress
           FROM Course c
-          JOIN Course_Lists cl ON c.course_id = cl.course_id
-          JOIN List_Type lt ON cl.list_type = lt.type_id
-          JOIN Items I ON c.course_id = I.course_id
+          LEFT JOIN Course_Lists cl ON c.course_id = cl.course_id
+          LEFT JOIN List_Type lt ON cl.list_type = lt.type_id
+          LEFT JOIN Items I ON c.course_id = I.course_id
           LEFT JOIN Video v ON I.item_id = v.item_id
           LEFT JOIN Article a ON I.item_id = a.item_id
           LEFT JOIN Quiz q ON I.item_id = q.item_id

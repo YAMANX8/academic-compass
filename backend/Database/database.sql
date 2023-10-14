@@ -2498,3 +2498,98 @@ VALUES
 
   ALTER TABLE users
 ALTER COLUMN password TYPE character varying(150);
+
+--edit Course page
+
+INSERT INTO course (course_title ,course_subtitle,course_description,course_level,course_type,course_thumnail)
+VALUES
+  ('manager'),
+  ('supervisor'),
+  ('AcademicManager');
+
+SELECT course_title , subtitle, course_level, course_type, course_description,course_thumnail FROM course WHERE course_id=12;
+
+  UPDATE course
+  SET
+    title = $1,
+    subtitle = $2,
+    level = $3,
+    type = $4,
+    description = $5
+  WHERE course_id =$6;
+  
+  SELECT item_body FROM Course_Lists WHERE course_id =12;
+--    else{
+--    insert date
+--    const insertQuery = `
+--      INSERT INTO course (course_title ,course_subtitle,course_description,course_level,course_type,course_thumnail)
+--      VALUES
+--      ($1),($2),($3),($4),($5),($6)
+--      `;
+--    const value = [title, subtitle, description, level, type, imageFilePath];
+--    const result = await pool.query(insertQuery, value);
+--  }
+
+  UPDATE Course_Lists
+  SET
+item_body
+  WHERE course_id =$1 AND list_id=$2;
+
+INSERT INTO Course_Lists (item_body,item_order,list_type,course_id)
+      VALUES
+      ("hhh",1,1,12) RETURNING *;
+
+      DELETE FROM Course_Lists WHERE list_id BETWEEN 41 AND 55;
+
+      SELECT course_title , subtitle, ct.type_name,l.level_name, course_type, course_description,course_thumnail
+       FROM course
+      JOIN Courses_Type ct ON course.course_type =ct.type_id
+      JOIN Levels l ON course.course_level =l.level_id
+
+       WHERE course_id=12
+       ---
+               SELECT course_id, course_title,course_thumnail, progress
+          FROM (
+            SELECT c.course_id, c.course_title,c.course_thumnail,
+            CASE
+              WHEN c.subtitle IS NOT NULL THEN 1 ELSE 0 END +
+            CASE
+              WHEN c.course_description IS NOT NULL THEN 1 ELSE 0 END +
+            CASE
+              WHEN c.course_level IS NOT NULL THEN 1 ELSE 0 END +
+            CASE
+              WHEN c.course_type IS NOT NULL THEN 1 ELSE 0 END +
+            CASE
+              WHEN c.course_thumnail IS NOT NULL THEN 1 ELSE 0 END +
+            CASE
+              WHEN COUNT(CASE WHEN lt.type_name = 'In this course you will learn the following' THEN cl.list_id END) >= 1 THEN 1 ELSE 0 END +
+            CASE
+              WHEN COUNT(CASE WHEN lt.type_name = 'Who this course is for:' THEN cl.list_id END) >= 1 THEN 1 ELSE 0 END +
+            CASE
+              WHEN COUNT(CASE WHEN lt.type_name = 'Requirements' THEN cl.list_id END) >= 1 THEN 1 ELSE 0 END +
+            CASE
+              WHEN COUNT(DISTINCT I.item_id) >= 3 THEN 1 ELSE 0 END +
+            CASE
+              WHEN (
+                COUNT(DISTINCT CASE WHEN v.item_id IS NOT NULL THEN I.item_id END) >= 1
+                AND COUNT(DISTINCT CASE WHEN a.item_id IS NOT NULL THEN I.item_id END) >= 1
+                AND COUNT(DISTINCT CASE WHEN q.item_id IS NOT NULL THEN I.item_id END) >= 1
+              ) THEN 1 ELSE 0 END AS progress
+          FROM Course c
+          LEFT JOIN Course_Lists cl ON c.course_id = cl.course_id
+          LEFT JOIN List_Type lt ON cl.list_type = lt.type_id
+          LEFT JOIN Items I ON c.course_id = I.course_id
+          LEFT JOIN Video v ON I.item_id = v.item_id
+          LEFT JOIN Article a ON I.item_id = a.item_id
+          LEFT JOIN Quiz q ON I.item_id = q.item_id
+          WHERE c.instructor_id = 3
+          GROUP BY c.course_id, c.course_title
+        ) AS subquery
+        WHERE progress < 10;
+    
+
+
+
+
+
+
