@@ -37,6 +37,7 @@ router.get("/student/:id", async (req, res) => {
     const jwtToken = req.header("token");
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
     const role_id = payload.roleId;
+    console.log(role_id);
     if (!jwtToken || role_id === 1) {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
@@ -46,6 +47,7 @@ router.get("/student/:id", async (req, res) => {
     } else {
       // Extract student ID from the token and proceed with your logic
       const studentId = payload.userId;
+      console.log(studentId);
       //permission
       const hasAccess = await checkPermission(
         studentId,

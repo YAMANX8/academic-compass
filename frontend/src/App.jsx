@@ -13,7 +13,6 @@ import {
   StudentSettings,
   StudentDashboard,
   CourseView,
-  Review,
   Article,
   Video,
   Quiz,
@@ -85,9 +84,7 @@ const App = () => {
                     </Route>
                   </Route>
                 </Route>
-
                 <Route path="courseview/:id" element={<CourseView />} />
-
                 <Route path="video" element={<Video />} />
                 <Route path="Article" element={<Article />} />
                 <Route path="search">
@@ -112,14 +109,12 @@ const App = () => {
                     path="courseview/:id/quiz/:itemId"
                     element={<Quiz />}
                   />
-                  <Route path="courseview/:id/review" element={<Review />} />
-
-                  {/* <Route path="/roadmaps/:roadmapid" element={< />} /> */}
                 </Route>
               </Route>
             </Route>
           </Route>
 
+          {/* instructor pages path */}
           <Route path="instructor">
             <Route path="login" element={<LoginInstructor />} />
             <Route path="register" element={<RegisterInstructor />} />
@@ -142,16 +137,17 @@ const App = () => {
                 }
               >
                 <Route index element={<Navigate to="/student" />} />
-
                 <Route path="home" element={<InstructorHome />} />
-                {/* <Route element={<RequireAuth allowedUser={Roles.instructor} />}> */}
+
+                {/* protected to instructors only */}
+                <Route element={<RequireAuth allowedUser={Roles.instructor} />}>
                   <Route path="dashboard" element={<InstructorDashboard />} />
                   <Route path="settings" element={<Settings />} />
                   <Route path="edit-course/:id" element={<EditCourse />} />
                   <Route path="create-course" element={<CreateCourse />} />
                   <Route path="course-info/:id" element={<CourseInfo />} />
                   <Route path="student-profile/:id" element={<ShowProfile />} />
-                {/* </Route> */}
+                </Route>
               </Route>
             </Route>
           </Route>

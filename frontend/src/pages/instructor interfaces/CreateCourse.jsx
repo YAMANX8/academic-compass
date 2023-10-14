@@ -1,149 +1,185 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  BsProjectorFill as ProjectorFill,
-  BsPlayBtnFill as Video,
-  BsCodeSlash as CodeSlash,
-  BsCaretDownSquareFill as DownSquareFill,
-} from "react-icons/bs";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import FirstStep from "./create course pages/FirstStep";
+import SecondStep from "./create course pages/SecondStep";
+import ThirdStep from "./create course pages/ThirdStep";
+import axios from "../../apis/axios";
+import useAuth from "../../hooks/useAuth";
+
 function CreateCourse() {
-  const [progress, setProgress] = useState(33.333);
+  const navigate = useNavigate();
+  const { auth } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
-  const levels = ["All Level", "Level 1", "Level n"];
-
+  const [btn, setBtn] = useState({
+    type: "button",
+    title: "Continue",
+  });
+  const [backBtn, setBackBtn] = useState("Cancel");
+  const [courseData, setCourseData] = useState({
+    title: "",
+    courseType: "",
+    courseLevel: "",
+  });
+  const [list, setList] = useState({
+    levels: [
+      {
+        id: 1,
+        title: "Beginner",
+      },
+      {
+        id: 2,
+        title: "Intermediate",
+      },
+      {
+        id: 3,
+        title: "Expert",
+      },
+    ],
+    types: [
+      {
+        id: 1,
+        title: "project based",
+      },
+      {
+        id: 2,
+        title: "beginner|advanced",
+      },
+      {
+        id: 3,
+        title: "observational learn",
+      },
+    ],
+  });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setCourseData((prevFormData) => {
+      return {
+        ...prevFormData,
+        [name]: value,
+      };
+    });
+  };
   const handleContinueClick = () => {
-    if (currentStep < 3) {
-      //    الخطوة الحالية أقل من 3
+    if (currentStep < 2) {
       setCurrentStep(currentStep + 1);
-      setProgress((prevProgress) => Math.min(prevProgress + 33.3333, 100));
+      setBackBtn("Back");
+      setBtn((prev) => ({ ...prev, type: "button", title: "Continue" }));
+    } else if (currentStep == 2) {
+      setCurrentStep(currentStep + 1);
+      setBtn((prev) => ({ ...prev, title: "Create" }));
     } else {
+      setBtn((prev) => ({ ...prev, type: "submit" }));
     }
   };
   //  شكل ابو راتب
   const handleBackClick = () => {
-    if (currentStep > 1) {
+    if (currentStep > 2) {
+      setBtn((prev) => ({ ...prev, type: "button", title: "Continue" }));
       setCurrentStep(currentStep - 1);
-      setProgress((prevProgress) => Math.max(prevProgress - 33, 0));
+      setBackBtn("Back");
+    } else if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+      setBackBtn("Cancel");
+    } else {
+      navigate(-1);
     }
   };
-  const course = [
-    {
-      id: 1,
-      progress: 33,
-    },
-  ];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (courseData.title.length == 0)
+        throw new Error("Course title is required!");
+      if (courseData.title.length > 60)
+        throw new Error(
+          "Your course title should not exceed 60 characters in length"
+        );
+      const res = await axios.post(
+        `/instructor/createCourse`,
+        {
+          title: courseData.title,
+          levelId: courseData.courseType,
+          typeId: courseData.courseLevel,
+        },
+        {
+          headers: {
+            token: auth.accessToken,
+          },
+        }
+      );
+      toast.success("Course created successfully");
+      navigate(`/instructor/dashboard`);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      const res = axios.get(`/instructor/createCourse`, {
+        headers: {
+          token: auth.accessToken,
+        },
+      });
+    };
+    //just I need to call the api here <<<<----------------------------------------------------------
+  }, []);
+  console.table(courseData);
+
   return (
-    <form className="w-full">
-      <div className="w-[1200px] m-auto p-0">
-        <div>
-          <h1 className="py-4">Stepe{currentStep}</h1>
-          <div className="h-[10px] w-full max-w-screen-xl m-auto bg-gray-300 rounded-[10px] relative">
-            <div
-              className="h-full bg-blue-800 rounded-[10px]"
-              style={{ width: `${progress}%` }}
-            ></div>
+    <form
+      className="w-[1200px] flex flex-col justify-between min-h-[75vh]"
+      onSubmit={handleSubmit}
+    >
+      <div>
+        <div className="flex flex-col gap-12">
+          <div>
+            <h1 className="py-4 text-[24px]">Step{currentStep}</h1>
+            <div className="h-[10px] w-full max-w-screen-xl m-auto bg-gray-300 rounded-[10px] relative">
+              <div
+                className="h-full bg-blue-800 rounded-[10px] transition-all duration-500 ease-in-out-back"
+                style={{ width: `${(currentStep / 3) * 100}%` }}
+              ></div>
+            </div>
           </div>
-        </div>
-
-        {/* القسم الاول  */}
-        {currentStep === 1 && (
-          <div className="flex flex-col items-center justify-center max-w-screen-xl ">
-            <h2 className="font-poppins text-[32px] text-dark  dark:text-light tracking-tight leading-l mt-[49px] ">
-              What is the title of your course
-            </h2>
-            <input
-              type="text"
-              placeholder="For example: Learn Html basics in one course"
-              className="w-[500px] p-[10px] mt-[32px] rounded-[5px] bg-light border border-gray-400"
+          {/* القسم الاول  */}
+          {currentStep === 1 && (
+            <FirstStep courseData={courseData} handleChange={handleChange} />
+          )}
+          {/* القسم الثاتي */}
+          {currentStep === 2 && (
+            <SecondStep
+              courseData={courseData}
+              handleChange={handleChange}
+              list={list.types}
             />
-            <h1 className="font-poppins text-[20px] tracking-tight leading-l py-[50px]">
-              Your course title should not exceed 60 characters in length
-            </h1>
-          </div>
-        )}
-        {/* القسم الثاتي */}
-        {currentStep === 2 && (
-          <div className="flex flex-col items-center justify-center max-w-screen-xl ">
-            <div className="text-dark text-[32px] py-[50px] tracking-tight leading-l dark:text-light">
-              Whate category does your educational course belong to ?
-            </div>
-
-            <div className="flex items-center justify-center gap-4">
-              <button className="border px-[50px] dark:border-light  py-[50px] flex flex-col items-center justify-center border-dark text-[20px] tracking-tight rounded-[5px]">
-                <ProjectorFill />
-                Project Based
-              </button>
-              <button className="border px-[50px] dark:border-light py-[50px] flex flex-col items-center justify-center border-dark text-[20px] tracking-tight rounded-[5px]">
-                <Video />
-                Observational
-              </button>
-              <button className="border px-[50px] dark:border-light  py-[50px] flex flex-col items-center justify-center border-dark text-[20px] tracking-tight rounded-[5px]">
-                <CodeSlash />
-                Challenge Based
-              </button>
-            </div>
-          </div>
-        )}
-        {/* القسم الثالث */}
-        {currentStep === 3 && (
-          <form className=" flex flex-col items-center justify-center ">
-            {" "}
-            <div className="text-dark text-[32px]  flex items-center justify-center py-[32px] tracking-tight leading-l dark:text-light ">
-              Whate category does your educational course belong to ?
-            </div>
-            <div className="relative w-64 mb-[146px]   ">
-              <div className="flex items-center justify-center border dark:border-light dark:bg-light border-dark rounded px-3 py-2">
-                <DownSquareFill
-                  className="text-[45px] cursor-pointer absolute ml-[218px] h-full dark:text-dark dark:border "
-                  onClick={() => setIsOpen(!isOpen)}
-                />
-                <input
-                  type="text"
-                  value={selectedValue}
-                  readOnly
-                  className="bg-light flex-1 dark:text-dark   font-semibold outline-none "
-                  onClick={() => setIsOpen(!isOpen)}
-                />
-              </div>
-              {isOpen && (
-                <div className="absolute w-full dark:text-dark  mt-1 border-t-0 border  bg-light z-10 shadow-md rounded-b ">
-                  {levels.map((level, index) => (
-                    <div
-                      key={index}
-                      className="px-4 py-2  text-[20px]  cursor-pointer hover:bg-gray-200 flex items-center justify-center"
-                      onClick={() => {
-                        setSelectedValue(level);
-                        setIsOpen(false);
-                      }}
-                    >
-                      {level}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </form>
-        )}
-      </div>
-      <div className="mt-[40px]">
-        <hr className="border-t border-gray-400" />
-        <div className="flex justify-between  my-4 mx-[120px]">
-          <Link
-            onClick={handleBackClick}
-            className="border py-[10px] px-[20px] rounded-[5px] border-accent text-primary font-poppins leading-l tracking-tight text-xl dark:text-light"
-          >
-            Back
-          </Link>
-          <Link
-            onClick={handleContinueClick}
-            className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-          >
-            Continue
-          </Link>
+          )}
+          {/* القسم الثالث */}
+          {currentStep === 3 && (
+            <ThirdStep
+              courseData={courseData}
+              handleChange={handleChange}
+              list={list.levels}
+            />
+          )}
         </div>
+      </div>
+      <div className="relative flex justify-between py-4">
+        <hr className="absolute h-[2px] -left-40 -right-40 bg-dark/50 -top-[1px]" />
+        <Link
+          onClick={handleBackClick}
+          className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-primary bg-light border-primary border-[1px]"
+        >
+          {backBtn}
+        </Link>
+        <button
+          type={btn.type}
+          onClick={handleContinueClick}
+          className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+        >
+          {btn.title}
+        </button>
       </div>
     </form>
   );

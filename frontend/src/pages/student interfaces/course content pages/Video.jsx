@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import axios from "../../../apis/axios";
 import { BsPlayCircleFill as Library } from "react-icons/bs";
-import { Button, CourseContent } from "../../../components";
+import { CourseContent } from "../../../components";
 import useAuth from "../../../hooks/useAuth";
 import { useParams } from "react-router-dom";
 
-const VIDEO_URL = "/course/video";
+const VIDEO_URL = "/video";
 
 function Video() {
   const { auth } = useAuth();
@@ -53,13 +53,17 @@ function Video() {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`${VIDEO_URL}/${id}/${itemId}`, {
-        headers: {
-          token: auth.accessToken,
-        },
-      });
+      const response = await axios.post(
+        `${VIDEO_URL}`,
+        { itemId: itemId, courseId: id },
+        {
+          headers: {
+            token: auth.accessToken,
+          },
+        }
+      );
 
-      setCourseContent(response.data);
+      setCourseContent(response.data.response);
     } catch (error) {
       console.error(error);
     }
@@ -68,8 +72,22 @@ function Video() {
   useEffect(() => {
     getData();
   }, []);
-  const handleCompletion = () => {
-    console.log("تم انتهاء");
+  const handleCompletion = async () => {
+      try {
+        const response = await axios.post(
+          `${VIDEO_URL}/Completed`,
+          { itemId: itemId },
+          {
+            headers: {
+              token: auth.accessToken,
+            },
+          }
+        );
+        
+      } catch (error) {
+        console.error(error);
+      }
+   
   };
 
   return (
@@ -103,7 +121,7 @@ function Video() {
                   }}
                 />
                 <div className="ml-[500px] py-[20px]">
-                  <Button onClick={handleCompletion}>Completion Flag</Button>
+                  <button onClick={handleCompletion} className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">Completion Flag</button>
                 </div>
               </div>
             </div>

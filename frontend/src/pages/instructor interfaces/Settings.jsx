@@ -56,7 +56,6 @@ function Settings() {
         [name]: value,
       };
     });
-    console.log([name], value);
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
