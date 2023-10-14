@@ -4,35 +4,37 @@ const db = require("../../Database/db");
 const completed_items = async (itemId, Id) => {
     try {
         const values_itemId = [itemId];
-        // console.log(itemId);
         const values_Id = [Id];
-        // console.log(Id)
+
         const courseQuery = "select course_id from items where item_id = $1;"
-        const courseResult = await db.query(courseQuery , values_itemId);
+        const courseResult = await db.query(courseQuery, values_itemId);
         const course_id = courseResult.rows[0].course_id;
-        // console.log(course_id);
 
         const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
-        // const enrollmentValues = [values_Id,course_id];
-        // console.log(enrollmentValues)
         const enrollmentResult = await db.query(enrollmentQuery, [values_Id[0], course_id]);
-
         const enrollId = enrollmentResult.rows[0].enrollment_id;
-        // console.log(enrollId);
 
-        const query = `
-        INSERT INTO Completed_Items(item_id,enrollment_id) VALUES($1,$2)
-        `;
-        // console.log(query)
-        // const values_re = [itemId , enrollId]
-        // console.log(values_re)
-        const result = await db.query(query, [values_itemId[0] , enrollId]);
-        // console.log(result)
+        // Here I Need To Check From Enrollmnet If Has Done This Item .
+        const checkQuery = "select completed_item_id from completed_items where enrollment_id = $1 and item_id =$2;"
+        const resultQuery = await db.query(checkQuery, [enrollId, values_itemId[0]]);
+
+
+        if (resultQuery.rows.length == 0) {
+            const query = `
+            INSERT INTO Completed_Items(item_id,enrollment_id) VALUES($1,$2)
+            `;
+            const result = await db.query(query, [values_itemId[0], enrollId]);
+            console.log("The item has been added"); 
+            return false;
+        } else {
+            console.log("You Have Already Done it");
+            return true;
+        }
     } catch (err) {
-        console.error("Error Insert Itmes");
+        console.error("Error Insert Items");
     }
 }
 
 module.exports = {
     completed_items
-  };
+};
