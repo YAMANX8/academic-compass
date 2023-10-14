@@ -87,8 +87,32 @@ function CreateCourse() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success("course created successfully");
-    navigate(`/instructor/dashboard`);
+
+    try {
+      if (courseData.title.length == 0)
+        throw new Error("Course title is required!");
+      if (courseData.title.length > 60)
+        throw new Error(
+          "Your course title should not exceed 60 characters in length"
+        );
+      const res = await axios.post(
+        `/instructor/createCourse`,
+        {
+          title: courseData.title,
+          levelId: courseData.courseType,
+          typeId: courseData.courseLevel,
+        },
+        {
+          headers: {
+            token: auth.accessToken,
+          },
+        }
+      );
+      toast.success("Course created successfully");
+      navigate(`/instructor/dashboard`);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
@@ -125,11 +149,19 @@ function CreateCourse() {
           )}
           {/* القسم الثاتي */}
           {currentStep === 2 && (
-            <SecondStep courseData={courseData} handleChange={handleChange} list={list.types} />
+            <SecondStep
+              courseData={courseData}
+              handleChange={handleChange}
+              list={list.types}
+            />
           )}
           {/* القسم الثالث */}
           {currentStep === 3 && (
-            <ThirdStep courseData={courseData} handleChange={handleChange} list={list.levels} />
+            <ThirdStep
+              courseData={courseData}
+              handleChange={handleChange}
+              list={list.levels}
+            />
           )}
         </div>
       </div>

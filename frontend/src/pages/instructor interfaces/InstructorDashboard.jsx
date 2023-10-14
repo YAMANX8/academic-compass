@@ -96,7 +96,11 @@ function InstructorDashboard() {
       });
       setJson(res.data);
     };
-    getData();
+    try {
+      getData();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
   return (
     <section className="max-w-[1200px] grid grid-cols-12 gap-[20px] grid-rows-9">
@@ -232,7 +236,9 @@ function InstructorDashboard() {
               ))}
             </div>
           ) : (
-            <div className="m-auto">You don't have any course under construction yet!</div>
+            <div className="m-auto">
+              You don't have any course under construction yet!
+            </div>
           )}
         </DashboardWrapper>
       </div>
@@ -301,7 +307,9 @@ function InstructorDashboard() {
               ))}
             </div>
           ) : (
-            <div className="m-auto">You don't have any completed course yet!</div>
+            <div className="m-auto">
+              You don't have any completed course yet!
+            </div>
           )}
         </DashboardWrapper>
       </div>
