@@ -21,35 +21,10 @@ function CreateCourse() {
     courseType: "",
     courseLevel: "",
   });
+  // the static lists came from the database like levels and courses type
   const [list, setList] = useState({
-    levels: [
-      {
-        id: 1,
-        title: "Beginner",
-      },
-      {
-        id: 2,
-        title: "Intermediate",
-      },
-      {
-        id: 3,
-        title: "Expert",
-      },
-    ],
-    types: [
-      {
-        id: 1,
-        title: "project based",
-      },
-      {
-        id: 2,
-        title: "beginner|advanced",
-      },
-      {
-        id: 3,
-        title: "observational learn",
-      },
-    ],
+    levels: [],
+    types: [],
   });
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -73,6 +48,7 @@ function CreateCourse() {
     }
   };
   //  شكل ابو راتب
+  // أي على عيني حارتك ☻ أبو حميد
   const handleBackClick = () => {
     if (currentStep > 2) {
       setBtn((prev) => ({ ...prev, type: "button", title: "Continue" }));
@@ -117,13 +93,18 @@ function CreateCourse() {
 
   useEffect(() => {
     const getData = async () => {
-      const res = axios.get(`/instructor/createCourse`, {
-        headers: {
-          token: auth.accessToken,
-        },
-      });
+      try {
+        const res = await axios.get(`/instructor/createCourse`, {
+          headers: {
+            token: auth.accessToken,
+          },
+        });
+        setList(res.data);
+      } catch (error) {
+        console.log(error);
+      }
     };
-    //just I need to call the api here <<<<----------------------------------------------------------
+    getData();
   }, []);
   console.table(courseData);
 
