@@ -2592,4 +2592,63 @@ INSERT INTO Course_Lists (item_body,item_order,list_type,course_id)
 
 
 
+-- show items with tln and tl1
+    SELECT 
+    Topic_Level_1.topic_level1_id,
+    Topic_Level_1.topic_title,
+    Topic_Level_N.topic_id,
+    Topic_Level_N.topic_title,
+    Items.item_id,
+    Items.item_title,
+    Items.item_no,
+    Items.item_type
+    FROM course
+    LEFT join items ON  course.course_id = items.course_id 
+    LEFT JOIN Topic_Level_N ON Items.topic_id = Topic_Level_N.topic_id
+    LEFT JOIN Topic_Level_1 ON  Topic_Level_N.topic_level1_id = Topic_Level_1.topic_level1_id
+    where items.course_id =12 And  course.instructor_id = 1;  
+
+    -- show topics 
+    -- SELECT 
+    -- Assigning_Topics.instructor_id, 
+    -- Topic_Level_1.topic_level1_id,
+    -- Topic_Level_1.topic_title,
+    -- Topic_Level_N.topic_id,
+    -- Topic_Level_N.topic_title
+    --  FROM Assigning_Topics 
+    --  JOIN Topic_Level_1 ON assigning_topics.topic_level1_id = Topic_Level_1.topic_level1_id
+    --  LEFT JOIN Topic_Level_N ON Topic_Level_1.topic_level1_id = Topic_Level_N.topic_level1_id
+    --  LEFT JOIN Items ON Topic_Level_N.topic_id = Items.topic_id
+    --  WHERE instructor_id = 2;
+
+    -- select topic 
+    SELECT 
+    Assigning_Topics.instructor_id, 
+    Topic_Level_1.topic_title
+     FROM Assigning_Topics 
+     JOIN Topic_Level_1 ON assigning_topics.topic_level1_id = Topic_Level_1.topic_level1_id
+     WHERE instructor_id = 1;
+    
+    -- select  subtopic 
+    SELECT 
+    Topic_Level_1.topic_level1_id,
+    Topic_Level_1.topic_title,
+    Topic_Level_N.topic_id,
+    Topic_Level_N.topic_title
+    FROM Topic_Level_1
+    join Topic_Level_n ON Topic_Level_1.topic_level1_id = Topic_Level_N.topic_level1_id
+    where Topic_Level_1.topic_level1_id = 2;
+
+
+    SELECT 
+    items.item_title,
+    items.item_type
+    FROM items
+    join course ON items.course_id = course.course_id
+    where items.course_id =$1 And  course.instructor_id = $2;
+
+
+
+
+
 

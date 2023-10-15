@@ -11,6 +11,7 @@ app.use(morgan("dev"));
 
 // Serve uploaded images
 app.use("/image", express.static("Upload/Images"));
+app.use("/video", express.static("Upload/video"));
 
 // * Update arrangement for routes
 //ROUTES//
