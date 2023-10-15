@@ -84,11 +84,10 @@ ALTER TABLE register_request
 ALTER COLUMN password TYPE character varying(100);
 
 -- Add Add values to a table (Note These values are constant)
-INSERT INTO Role (role_name)
+INSERT INTO role_permission (role_id,permission_id)
 VALUES
-  ('manager'),
-  ('supervisor'),
-  ('AcademicManager');
+  (1,17);
+
 
 
 

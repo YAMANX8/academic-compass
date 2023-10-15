@@ -41,15 +41,15 @@ router.put("/:id", authorization, upload.single("image"), async (req, res) => {
 
     // Permission check
     //* This permission has not been added to the database("updateCourse")
-    // const hasAccess = await checkPermission(
-    //   instructorId,
-    //   "updateCourse",
-    //   roleId
-    // );
+    const hasAccess = await checkPermission(
+      instructorId,
+      "updateCourse",
+      roleId
+    );
 
-    // if (!hasAccess) {
-    //   return res.status(403).json("Access denied");
-    // }
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
 
     //handling the image
     let imageFilePath = null;
@@ -356,15 +356,15 @@ router.get("/:id", authorization, async (req, res) => {
 
     // Permission check
     //* This permission has not been added to the database
-    // const hasAccess = await checkPermission(
-    //   instructorId,
-    //   "updateCourse",
-    //   roleId
-    // );
+    const hasAccess = await checkPermission(
+      instructorId,
+      "updateCourse",
+      roleId
+    );
 
-    // if (!hasAccess) {
-    //   return res.status(403).json("Access denied");
-    // }
+    if (!hasAccess) {
+      return res.status(403).json("Access denied");
+    }
 
     // Get course data
     const getCourseQuery = `
