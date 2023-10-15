@@ -5,10 +5,11 @@ const checkPermission = require("../../middleware/checkPermissions");
 const Completed_Items_import = require("../../Utils/course/Completed");
 
 
-router.post("/", authorization, async (req, res) => {
+router.get("/:courseId/:itemId", authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;
-    const {courseId, itemId } = req.body;
+    const courseId = req.params.courseId;
+    const itemId = req.params.itemId;
     const roleId = req.user.roleId;
     //permission
     const hasAccess = await checkPermission(studentId, "show_video", roleId);
@@ -36,6 +37,7 @@ router.post("/", authorization, async (req, res) => {
     Topic_Level_n.topic_title AS topicTitlen,
     Items.item_id,
     Items.item_title,
+    Items.item_description,
     Items.item_no,
     Items_Types.type_name,
     CASE 
@@ -123,6 +125,7 @@ WHERE course.course_id = $2`;
         currentSubTopic.items.push({
           id: row.item_id,
           title: row.item_title,
+          description : row.item_description,
           order: row.item_no,
           type: row.type_name,
           is_completed: row.is_completed,
@@ -152,8 +155,12 @@ router.post("/Completed", authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
     const { itemId } = req.body;
-    const post_completed = await Completed_Items_import.completed_items(itemId , Id)
-    res.json("The item has been added");
+    const itemCompleted = await Completed_Items_import.completed_items(itemId , Id)
+    if (itemCompleted) {
+      res.json("You have already completed this item.");
+  } else {
+      res.json("The item has been added.");
+  }
   } catch (err) {
     console.error("Error insert item information", err);
     res.status(500).json({ error: "Server Error" });
