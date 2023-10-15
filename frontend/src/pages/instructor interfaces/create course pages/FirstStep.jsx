@@ -6,7 +6,6 @@ const FirstStep = ({ courseData, handleChange }) => {
       </h2>
       <input
         type="text"
-        maxLength={60}
         onChange={handleChange}
         name="title"
         value={courseData.title}
