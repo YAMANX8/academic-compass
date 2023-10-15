@@ -24,7 +24,7 @@ router.put("/:id", authorization, upload.single("image"), async (req, res) => {
     const instructorId = req.user.userId;
     const roleId = req.user.roleId;
     const courseId = req.params.id;
-    const {
+    let {
       title,
       subtitle,
       level,
@@ -38,7 +38,13 @@ router.put("/:id", authorization, upload.single("image"), async (req, res) => {
       updatePrerequisites,
       isActive,
     } = req.body;
-
+    whatLearn = JSON.parse(whatLearn)
+    whoFor = JSON.parse(whoFor)
+    prerequisites = JSON.parse(prerequisites)
+    updateWhoFor = JSON.parse(updateWhoFor)
+    updateWhatLearn = JSON.parse(updateWhatLearn)
+    updatePrerequisites = JSON.parse(updatePrerequisites)
+ 
     // Permission check
     //* This permission has not been added to the database("updateCourse")
     const hasAccess = await checkPermission(
@@ -132,7 +138,7 @@ router.put("/:id", authorization, upload.single("image"), async (req, res) => {
       }
     };
     // insert for courseList
-    if (getResult2 && getResult2.rows.length > 0) {
+    if (true) {
       const item = getResult2.rows;
       let found = false;
 
