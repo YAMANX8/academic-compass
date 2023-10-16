@@ -144,50 +144,50 @@ router.put("/:id", authorization, upload.single("image"), async (req, res) => {
 
       if (whoFor && whoFor.length > 0) {
         whoFor.forEach((el) => {
-          item.forEach((item) => {
-            if (
-              item.item_body === el.item_body &&
-              item.list_type === el.list_type
-            ) {
-              found = true;
-            }
-          });
-          if (found !== true) {
+          // item.forEach((item) => {
+          //   if (
+          //     item.item_body === el.item_body &&
+          //     item.list_type === el.list_type
+          //   ) {
+          //     found = true;
+          //   }
+          // });
+          // if (found !== true) {
             insert(el.item_body, el.item_order, el.list_type);
-            found = false;
-          }
+          //   found = false;
+          // }
         });
       }
       if (whatLearn && whatLearn.length > 0) {
         whatLearn.forEach((el) => {
-          item.forEach((item) => {
-            if (
-              item.item_body === el.item_body &&
-              item.list_type === el.list_type
-            ) {
-              found = true;
-            }
-          });
-          if (found !== true) {
+          // item.forEach((item) => {
+          //   if (
+          //     item.item_body === el.item_body &&
+          //     item.list_type === el.list_type
+          //   ) {
+          //     found = true;
+          //   }
+          // });
+          // if (found !== true) {
             insert(el.item_body, el.item_order, el.list_type);
-            found = false;
-          }
+          //   found = false;
+          // }
         });
       }
       if (prerequisites && prerequisites.length > 0) {
         prerequisites.forEach((el) => {
-          item.forEach((item) => {
-            if (
-              item.item_body === el.item_body &&
-              item.list_type === el.list_type
-            ) {
-              found = true;
-            }
-          });
-          if (found !== true) {
+          // item.forEach((item) => {
+          //   if (
+          //     item.item_body === el.item_body &&
+          //     item.list_type === el.list_type
+          //   ) {
+          //     found = true;
+          //   }
+          // });
+          // if (found !== true) {
             insert(el.item_body, el.item_order, el.list_type);
-            found = false;
-          }
+          //   found = false;
+          // }
         });
       }
     }

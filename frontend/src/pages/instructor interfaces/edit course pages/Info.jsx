@@ -34,6 +34,12 @@ const Info = () => {
   // **********************************************************************************************************
   // handling adding lists
 
+  //for ordering
+  const [learnCount, setLearnCount] = useState(0);
+  const [whoCount, setWhoCount] = useState(0);
+  const [preCount, setPreCount] = useState(0);
+
+
   const [whatLearn, setWhatLearn] = useState([]); // array state
   const [whoFor, setWhoFor] = useState([]); // array state
   const [prerequisites, setPrerequisites] = useState([]); // array state
@@ -49,18 +55,55 @@ const Info = () => {
       });
     });
   };
-  const handleAddClick = (setArray, order, type) => {
+  const handleAddClick = (setArray, order, type, setOrder) => {
     setArray((prevData) => [
       ...prevData,
       { item_body: "", item_order: order, list_type: type },
     ]);
+    setOrder(order);
   };
 
   // handling editing lists
+  const [whoForStatus, setWhoForStatus] = useState([]);
+  const [whatLearnStatus, setWhatLearnStatus] = useState([]);
+  const [preStatus, setPreStatus] = useState([]);
+
   const [updateWhoFor, setUpdateWhoFor] = useState([]); // array state
   const [updateWhatLearn, setUpdateWhatLearn] = useState([]); // array state
   const [updatePrerequisites, setUpdatePrerequisites] = useState([]); // array state
 
+  const handleEditClick = (
+    index,
+    oldValue,
+    setArray,
+    status,
+    setStatus,
+    type
+  ) => {
+    const updatedIsEdited = [...status];
+    updatedIsEdited[index] = !updatedIsEdited[index];
+    setStatus(updatedIsEdited);
+    setArray((prevData) => [
+      ...prevData,
+      {
+        id: index,
+        item_body: oldValue,
+        newitem_body: oldValue,
+        list_type: type,
+      },
+    ]);
+  };
+  const handleEditChange = (setArray, index, newValue) => {
+    setArray((prevArray) => {
+      return prevArray.map((item) => {
+        if (item.id === index) {
+          return { ...item, newitem_body: newValue };
+        } else {
+          return item;
+        }
+      });
+    });
+  };
   // __________________________________________________________________________________________________________
 
   const handleChange = (event) => {
@@ -90,9 +133,21 @@ const Info = () => {
       );
       const type = await res.data.types.find((i) => i.title == res2.data.type);
       const data = await res2.data;
-      // console.log(type);
+      const sortedWhatLearn = [...data.whatLearn].sort(
+        (a, b) => a.item_order - b.item_order
+      );
+      const sortedWhoFor = [...data.whoFor].sort(
+        (a, b) => a.item_order - b.item_order
+      );
+      const sortedPre = [...data.prerequisites].sort(
+        (a, b) => a.item_order - b.item_order
+      );
+
       setData(() => ({
         ...data,
+        whatLearn: sortedWhatLearn,
+        whoFor: sortedWhoFor,
+        prerequisites: sortedPre,
         title: data?.title ? data.title : "",
         subtitle: data?.subtitle ? data.subtitle : "",
         description: data?.description ? data.description : "",
@@ -104,6 +159,12 @@ const Info = () => {
       setImage(
         data?.thumbnail ? `http://localhost:5000/image/${data.thumbnail}` : ""
       );
+      setPreStatus(new Array(data.prerequisites.length).fill(false));
+      setWhoForStatus(new Array(data.whoFor.length).fill(false));
+      setWhatLearnStatus(new Array(data.whatLearn.length).fill(false));
+      setLearnCount(await res2.data.whatLearn.length);
+      setWhoCount(await res2.data.whoFor.length);
+      setPreCount(await res2.data.prerequisites.length);
     } catch (error) {
       console.log(error);
     }
@@ -124,14 +185,18 @@ const Info = () => {
     formdata.set("updateWhoFor", JSON.stringify(updateWhoFor));
     formdata.set("updateWhatLearn", JSON.stringify(updateWhatLearn));
     formdata.set("updatePrerequisites", JSON.stringify(updatePrerequisites));
-    formdata.forEach((value, key) => console.log(`${key}: ${value}`));
+    // formdata.forEach((value, key) => console.log(`${key}: ${value}`));
     try {
-      const res = await axios.put(`/instructor/editeCourseInfo/${id}`, formdata, {
-        headers: {
-          token: auth.accessToken,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await axios.put(
+        `/instructor/editeCourseInfo/${id}`,
+        formdata,
+        {
+          headers: {
+            token: auth.accessToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       setWhatLearn([]);
       setWhoFor([]);
       setPrerequisites([]);
@@ -249,16 +314,43 @@ const Info = () => {
           <div className="relative group" key={index}>
             <input
               type="text"
-              value={item.item_body}
+              value={
+                whatLearnStatus.length > 0 && whatLearnStatus[index]
+                  ? updateWhatLearn.find((i) => i.id == index).newitem_body
+                  : item.item_body
+              }
               placeholder="Ex: how to style a website using ..."
-              className={inputs}
-              disabled
+              className={`${inputs} ${
+                whatLearnStatus.length > 0 &&
+                whatLearnStatus[index] &&
+                `!bg-primary/40 dark:bg-primary/40`
+              }`}
+              onChange={(e) =>
+                handleEditChange(setUpdateWhatLearn, index, e.target.value)
+              }
+              disabled={
+                whatLearnStatus.length > 0 && whatLearnStatus[index]
+                  ? false
+                  : true
+              }
             />
             <button
               type="button"
+              onClick={(e) =>
+                handleEditClick(
+                  index,
+                  item.item_body,
+                  setUpdateWhatLearn,
+                  whatLearnStatus,
+                  setWhatLearnStatus,
+                  1
+                )
+              }
               className="absolute right-[10px] top-[50%] -translate-y-1/2 hidden group-hover:block"
             >
-              <Edit size={50} />
+              {whatLearnStatus.length > 0 && whatLearnStatus[index] ? null : (
+                <Edit size={50} />
+              )}
             </button>
           </div>
           // item_body
@@ -284,7 +376,9 @@ const Info = () => {
         /> */}
         <button
           type="button"
-          onClick={() => handleAddClick(setWhatLearn, 1, 1)}
+          onClick={() =>
+            handleAddClick(setWhatLearn, learnCount + 1, 1, setLearnCount)
+          }
           className="p-[10px] self-start border border-primary bg-light rounded-[5px] text-primary flex items-center gap-2"
         >
           <Add />
@@ -301,16 +395,39 @@ const Info = () => {
           <div className="relative group" key={index}>
             <input
               type="text"
-              value={item.item_body}
+              value={
+                preStatus.length > 0 && preStatus[index]
+                  ? updatePrerequisites.find((i) => i.id == index).newitem_body
+                  : item.item_body
+              }
               placeholder="Ex: how to style a website using ..."
-              className={inputs}
-              disabled
+              className={`${inputs} ${
+                preStatus.length > 0 &&
+                preStatus[index] &&
+                `!bg-primary/40 dark:bg-primary/40`
+              }`}
+              onChange={(e) =>
+                handleEditChange(setUpdatePrerequisites, index, e.target.value)
+              }
+              disabled={preStatus.length > 0 && preStatus[index] ? false : true}
             />
             <button
               type="button"
+              onClick={(e) =>
+                handleEditClick(
+                  index,
+                  item.item_body,
+                  setUpdatePrerequisites,
+                  preStatus,
+                  setPreStatus,
+                  3
+                )
+              }
               className="absolute right-[10px] top-[50%] -translate-y-1/2 hidden group-hover:block"
             >
-              <Edit size={50} />
+              {preStatus.length > 0 && preStatus[index] ? null : (
+                <Edit size={50} />
+              )}
             </button>
           </div>
           // item_body
@@ -336,7 +453,9 @@ const Info = () => {
         /> */}
         <button
           type="button"
-          onClick={() => handleAddClick(setPrerequisites, 1, 3)}
+          onClick={() =>
+            handleAddClick(setPrerequisites, preCount + 1, 3, setPreCount)
+          }
           className="p-[10px] self-start border border-primary bg-light rounded-[5px] text-primary flex items-center gap-2"
         >
           <Add />
@@ -353,16 +472,41 @@ const Info = () => {
           <div className="relative group" key={index}>
             <input
               type="text"
-              value={item.item_body}
+              value={
+                whoForStatus.length > 0 && whoForStatus[index]
+                  ? updateWhoFor.find((i) => i.id == index).newitem_body
+                  : item.item_body
+              }
               placeholder="Ex: how to style a website using ..."
-              className={inputs}
-              disabled
+              className={`${inputs} ${
+                whoForStatus.length > 0 &&
+                whoForStatus[index] &&
+                `!bg-primary/40 dark:bg-primary/40`
+              }`}
+              onChange={(e) =>
+                handleEditChange(setUpdateWhoFor, index, e.target.value)
+              }
+              disabled={
+                whoForStatus.length > 0 && whoForStatus[index] ? false : true
+              }
             />
             <button
               type="button"
+              onClick={(e) =>
+                handleEditClick(
+                  index,
+                  item.item_body,
+                  setUpdateWhoFor,
+                  whoForStatus,
+                  setWhoForStatus,
+                  2
+                )
+              }
               className="absolute right-[10px] top-[50%] -translate-y-1/2 hidden group-hover:block"
             >
-              <Edit size={50} />
+              {whoForStatus.length > 0 && whoForStatus[index] ? null : (
+                <Edit size={50} />
+              )}
             </button>
           </div>
           // item_body
@@ -388,7 +532,9 @@ const Info = () => {
         /> */}
         <button
           type="button"
-          onClick={() => handleAddClick(setWhoFor, 1, 2)}
+          onClick={() =>
+            handleAddClick(setWhoFor, whoCount + 1, 2, setWhoCount)
+          }
           className="p-[10px] self-start border border-primary bg-light rounded-[5px] text-primary flex items-center gap-2"
         >
           <Add />

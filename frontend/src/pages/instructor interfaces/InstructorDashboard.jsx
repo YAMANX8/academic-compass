@@ -203,8 +203,9 @@ function InstructorDashboard() {
                   className="bg-light dark:bg-dark text-dark dark:text-light transition-colors duration-1000 ease-in-out-back shadow-[0_0_10px] shadow-black/40 rounded-[10px]"
                 >
                   <div className="flex">
-                    <div className="flex w-[50%] aspect-video bg-accent-dark rounded-bl-[10px] rounded-tl-[10px]">
+                    <div className="w-[50%] bg-accent-dark rounded-bl-[10px] rounded-tl-[10px]">
                       <img
+                      className="object-cover aspect-video"
                         src={`http://localhost:5000/image/${course.thumnail}`}
                         alt="course thumnail"
                       />
