@@ -126,7 +126,7 @@ const Info = () => {
     formdata.set("updatePrerequisites", JSON.stringify(updatePrerequisites));
     formdata.forEach((value, key) => console.log(`${key}: ${value}`));
     try {
-      const res = axios.put(`/instructor/editeCourseInfo/${id}`, formdata, {
+      const res = await axios.put(`/instructor/editeCourseInfo/${id}`, formdata, {
         headers: {
           token: auth.accessToken,
           "Content-Type": "multipart/form-data",
@@ -271,7 +271,7 @@ const Info = () => {
             type="text"
             value={item.item_body}
             placeholder="Ex: how to style a website using ..."
-            className={`${inputs} bg-green/40 dark:bg-green/40`}
+            className={`${inputs} !bg-green/40 !dark:bg-green/40`}
             onChange={(e) =>
               handleArrayChange(setWhatLearn, index, e.target.value)
             }
@@ -323,7 +323,7 @@ const Info = () => {
             type="text"
             value={item.item_body}
             placeholder="Ex: how to style a website using ..."
-            className={`${inputs} bg-green/40 dark:bg-green/40`}
+            className={`${inputs} !bg-green/40 !dark:bg-green/40`}
             onChange={(e) =>
               handleArrayChange(setPrerequisites, index, e.target.value)
             }
@@ -375,7 +375,7 @@ const Info = () => {
             type="text"
             value={item.item_body}
             placeholder="Ex: how to style a website using ..."
-            className={`${inputs} bg-green/40 dark:bg-green/40`}
+            className={`${inputs} !bg-green/40 !dark:bg-green/40`}
             onChange={(e) =>
               handleArrayChange(setWhoFor, index, e.target.value)
             }
