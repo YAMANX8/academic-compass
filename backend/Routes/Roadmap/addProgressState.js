@@ -2,6 +2,7 @@ const router = require("express").Router();
 const pool = require("../../Database/db");
 const authorization = require("../../middleware/authorization");
 const checkPermission = require("../../middleware/checkPermissions");
+
 router.post("/student/state", authorization, async (req, res) => {
   try {
     const { topic_id, topic_level, state_id } = req.body;
@@ -85,14 +86,3 @@ router.delete(
 );
 
 module.exports = router;
-
-`roadmap=# SELECT * FROM Topic_States;
--[ RECORD 1 ]-----------
-state_id   | 1
-state_name | Not Started
--[ RECORD 2 ]-----------
-state_id   | 2
-state_name | In Progress
--[ RECORD 3 ]-----------
-state_id   | 3
-state_name | Completed`;

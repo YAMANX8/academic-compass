@@ -51,3 +51,5 @@ router.get("/", authorization, async (req, res) => {
     res.status(500).json("Sever Error");
   }
 });
+
+module.exports = router;

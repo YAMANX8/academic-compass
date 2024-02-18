@@ -54,3 +54,5 @@ SELECT
     res.status(500).json("Server Error");
   }
 });
+
+module.exports = router;

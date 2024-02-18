@@ -4,7 +4,6 @@ const authorization = require("../../middleware/authorization");
 const checkPermission = require("../../middleware/checkPermissions");
 const Completed_Items_import = require("../../Utils/course/Completed");
 
-
 router.get("/:courseId/:itemId", authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;

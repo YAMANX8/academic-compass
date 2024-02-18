@@ -1,22 +1,8 @@
 const router = require("express").Router();
 const pool = require("../../Database/db");
-const multer = require("multer");
-const path = require("path");
+const uploadImage = require("../../lib/multer-image");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "Upload/Images");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const fileExtension = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + uniqueSuffix + fileExtension);
-  },
-});
-
-const upload = multer({ storage: storage });
-
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", uploadImage.single("image"), async (req, res) => {
   try {
     const { title, description } = req.body;
     const imageFilePath = encodeURIComponent(req.file.filename);

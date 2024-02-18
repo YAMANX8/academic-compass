@@ -1,23 +1,7 @@
 const router = require("express").Router();
 const db = require("../../../Database/db");
-const path = require("path");
 const authorization = require("../../../middleware/authorization");
-const multer = require("multer");
-// multer
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "Upload/video");
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        cb(
-            null,
-            file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-        );
-    },
-});
-
-const upload = multer({ storage: storage });
+const uploadVideo = require("../../../lib/multer-video");
 
 // Get TL1 And TLN .
 // Items For Specific Insturctor And Course . 
@@ -141,61 +125,72 @@ router.get("/show_items/:course_id", authorization, async (req, res) => {
 });
 
 // Post A New Item
-router.post("/insert_item", authorization, upload.single('video'), async (req, res) => {
+router.post(
+  "/insert_item",
+  authorization,
+  uploadVideo.single("video"),
+  async (req, res) => {
     try {
-        const {
-            item_title,
-            item_description,
-            item_no,
-            course_id,
-            topic_id,
-            item_type,
-            content_type
-        } = req.body;
+      const {
+        item_title,
+        item_description,
+        item_no,
+        course_id,
+        topic_id,
+        item_type,
+        content_type,
+      } = req.body;
 
-        const query = `
+      const query = `
         INSERT INTO items
         (item_title, item_description, item_no, course_id, topic_id, item_type)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING item_id;
         `;
 
-        const values = [item_title, item_description, item_no, course_id, topic_id, item_type];
+      const values = [
+        item_title,
+        item_description,
+        item_no,
+        course_id,
+        topic_id,
+        item_type,
+      ];
 
-        const result = await db.query(query, values);
-        const my_item_id = result.rows[0].item_id;
+      const result = await db.query(query, values);
+      const my_item_id = result.rows[0].item_id;
 
-        console.log(item_type);
+      console.log(item_type);
 
-        if (item_type == 2) {
-            if (!req.file) {
-                // إذا لم يتم تحميل أي ملف
-                res.status(400).json({ error: 'No video file uploaded.' });
-                return;
-            }
-            let video_path = null;
-            video_path = encodeURIComponent(req.file.path);
-            console.log(video_path);
-            const videoQuery = `
+      if (item_type == 2) {
+        if (!req.file) {
+          // إذا لم يتم تحميل أي ملف
+          res.status(400).json({ error: "No video file uploaded." });
+          return;
+        }
+        let video_path = null;
+        video_path = encodeURIComponent(req.file.path);
+        console.log(video_path);
+        const videoQuery = `
             INSERT INTO video (video_path, item_id)
             VALUES ($1, $2);
             `;
-            const videoValues = [video_path, my_item_id];
-            await db.query(videoQuery, videoValues);
-        }
-        else {
-            const articleQuery = `
+        const videoValues = [video_path, my_item_id];
+        await db.query(videoQuery, videoValues);
+      } else {
+        const articleQuery = `
                 INSERT INTO article (article_body, item_id)
                 VALUES ($1, $2);
             `;
-            const articleValues = [content_type, my_item_id];
-            await db.query(articleQuery, articleValues);
-        }
-        res.json("Item has been inserted.");
+        const articleValues = [content_type, my_item_id];
+        await db.query(articleQuery, articleValues);
+      }
+      res.json("Item has been inserted.");
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error");
+      console.error(err);
+      res.status(500).send("Server Error");
     }
-});
+  }
+);
 
 module.exports = router;

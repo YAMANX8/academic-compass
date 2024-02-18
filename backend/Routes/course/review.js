@@ -3,8 +3,7 @@ const db = require("../../Database/db");
 const authorization = require("../../middleware/authorization");
 const checkPermission = require("../../middleware/checkPermissions");
 
-
-// * Insert And Update 
+//  Insert And Update 
 router.post('/edit_review/:course_id', authorization, async (req, res) => {
   try {
     const { stars_number, review } = req.body;
@@ -63,7 +62,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
 
 
 
-// * Show Review
+//  Show Review
 router.get("/show_review/:course_id", authorization, async (req, res) => {
   try {
     const course_id = req.params.course_id;
