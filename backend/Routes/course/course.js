@@ -279,7 +279,7 @@ router.post("/enroll", authorization, async (req, res) => {
     }
     const { courseId } = req.body;
     const progress = 0;
-    const startDate = new Date();
+    const startDate = new Date();//
 
     //تجهيز استعلام للتحقق من أن الطالب قد قام مسبقاً بالاشتراك بالدورة
     const checkEnrollmentQuery = `
@@ -288,7 +288,6 @@ router.post("/enroll", authorization, async (req, res) => {
       WHERE student_id = '${studentId}' AND course_id = '${courseId}';
       `;
     const { rows } = await db.query(checkEnrollmentQuery);
-
     if (rows.length === 0) {
       const insertEnrollmentQuery = `
       INSERT INTO enrollment (student_id, progress_state, strting_date ,course_id)
@@ -296,7 +295,6 @@ router.post("/enroll", authorization, async (req, res) => {
       RETURNING enrollment_id;`;
 
       const values = [studentId, progress, startDate, courseId];
-
       const result = await db.query(insertEnrollmentQuery, values);
 
       res.json({ enrollmentId: result.rows[0].enrollment_id });

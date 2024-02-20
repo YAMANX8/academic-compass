@@ -33,7 +33,7 @@ router.post("/student/register", validInfo, async (req, res) => {
     );
 
     // 5.generating our jwt token
-    const { accessToken,refreshToken } = jwtGenerator(
+    const { token,refreshToken } = jwtGenerator(
       newStudent.rows[0].student_id,
       newStudent.rows[0].role_id
     );
@@ -43,7 +43,7 @@ router.post("/student/register", validInfo, async (req, res) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({ accessToken, role_id });
+    res.status(200).json({ token, role_id });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
@@ -78,7 +78,7 @@ router.post("/student/login", validInfo, async (req, res) => {
 
     // 4. give them the jwt token
     else if (validPassword) {
-      const { accessToken, refreshToken } = jwtGenerator(
+      const { token, refreshToken } = jwtGenerator(
         student.rows[0].student_id,
         student.rows[0].role_id
       );
@@ -89,7 +89,7 @@ router.post("/student/login", validInfo, async (req, res) => {
         secure: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      return res.status(200).json({ accessToken, role_id });
+      return res.status(200).json({ token, role_id });
     }
   } catch (error) {
     console.error(error);

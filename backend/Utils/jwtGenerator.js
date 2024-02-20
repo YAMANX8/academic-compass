@@ -9,13 +9,13 @@ function jwtGenerator(user_id,roleid) {
   };
 
   //access token
-  const accessToken = jwt.sign(payload, process.env.jwtSecret, {
-    expiresIn: "30s",
+  const token = jwt.sign(payload, process.env.jwtSecret, {
+    expiresIn: "30d",
   }); 
   const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "1d",
   });
 
-  return { accessToken, refreshToken };
+  return { token, refreshToken };
 }
 module.exports = jwtGenerator;

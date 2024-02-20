@@ -11,5 +11,6 @@ const storage = multer.diskStorage({
     cb(null, `${file.fieldname}-${uniqueSuffix}${fileExtension}`);
   },
 });
+const uploadVideo = multer({ storage });
 
-export const uploadVideo = multer({ storage });
+module.exports = uploadVideo;

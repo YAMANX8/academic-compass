@@ -13,10 +13,10 @@ async function refreshTokenMiddleware(req, res) {
    }
    try {
      const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-     const { accessToken } = jwtGenerator(payload.userId, payload.roleId);
+     const { token } = jwtGenerator(payload.userId, payload.roleId);
 
      // Respond with the new access token
-     return res.json({ accessToken });
+     return res.json({ token });
    } catch (error) {
      console.error(error.message);
      return res.status(403).json("Not Authorized");
