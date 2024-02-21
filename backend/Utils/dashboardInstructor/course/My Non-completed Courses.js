@@ -2,17 +2,21 @@ const db = require("../../../Database/db");
 
 // Bring Non-completed Courses .
 const My_Non_completed_Courses = async (instructoer_id) => {
-    try {
-        const value = [instructoer_id];
+  try {
+    const value = [instructoer_id];
 
-        const query = `
+    const query = `
         SELECT course_id, course_title,course_thumnail, progress
           FROM (
             SELECT c.course_id, c.course_title,c.course_thumnail,
             CASE
+              WHEN c.course_title IS NOT NULL THEN 1 ELSE 0 END +
+            CASE
               WHEN c.subtitle IS NOT NULL THEN 1 ELSE 0 END +
             CASE
               WHEN c.course_description IS NOT NULL THEN 1 ELSE 0 END +
+            CASE
+              WHEN c.course_status = 'true' THEN 1 ELSE 0 END +
             CASE
               WHEN c.course_level IS NOT NULL THEN 1 ELSE 0 END +
             CASE
@@ -43,24 +47,24 @@ const My_Non_completed_Courses = async (instructoer_id) => {
           WHERE c.instructor_id = $1
           GROUP BY c.course_id, c.course_title
         ) AS subquery
-        WHERE progress < 10;
+        WHERE progress < 12;
       `;
-      const result = await db.query(query, value);
-      console.log(result);
-        return {
-            status: "success",
-            Data: {
-                Non_completed_Courses: result.rows,
-            }
-        }
-    } catch (err) {
-        console.error("Error: ", err);
-        return {
-            status: "error",
-            message: "Field",
-        };
-    }
-}
+    const result = await db.query(query, value);
+    console.log(result);
+    return {
+      status: "success",
+      Data: {
+        Non_completed_Courses: result.rows,
+      },
+    };
+  } catch (err) {
+    console.error("Error: ", err);
+    return {
+      status: "error",
+      message: "Field",
+    };
+  }
+};
 module.exports = {
-    My_Non_completed_Courses
+  My_Non_completed_Courses,
 };

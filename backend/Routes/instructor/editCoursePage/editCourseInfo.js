@@ -35,7 +35,6 @@ router.put(
       updatePrerequisites = JSON.parse(updatePrerequisites);
 
       // Permission check
-      //* This permission has not been added to the database("updateCourse")
       const hasAccess = await checkPermission(
         instructorId,
         "updateCourse",
@@ -76,7 +75,7 @@ router.put(
           level,
           type,
           description,
-          `http://localhost:5000/image/${imageFilePath}`,
+          imageFilePath,
           isActive,
           courseId,
         ];

@@ -68,7 +68,7 @@ router.get("/", authorization, async (req, res, next) => {
         My_Non_completed_Courses.Data.Non_completed_Courses.map((course) => ({
           id: course.course_id,
           title: course.course_title,
-          progress: (course.progress * 100) / 10,// ther is an error here
+          progress: ((course.progress * 100) / 12).toFixed(1),
           thumnail: course.course_thumnail,
         })),
       completed_courses: Completed_Courses.Data.Completed_Courses.map(

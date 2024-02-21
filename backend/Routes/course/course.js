@@ -157,13 +157,6 @@ router.get("/:courseId", async (req, res) => {
     );
     const Get_Review_result = await db.query(Get_Review, [courseId]);
 
-    // const data4 = Part_2From_Course_info_result.rows.map((item) => ({
-    //   [item.type_name]: {
-    //     item_body: item.item_body,
-    //     item_order: item.item_order,
-    //   },
-    // }));
-
     //for learn..
     const learnItems = [];
     const forWhoItems = [];
@@ -236,7 +229,7 @@ router.get("/:courseId", async (req, res) => {
       comment: row.review,
     }));
     const frontEndJson = {
-      course_thumnail: Get_Course_info_result.rows[0].course_thumnail,
+      course_thumnail: `http://localhost:5000/image/${Get_Course_info_result.rows[0].course_thumnail}`,
       course_title: Get_Course_info_result.rows[0].course_title,
       subtitle: Get_Course_info_result.rows[0].subtitle,
       stars: Get_Course_info_result.rows[0].average_rating,
@@ -279,7 +272,7 @@ router.post("/enroll", authorization, async (req, res) => {
     }
     const { courseId } = req.body;
     const progress = 0;
-    const startDate = new Date();//
+    const startDate = new Date(); //
 
     //تجهيز استعلام للتحقق من أن الطالب قد قام مسبقاً بالاشتراك بالدورة
     const checkEnrollmentQuery = `
@@ -310,4 +303,3 @@ router.post("/enroll", authorization, async (req, res) => {
 });
 
 module.exports = router;
-
