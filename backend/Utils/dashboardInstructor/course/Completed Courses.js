@@ -18,10 +18,12 @@ const Completed_Courses = async (instructoer_id) => {
         LEFT JOIN Quiz q ON I.item_id = q.item_id
         WHERE c.instructor_id = $1
         AND c.subtitle IS NOT NULL
+        AND c.c.course_title IS NOT NULL
         AND c.course_description IS NOT NULL
         AND c.course_level IS NOT NULL
         AND c.course_type IS NOT NULL
         AND c.course_thumnail IS NOT NULL
+        AND c.course_status = 'true'
         GROUP BY c.course_id, c.course_title
         HAVING
           COUNT(CASE WHEN lt.type_name = 'In this course you will learn the following' THEN cl.list_id END) >= 1
