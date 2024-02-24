@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-02-24T14:30:58.160Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" etag="S4rfENG-Qyz434LF9Db_" version="23.1.5" type="github">
+<mxfile host="app.diagrams.net" modified="2024-02-24T14:37:20.039Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" etag="NxShkc1Wvm2xsbajbkEb" version="23.1.5" type="github">
   <diagram name="Page-1" id="ULvkepZrze767ZOHFqph">
-    <mxGraphModel dx="5945" dy="1751" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="4157" dy="1022" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -169,7 +169,7 @@
           <mxGeometry x="-516.5" y="1840" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="Thxcj-0kOySwmjmrB6FI-6" value="Browse Roadmaps" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="1" vertex="1">
-          <mxGeometry x="110" y="1860" width="140" height="70" as="geometry" />
+          <mxGeometry x="70" y="2000" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="Thxcj-0kOySwmjmrB6FI-8" value="Search for a Course" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="1" vertex="1">
           <mxGeometry x="-516.5" y="1920" width="140" height="70" as="geometry" />
@@ -255,6 +255,9 @@
         </mxCell>
         <mxCell id="ZqFeVGlqoxZ3mJ63dnHJ-4" value="Academic Supervisor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
           <mxGeometry x="-700" y="2785" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ZqFeVGlqoxZ3mJ63dnHJ-7" value="تذكرة:&lt;br&gt;هل كل حالة استخدام&lt;br&gt;&amp;nbsp;من هذه الثلاث&lt;br&gt;تعتبر حالة&amp;nbsp;منفصلة، أم&lt;br&gt;&amp;nbsp;هي فقط امتداد&lt;br&gt;لحالة إنشاء الدرس&lt;br&gt;&amp;nbsp;أم&amp;nbsp;الاثنين معاً" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#6c8ebf;fillColor=#dae8fc;" vertex="1" parent="1">
+          <mxGeometry x="-123" y="2510" width="110" height="110" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
