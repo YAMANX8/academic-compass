@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const pool = require('../../Database/db');
 const authorization = require('../../middleware/authorization');
-const checkPermission = require('../../middleware/checkPermissions');
-const Completed_Items_import = require('../../Utils/course/Completed');
+const checkPermission = require('../../middleware/check-permissions');
+const Completed_Items_import = require('../../Utils/course/completed');
 
 router.get('/:courseId/:itemId', authorization, async (req, res) => {
   try {

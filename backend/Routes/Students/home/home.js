@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const pool = require('../../../Database/db');
-const popularRoadmaps = require('../../../Utils/dashboard/popularRoadmaps');
+const popularRoadmaps = require('../../../Utils/dashboard/popular-roadmaps');
 
 // * we don't need authorization in home page
 // todo we need to change role_id

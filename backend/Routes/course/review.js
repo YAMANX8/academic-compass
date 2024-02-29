@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const pool = require('../../Database/db');
 const authorization = require('../../middleware/authorization');
-const checkPermission = require('../../middleware/checkPermissions');
+const checkPermission = require('../../middleware/check-permissions');
 
 //  Insert And Update
 router.post('/edit_review/:course_id', authorization, async (req, res) => {
