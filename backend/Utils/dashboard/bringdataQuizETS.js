@@ -1,6 +1,6 @@
-const db = require("../../Database/db");
+const db = require('../../Database/db');
 
-// Bring (quiz video and artical) numbers Fro Studnet   
+// Bring (quiz video and artical) numbers Fro Studnet
 const qva = async (student_id) => {
   try {
     const query = `SELECT
@@ -16,27 +16,26 @@ JOIN
 JOIN 
   Items_Types it ON i.item_type = it.type_id
 WHERE
-    e.student_id = $1;`
+    e.student_id = $1;`;
 
     const values = [student_id];
-    const result = await db.query(query , values);
+    const result = await db.query(query, values);
     return {
-      status: "success",
+      status: 'success',
       results: result.rows.length,
       Data: {
         data: result.rows[0],
       },
     };
-  }
-   catch (err) {
-    console.error("Error Get Quiz Video Artical : ", err);
+  } catch (err) {
+    console.error('Error Get Quiz Video Artical : ', err);
     return {
-      status: "error",
-      message: "Error Get Quiz Video Artical Is Field",
+      status: 'error',
+      message: 'Error Get Quiz Video Artical Is Field',
     };
   }
-}
+};
 
 module.exports = {
-  qva
+  qva,
 };

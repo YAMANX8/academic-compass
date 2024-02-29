@@ -1,4 +1,4 @@
-const db = require("../../Database/db");
+const db = require('../../Database/db');
 
 // Bring Info & Rating's Instructoer.
 const myProfile = async (instructoer_id) => {
@@ -23,17 +23,17 @@ const myProfile = async (instructoer_id) => {
     `;
     const result2 = await db.query(query2, value);
     return {
-      status: "success",
+      status: 'success',
       Data: {
         Instructoer_info: result1.rows[0],
         Instructoer_Rating: result2.rows[0],
       },
     };
   } catch (err) {
-    console.error("Error: ", err);
+    console.error('Error: ', err);
     return {
-      status: "error",
-      message: "Field",
+      status: 'error',
+      message: 'Field',
     };
   }
 };

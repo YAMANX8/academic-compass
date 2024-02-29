@@ -1,21 +1,21 @@
-const router = require("express").Router();
-const db = require("../../../Database/db");
-const authorization = require("../../../middleware/authorization");
-const uploadVideo = require("../../../lib/multer-video");
+const router = require('express').Router();
+const db = require('../../../Database/db');
+const authorization = require('../../../middleware/authorization');
+const uploadVideo = require('../../../lib/multer-video');
 
 // Get TL1 And TLN .
-// Items For Specific Insturctor And Course . 
+// Items For Specific Insturctor And Course .
 // ToDo Don't Forget Put authoriz
-router.get("/show_items/:course_id", authorization, async (req, res) => {
-    try {
-        const { tl1_id } = req.body;
-        const instructorId = req.user.userId;
-        console.log(instructorId);
+router.get('/show_items/:course_id', authorization, async (req, res) => {
+  try {
+    const { tl1_id } = req.body;
+    const instructorId = req.user.userId;
+    console.log(instructorId);
 
-        const course_id = req.params.course_id;
-        console.log(course_id);
-        // show items with topic_level_n and topic_level_1
-        const show_items = `
+    const course_id = req.params.course_id;
+    console.log(course_id);
+    // show items with topic_level_n and topic_level_1
+    const show_items = `
         SELECT 
         Topic_Level_1.topic_level1_id,
         Topic_Level_1.topic_title,
@@ -31,25 +31,24 @@ router.get("/show_items/:course_id", authorization, async (req, res) => {
         LEFT JOIN Topic_Level_1 ON  Topic_Level_N.topic_level1_id = Topic_Level_1.topic_level1_id
         where items.course_id =$1 And  course.instructor_id = $2;  
     `;
-        const Values_show_items = [course_id, instructorId];
-        const result_show_items = await db.query(show_items, Values_show_items);
+    const Values_show_items = [course_id, instructorId];
+    const result_show_items = await db.query(show_items, Values_show_items);
 
-        // select topic_level_1
-        const show_tl1 =
-            `
+    // select topic_level_1
+    const show_tl1 = `
         SELECT 
         Assigning_Topics.instructor_id, 
         Topic_Level_1.topic_title
          FROM Assigning_Topics 
          JOIN Topic_Level_1 ON assigning_topics.topic_level1_id = Topic_Level_1.topic_level1_id
          WHERE instructor_id = $1;
-        `
-        const Values_show_tl1 = [instructorId];
-        const result_show_tl1 = await db.query(show_tl1, Values_show_tl1);
+        `;
+    const Values_show_tl1 = [instructorId];
+    // result_show_tl1
+    await db.query(show_tl1, Values_show_tl1);
 
-        // select topic_level_n
-        const show_tln =
-            `
+    // select topic_level_n
+    const show_tln = `
         SELECT 
         Topic_Level_1.topic_level1_id,
         Topic_Level_1.topic_title,
@@ -58,77 +57,67 @@ router.get("/show_items/:course_id", authorization, async (req, res) => {
         FROM Topic_Level_1
         join Topic_Level_n ON Topic_Level_1.topic_level1_id = Topic_Level_N.topic_level1_id
         where Topic_Level_1.topic_level1_id = $1;
-        `
-        const values_show_tln = [tl1_id];
-        const result_show_tln = await db.query(show_tln, values_show_tln);
+        `;
+    const values_show_tln = [tl1_id];
+    // result_show_tln
+    await db.query(show_tln, values_show_tln);
 
-        // const responseData = {
-        //     items : result_show_items.rows,
-        //     topic_level_n : result_show_tln.rows,
-        //     topic_level_1 : result_show_tl1.rows
-        // };
-        // Process the course content data
-        const courseContent = [];
+    // Process the course content data
+    const courseContent = [];
 
-        const usedTopicIds = new Map();
+    const usedTopicIds = new Map();
 
-        result_show_items.rows.forEach((row) => {
-            const topicId = row.topic_level1_id;
-            const subTopicId = row.topic_id;
+    result_show_items.rows.forEach((row) => {
+      const topicId = row.topic_level1_id;
+      const subTopicId = row.topic_id;
 
-            if (!usedTopicIds.has(topicId)) {
-                usedTopicIds.set(topicId, courseContent.length);
-                courseContent.push({
-                    id: topicId,
-                    topicTitle: row.topic_title, // Adjusted to match the column name
-                    subTopics: [],
-                });
-            }
-
-            const topicIndex = usedTopicIds.get(topicId);
-            const currentTopic = courseContent[topicIndex];
-
-            if (
-                !currentTopic.subTopics.find((subTopic) => subTopic.id === subTopicId)
-            ) {
-                currentTopic.subTopics.push({
-                    id: subTopicId,
-                    title: row.topic_title, // Adjusted to match the column name
-                    items: [],
-                });
-            }
-
-            const subTopicIndex = currentTopic.subTopics.findIndex(
-                (subTopic) => subTopic.id === subTopicId
-            );
-            const currentSubTopic = currentTopic.subTopics[subTopicIndex];
-
-            currentSubTopic.items.push({
-                id: row.item_id,
-                title: row.item_title,
-                order: row.item_no,
-                type: row.item_type,
-            });
+      if (!usedTopicIds.has(topicId)) {
+        usedTopicIds.set(topicId, courseContent.length);
+        courseContent.push({
+          id: topicId,
+          topicTitle: row.topic_title, // Adjusted to match the column name
+          subTopics: [],
         });
+      }
 
-        // const frontEndJson = {
-        //   courseContent: courseContent, 
-        // };
+      const topicIndex = usedTopicIds.get(topicId);
+      const currentTopic = courseContent[topicIndex];
 
-        res.json(courseContent);
+      if (
+        !currentTopic.subTopics.find((subTopic) => subTopic.id === subTopicId)
+      ) {
+        currentTopic.subTopics.push({
+          id: subTopicId,
+          title: row.topic_title, // Adjusted to match the column name
+          items: [],
+        });
+      }
 
-        // res.json(responseData);
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).send("Server Error");
-    }
+      const subTopicIndex = currentTopic.subTopics.findIndex(
+        (subTopic) => subTopic.id === subTopicId,
+      );
+      const currentSubTopic = currentTopic.subTopics[subTopicIndex];
+
+      currentSubTopic.items.push({
+        id: row.item_id,
+        title: row.item_title,
+        order: row.item_no,
+        type: row.item_type,
+      });
+    });
+
+    res.json(courseContent);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 // Post A New Item
 router.post(
-  "/insert_item",
+  '/insert_item',
   authorization,
-  uploadVideo.single("video"),
+  uploadVideo.single('video'),
   async (req, res) => {
     try {
       const {
@@ -165,7 +154,7 @@ router.post(
       if (item_type == 2) {
         if (!req.file) {
           // إذا لم يتم تحميل أي ملف
-          res.status(400).json({ error: "No video file uploaded." });
+          res.status(400).json({ error: 'No video file uploaded.' });
           return;
         }
         let video_path = null;
@@ -185,12 +174,12 @@ router.post(
         const articleValues = [content_type, my_item_id];
         await db.query(articleQuery, articleValues);
       }
-      res.json("Item has been inserted.");
+      res.json('Item has been inserted.');
     } catch (err) {
       console.error(err);
-      res.status(500).send("Server Error");
+      res.status(500).send('Server Error');
     }
-  }
+  },
 );
 
 module.exports = router;

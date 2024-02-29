@@ -1,25 +1,25 @@
-const router = require("express").Router();
-const db = require("../../Database/db");
-const authorization = require("../../middleware/authorization");
-const checkPermission = require("../../middleware/checkPermissions");
+const router = require('express').Router();
+const db = require('../../Database/db');
+const authorization = require('../../middleware/authorization');
+const checkPermission = require('../../middleware/checkPermissions');
 
-//  Insert And Update 
+//  Insert And Update
 router.post('/edit_review/:course_id', authorization, async (req, res) => {
   try {
     const { stars_number, review } = req.body;
-    const courseId = req.params.course_id
+    const courseId = req.params.course_id;
     const studentId = req.user.userId;
     const roleId = req.user.roleId;
     //permission
-    const hasAccess = await checkPermission(studentId, "addReview", roleId);
+    const hasAccess = await checkPermission(studentId, 'addReview', roleId);
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     // Get Enrollment_id.
     const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
     const enrollmentValues = [studentId, courseId];
     const enrollmentResult = await db.query(enrollmentQuery, enrollmentValues);
-    console.log(enrollmentResult)
+    console.log(enrollmentResult);
 
     if (enrollmentResult.rows.length !== 0) {
       const enrollmentId = enrollmentResult.rows[0].enrollment_id;
@@ -37,7 +37,12 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
           UPDATE rating 
           SET review = $1, stars_number = $2 
           WHERE rating_id = $3 AND enrollment_id = $4;`;
-        const updateReviewValues = [review, stars_number, ratingId, enrollmentId];
+        const updateReviewValues = [
+          review,
+          stars_number,
+          ratingId,
+          enrollmentId,
+        ];
         await db.query(updateReviewQuery, updateReviewValues);
 
         return res.status(200).json({ status: 'Success, Updated Rating' });
@@ -52,7 +57,9 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
         return res.status(200).json({ status: 'Success, Inserted Rating' });
       }
     } else {
-      return res.status(401).json({ message: "You Didn't Enroll in This Course" });
+      return res
+        .status(401)
+        .json({ message: "You Didn't Enroll in This Course" });
     }
   } catch (error) {
     console.error('Error:', error);
@@ -60,18 +67,16 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
   }
 });
 
-
-
 //  Show Review
-router.get("/show_review/:course_id", authorization, async (req, res) => {
+router.get('/show_review/:course_id', authorization, async (req, res) => {
   try {
     const course_id = req.params.course_id;
     const studentId = req.user.userId;
     const roleId = req.user.roleId;
     //permission
-    const hasAccess = await checkPermission(studentId, "addReview", roleId);
+    const hasAccess = await checkPermission(studentId, 'addReview', roleId);
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     const show_review = `
       SELECT 
@@ -92,34 +97,32 @@ router.get("/show_review/:course_id", authorization, async (req, res) => {
     if (show_review_result.rows.length === 0) {
       const jsonResult = {
         rating: null,
-        review: "",
+        review: '',
       };
       res.status(200).json(jsonResult);
       return;
     }
     const jsonResult = {
       rating: result.rating,
-      review: result.review
+      review: result.review,
     };
     res.status(200).json(jsonResult);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ status: "error" });
+    res.status(500).json({ status: 'error' });
   }
 });
 
-
-
 // * Delete Rview
-router.delete("/delete_review/:course_id", authorization, async (req, res) => {
+router.delete('/delete_review/:course_id', authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;
     const courseId = req.params.course_id;
     const roleId = req.user.roleId;
     //permission
-    const hasAccess = await checkPermission(studentId, "addReview", roleId);
+    const hasAccess = await checkPermission(studentId, 'addReview', roleId);
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     const enrollmentQuery = `
       SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;
@@ -145,23 +148,20 @@ router.delete("/delete_review/:course_id", authorization, async (req, res) => {
         const deleteReviewValues = [enrollmentId, ratingId];
         await db.query(deleteReviewQuery, deleteReviewValues);
 
-        res.json({ status: "Success, Review Deleted" });
+        res.json({ status: 'Success, Review Deleted' });
       } else {
-        res
-          .status(500)
-          .json({
-            status: "error",
-            message: "No rating found for this enrollment",
-          });
+        res.status(500).json({
+          status: 'error',
+          message: 'No rating found for this enrollment',
+        });
       }
     } else {
       res.status(401).json({ message: "You Didn't Enroll in This Course" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: "error", message: "An error occurred" });
+    res.status(500).json({ status: 'error', message: 'An error occurred' });
   }
 });
 
 module.exports = router;
-

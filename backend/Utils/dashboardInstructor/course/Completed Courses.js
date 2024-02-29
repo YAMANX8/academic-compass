@@ -1,11 +1,11 @@
-const db = require("../../../Database/db");
+const db = require('../../../Database/db');
 
 // Bring Completed Courses .
 const Completed_Courses = async (instructoer_id) => {
-    try {
-        const value = [instructoer_id];
+  try {
+    const value = [instructoer_id];
 
-        const query = `
+    const query = `
         SELECT c.course_id, c.course_title,c.subtitle,course_thumnail
         FROM Course c
         JOIN Course_Lists cl ON c.course_id = cl.course_id
@@ -42,23 +42,23 @@ const Completed_Courses = async (instructoer_id) => {
             COUNT(DISTINCT CASE WHEN q.item_id IS NOT NULL THEN I.item_id END) >= 1
           );
       `;
-      
-      const result = await db.query(query, value);
-      console.log(result);
-        return {
-            status: "success",
-            Data: {
-                Completed_Courses: result.rows,
-            }
-        }
-    } catch (err) {
-        console.error("Error: ", err);
-        return {
-            status: "error",
-            message: "Field",
-        };
-    }
-}
+
+    const result = await db.query(query, value);
+    console.log(result);
+    return {
+      status: 'success',
+      Data: {
+        Completed_Courses: result.rows,
+      },
+    };
+  } catch (err) {
+    console.error('Error: ', err);
+    return {
+      status: 'error',
+      message: 'Field',
+    };
+  }
+};
 module.exports = {
-    Completed_Courses
+  Completed_Courses,
 };

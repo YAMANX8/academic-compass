@@ -1,19 +1,19 @@
-const router = require("express").Router();
-const pool = require("../../../Database/db");
-const checkPermission = require("../../../middleware/checkPermissions");
-const authorization = require("../../../middleware/authorization");
-router.get("/", authorization, async (req, res) => {
+const router = require('express').Router();
+const pool = require('../../../Database/db');
+const checkPermission = require('../../../middleware/checkPermissions');
+const authorization = require('../../../middleware/authorization');
+router.get('/', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
     const roleId = req.user.roleId;
     //permission
     const hasAccess = await checkPermission(
       instructorId,
-      "showCourseInfoPage",
-      roleId
+      'showCourseInfoPage',
+      roleId,
     );
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     const show_review_query = `
             SELECT 
@@ -33,9 +33,9 @@ router.get("/", authorization, async (req, res) => {
                 `;
     const show_review_reuslt = await pool.query(
       show_review_query,
-      instructorId
+      instructorId,
     );
-    const date = "05-05-2023";
+    const date = '05-05-2023';
     const Data = show_review_reuslt.rows.map((row) => ({
       id: row.id,
       fname: row.first_name,
@@ -48,7 +48,7 @@ router.get("/", authorization, async (req, res) => {
     res.status(200).json(Data);
   } catch (err) {
     console.log(err.message);
-    res.status(500).json("Sever Error");
+    res.status(500).json('Sever Error');
   }
 });
 

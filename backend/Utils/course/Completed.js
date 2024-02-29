@@ -1,4 +1,4 @@
-const db = require("../../Database/db");
+const db = require('../../Database/db');
 
 // Insert Completed Items .
 const completed_items = async (itemId, Id) => {
@@ -6,7 +6,7 @@ const completed_items = async (itemId, Id) => {
     const values_itemId = [itemId];
     const values_Id = [Id];
 
-    const courseQuery = "select course_id from items where item_id = $1;";
+    const courseQuery = 'select course_id from items where item_id = $1;';
     const courseResult = await db.query(courseQuery, values_itemId);
     const course_id = courseResult.rows[0].course_id;
 
@@ -20,14 +20,14 @@ const completed_items = async (itemId, Id) => {
 
     // Here I Need To Check From Enrollmnet If Has Done This Item .
     const checkQuery =
-      "select completed_item_id from completed_items where enrollment_id = $1 and item_id =$2;";
+      'select completed_item_id from completed_items where enrollment_id = $1 and item_id =$2;';
     const resultQuery = await db.query(checkQuery, [
       enrollId,
       values_itemId[0],
     ]);
 
     if (resultQuery.rows.length == 0) {
-    // Update the progress_state by incrementing it
+      // Update the progress_state by incrementing it
       const updateProgressQuery = `
         UPDATE enrollment
         SET progress_state = $1
@@ -40,7 +40,8 @@ const completed_items = async (itemId, Id) => {
       const query = `
             INSERT INTO Completed_Items(item_id,enrollment_id) VALUES($1,$2)
             `;
-      const result = await db.query(query, [values_itemId[0], enrollId]);
+      // result
+      await db.query(query, [values_itemId[0], enrollId]);
       // The item has been added
       return false;
     } else {
@@ -48,7 +49,7 @@ const completed_items = async (itemId, Id) => {
       return true;
     }
   } catch (err) {
-    console.error("Error Insert Items");
+    console.error('Error Insert Items');
   }
 };
 

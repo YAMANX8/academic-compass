@@ -1,29 +1,28 @@
-const router = require("express").Router();
-const authorization = require("../../../middleware/authorization");
-const checkPermission = require("../../../middleware/checkPermissions");
-const getMyPerformanceNumber = require("../../../Utils/dashboardInstructor/myPerformance");
-const getMyProfile = require("../../../Utils/dashboardInstructor/MyProfile");
-const get_Non_completed_Courses = require("../../../Utils/dashboardInstructor/course/My Non-completed Courses");
-const get_Completed_Courses = require("../../../Utils/dashboardInstructor/course/completed Courses");
-const getMyTopics = require("../../../Utils/dashboardInstructor/myTopics");
+const router = require('express').Router();
+const authorization = require('../../../middleware/authorization');
+const checkPermission = require('../../../middleware/checkPermissions');
+const getMyPerformanceNumber = require('../../../Utils/dashboardInstructor/myPerformance');
+const getMyProfile = require('../../../Utils/dashboardInstructor/MyProfile');
+const get_Non_completed_Courses = require('../../../Utils/dashboardInstructor/course/My Non-completed Courses');
+const get_Completed_Courses = require('../../../Utils/dashboardInstructor/course/completed Courses');
+const getMyTopics = require('../../../Utils/dashboardInstructor/myTopics');
 
-router.get("/", authorization, async (req, res, next) => {
+router.get('/', authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
     const roleId = req.user.roleId;
     //permission
     const hasAccess = await checkPermission(
       Id,
-      "dashboardAccessToInstructor",
-      roleId
+      'dashboardAccessToInstructor',
+      roleId,
     );
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     // get my performance number
-    const myPerformance = await getMyPerformanceNumber.GetALlPerformanceNumber(
-      Id
-    );
+    const myPerformance =
+      await getMyPerformanceNumber.GetALlPerformanceNumber(Id);
     // Get Genral Info About Instructor .
     const myProfile = await getMyProfile.myProfile(Id);
     // Get My_Non_completed_Courses .
@@ -40,22 +39,22 @@ router.get("/", authorization, async (req, res, next) => {
       performance: [
         {
           id: 1,
-          title: "Total Enrollments",
+          title: 'Total Enrollments',
           count: parseInt(myPerformance.Data.totalEnrollments),
         },
         {
           id: 2,
-          title: "Total Reviews",
+          title: 'Total Reviews',
           count: parseInt(myPerformance.Data.totalReviews),
         },
         {
           id: 3,
-          title: "Total Courses",
+          title: 'Total Courses',
           count: parseInt(myPerformance.Data.totalCourses),
         },
         {
           id: 4,
-          title: "Total Students",
+          title: 'Total Students',
           count: parseInt(myPerformance.Data.totalStudents),
         },
       ],
@@ -77,14 +76,14 @@ router.get("/", authorization, async (req, res, next) => {
           title: course.course_title,
           subtitle: course.subtitle,
           thumnail: course.course_thumnail,
-        })
+        }),
       ),
     };
 
     res.status(200).json(formattedData);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json("Server Error");
+    res.status(500).json('Server Error');
   }
 });
 

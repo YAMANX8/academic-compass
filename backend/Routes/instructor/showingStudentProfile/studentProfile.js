@@ -1,21 +1,21 @@
-const router = require("express").Router();
-const pool = require("../../../Database/db");
-const checkPermission = require("../../../middleware/checkPermissions");
-const authorization = require("../../../middleware/authorization");
-router.get("/:studentId", authorization, async (req, res) => {
+const router = require('express').Router();
+const pool = require('../../../Database/db');
+const checkPermission = require('../../../middleware/checkPermissions');
+const authorization = require('../../../middleware/authorization');
+router.get('/:studentId', authorization, async (req, res) => {
   try {
     const Id = req.params.studentId;
-    const instructorId=req.user.userId;
+    const instructorId = req.user.userId;
     const roleId = req.user.roleId;
-console.log(roleId);
+    console.log(roleId);
     //permission
     const hasAccess = await checkPermission(
       instructorId,
-      "showStudentProfile",
-      roleId
+      'showStudentProfile',
+      roleId,
     );
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     const query = `SELECT * FROM student WHERE student_id =$1 `;
     const value = [Id];
@@ -32,12 +32,12 @@ console.log(roleId);
       city: row.city,
       birth_date: row.birth_date,
       bio: row.bio,
-      picture: row.picture
+      picture: row.picture,
     }));
     res.status(200).json(response);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json("Server Error");
+    res.status(500).json('Server Error');
   }
 });
 

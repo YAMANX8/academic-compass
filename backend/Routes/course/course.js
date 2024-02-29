@@ -1,14 +1,14 @@
-const router = require("express").Router();
-const db = require("../../Database/db");
-const jwt = require("jsonwebtoken");
-const checkPermission = require("../../middleware/checkPermissions");
-const authorization = require("../../middleware/authorization");
+const router = require('express').Router();
+const db = require('../../Database/db');
+const jwt = require('jsonwebtoken');
+const checkPermission = require('../../middleware/checkPermissions');
+const authorization = require('../../middleware/authorization');
 
-router.get("/:courseId", async (req, res) => {
+router.get('/:courseId', async (req, res) => {
   try {
     // const studentId = req.params.studentId;
     const courseId = req.params.courseId;
-    const jwtToken = req.header("token");
+    const jwtToken = req.header('token');
     let Course_info;
     let values = [];
     if (!jwtToken) {
@@ -64,6 +64,7 @@ router.get("/:courseId", async (req, res) => {
     // إذا مسجل دخول
     else {
       // Extract student ID from the token and proceed with your logic
+      // eslint-disable-next-line no-undef
       const payload = jwt.verify(jwtToken, process.env.jwtSecret);
       const studentId = payload.userId;
       const roleId = payload.roleId;
@@ -71,11 +72,11 @@ router.get("/:courseId", async (req, res) => {
         //permission
         const hasAccess = await checkPermission(
           studentId,
-          "show_course",
-          roleId
+          'show_course',
+          roleId,
         );
         if (!hasAccess) {
-          return res.status(403).json("Access denied");
+          return res.status(403).json('Access denied');
         }
       } catch (error) {
         console.log(error);
@@ -140,11 +141,11 @@ router.get("/:courseId", async (req, res) => {
     }
     const Get_Course_info = `${Course_info}`;
     const Get_Topic_content =
-      "SELECT Topic_Level_1.topic_level1_id, Topic_Level_1.topic_title AS tl1, Topic_Level_n.topic_id, Topic_Level_n.topic_title AS tln, Items.item_id, Items.item_title, Items.item_no, Items_Types.type_name FROM course JOIN items ON course.course_id= items.course_id JOIN Items_Types ON Items.item_type= Items_Types.type_id join Topic_Level_N ON items.topic_id= Topic_Level_N.topic_id join Topic_Level_1 ON Topic_Level_N.topic_level1_id= Topic_Level_1.topic_level1_id WHERE course.course_id = $1";
+      'SELECT Topic_Level_1.topic_level1_id, Topic_Level_1.topic_title AS tl1, Topic_Level_n.topic_id, Topic_Level_n.topic_title AS tln, Items.item_id, Items.item_title, Items.item_no, Items_Types.type_name FROM course JOIN items ON course.course_id= items.course_id JOIN Items_Types ON Items.item_type= Items_Types.type_id join Topic_Level_N ON items.topic_id= Topic_Level_N.topic_id join Topic_Level_1 ON Topic_Level_N.topic_level1_id= Topic_Level_1.topic_level1_id WHERE course.course_id = $1';
     const Part_2From_Course_info =
-      "SELECT List_Type.type_name, Course_Lists.item_body, Course_Lists.item_order FROM course JOIN Course_Lists ON Course.course_id = Course_Lists.course_id JOIN List_Type ON Course_Lists.list_type= List_Type.type_id WHERE course.course_id = $1";
+      'SELECT List_Type.type_name, Course_Lists.item_body, Course_Lists.item_order FROM course JOIN Course_Lists ON Course.course_id = Course_Lists.course_id JOIN List_Type ON Course_Lists.list_type= List_Type.type_id WHERE course.course_id = $1';
     const Get_Review =
-      "SELECT Rating.rating_id, Student.first_name, Student.last_name, Student.picture, Rating.stars_number, Rating.review FROM course LEFT JOIN Enrollment ON Course.course_id = Enrollment.course_id JOIN Student ON Enrollment.student_id = Student.student_id JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id WHERE course.course_id = $1";
+      'SELECT Rating.rating_id, Student.first_name, Student.last_name, Student.picture, Rating.stars_number, Rating.review FROM course LEFT JOIN Enrollment ON Course.course_id = Enrollment.course_id JOIN Student ON Enrollment.student_id = Student.student_id JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id WHERE course.course_id = $1';
     // const values = [studentId, courseId];
 
     const Get_Course_info_result = await db.query(Get_Course_info, values);
@@ -153,7 +154,7 @@ router.get("/:courseId", async (req, res) => {
     ]);
     const Part_2From_Course_info_result = await db.query(
       Part_2From_Course_info,
-      [courseId]
+      [courseId],
     );
     const Get_Review_result = await db.query(Get_Review, [courseId]);
 
@@ -162,11 +163,11 @@ router.get("/:courseId", async (req, res) => {
     const forWhoItems = [];
     const requirementsItems = [];
     Part_2From_Course_info_result.rows.forEach((row) => {
-      if (row.type_name === "In this course you will learn the following") {
+      if (row.type_name === 'In this course you will learn the following') {
         learnItems.push(row.item_body);
-      } else if (row.type_name === "Who this course is for:") {
+      } else if (row.type_name === 'Who this course is for:') {
         forWhoItems.push(row.item_body);
-      } else if (row.type_name === "Requirements") {
+      } else if (row.type_name === 'Requirements') {
         requirementsItems.push(row.item_body);
       }
     });
@@ -208,7 +209,7 @@ router.get("/:courseId", async (req, res) => {
 
       // البحث عن الموضوع الفرعي الحالي في subTopics
       const currentSubTopic = currentTopic.subTopics.find(
-        (subTopic) => subTopic.id === subTopicId
+        (subTopic) => subTopic.id === subTopicId,
       );
 
       currentSubTopic.items.push({
@@ -252,23 +253,23 @@ router.get("/:courseId", async (req, res) => {
 
     res.json(frontEndJson);
   } catch (err) {
-    console.error("Error retrieving course information:", err);
-    res.status(500).json({ error: "Server Error" });
+    console.error('Error retrieving course information:', err);
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 
-router.post("/enroll", authorization, async (req, res) => {
+router.post('/enroll', authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;
     const roleId = req.user.roleId;
     //permission
     const hasAccess = await checkPermission(
       studentId,
-      "enrollToCourse",
-      roleId
+      'enrollToCourse',
+      roleId,
     );
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     const { courseId } = req.body;
     const progress = 0;
@@ -294,11 +295,11 @@ router.post("/enroll", authorization, async (req, res) => {
     } else {
       return res
         .status(401)
-        .json({ message: "You are already enrolled to this course!" });
+        .json({ message: 'You are already enrolled to this course!' });
     }
   } catch (err) {
-    console.error("Error inserting enrollment:", err);
-    res.status(500).json({ error: "Server Error" });
+    console.error('Error inserting enrollment:', err);
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 

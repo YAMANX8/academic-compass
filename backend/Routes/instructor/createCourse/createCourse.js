@@ -1,9 +1,9 @@
-const router = require("express").Router();
-const pool = require("../../../Database/db");
-const checkPermission = require("../../../middleware/checkPermissions");
-const authorization = require("../../../middleware/authorization");
+const router = require('express').Router();
+const pool = require('../../../Database/db');
+const checkPermission = require('../../../middleware/checkPermissions');
+const authorization = require('../../../middleware/authorization');
 
-router.post("/", authorization, async (req, res) => {
+router.post('/', authorization, async (req, res) => {
   try {
     const { title, levelId, typeId } = req.body;
     const instructorId = req.user.userId;
@@ -11,11 +11,11 @@ router.post("/", authorization, async (req, res) => {
     //permission
     const hasAccess = await checkPermission(
       instructorId,
-      "createCourse",
-      roleId
+      'createCourse',
+      roleId,
     );
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     const query = `INSERT INTO Course (course_title, instructor_id, course_level, course_type)
     VALUES ($1, $2, $3, $4) RETURNING * `;
@@ -24,12 +24,12 @@ router.post("/", authorization, async (req, res) => {
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json("Server Error");
+    res.status(500).json('Server Error');
   }
 });
 
 // Get course data
-router.get("/", authorization, async (req, res) => {
+router.get('/', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
     const roleId = req.user.roleId;
@@ -37,12 +37,12 @@ router.get("/", authorization, async (req, res) => {
     // Permission check
     const hasAccess = await checkPermission(
       instructorId,
-      "createCourse",
-      roleId
+      'createCourse',
+      roleId,
     );
 
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
 
     // Get levels data
@@ -67,9 +67,8 @@ router.get("/", authorization, async (req, res) => {
     res.status(200).json(jsonResponse);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json("Server Error");
+    res.status(500).json('Server Error');
   }
 });
 
 module.exports = router;
-

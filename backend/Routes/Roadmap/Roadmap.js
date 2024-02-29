@@ -1,12 +1,12 @@
-const router = require("express").Router();
-const pool = require("../../Database/db");
-const jwt = require("jsonwebtoken");
-const checkPermission = require("../../middleware/checkPermissions");
+const router = require('express').Router();
+const pool = require('../../Database/db');
+const jwt = require('jsonwebtoken');
+const checkPermission = require('../../middleware/checkPermissions');
 
 // Get all roadmaps
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const queryResult = await pool.query("SELECT * FROM Roadmap");
+    const queryResult = await pool.query('SELECT * FROM Roadmap');
     const decodedData = queryResult.rows.map((row) => {
       const decodedImagePath = decodeURIComponent(row.image_path);
       return {
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
     });
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       result: queryResult.rows.length,
       data: {
         dataresult: decodedData,
@@ -25,17 +25,18 @@ router.get("/", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      status: "error",
-      message: "An error occurred",
+      status: 'error',
+      message: 'An error occurred',
     });
   }
 });
 
 //* Returns topics with login by roadmapID
-router.get("/student/:id", async (req, res) => {
+router.get('/student/:id', async (req, res) => {
   try {
     const roadmapId = req.params.id;
-    const jwtToken = req.header("token");
+    const jwtToken = req.header('token');
+    // eslint-disable-next-line no-undef
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
     const role_id = payload.roleId;
     console.log(role_id);
@@ -43,7 +44,7 @@ router.get("/student/:id", async (req, res) => {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
       return res.redirect(
-        `http://localhost:5000/AcademicCompass/roadmap/${roadmapId}`
+        `http://localhost:5000/AcademicCompass/roadmap/${roadmapId}`,
       );
     } else {
       // Extract student ID from the token and proceed with your logic
@@ -52,11 +53,11 @@ router.get("/student/:id", async (req, res) => {
       //permission
       const hasAccess = await checkPermission(
         studentId,
-        "show_roadmap",
-        role_id
+        'show_roadmap',
+        role_id,
       );
       if (!hasAccess) {
-        return res.status(403).json("Access denied");
+        return res.status(403).json('Access denied');
       }
       const query = `
     SELECT DISTINCT ON (r.roadmap_id, TL1.topic_level1_id)
@@ -99,8 +100,8 @@ ORDER BY
       const result = await pool.query(query, values);
       if (result.rows.length === 0) {
         res.status(404).json({
-          status: "error",
-          message: "Roadmap not found",
+          status: 'error',
+          message: 'Roadmap not found',
         });
         return;
       }
@@ -134,7 +135,7 @@ ORDER BY
         .filter((progress) => progress.progress_id !== null);
       console.log(result.rows);
       res.status(200).json({
-        status: "success",
+        status: 'success',
         roadmap: roadmapData,
         topics: topics,
         progress: progressData,
@@ -143,14 +144,14 @@ ORDER BY
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      status: "error",
-      message: "An error occurred",
+      status: 'error',
+      message: 'An error occurred',
     });
   }
 });
 
 //* Returns topics without login by roadmapID
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const roadmap_id = req.params.id;
     const query = `SELECT
@@ -168,8 +169,8 @@ router.get("/:id", async (req, res) => {
 
     if (result.rows.length === 0) {
       res.status(404).json({
-        status: "error",
-        message: "Roadmap not found",
+        status: 'error',
+        message: 'Roadmap not found',
       });
       return;
     }
@@ -178,7 +179,7 @@ router.get("/:id", async (req, res) => {
       roadmap_title: result.rows[0].roadmap_title,
       roadmap_description: result.rows[0].roadmap_description,
       image_path: `http://localhost:5000/image/${decodeURIComponent(
-        result.rows[0].image_path
+        result.rows[0].image_path,
       )}`,
     };
 
@@ -192,24 +193,25 @@ router.get("/:id", async (req, res) => {
     }));
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       roadmap: roadmapData,
       topics: topics,
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      status: "error",
-      message: "An error occurred",
+      status: 'error',
+      message: 'An error occurred',
     });
   }
 });
 
 // * Returns topics from the second level with login
-router.get("/student/topic/:id", async (req, res) => {
+router.get('/student/topic/:id', async (req, res) => {
   try {
-    const jwtToken = req.header("token");
+    const jwtToken = req.header('token');
     const topic_level1_id = req.params.id;
+    // eslint-disable-next-line no-undef
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
     const role_id = payload.roleId;
     console.log(role_id);
@@ -217,7 +219,7 @@ router.get("/student/topic/:id", async (req, res) => {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
       return res.redirect(
-        `http://localhost:5000/AcademicCompass/roadmap/topic/${topic_level1_id}`
+        `http://localhost:5000/AcademicCompass/roadmap/topic/${topic_level1_id}`,
       );
     } else {
       // Extract student ID from the token and proceed with your logic
@@ -225,11 +227,11 @@ router.get("/student/topic/:id", async (req, res) => {
       //permission
       const hasAccess = await checkPermission(
         studentId,
-        "show_roadmap",
-        role_id
+        'show_roadmap',
+        role_id,
       );
       if (!hasAccess) {
-        return res.status(403).json("Access denied");
+        return res.status(403).json('Access denied');
       }
       const query = `
      SELECT
@@ -262,8 +264,8 @@ router.get("/student/topic/:id", async (req, res) => {
       const result = await pool.query(query, values);
       if (result.rows.length === 0) {
         res.status(404).json({
-          status: "error",
-          message: "topic not found",
+          status: 'error',
+          message: 'topic not found',
         });
         return;
       }
@@ -292,7 +294,7 @@ router.get("/student/topic/:id", async (req, res) => {
         .filter((progress) => progress.progress_id !== null);
 
       res.status(200).json({
-        status: "success",
+        status: 'success',
         topics: topics,
         progress: progressData,
       });
@@ -300,14 +302,14 @@ router.get("/student/topic/:id", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      status: "error",
-      message: "An error occurred",
+      status: 'error',
+      message: 'An error occurred',
     });
   }
 });
 
 // * Returns topics from the second level without login
-router.get("/topic/:id", async (req, res) => {
+router.get('/topic/:id', async (req, res) => {
   try {
     const topic_level1_id = req.params.id;
     // Extract student ID from the token and proceed with your logic
@@ -328,8 +330,8 @@ router.get("/topic/:id", async (req, res) => {
     const result = await pool.query(query, values);
     if (result.rows.length === 0) {
       res.status(404).json({
-        status: "error",
-        message: "topic not found",
+        status: 'error',
+        message: 'topic not found',
       });
       return;
     }
@@ -347,29 +349,30 @@ router.get("/topic/:id", async (req, res) => {
       .filter((topic) => topic.topic_id !== null);
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       topics: topics,
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      status: "error",
-      message: "An error occurred",
+      status: 'error',
+      message: 'An error occurred',
     });
   }
 });
 // * Returns topics from the N level with login
-router.get("/student/topicN/:id", async (req, res) => {
+router.get('/student/topicN/:id', async (req, res) => {
   try {
-    const jwtToken = req.header("token");
+    const jwtToken = req.header('token');
     const topic_levelN_id = req.params.id;
+    // eslint-disable-next-line no-undef
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
     const role_id = payload.roleId;
     if (!jwtToken || role_id === 1) {
       // If there is no valid authentication (student is not authenticated)
       // Redirect the request to another API endpoint
       return res.redirect(
-        `http://localhost:5000/AcademicCompass/roadmap/topicN/${topic_levelN_id}`
+        `http://localhost:5000/AcademicCompass/roadmap/topicN/${topic_levelN_id}`,
       );
     } else {
       // Extract student ID from the token and proceed with your logic
@@ -377,11 +380,11 @@ router.get("/student/topicN/:id", async (req, res) => {
       //permission
       const hasAccess = await checkPermission(
         studentId,
-        "show_roadmap",
-        role_id
+        'show_roadmap',
+        role_id,
       );
       if (!hasAccess) {
-        return res.status(403).json("Access denied");
+        return res.status(403).json('Access denied');
       }
       const query = `
   SELECT
@@ -414,8 +417,8 @@ router.get("/student/topicN/:id", async (req, res) => {
       const result = await pool.query(query, values);
       if (result.rows.length === 0) {
         res.status(404).json({
-          status: "error",
-          message: "topic not found",
+          status: 'error',
+          message: 'topic not found',
         });
         return;
       }
@@ -444,7 +447,7 @@ router.get("/student/topicN/:id", async (req, res) => {
         .filter((progress) => progress.progress_id !== null);
 
       res.status(200).json({
-        status: "success",
+        status: 'success',
         topics: topics,
         progress: progressData,
       });
@@ -452,14 +455,14 @@ router.get("/student/topicN/:id", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      status: "error",
-      message: "An error occurred",
+      status: 'error',
+      message: 'An error occurred',
     });
   }
 });
 
 // * Returns topics from the N level without login
-router.get("/topicN/:id", async (req, res) => {
+router.get('/topicN/:id', async (req, res) => {
   try {
     const topic_levelN_id = req.params.id;
     // Extract student ID from the token and proceed with your logic
@@ -486,8 +489,8 @@ SELECT
     const result = await pool.query(query, values);
     if (result.rows.length === 0) {
       res.status(404).json({
-        status: "error",
-        message: "topic not found",
+        status: 'error',
+        message: 'topic not found',
       });
       return;
     }
@@ -505,14 +508,14 @@ SELECT
       .filter((topic) => topic.topic_id !== null);
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       topics: topics,
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      status: "error",
-      message: "An error occurred",
+      status: 'error',
+      message: 'An error occurred',
     });
   }
 });

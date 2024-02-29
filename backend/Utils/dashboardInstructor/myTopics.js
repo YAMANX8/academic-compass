@@ -1,4 +1,4 @@
-const db = require("../../Database/db");
+const db = require('../../Database/db');
 
 // Bring Info & Rating's Instructoer.
 const GetMyTopics = async (instructoer_id) => {
@@ -14,16 +14,16 @@ const GetMyTopics = async (instructoer_id) => {
     `;
     const result = await db.query(query, value);
     return {
-      status: "success",
+      status: 'success',
       Data: {
         mytopic: result.rows,
       },
     };
   } catch (err) {
-    console.error("Error: ", err);
+    console.error('Error: ', err);
     return {
-      status: "error",
-      message: "Field",
+      status: 'error',
+      message: 'Field',
     };
   }
 };

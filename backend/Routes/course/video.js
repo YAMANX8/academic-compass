@@ -1,19 +1,19 @@
-const router = require("express").Router();
-const db = require("../../Database/db");
-const authorization = require("../../middleware/authorization");
-const checkPermission = require("../../middleware/checkPermissions");
-const Completed_Items_import = require("../../Utils/course/Completed");
+const router = require('express').Router();
+const db = require('../../Database/db');
+const authorization = require('../../middleware/authorization');
+const checkPermission = require('../../middleware/checkPermissions');
+const Completed_Items_import = require('../../Utils/course/Completed');
 
-router.get("/:courseId/:itemId", authorization, async (req, res) => {
+router.get('/:courseId/:itemId', authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;
     const courseId = req.params.courseId;
     const itemId = req.params.itemId;
     const roleId = req.user.roleId;
     //permission
-    const hasAccess = await checkPermission(studentId, "show_video", roleId);
+    const hasAccess = await checkPermission(studentId, 'show_video', roleId);
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
     const enrollmentValues = [studentId, courseId];
@@ -102,7 +102,7 @@ WHERE course.course_id = $2`;
 
         // البحث عن الموضوع الحالي في courseContent
         const currentTopic = courseContent.find(
-          (topic) => topic.id === topicId
+          (topic) => topic.id === topicId,
         );
 
         // التحقق مما إذا كان subTopicId تم استخدامه بالفعل
@@ -118,13 +118,13 @@ WHERE course.course_id = $2`;
 
         // البحث عن الموضوع الفرعي الحالي في subTopics
         const currentSubTopic = currentTopic.subTopics.find(
-          (subTopic) => subTopic.id === subTopicId
+          (subTopic) => subTopic.id === subTopicId,
         );
 
         currentSubTopic.items.push({
           id: row.item_id,
           title: row.item_title,
-          description : row.item_description,
+          description: row.item_description,
           order: row.item_no,
           type: row.type_name,
           is_completed: row.is_completed,
@@ -141,28 +141,31 @@ WHERE course.course_id = $2`;
         response,
       });
     } else {
-      return res.status(401).json({ message: "Access Denied" });
+      return res.status(401).json({ message: 'Access Denied' });
     }
   } catch (err) {
-    console.error("Error retrieving course information:", err);
-    res.status(500).json({ error: "Server Error" });
+    console.error('Error retrieving course information:', err);
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 
 // complete item
-router.post("/Completed", authorization, async (req, res) => {
+router.post('/Completed', authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
     const { itemId } = req.body;
-    const itemCompleted = await Completed_Items_import.completed_items(itemId , Id)
+    const itemCompleted = await Completed_Items_import.completed_items(
+      itemId,
+      Id,
+    );
     if (itemCompleted) {
-      res.json("You have already completed this item.");
-  } else {
-      res.json("The item has been added.");
-  }
+      res.json('You have already completed this item.');
+    } else {
+      res.json('The item has been added.');
+    }
   } catch (err) {
-    console.error("Error insert item information", err);
-    res.status(500).json({ error: "Server Error" });
+    console.error('Error insert item information', err);
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 

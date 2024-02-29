@@ -1,11 +1,10 @@
 const fs = require('fs');
 
 const createUploadDirectory = () => {
-  console.log("Creating upload directory...");
-  const uploadDirectory = "Upload";
-  const imagesDirectory = "Upload/Images";
-  const videosDirectory = "Upload/Videos";
-
+  console.log('Creating upload directory...');
+  const uploadDirectory = 'Upload';
+  const imagesDirectory = 'Upload/Images';
+  const videosDirectory = 'Upload/Videos';
   try {
     // Check if the main upload directory exists
     if (!fs.existsSync(uploadDirectory)) {
@@ -28,7 +27,7 @@ const createUploadDirectory = () => {
       console.log(`${videosDirectory} directory created.`);
     }
   } catch (error) {
-    console.error("Error creating upload directories:", error);
+    console.error('Error creating upload directories:', error);
   }
 };
 

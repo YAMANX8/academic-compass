@@ -1,4 +1,4 @@
-const db = require("../../Database/db");
+const db = require('../../Database/db');
 
 // Bring All Performance Number
 const GetALlPerformanceNumber = async (instructoer_id) => {
@@ -49,19 +49,19 @@ JOIN
     where user_id = $1`;
     const result4 = await db.query(query4, value);
     return {
-      status: "success",
+      status: 'success',
       Data: {
         totalEnrollments: result1.rows[0].total,
         totalReviews: result2.rows[0].total,
         totalCourses: result3.rows[0].total,
-        totalStudents: result4.rows[0].total_student
+        totalStudents: result4.rows[0].total_student,
       },
     };
   } catch (err) {
-    console.error("Error Get All Courses Number : ", err);
+    console.error('Error Get All Courses Number : ', err);
     return {
-      status: "error",
-      message: "Error Get All Courses Number Is Field",
+      status: 'error',
+      message: 'Error Get All Courses Number Is Field',
     };
   }
 };

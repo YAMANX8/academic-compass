@@ -1,31 +1,31 @@
-const router = require("express").Router();
-const pool = require("../../../Database/db");
-const authorization = require("../../../middleware/authorization");
-const count = require("../../../Utils/dashboard/countDashboardS");
-const inprogresInfo = require("../../../Utils/dashboard/coursesInprogresInfo");
-const completCourseInfo = require("../../../Utils/dashboard/CompletedCourse");
-const MyRoadmaps = require("../../../Utils/dashboard/MyRoadmaps");
-const bringdataQuizETS = require("../../../Utils/dashboard/bringdataQuizETS");
-const bring_All_Courses_Number = require("../../../Utils/dashboard/bring_All_Courses_Number");
-const checkPermission = require("../../../middleware/checkPermissions");
+const router = require('express').Router();
+const pool = require('../../../Database/db');
+const authorization = require('../../../middleware/authorization');
+const count = require('../../../Utils/dashboard/countDashboardS');
+const inprogresInfo = require('../../../Utils/dashboard/coursesInprogresInfo');
+const completCourseInfo = require('../../../Utils/dashboard/CompletedCourse');
+const MyRoadmaps = require('../../../Utils/dashboard/MyRoadmaps');
+const bringdataQuizETS = require('../../../Utils/dashboard/bringdataQuizETS');
+const bring_All_Courses_Number = require('../../../Utils/dashboard/bring_All_Courses_Number');
+const checkPermission = require('../../../middleware/checkPermissions');
 
-router.get("/", authorization, async (req, res, next) => {
+router.get('/', authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
     const roleId = req.user.roleId;
     //permission
     const hasAccess = await checkPermission(
       Id,
-      "dashboardAccessToStudent",
-      roleId
+      'dashboardAccessToStudent',
+      roleId,
     );
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
     //get information to student
     const studentInfo = await pool.query(
-      "SELECT * FROM student WHERE student_id = $1",
-      [Id]
+      'SELECT * FROM student WHERE student_id = $1',
+      [Id],
     );
     // get Info about courses count to student
     const countData = await count.GetCoursesNumberInfo(Id); //
@@ -127,7 +127,7 @@ router.get("/", authorization, async (req, res, next) => {
     res.status(200).json(responseData);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json("Server Error");
+    res.status(500).json('Server Error');
   }
 });
 

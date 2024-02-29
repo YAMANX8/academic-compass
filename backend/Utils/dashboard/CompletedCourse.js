@@ -1,4 +1,4 @@
-const db = require("../../Database/db");
+const db = require('../../Database/db');
 
 const GetCompletedCourse = async (student_id) => {
   try {
@@ -11,17 +11,17 @@ const GetCompletedCourse = async (student_id) => {
     const values = [student_id];
     const result = await db.query(query, values);
     return {
-      status: "success",
+      status: 'success',
       results: result.rows.length,
       Data: {
         data: result.rows,
       },
     };
   } catch (error) {
-    console.error("Error Get Completed Course : ", error);
+    console.error('Error Get Completed Course : ', error);
     return {
-      status: "error",
-      message: "Error Get Completed Course Is Field",
+      status: 'error',
+      message: 'Error Get Completed Course Is Field',
     };
   }
 };

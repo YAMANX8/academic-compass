@@ -1,7 +1,7 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const logoutMiddleware = require("../../../backend/middleware/logout");
+const logoutMiddleware = require('../../../backend/middleware/logout');
 
-router.get("/logout",logoutMiddleware );
+router.get('/logout', logoutMiddleware);
 
 module.exports = router;

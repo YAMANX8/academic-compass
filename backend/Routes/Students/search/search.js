@@ -1,8 +1,8 @@
-const router = require("express").Router();
-const pool = require("../../../Database/db");
+const router = require('express').Router();
+const pool = require('../../../Database/db');
 
 // todo Here we used dynamic query
-router.post("/course", async (req, res) => {
+router.post('/course', async (req, res) => {
   try {
     const {
       Beginner,
@@ -16,27 +16,27 @@ router.post("/course", async (req, res) => {
       courseRank,
     } = req.body;
 
-    let condition1 = "";
-    let condition2 = "";
-    let condition3 = "";
-    let condition4 = "";
+    let condition1 = '';
+    let condition2 = '';
+    let condition3 = '';
+    let condition4 = '';
 
     if (
-      (Beginner !== "" || Intermediate !== "" || Expert !== "") &&
-      (typeName1 !== "" || typeName2 !== "" || typeName3 !== "")
+      (Beginner !== '' || Intermediate !== '' || Expert !== '') &&
+      (typeName1 !== '' || typeName2 !== '' || typeName3 !== '')
     ) {
       condition1 = `((l.level_name IS NOT NULL AND l.level_name IN ($1, $2, $3)) AND (ct.type_name IS NOT NULL AND ct.type_name IN ($4, $5, $6)))`;
-    } else if (Beginner !== "" || Intermediate !== "" || Expert !== "") {
+    } else if (Beginner !== '' || Intermediate !== '' || Expert !== '') {
       condition2 = `((l.level_name IS NOT NULL AND l.level_name IN ($1, $2, $3)) OR (ct.type_name IS NOT NULL AND ct.type_name IN ($4, $5, $6)))`;
-    } else if (typeName1 !== "" || typeName2 !== "" || typeName3 !== "") {
+    } else if (typeName1 !== '' || typeName2 !== '' || typeName3 !== '') {
       condition3 = `((l.level_name IS NOT NULL AND l.level_name IN ($1, $2, $3)) OR (ct.type_name IS NOT NULL AND ct.type_name IN ($4, $5, $6)))`;
     } else if (
-      Beginner == "" &&
-      Intermediate == "" &&
-      Expert == "" &&
-      typeName1 == "" &&
-      typeName2 == "" &&
-      typeName3 == ""
+      Beginner == '' &&
+      Intermediate == '' &&
+      Expert == '' &&
+      typeName1 == '' &&
+      typeName2 == '' &&
+      typeName3 == ''
     ) {
       condition4 = `((l.level_name IS NOT NULL AND l.level_name IN ($1, $2, $3)) OR (ct.type_name IS NOT NULL AND ct.type_name IN ($4, $5, $6)))`;
     }
@@ -45,7 +45,7 @@ router.post("/course", async (req, res) => {
     let condition5;
     let condition6;
     let values = [];
-    if (Rating == "") {
+    if (Rating == '') {
       condition5 = `(c.course_title IS NOT NULL AND c.course_title ILIKE '%' || $7 || '%')`;
       condition6 = ` RC.course_rank > (($8 - 1) * 4) AND RC.course_rank <= ($8 * 4)`;
       values = [
@@ -75,33 +75,33 @@ router.post("/course", async (req, res) => {
     }
 
     // دمج الشروط الثلاث حسب الحالة
-    let finalCondition = "";
+    let finalCondition = '';
     if (
-      condition1 !== "" &&
-      condition2 == "" &&
-      condition3 == "" &&
-      condition4 == ""
+      condition1 !== '' &&
+      condition2 == '' &&
+      condition3 == '' &&
+      condition4 == ''
     ) {
       finalCondition = `(${condition1}) AND (${condition5})`;
     } else if (
-      condition1 == "" &&
-      condition2 !== "" &&
-      condition3 == "" &&
-      condition4 == ""
+      condition1 == '' &&
+      condition2 !== '' &&
+      condition3 == '' &&
+      condition4 == ''
     ) {
       finalCondition = `(${condition2}) AND (${condition5})`;
     } else if (
-      condition1 == "" &&
-      condition2 == "" &&
-      condition3 !== "" &&
-      condition4 == ""
+      condition1 == '' &&
+      condition2 == '' &&
+      condition3 !== '' &&
+      condition4 == ''
     ) {
       finalCondition = `(${condition3}) AND (${condition5})`;
     } else if (
-      condition1 == "" &&
-      condition2 == "" &&
-      condition3 == "" &&
-      condition4 !== ""
+      condition1 == '' &&
+      condition2 == '' &&
+      condition3 == '' &&
+      condition4 !== ''
     ) {
       finalCondition = `(${condition4}) OR (${condition5})`;
     }
@@ -195,7 +195,7 @@ LEFT JOIN
    ${condition6}
    AND c.course_status='Active'
 `;
-const result = await pool.query(query, values);
+    const result = await pool.query(query, values);
     const courses = [];
     let total_courses = 0;
     // تحويل البيانات من قاعدة البيانات إلى التنسيق المطلوب
@@ -246,19 +246,19 @@ const result = await pool.query(query, values);
     });
     // إرسال البيانات بالشكل المطلوب
     res.status(200).json({
-      status: "success",
-      title:"",
+      status: 'success',
+      title: '',
       total_courses: total_courses,
       data: courses,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server Error");
+    res.status(500).send('Server Error');
   }
 });
 
 //* serch by topc_id
-router.post("/topic", async (req, res) => {
+router.post('/topic', async (req, res) => {
   try {
     const {
       Beginner,
@@ -273,37 +273,37 @@ router.post("/topic", async (req, res) => {
       courseRank,
     } = req.body;
 
-    let condition1 = "";
-    let condition2 = "";
-    let condition3 = "";
-    let condition4 = "";
+    let condition1 = '';
+    let condition2 = '';
+    let condition3 = '';
+    let condition4 = '';
 
     if (
-      (Beginner !== "" || Intermediate !== "" || Expert !== "") &&
-      (typeName1 !== "" || typeName2 !== "" || typeName3 !== "")
+      (Beginner !== '' || Intermediate !== '' || Expert !== '') &&
+      (typeName1 !== '' || typeName2 !== '' || typeName3 !== '')
     ) {
       condition1 = `((l.level_name IS NOT NULL AND l.level_name IN ($1, $2, $3)) AND (ct.type_name IS NOT NULL AND ct.type_name IN ($4, $5, $6)))`;
-    } else if (Beginner !== "" || Intermediate !== "" || Expert !== "") {
+    } else if (Beginner !== '' || Intermediate !== '' || Expert !== '') {
       condition2 = `((l.level_name IS NOT NULL AND l.level_name IN ($1, $2, $3)) OR (ct.type_name IS NOT NULL AND ct.type_name IN ($4, $5, $6)))`;
-    } else if (typeName1 !== "" || typeName2 !== "" || typeName3 !== "") {
+    } else if (typeName1 !== '' || typeName2 !== '' || typeName3 !== '') {
       condition3 = `((l.level_name IS NOT NULL AND l.level_name IN ($1, $2, $3)) OR (ct.type_name IS NOT NULL AND ct.type_name IN ($4, $5, $6)))`;
     } else if (
-      Beginner == "" &&
-      Intermediate == "" &&
-      Expert == "" &&
-      typeName1 == "" &&
-      typeName2 == "" &&
-      typeName3 == ""
+      Beginner == '' &&
+      Intermediate == '' &&
+      Expert == '' &&
+      typeName1 == '' &&
+      typeName2 == '' &&
+      typeName3 == ''
     ) {
       condition4 = `((l.level_name IS NOT NULL AND l.level_name IN ($1, $2, $3)) OR (ct.type_name IS NOT NULL AND ct.type_name IN ($4, $5, $6)))`;
     }
 
     // بناء الشرط الثاني حسب الحالات الثلاث`
-    let condition5 = "";
-    let condition6 = "";
+    let condition5 = '';
+    let condition6 = '';
     let values = [];
     let topicId = 0;
-    if (topiclevel_N !== "" && Rating !== "") {
+    if (topiclevel_N !== '' && Rating !== '') {
       topicId = topiclevel_N;
       condition5 = `(rt.rating_stars IS NOT NULL AND rt.rating_stars >= $7) AND (TLN.topic_id IS NOT NULL AND TLN.topic_id = $8)`;
       condition6 = ` RC.course_rank > (($9 - 1) * 4) AND RC.course_rank <= ($9 * 4)`;
@@ -318,7 +318,7 @@ router.post("/topic", async (req, res) => {
         topicId,
         courseRank,
       ];
-    } else if (topiclevel_N !== "" && Rating == "") {
+    } else if (topiclevel_N !== '' && Rating == '') {
       topicId = topiclevel_N;
       condition5 = ` (TLN.topic_id IS NOT NULL AND TLN.topic_id = $7)`;
       condition6 = ` RC.course_rank > (($8 - 1) * 4) AND RC.course_rank <= ($8 * 4)`;
@@ -332,7 +332,7 @@ router.post("/topic", async (req, res) => {
         topicId,
         courseRank,
       ];
-    } else if (topiclevel_1 !== "" && Rating !== "") {
+    } else if (topiclevel_1 !== '' && Rating !== '') {
       topicId = topiclevel_1;
       condition5 = `(rt.rating_stars IS NOT NULL AND rt.rating_stars >= $7) AND (TL1.topic_level1_id IS NOT NULL AND TL1.topic_level1_id = $8)`;
       condition6 = ` RC.course_rank > (($9 - 1) * 4) AND RC.course_rank <= ($9 * 4)`;
@@ -347,7 +347,7 @@ router.post("/topic", async (req, res) => {
         topicId,
         courseRank,
       ];
-    }else if (topiclevel_1 !== "" && Rating == ""){
+    } else if (topiclevel_1 !== '' && Rating == '') {
       topicId = topiclevel_1;
       condition5 = ` (TL1.topic_level1_id IS NOT NULL AND TL1.topic_level1_id = $7)`;
       condition6 = ` RC.course_rank > (($8 - 1) * 4) AND RC.course_rank <= ($8 * 4)`;
@@ -362,35 +362,35 @@ router.post("/topic", async (req, res) => {
         courseRank,
       ];
     }
-      
+
     // دمج الشروط الثلاث حسب الحالة
-    let finalCondition = "";
+    let finalCondition = '';
     if (
-      condition1 !== "" &&
-      condition2 == "" &&
-      condition3 == "" &&
-      condition4 == ""
+      condition1 !== '' &&
+      condition2 == '' &&
+      condition3 == '' &&
+      condition4 == ''
     ) {
       finalCondition = `(${condition1}) AND (${condition5})`;
     } else if (
-      condition1 == "" &&
-      condition2 !== "" &&
-      condition3 == "" &&
-      condition4 == ""
+      condition1 == '' &&
+      condition2 !== '' &&
+      condition3 == '' &&
+      condition4 == ''
     ) {
       finalCondition = `(${condition2}) AND (${condition5})`;
     } else if (
-      condition1 == "" &&
-      condition2 == "" &&
-      condition3 !== "" &&
-      condition4 == ""
+      condition1 == '' &&
+      condition2 == '' &&
+      condition3 !== '' &&
+      condition4 == ''
     ) {
       finalCondition = `(${condition3}) AND (${condition5})`;
     } else if (
-      condition1 == "" &&
-      condition2 == "" &&
-      condition3 == "" &&
-      condition4 !== ""
+      condition1 == '' &&
+      condition2 == '' &&
+      condition3 == '' &&
+      condition4 !== ''
     ) {
       finalCondition = `(${condition4}) OR (${condition5})`;
     }
@@ -485,19 +485,18 @@ JOIN
 WHERE
 ${condition6}
 `;
-    let query2 = "";
+    let query2 = '';
     let values2;
-if(topiclevel_N !==""){
-query2 = `SELECT topic_title FROM topic_level_N WHERE topic_id=$1`;
-values2 = [topiclevel_N];
-}else if (topiclevel_1 !== "") {
-  query2 = `SELECT topic_title FROM topic_level_1 WHERE topic_level1_id=$1`;
-  values2 = [topiclevel_1];
-}
-
+    if (topiclevel_N !== '') {
+      query2 = `SELECT topic_title FROM topic_level_N WHERE topic_id=$1`;
+      values2 = [topiclevel_N];
+    } else if (topiclevel_1 !== '') {
+      query2 = `SELECT topic_title FROM topic_level_1 WHERE topic_level1_id=$1`;
+      values2 = [topiclevel_1];
+    }
 
     const result1 = await pool.query(query, values);
-    const result2= await pool.query(query2,values2)
+    const result2 = await pool.query(query2, values2);
     const courses = [];
     let total_courses = 0;
     // تحويل البيانات من قاعدة البيانات إلى التنسيق المطلوب
@@ -549,14 +548,14 @@ values2 = [topiclevel_N];
     });
     // إرسال البيانات بالشكل المطلوب
     res.status(200).json({
-      status: "success",
-      topicTitle:result2.rows[0].topic_title,
+      status: 'success',
+      topicTitle: result2.rows[0].topic_title,
       total_courses: total_courses,
       data: courses,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server Error");
+    res.status(500).send('Server Error');
   }
 });
 

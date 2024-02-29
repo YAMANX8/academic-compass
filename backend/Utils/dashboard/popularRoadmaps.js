@@ -1,4 +1,4 @@
-const db = require("../../Database/db");
+const db = require('../../Database/db');
 
 const popularRoadmapsInfo = async () => {
   try {
@@ -26,22 +26,21 @@ LIMIT 3;
     });
 
     return {
-      status: "success",
+      status: 'success',
       results: decodedData.length,
       Data: {
         data: decodedData,
       },
     };
   } catch (error) {
-    console.error("Error Get Returns the first three maps:", error);
+    console.error('Error Get Returns the first three maps:', error);
     return {
-      status: "error",
-      message: "Get Returns the first three maps is Filed",
+      status: 'error',
+      message: 'Get Returns the first three maps is Filed',
     };
   }
 };
 
-
 module.exports = {
-popularRoadmapsInfo
+  popularRoadmapsInfo,
 };

@@ -1,13 +1,13 @@
-const router = require("express").Router();
-const pool = require("../../../Database/db");
-const checkPermission = require("../../../middleware/checkPermissions");
-const authorization = require("../../../middleware/authorization");
+const router = require('express').Router();
+const pool = require('../../../Database/db');
+const checkPermission = require('../../../middleware/checkPermissions');
+const authorization = require('../../../middleware/authorization');
 const uploadImage = require('../../../lib/multer-image');
 
 router.put(
-  "/:id",
+  '/:id',
   authorization,
-  uploadImage.single("image"),
+  uploadImage.single('image'),
   async (req, res) => {
     try {
       const instructorId = req.user.userId;
@@ -37,12 +37,12 @@ router.put(
       // Permission check
       const hasAccess = await checkPermission(
         instructorId,
-        "updateCourse",
-        roleId
+        'updateCourse',
+        roleId,
       );
 
       if (!hasAccess) {
-        return res.status(403).json("Access denied");
+        return res.status(403).json('Access denied');
       }
 
       //handling the image
@@ -79,10 +79,12 @@ router.put(
           isActive,
           courseId,
         ];
-        const updateResult = await pool.query(updateQuery, updateValue);
+        // updateResult
+        await pool.query(updateQuery, updateValue);
       } else {
+        // eslint-disable-next-line no-undef
         console.error(err.message);
-        res.status(500).json("Server Error");
+        res.status(500).json('Server Error');
       }
 
       // get data from Course_Lists
@@ -99,12 +101,13 @@ router.put(
           item_body=$1
           WHERE course_id =$2 AND list_id=$3 AND list_type=$4`;
           const updateValue = [item_body, course_id, list_id, list_type];
-          const updateResult = await pool.query(update, updateValue);
+          // updateResult
+          await pool.query(update, updateValue);
         } catch (err) {
-          console.error("Error  : ", err);
+          console.error('Error  : ', err);
           return {
-            status: "error",
-            message: "Error Update data is faild",
+            status: 'error',
+            message: 'Error Update data is faild',
           };
         }
       };
@@ -116,69 +119,33 @@ router.put(
       VALUES
       ($1,$2,$3,$4)`;
           const insertValue = [item_body, item_order, list_type, courseId];
-          const insertResult = await pool.query(insertQuery, insertValue);
+          // insertResult
+          await pool.query(insertQuery, insertValue);
         } catch (err) {
-          console.error("Error  : ", err);
+          console.error('Error  : ', err);
           return {
-            status: "error",
-            message: "Error insert data is faild",
+            status: 'error',
+            message: 'Error insert data is faild',
           };
         }
       };
       // insert for courseList
-      if (true) {
-        const item = getResult2.rows;
-        let found = false;
-
-        if (whoFor && whoFor.length > 0) {
-          whoFor.forEach((el) => {
-            // item.forEach((item) => {
-            //   if (
-            //     item.item_body === el.item_body &&
-            //     item.list_type === el.list_type
-            //   ) {
-            //     found = true;
-            //   }
-            // });
-            // if (found !== true) {
-            insert(el.item_body, el.item_order, el.list_type);
-            //   found = false;
-            // }
-          });
-        }
-        if (whatLearn && whatLearn.length > 0) {
-          whatLearn.forEach((el) => {
-            // item.forEach((item) => {
-            //   if (
-            //     item.item_body === el.item_body &&
-            //     item.list_type === el.list_type
-            //   ) {
-            //     found = true;
-            //   }
-            // });
-            // if (found !== true) {
-            insert(el.item_body, el.item_order, el.list_type);
-            //   found = false;
-            // }
-          });
-        }
-        if (prerequisites && prerequisites.length > 0) {
-          prerequisites.forEach((el) => {
-            // item.forEach((item) => {
-            //   if (
-            //     item.item_body === el.item_body &&
-            //     item.list_type === el.list_type
-            //   ) {
-            //     found = true;
-            //   }
-            // });
-            // if (found !== true) {
-            insert(el.item_body, el.item_order, el.list_type);
-            //   found = false;
-            // }
-          });
-        }
+      if (whoFor && whoFor.length > 0) {
+        whoFor.forEach((el) => {
+          insert(el.item_body, el.item_order, el.list_type);
+        });
       }
+      if (whatLearn && whatLearn.length > 0) {
+        whatLearn.forEach((el) => {
+          insert(el.item_body, el.item_order, el.list_type);
+        });
+      }
+      if (prerequisites && prerequisites.length > 0) {
+        prerequisites.forEach((el) => {
+          insert(el.item_body, el.item_order, el.list_type);
+        });
+      }
+
       //update for courseList
       if (getResult2 && getResult2.rows.length > 0) {
         const item = getResult2.rows;
@@ -276,7 +243,7 @@ router.put(
           const getCourseListValues = [courseid];
           const courseListResult = await pool.query(
             getCourseListQuery,
-            getCourseListValues
+            getCourseListValues,
           );
           return {
             Data: {
@@ -285,10 +252,10 @@ router.put(
             },
           };
         } catch (err) {
-          console.error("Error  : ", err);
+          console.error('Error  : ', err);
           return {
-            status: "error",
-            message: "Error Update data is faild",
+            status: 'error',
+            message: 'Error Update data is faild',
           };
         }
       };
@@ -296,15 +263,15 @@ router.put(
       console.log(newData);
       // Initialize JSON response object
       const jsonResponse = {
-        title: "",
-        subtitle: "",
-        level: "",
-        type: "",
-        description: "",
+        title: '',
+        subtitle: '',
+        level: '',
+        type: '',
+        description: '',
         whoFor: [],
         whatLearn: [],
         prerequisites: [],
-        thumbnail: "",
+        thumbnail: '',
         isActive: false,
       };
       // Populate JSON response based on list_type
@@ -338,13 +305,13 @@ router.put(
       res.status(200).json(jsonResponse);
     } catch (err) {
       console.error(err.message);
-      res.status(500).json("Server Error");
+      res.status(500).json('Server Error');
     }
-  }
+  },
 );
 
 // Get course data
-router.get("/:id", authorization, async (req, res) => {
+router.get('/:id', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
     const roleId = req.user.roleId;
@@ -354,12 +321,12 @@ router.get("/:id", authorization, async (req, res) => {
     //* This permission has not been added to the database
     const hasAccess = await checkPermission(
       instructorId,
-      "updateCourse",
-      roleId
+      'updateCourse',
+      roleId,
     );
 
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
 
     // Get course data
@@ -390,20 +357,20 @@ router.get("/:id", authorization, async (req, res) => {
     const getCourseListValues = [courseId];
     const courseListResult = await pool.query(
       getCourseListQuery,
-      getCourseListValues
+      getCourseListValues,
     );
 
     // Initialize JSON response object
     const jsonResponse = {
-      title: "",
-      subtitle: "",
-      level: "",
-      type: "",
-      description: "",
+      title: '',
+      subtitle: '',
+      level: '',
+      type: '',
+      description: '',
       whoFor: [],
       whatLearn: [],
       prerequisites: [],
-      thumbnail: "",
+      thumbnail: '',
       isActive: false,
     };
 
@@ -437,9 +404,8 @@ router.get("/:id", authorization, async (req, res) => {
     res.status(200).json(jsonResponse);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json("Server Error");
+    res.status(500).json('Server Error');
   }
 });
 
 module.exports = router;
-

@@ -1,21 +1,20 @@
-const router = require("express").Router();
-const db = require("../../Database/db");
-const pool = require("../../Database/db");
-const authorization = require("../../middleware/authorization");
-const checkPermission = require("../../middleware/checkPermissions");
-const Completed_Items_import = require("../../Utils/course/Completed");
+const router = require('express').Router();
+const db = require('../../Database/db');
+const pool = require('../../Database/db');
+const authorization = require('../../middleware/authorization');
+const checkPermission = require('../../middleware/checkPermissions');
+const Completed_Items_import = require('../../Utils/course/Completed');
 
-
-router.get("/:courseId/:itemId", authorization, async (req, res) => {
+router.get('/:courseId/:itemId', authorization, async (req, res) => {
   try {
     const studentId = req.user.userId;
     const roleId = req.user.roleId;
     const courseId = req.params.courseId;
     const itemId = req.params.itemId;
     //permission
-    const hasAccess = await checkPermission(studentId, "show_article", roleId);
+    const hasAccess = await checkPermission(studentId, 'show_article', roleId);
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
 
     const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
@@ -46,20 +45,20 @@ router.get("/:courseId/:itemId", authorization, async (req, res) => {
         WHEN c.item_id IS NOT NULL THEN TRUE 
         ELSE FALSE 
     END AS is_completed,
-CASE 
+    CASE 
     WHEN EXISTS (
         SELECT 1
         FROM Enrollment e
         WHERE e.student_id = $1 AND e.course_id = $2
     ) THEN TRUE
     ELSE FALSE
-END AS is_enroll
-FROM course 
-JOIN items ON course.course_id = items.course_id
-JOIN Items_Types ON Items.item_type = Items_Types.type_id
-LEFT JOIN Completed_Items ON Items.item_id = Completed_Items.item_id
-JOIN Topic_Level_N ON items.topic_id = Topic_Level_N.topic_id
-JOIN Topic_Level_1 ON Topic_Level_N.topic_level1_id = Topic_Level_1.topic_level1_id
+    END AS is_enroll
+    FROM course 
+    JOIN items ON course.course_id = items.course_id
+    JOIN Items_Types ON Items.item_type = Items_Types.type_id
+    LEFT JOIN Completed_Items ON Items.item_id = Completed_Items.item_id
+    JOIN Topic_Level_N ON items.topic_id = Topic_Level_N.topic_id
+    JOIN Topic_Level_1 ON Topic_Level_N.topic_level1_id = Topic_Level_1.topic_level1_id
 LEFT JOIN (
     SELECT 
         item_id,
@@ -106,7 +105,7 @@ WHERE items.item_id=$1
 
         // البحث عن الموضوع الحالي في courseContent
         const currentTopic = courseContent.find(
-          (topic) => topic.id === topicId
+          (topic) => topic.id === topicId,
         );
 
         // التحقق مما إذا كان subTopicId تم استخدامه بالفعل
@@ -122,13 +121,13 @@ WHERE items.item_id=$1
 
         // البحث عن الموضوع الفرعي الحالي في subTopics
         const currentSubTopic = currentTopic.subTopics.find(
-          (subTopic) => subTopic.id === subTopicId
+          (subTopic) => subTopic.id === subTopicId,
         );
 
         currentSubTopic.items.push({
           id: row.item_id,
           title: row.item_title,
-          description : row.item_description,
+          description: row.item_description,
           order: row.item_no,
           type: row.type_name,
           is_completed: row.is_completed,
@@ -144,28 +143,31 @@ WHERE items.item_id=$1
         response,
       });
     } else {
-      return res.status(401).json({ message: "Access Denied" });
+      return res.status(401).json({ message: 'Access Denied' });
     }
   } catch (err) {
-    console.error("Error retrieving course information:", err);
-    res.status(500).json({ error: "Server Error" });
+    console.error('Error retrieving course information:', err);
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 
 // complete item
-router.post("/Completed", authorization, async (req, res) => {
+router.post('/Completed', authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
     const { itemId } = req.body;
-    const itemCompleted = await Completed_Items_import.completed_items(itemId, Id)
+    const itemCompleted = await Completed_Items_import.completed_items(
+      itemId,
+      Id,
+    );
     if (itemCompleted) {
-      res.json("You have already completed this item.");
-  } else {
-      res.json("The item has been added.");
-  }
+      res.json('You have already completed this item.');
+    } else {
+      res.json('The item has been added.');
+    }
   } catch (err) {
-    console.error("Error insert item information", err);
-    res.status(500).json({ error: "Server Error" });
+    console.error('Error insert item information', err);
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 

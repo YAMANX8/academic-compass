@@ -1,9 +1,9 @@
-const router = require("express").Router();
-const pool = require("../../../Database/db");
-const checkPermission = require("../../../middleware/checkPermissions");
-const authorization = require("../../../middleware/authorization");
+const router = require('express').Router();
+const pool = require('../../../Database/db');
+const checkPermission = require('../../../middleware/checkPermissions');
+const authorization = require('../../../middleware/authorization');
 
-router.get("/", authorization, async (req, res) => {
+router.get('/', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
     const roleId = req.user.roleId;
@@ -11,12 +11,12 @@ router.get("/", authorization, async (req, res) => {
     // Permission check
     const hasAccess = await checkPermission(
       instructorId,
-      "showCourseInfoPage",
-      roleId
+      'showCourseInfoPage',
+      roleId,
     );
 
     if (!hasAccess) {
-      return res.status(403).json("Access denied");
+      return res.status(403).json('Access denied');
     }
 
     const show_enrollment_query = `
@@ -51,7 +51,7 @@ SELECT
     res.status(200).json(enrollmentData);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json("Server Error");
+    res.status(500).json('Server Error');
   }
 });
 
