@@ -1,4 +1,4 @@
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 
 // Bring All Performance Number
 const GetALlPerformanceNumber = async (instructoer_id) => {
@@ -14,7 +14,7 @@ const GetALlPerformanceNumber = async (instructoer_id) => {
         GROUP BY Course.course_id
         ) subquery
         WHERE total_enrollments > 0`;
-    const result1 = await db.query(query1, value);
+    const result1 = await pool.query(query1, value);
     //2- total reviews
     const query2 = `SELECT SUM(total_reviews) AS total
             FROM (
@@ -26,7 +26,7 @@ const GetALlPerformanceNumber = async (instructoer_id) => {
             GROUP BY Course.course_id
             ) subquery
             WHERE total_reviews > 0`;
-    const result2 = await db.query(query2, value);
+    const result2 = await pool.query(query2, value);
     //3- total courses
     const query3 = `SELECT SUM(total_courses) AS total
             FROM (
@@ -36,7 +36,7 @@ const GetALlPerformanceNumber = async (instructoer_id) => {
             GROUP BY Course.course_id
             ) subquery
             WHERE total_courses > 0`;
-    const result3 = await db.query(query3, value);
+    const result3 = await pool.query(query3, value);
     //4- total students
     const query4 = `SELECT
     COUNT(DISTINCT Enrollment.student_id) AS total_student
@@ -47,7 +47,7 @@ JOIN
 JOIN
     Enrollment ON Course.course_id = Enrollment.course_id
     where user_id = $1`;
-    const result4 = await db.query(query4, value);
+    const result4 = await pool.query(query4, value);
     return {
       status: 'success',
       Data: {

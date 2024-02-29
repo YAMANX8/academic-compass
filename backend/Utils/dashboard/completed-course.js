@@ -1,4 +1,4 @@
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 
 const GetCompletedCourse = async (student_id) => {
   try {
@@ -9,7 +9,7 @@ const GetCompletedCourse = async (student_id) => {
          JOIN enrollment e ON c.course_id = e.course_id 
          WHERE e.student_id = $1 AND e.progress_state >= c.items_count ORDER BY c.course_title`;
     const values = [student_id];
-    const result = await db.query(query, values);
+    const result = await pool.query(query, values);
     return {
       status: 'success',
       results: result.rows.length,

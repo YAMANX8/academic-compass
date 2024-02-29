@@ -1,4 +1,4 @@
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 
 // Bring All Courses Number For Studnet
 const Get_All_Courses_Number = async (student_id) => {
@@ -8,7 +8,7 @@ const Get_All_Courses_Number = async (student_id) => {
         JOIN Enrollment ON Course.course_id = Enrollment.course_id
         WHERE Enrollment.student_id = $1;`;
     const values = [student_id];
-    const result = await db.query(query, values);
+    const result = await pool.query(query, values);
     return {
       status: 'success',
       results: result.rows.length,

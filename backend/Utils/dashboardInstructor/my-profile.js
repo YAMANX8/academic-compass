@@ -1,4 +1,4 @@
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 
 // Bring Info & Rating's Instructoer.
 const myProfile = async (instructoer_id) => {
@@ -7,7 +7,7 @@ const myProfile = async (instructoer_id) => {
 
     // Bring Instructoer Infor .
     const query1 = `select Users.first_name , Users.last_name , Users.picture , Users.country , Users.city from Users WHERE user_id = $1`;
-    const result1 = await db.query(query1, value);
+    const result1 = await pool.query(query1, value);
 
     // Bring Avg Stra .
     const query2 = `SELECT ROUND(avg(average), 1) AS avg
@@ -21,7 +21,7 @@ const myProfile = async (instructoer_id) => {
     ) subquery
     WHERE average > 0;
     `;
-    const result2 = await db.query(query2, value);
+    const result2 = await pool.query(query2, value);
     return {
       status: 'success',
       Data: {

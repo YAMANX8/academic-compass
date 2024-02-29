@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const roadmap = require('./Roadmap.js');
-const addRoadmap = require('./addRoadmap.js');
-const addProgressState = require('./addProgressState.js');
+const roadmap = require('./roadmap.js');
+const addRoadmap = require('./add-roadmap.js.js');
+const addProgressState = require('./add-progress-state.js.js');
 
 /*Roadmap*/
 // Roadmap(all && specific map)

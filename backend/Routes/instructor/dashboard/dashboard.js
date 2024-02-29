@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const authorization = require('../../../middleware/authorization');
-const checkPermission = require('../../../middleware/checkPermissions');
-const getMyPerformanceNumber = require('../../../Utils/dashboardInstructor/myPerformance');
-const getMyProfile = require('../../../Utils/dashboardInstructor/MyProfile');
-const get_Non_completed_Courses = require('../../../Utils/dashboardInstructor/course/My Non-completed Courses');
-const get_Completed_Courses = require('../../../Utils/dashboardInstructor/course/completed Courses');
-const getMyTopics = require('../../../Utils/dashboardInstructor/myTopics');
+const checkPermission = require('../../../middleware/check-permissions');
+const getMyPerformanceNumber = require('../../../Utils/dashboardInstructor/my-performance');
+const getMyProfile = require('../../../Utils/dashboardInstructor/my-profile');
+const get_Non_completed_Courses = require('../../../Utils/dashboardInstructor/course/my-non-completed-courses');
+const get_Completed_Courses = require('../../../Utils/dashboardInstructor/course/completed-courses');
+const getMyTopics = require('../../../Utils/dashboardInstructor/my-topics');
 
 router.get('/', authorization, async (req, res) => {
   try {

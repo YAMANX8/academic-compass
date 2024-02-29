@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 const authorization = require('../../middleware/authorization');
 const checkPermission = require('../../middleware/checkPermissions');
 
@@ -18,7 +18,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
     // Get Enrollment_id.
     const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
     const enrollmentValues = [studentId, courseId];
-    const enrollmentResult = await db.query(enrollmentQuery, enrollmentValues);
+    const enrollmentResult = await pool.query(enrollmentQuery, enrollmentValues);
     console.log(enrollmentResult);
 
     if (enrollmentResult.rows.length !== 0) {
@@ -27,7 +27,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
       // Get Rating_id.
       const ratingQuery = `SELECT rating_id FROM rating WHERE enrollment_id = $1;`;
       const ratingValues = [enrollmentId];
-      const ratingResult = await db.query(ratingQuery, ratingValues);
+      const ratingResult = await pool.query(ratingQuery, ratingValues);
 
       if (ratingResult.rows.length !== 0) {
         const ratingId = ratingResult.rows[0].rating_id;
@@ -43,7 +43,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
           ratingId,
           enrollmentId,
         ];
-        await db.query(updateReviewQuery, updateReviewValues);
+        await pool.query(updateReviewQuery, updateReviewValues);
 
         return res.status(200).json({ status: 'Success, Updated Rating' });
       } else {
@@ -52,7 +52,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
           INSERT INTO rating (stars_number, review, enrollment_id) 
           VALUES ($1, $2, $3);`;
         const insertReviewValues = [stars_number, review, enrollmentId];
-        await db.query(insertReviewQuery, insertReviewValues);
+        await pool.query(insertReviewQuery, insertReviewValues);
 
         return res.status(200).json({ status: 'Success, Inserted Rating' });
       }
@@ -92,7 +92,7 @@ router.get('/show_review/:course_id', authorization, async (req, res) => {
       WHERE course.course_id = $1 AND enrollment.student_id = $2;
     `;
     const values = [course_id, studentId];
-    const show_review_result = await db.query(show_review, values);
+    const show_review_result = await pool.query(show_review, values);
     const result = show_review_result.rows[0];
     if (show_review_result.rows.length === 0) {
       const jsonResult = {
@@ -128,7 +128,7 @@ router.delete('/delete_review/:course_id', authorization, async (req, res) => {
       SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;
     `;
     const enrollmentValues = [studentId, courseId];
-    const enrollmentResult = await db.query(enrollmentQuery, enrollmentValues);
+    const enrollmentResult = await pool.query(enrollmentQuery, enrollmentValues);
 
     if (enrollmentResult.rows.length !== 0) {
       const enrollmentId = enrollmentResult.rows[0].enrollment_id;
@@ -137,7 +137,7 @@ router.delete('/delete_review/:course_id', authorization, async (req, res) => {
         SELECT rating_id FROM rating WHERE enrollment_id = $1;
       `;
       const ratingValues = [enrollmentId];
-      const ratingResult = await db.query(ratingQuery, ratingValues);
+      const ratingResult = await pool.query(ratingQuery, ratingValues);
 
       if (ratingResult.rows.length !== 0) {
         const ratingId = ratingResult.rows[0].rating_id;
@@ -146,7 +146,7 @@ router.delete('/delete_review/:course_id', authorization, async (req, res) => {
           DELETE FROM rating WHERE enrollment_id = $1 AND rating_id = $2;
         `;
         const deleteReviewValues = [enrollmentId, ratingId];
-        await db.query(deleteReviewQuery, deleteReviewValues);
+        await pool.query(deleteReviewQuery, deleteReviewValues);
 
         res.json({ status: 'Success, Review Deleted' });
       } else {

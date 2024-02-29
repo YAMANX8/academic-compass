@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const db = require('../../Database/db');
 const pool = require('../../Database/db');
 const authorization = require('../../middleware/authorization');
 const checkPermission = require('../../middleware/checkPermissions');
@@ -19,7 +18,7 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
 
     const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
     const enrollmentValues = [studentId, courseId];
-    const enrollmentResult = await db.query(enrollmentQuery, enrollmentValues);
+    const enrollmentResult = await pool.query(enrollmentQuery, enrollmentValues);
     const enrollId = enrollmentResult.rows[0].enrollment_id;
 
     const checkEnrollmentQuery = `
@@ -27,7 +26,7 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
       FROM enrollment
       WHERE course_id = '${courseId}' AND enrollment_id = '${enrollId}';
       `;
-    const { rows } = await db.query(checkEnrollmentQuery);
+    const { rows } = await pool.query(checkEnrollmentQuery);
     console.log(rows);
     if (rows.length !== 0) {
       const query1 = `

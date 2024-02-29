@@ -1,4 +1,4 @@
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 
 const popularRoadmapsInfo = async () => {
   try {
@@ -15,7 +15,7 @@ GROUP BY Roadmap.roadmap_id, Roadmap.roadmap_title, Roadmap.roadmap_description,
 ORDER BY enrollment_count DESC
 LIMIT 3;
 `;
-    const result = await db.query(query);
+    const result = await pool.query(query);
     // فك ترميز اسماء الملفات قبل إرجاع البيانات
     const decodedData = result.rows.map((row) => {
       const decodedImagePath = decodeURIComponent(row.image_path);

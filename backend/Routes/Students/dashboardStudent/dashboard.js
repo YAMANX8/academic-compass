@@ -1,13 +1,13 @@
 const router = require('express').Router();
 const pool = require('../../../Database/db');
 const authorization = require('../../../middleware/authorization');
-const count = require('../../../Utils/dashboard/countDashboardS');
-const inprogresInfo = require('../../../Utils/dashboard/coursesInprogresInfo');
-const completCourseInfo = require('../../../Utils/dashboard/CompletedCourse');
-const MyRoadmaps = require('../../../Utils/dashboard/MyRoadmaps');
-const bringdataQuizETS = require('../../../Utils/dashboard/bringdataQuizETS');
-const bring_All_Courses_Number = require('../../../Utils/dashboard/bring_All_Courses_Number');
-const checkPermission = require('../../../middleware/checkPermissions');
+const count = require('../../../Utils/dashboard/count-dashboards');
+const inprogresInfo = require('../../../Utils/dashboard/courses-inprogres-info');
+const completCourseInfo = require('../../../Utils/dashboard/completed-course');
+const MyRoadmaps = require('../../../Utils/dashboard/my-roadmaps');
+const bringdataQuizETS = require('../../../Utils/dashboard/bringdata-quiz-ets');
+const bring_All_Courses_Number = require('../../../Utils/dashboard/bring-all-courses-number');
+const checkPermission = require('../../../middleware/check-permissions');
 
 router.get('/', authorization, async (req, res) => {
   try {

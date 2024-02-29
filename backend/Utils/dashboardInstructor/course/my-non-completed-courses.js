@@ -1,4 +1,4 @@
-const db = require('../../../Database/db');
+const pool = require('../../../Database/db');
 
 // Bring Non-completed Courses .
 const My_Non_completed_Courses = async (instructoer_id) => {
@@ -49,7 +49,7 @@ const My_Non_completed_Courses = async (instructoer_id) => {
         ) AS subquery
         WHERE progress < 12;
       `;
-    const result = await db.query(query, value);
+    const result = await pool.query(query, value);
     console.log(result);
     return {
       status: 'success',

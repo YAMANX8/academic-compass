@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const pool = require('../../../Database/db');
+const pool = require('../../../Database/db.js');
 const bcrypt = require('bcrypt');
-const jwtGenerator = require('../../../Utils/jwtGenerator');
-const validInfo = require('../../../middleware/validInfo');
+const jwtGenerator = require('../../../Utils/jwt-generator.js');
+const validInfo = require('../../../middleware/valid-info.js');
 const authorization = require('../../../middleware/authorization.js');
 const dotenv = require('dotenv');
 dotenv.config();

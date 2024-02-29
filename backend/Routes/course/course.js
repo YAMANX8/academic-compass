@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 const jwt = require('jsonwebtoken');
 const checkPermission = require('../../middleware/checkPermissions');
 const authorization = require('../../middleware/authorization');
@@ -148,15 +148,15 @@ router.get('/:courseId', async (req, res) => {
       'SELECT Rating.rating_id, Student.first_name, Student.last_name, Student.picture, Rating.stars_number, Rating.review FROM course LEFT JOIN Enrollment ON Course.course_id = Enrollment.course_id JOIN Student ON Enrollment.student_id = Student.student_id JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id WHERE course.course_id = $1';
     // const values = [studentId, courseId];
 
-    const Get_Course_info_result = await db.query(Get_Course_info, values);
-    const Get_Topic_content_result = await db.query(Get_Topic_content, [
+    const Get_Course_info_result = await pool.query(Get_Course_info, values);
+    const Get_Topic_content_result = await pool.query(Get_Topic_content, [
       courseId,
     ]);
-    const Part_2From_Course_info_result = await db.query(
+    const Part_2From_Course_info_result = await pool.query(
       Part_2From_Course_info,
       [courseId],
     );
-    const Get_Review_result = await db.query(Get_Review, [courseId]);
+    const Get_Review_result = await pool.query(Get_Review, [courseId]);
 
     //for learn..
     const learnItems = [];
@@ -281,7 +281,7 @@ router.post('/enroll', authorization, async (req, res) => {
       FROM enrollment
       WHERE student_id = '${studentId}' AND course_id = '${courseId}';
       `;
-    const { rows } = await db.query(checkEnrollmentQuery);
+    const { rows } = await pool.query(checkEnrollmentQuery);
     if (rows.length === 0) {
       const insertEnrollmentQuery = `
       INSERT INTO enrollment (student_id, progress_state, strting_date ,course_id)
@@ -289,7 +289,7 @@ router.post('/enroll', authorization, async (req, res) => {
       RETURNING enrollment_id;`;
 
       const values = [studentId, progress, startDate, courseId];
-      const result = await db.query(insertEnrollmentQuery, values);
+      const result = await pool.query(insertEnrollmentQuery, values);
 
       res.json({ enrollmentId: result.rows[0].enrollment_id });
     } else {

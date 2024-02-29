@@ -1,4 +1,4 @@
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 
 // Bring (quiz video and artical) numbers Fro Studnet
 const qva = async (student_id) => {
@@ -19,7 +19,7 @@ WHERE
     e.student_id = $1;`;
 
     const values = [student_id];
-    const result = await db.query(query, values);
+    const result = await pool.query(query, values);
     return {
       status: 'success',
       results: result.rows.length,
