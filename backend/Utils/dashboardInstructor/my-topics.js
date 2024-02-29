@@ -1,4 +1,4 @@
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 
 // Bring Info & Rating's Instructoer.
 const GetMyTopics = async (instructoer_id) => {
@@ -12,7 +12,7 @@ const GetMyTopics = async (instructoer_id) => {
         LEFT JOIN Topic_Level_1  ON Assigning_Topics.topic_level1_id = Topic_Level_1.topic_level1_id
         WHERE Assigning_Topics.instructor_id = $1;
     `;
-    const result = await db.query(query, value);
+    const result = await pool.query(query, value);
     return {
       status: 'success',
       Data: {

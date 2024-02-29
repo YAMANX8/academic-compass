@@ -3,7 +3,7 @@ const pool = require('../../../Database/db');
 const uploadImage = require('../../../lib/multer-image');
 const authorization = require('../../../middleware/authorization');
 const bcrypt = require('bcrypt');
-const checkPermission = require('../../../middleware/checkPermissions');
+const checkPermission = require('../../../middleware/check-permissions');
 
 const PWD_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const db = require('../../Database/db');
+const pool = require('../../Database/db');
 const authorization = require('../../middleware/authorization');
 const checkPermission = require('../../middleware/checkPermissions');
 const Completed_Items_import = require('../../Utils/course/Completed');
@@ -17,7 +17,7 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
     }
     const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
     const enrollmentValues = [studentId, courseId];
-    const enrollmentResult = await db.query(enrollmentQuery, enrollmentValues);
+    const enrollmentResult = await pool.query(enrollmentQuery, enrollmentValues);
     const enrollId = enrollmentResult.rows[0].enrollment_id;
 
     const checkEnrollmentQuery = `
@@ -25,7 +25,7 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
       FROM enrollment
       WHERE course_id = '${courseId}' AND enrollment_id = '${enrollId}';
       `;
-    const { rows } = await db.query(checkEnrollmentQuery);
+    const { rows } = await pool.query(checkEnrollmentQuery);
     console.log(rows);
     if (rows.length !== 0) {
       const query1 = `
@@ -75,8 +75,8 @@ WHERE course.course_id = $2`;
     `;
       const values1 = [studentId, courseId, enrollId];
       const values2 = [itemId];
-      const result1 = await db.query(query1, values1);
-      const result2 = await db.query(query2, values2);
+      const result1 = await pool.query(query1, values1);
+      const result2 = await pool.query(query2, values2);
       const videoPath = result2.rows[0].video_path;
 
       // Process the course content data

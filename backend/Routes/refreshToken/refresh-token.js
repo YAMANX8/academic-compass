@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const refreshTokenMiddleware = require('../../../backend/middleware/refreshToken');
+const refreshTokenMiddleware = require('../../middleware/refresh-token');
 
 router.get('/refresh', refreshTokenMiddleware);
 

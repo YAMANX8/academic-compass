@@ -1,4 +1,4 @@
-const db = require('../../../Database/db');
+const pool = require('../../../Database/db');
 
 // Bring Completed Courses .
 const Completed_Courses = async (instructoer_id) => {
@@ -43,7 +43,7 @@ const Completed_Courses = async (instructoer_id) => {
           );
       `;
 
-    const result = await db.query(query, value);
+    const result = await pool.query(query, value);
     console.log(result);
     return {
       status: 'success',

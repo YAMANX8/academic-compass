@@ -2,7 +2,7 @@ const router = require('express').Router();
 const pool = require('../../../Database/db');
 const authorization = require('../../../middleware/authorization');
 const bcrypt = require('bcrypt');
-const checkPermission = require('../../../middleware/checkPermissions');
+const checkPermission = require('../../../middleware/check-permissions');
 const uploadImage = require('../../../lib/multer-image');
 
 const PWD_REGEX =

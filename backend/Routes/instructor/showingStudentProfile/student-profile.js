@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const pool = require('../../../Database/db');
-const checkPermission = require('../../../middleware/checkPermissions');
+const checkPermission = require('../../../middleware/check-permissions');
 const authorization = require('../../../middleware/authorization');
 router.get('/:studentId', authorization, async (req, res) => {
   try {

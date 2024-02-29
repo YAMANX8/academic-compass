@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const refreshToken = require('./refreshToken');
+const refreshToken = require('./refresh-token');
 const logout = require('./logout');
 
 /*refreshToken*/

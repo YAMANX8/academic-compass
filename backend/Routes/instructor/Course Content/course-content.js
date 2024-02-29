@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const db = require('../../../Database/db');
+const pool = require('../../../Database/db');
 const authorization = require('../../../middleware/authorization');
 const uploadVideo = require('../../../lib/multer-video');
 
@@ -32,7 +32,7 @@ router.get('/show_items/:course_id', authorization, async (req, res) => {
         where items.course_id =$1 And  course.instructor_id = $2;  
     `;
     const Values_show_items = [course_id, instructorId];
-    const result_show_items = await db.query(show_items, Values_show_items);
+    const result_show_items = await pool.query(show_items, Values_show_items);
 
     // select topic_level_1
     const show_tl1 = `
@@ -45,7 +45,7 @@ router.get('/show_items/:course_id', authorization, async (req, res) => {
         `;
     const Values_show_tl1 = [instructorId];
     // result_show_tl1
-    await db.query(show_tl1, Values_show_tl1);
+    await pool.query(show_tl1, Values_show_tl1);
 
     // select topic_level_n
     const show_tln = `
@@ -60,7 +60,7 @@ router.get('/show_items/:course_id', authorization, async (req, res) => {
         `;
     const values_show_tln = [tl1_id];
     // result_show_tln
-    await db.query(show_tln, values_show_tln);
+    await pool.query(show_tln, values_show_tln);
 
     // Process the course content data
     const courseContent = [];
@@ -146,7 +146,7 @@ router.post(
         item_type,
       ];
 
-      const result = await db.query(query, values);
+      const result = await pool.query(query, values);
       const my_item_id = result.rows[0].item_id;
 
       console.log(item_type);
@@ -165,14 +165,14 @@ router.post(
             VALUES ($1, $2);
             `;
         const videoValues = [video_path, my_item_id];
-        await db.query(videoQuery, videoValues);
+        await pool.query(videoQuery, videoValues);
       } else {
         const articleQuery = `
                 INSERT INTO article (article_body, item_id)
                 VALUES ($1, $2);
             `;
         const articleValues = [content_type, my_item_id];
-        await db.query(articleQuery, articleValues);
+        await pool.query(articleQuery, articleValues);
       }
       res.json('Item has been inserted.');
     } catch (err) {

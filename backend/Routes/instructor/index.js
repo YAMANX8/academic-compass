@@ -1,14 +1,15 @@
 const router = require('express').Router();
 const coresContent = require('./Course Content/course_content');
-const courseStatus = require('./Course Info Page/Course_Stauts');
-const courseEnrollment = require('./Course Info Page/Course_Stauts');
-const ShowReview = require('./Course Info Page/Show_Review');
-const createCouse = require('./createCourse/createCourse');
+const courseStatus = require('./Course Info Page/course-stauts');
+const courseEnrollment = require('./Course Info Page/enrollment');
+const ShowReview = require('./Course Info Page//show-review');
+const createCouse = require('./createCourse/create-course');
 const dashboard = require('./dashboard/dashboard');
-const editeCoursePage = require('./editCoursePage/editCourseInfo');
-const register = require('./register/jwtAuth');
+const editeCoursePage = require('./editCoursePage/edit-course-info');
+const register = require('./register/jwt-auth');
 const settings = require('./settings/setting');
-const showStudentProfile = require('./showingStudentProfile/studentProfile');
+const showStudentProfile = require('./showingStudentProfile/student-profile');
+
 /*Instructor*/
 // Course Content
 router.use('/AcademicCompass/instructor/Course_Content', coresContent);

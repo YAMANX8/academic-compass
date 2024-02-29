@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const pool = require('../../Database/db');
 const jwt = require('jsonwebtoken');
-const checkPermission = require('../../middleware/checkPermissions');
+const checkPermission = require('../../middleware/check-permissions');
 
 // Get all roadmaps
 router.get('/', async (req, res) => {
