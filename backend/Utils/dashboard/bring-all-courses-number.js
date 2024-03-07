@@ -1,12 +1,18 @@
-const pool = require('../../Database/db');
+const pool = require('../../database/db');
+const sql = require('pg-promise')();
 
 // Bring All Courses Number For Studnet
 const Get_All_Courses_Number = async (student_id) => {
   try {
-    const query = `SELECT COUNT(DISTINCT Course.course_id) AS total_enrollments
-        FROM Course
+    const query = sql.postgresql`
+      SELECT
+        COUNT(DISTINCT Course.course_id) AS total_enrollments
+      FROM
+        Course
         JOIN Enrollment ON Course.course_id = Enrollment.course_id
-        WHERE Enrollment.student_id = $1;`;
+      WHERE
+        Enrollment.student_id = $1;
+    `;
     const values = [student_id];
     const result = await pool.query(query, values);
     return {

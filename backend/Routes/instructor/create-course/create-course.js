@@ -1,7 +1,8 @@
 const router = require('express').Router();
-const pool = require('../../../Database/db');
+const pool = require('../../../database/db');
 const checkPermission = require('../../../middleware/check-permissions');
 const authorization = require('../../../middleware/authorization');
+const sql = require('pg-promise')();
 
 router.post('/', authorization, async (req, res) => {
   try {
@@ -17,8 +18,19 @@ router.post('/', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
-    const query = `INSERT INTO Course (course_title, instructor_id, course_level, course_type)
-    VALUES ($1, $2, $3, $4) RETURNING * `;
+    const query = sql.postgresql`
+      INSERT INTO
+        Course (
+          course_title,
+          instructor_id,
+          course_level,
+          course_type
+        )
+      VALUES
+        ($1, $2, $3, $4)
+      RETURNING
+        *
+    `;
     const value = [title, instructorId, levelId, typeId];
     const result = await pool.query(query, value);
     res.status(201).json(result.rows[0]);
@@ -46,16 +58,22 @@ router.get('/', authorization, async (req, res) => {
     }
 
     // Get levels data
-    const getLevelsQuery = `
-      SELECT level_id as id, level_name as title
-      FROM Levels
+    const getLevelsQuery = sql.postgresql`
+      SELECT
+        level_id as id,
+        level_name as title
+      FROM
+        Levels
     `;
     const levelsResult = await pool.query(getLevelsQuery);
 
     // Get Courses_Type data
-    const getCoursesTypeQuery = `
-      SELECT type_id as id, type_name as title
-      FROM Courses_Type
+    const getCoursesTypeQuery = sql.postgresql`
+      SELECT
+        type_id as id,
+        type_name as title
+      FROM
+        Courses_Type
     `;
     const coursesTypeResult = await pool.query(getCoursesTypeQuery);
 

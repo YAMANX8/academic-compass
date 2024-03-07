@@ -1,4 +1,5 @@
-const db = require('../../Database/db');
+const db = require('../../database/db');
+const sql = require('pg-promise')();
 
 // Insert Completed Items .
 const completed_items = async (itemId, Id) => {
@@ -10,7 +11,16 @@ const completed_items = async (itemId, Id) => {
     const courseResult = await db.query(courseQuery, values_itemId);
     const course_id = courseResult.rows[0].course_id;
 
-    const enrollmentQuery = `SELECT enrollment_id,progress_state FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
+    const enrollmentQuery = sql.postgresql`
+      SELECT
+        enrollment_id,
+        progress_state
+      FROM
+        enrollment
+      WHERE
+        student_id = $1
+        AND course_id = $2;
+    `;
     const enrollmentResult = await db.query(enrollmentQuery, [
       values_Id[0],
       course_id,
@@ -28,18 +38,23 @@ const completed_items = async (itemId, Id) => {
 
     if (resultQuery.rows.length == 0) {
       // Update the progress_state by incrementing it
-      const updateProgressQuery = `
+      const updateProgressQuery = sql.postgresql`
         UPDATE enrollment
-        SET progress_state = $1
-        WHERE enrollment_id = $2;
+        SET
+          progress_state = $1
+        WHERE
+          enrollment_id = $2;
       `;
       await db.query(updateProgressQuery, [
         enrollmentResult.rows[0].progress_state + 1,
         enrollId,
       ]);
-      const query = `
-            INSERT INTO Completed_Items(item_id,enrollment_id) VALUES($1,$2)
-            `;
+      const query = sql.postgresql`
+        INSERT INTO
+          Completed_Items (item_id, enrollment_id)
+        VALUES
+          ($1, $2)
+      `;
       // result
       await db.query(query, [values_itemId[0], enrollId]);
       // The item has been added

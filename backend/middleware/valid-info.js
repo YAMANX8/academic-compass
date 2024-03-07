@@ -2,6 +2,7 @@ module.exports = (req, res, next) => {
   const { email, name, password } = req.body;
 
   function validEmail(userEmail) {
+    // eslint-disable-next-line no-useless-escape
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
   }
 

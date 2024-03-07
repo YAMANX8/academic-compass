@@ -1,7 +1,9 @@
 const router = require('express').Router();
-const pool = require('../../../Database/db');
+const pool = require('../../../database/db');
 const checkPermission = require('../../../middleware/check-permissions');
 const authorization = require('../../../middleware/authorization');
+const sql = require('pg-promise')();
+
 router.get('/:studentId', authorization, async (req, res) => {
   try {
     const Id = req.params.studentId;
@@ -17,7 +19,15 @@ router.get('/:studentId', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
-    const query = `SELECT * FROM student WHERE student_id =$1 `;
+    // eslint-disable-next-line no-undef
+    const query = sql.postgresql`
+      SELECT
+        *
+      FROM
+        student
+      WHERE
+        student_id = $1
+    `;
     const value = [Id];
     const result = await pool.query(query, value);
 
@@ -32,7 +42,7 @@ router.get('/:studentId', authorization, async (req, res) => {
       city: row.city,
       birth_date: row.birth_date,
       bio: row.bio,
-      picture: row.picture,
+      picture: `'http://localhost:5000/image/${row.picture}`,
     }));
     res.status(200).json(response);
   } catch (err) {

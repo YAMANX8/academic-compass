@@ -3,8 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const routes = require('./Routes/index');
-const createUploadDirectory = require('./middleware/createUploadDirectory');
+const routes = require('./routes/index');
+const createUploadDirectory = require('./middleware/create-upload-directory');
 const app = express();
 
 //midleware

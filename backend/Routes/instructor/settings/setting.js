@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../../Database/db');
+const pool = require('../../../database/db');
 const authorization = require('../../../middleware/authorization');
 const bcrypt = require('bcrypt');
 const checkPermission = require('../../../middleware/check-permissions');

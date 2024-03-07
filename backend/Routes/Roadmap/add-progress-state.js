@@ -2,6 +2,7 @@ const router = require('express').Router();
 const pool = require('../../Database/db');
 const authorization = require('../../middleware/authorization');
 const checkPermission = require('../../middleware/check-permissions');
+const sql = require('pg-promise')();
 
 router.post('/student/state', authorization, async (req, res) => {
   try {
@@ -19,8 +20,19 @@ router.post('/student/state', authorization, async (req, res) => {
     }
     // Verify before adding(true or false)
     const verify = await pool.query(
-      ` SELECT EXISTS (
-        SELECT 1 FROM Progress_Status WHERE topic_id=$1 AND topic_level=$2 AND student_id=$3)`,
+      sql.postgresql`
+        SELECT
+          EXISTS (
+            SELECT
+              1
+            FROM
+              Progress_Status
+            WHERE
+              topic_id = $1
+              AND topic_level = $2
+              AND student_id = $3
+          )
+      `,
       [topic_id, topic_level, studentId],
     );
     // * Update state
@@ -28,9 +40,17 @@ router.post('/student/state', authorization, async (req, res) => {
       try {
         // update Progress_Status query
         await pool.query(
-          `UPDATE Progress_Status
-             SET topic_id=$1, topic_level=$2, state_id=$4
-             WHERE topic_id=$1 AND topic_level=$2 AND student_id=$3`,
+          sql.postgresql`
+            UPDATE Progress_Status
+            SET
+              topic_id = $1,
+              topic_level = $2,
+              state_id = $4
+            WHERE
+              topic_id = $1
+              AND topic_level = $2
+              AND student_id = $3
+          `,
           [topic_id, topic_level, studentId, state_id],
         );
         return res
@@ -43,7 +63,12 @@ router.post('/student/state', authorization, async (req, res) => {
     }
     // newRodmapInfo
     await pool.query(
-      'INSERT INTO Progress_Status (topic_id, topic_level, student_id,state_id) VALUES ($1, $2, $3,$4) ',
+      sql.postgresql`
+        INSERT INTO
+          Progress_Status (topic_id, topic_level, student_id, state_id)
+        VALUES
+          ($1, $2, $3, $4)
+      `,
       [topic_id, topic_level, studentId, state_id],
     );
 
@@ -75,7 +100,13 @@ router.delete(
       }
       // delete Progress_Status
       await pool.query(
-        'DELETE FROM Progress_Status WHERE topic_id = $1 AND student_id = $2 AND topic_level=$3',
+        sql.postgresql`
+          DELETE FROM Progress_Status
+          WHERE
+            topic_id = $1
+            AND student_id = $2
+            AND topic_level = $3
+        `,
         [topic_id, studentId, level],
       );
 

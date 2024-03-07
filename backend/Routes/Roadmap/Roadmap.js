@@ -1,7 +1,8 @@
 const router = require('express').Router();
-const pool = require('../../Database/db');
+const pool = require('../../database/db');
 const jwt = require('jsonwebtoken');
 const checkPermission = require('../../middleware/check-permissions');
+const sql = require('pg-promise')();
 
 // Get all roadmaps
 router.get('/', async (req, res) => {
@@ -59,43 +60,49 @@ router.get('/student/:id', async (req, res) => {
       if (!hasAccess) {
         return res.status(403).json('Access denied');
       }
-      const query = `
-    SELECT DISTINCT ON (r.roadmap_id, TL1.topic_level1_id)
-    r.roadmap_id,
-    r.roadmap_title,
-    r.roadmap_description,
-    TL1.topic_level1_id,
-    TL1.topic_title,
-    TL1.topic_description,
-    TL1.topic_status,
-    TL1.topic_order,
-    TC.category_name, 
-    ps.progress_id,
-    ps.student_id,
-    ps.state_id AS progress_state_id,
-    ps.topic_id,
-    ps.topic_level,
-    ts.state_name,
-    CASE
-        WHEN EXISTS (
-            SELECT 1
-            FROM topic_level_N TLN
-            WHERE TLN.topic_level1_id = TL1.topic_level1_id
-        ) THEN FALSE
-        ELSE TRUE
-    END AS is_last
-FROM
-    Roadmap r
-JOIN
-    Topic_Level_1 TL1 ON r.roadmap_id = TL1.roadmap_id
-LEFT JOIN Topic_Category TC ON TL1.category_id = TC.category_id
-LEFT JOIN Progress_Status ps ON TL1.topic_level1_id = ps.topic_id AND ps.topic_level = 1 AND ps.student_id = $1
-LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
-
-WHERE
-    r.roadmap_id = $2
-ORDER BY
-    r.roadmap_id, TL1.topic_level1_id, ps.progress_id;`;
+      const query = sql.postgresql`
+        SELECT DISTINCT
+          ON (r.roadmap_id, TL1.topic_level1_id) r.roadmap_id,
+          r.roadmap_title,
+          r.roadmap_description,
+          TL1.topic_level1_id,
+          TL1.topic_title,
+          TL1.topic_description,
+          TL1.topic_status,
+          TL1.topic_order,
+          TC.category_name,
+          ps.progress_id,
+          ps.student_id,
+          ps.state_id AS progress_state_id,
+          ps.topic_id,
+          ps.topic_level,
+          ts.state_name,
+          CASE
+            WHEN EXISTS (
+              SELECT
+                1
+              FROM
+                topic_level_N TLN
+              WHERE
+                TLN.topic_level1_id = TL1.topic_level1_id
+            ) THEN FALSE
+            ELSE TRUE
+          END AS is_last
+        FROM
+          Roadmap r
+          JOIN Topic_Level_1 TL1 ON r.roadmap_id = TL1.roadmap_id
+          LEFT JOIN Topic_Category TC ON TL1.category_id = TC.category_id
+          LEFT JOIN Progress_Status ps ON TL1.topic_level1_id = ps.topic_id
+          AND ps.topic_level = 1
+          AND ps.student_id = $1
+          LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
+        WHERE
+          r.roadmap_id = $2
+        ORDER BY
+          r.roadmap_id,
+          TL1.topic_level1_id,
+          ps.progress_id;
+      `;
       const values = [studentId, roadmapId];
       const result = await pool.query(query, values);
       if (result.rows.length === 0) {
@@ -154,17 +161,18 @@ ORDER BY
 router.get('/:id', async (req, res) => {
   try {
     const roadmap_id = req.params.id;
-    const query = `SELECT
-    Roadmap.*,
-    TL1.*,
-    TC.category_name
-    FROM
-    Roadmap
-    JOIN
-    Topic_Level_1 TL1 ON Roadmap.roadmap_id = TL1.roadmap_id
-    LEFT JOIN Topic_Category TC ON TL1.category_id = TC.category_id
-    WHERE
-    Roadmap.roadmap_id = $1`;
+    const query = sql.postgresql`
+      SELECT
+        Roadmap.*,
+        TL1.*,
+        TC.category_name
+      FROM
+        Roadmap
+        JOIN Topic_Level_1 TL1 ON Roadmap.roadmap_id = TL1.roadmap_id
+        LEFT JOIN Topic_Category TC ON TL1.category_id = TC.category_id
+      WHERE
+        Roadmap.roadmap_id = $1
+    `;
     const result = await pool.query(query, [roadmap_id]);
 
     if (result.rows.length === 0) {
@@ -178,9 +186,7 @@ router.get('/:id', async (req, res) => {
       roadmap_id: result.rows[0].roadmap_id,
       roadmap_title: result.rows[0].roadmap_title,
       roadmap_description: result.rows[0].roadmap_description,
-      image_path: `http://localhost:5000/image/${decodeURIComponent(
-        result.rows[0].image_path,
-      )}`,
+      image_path: `http://localhost:5000/image/${decodeURIComponent(result.rows[0].image_path)}`,
     };
 
     const topics = result.rows.map((row) => ({
@@ -233,33 +239,41 @@ router.get('/student/topic/:id', async (req, res) => {
       if (!hasAccess) {
         return res.status(403).json('Access denied');
       }
-      const query = `
-     SELECT
-   TLN.topic_id AS topic_id_lN,
-   TLN.topic_title,
-   TLN.topic_description,
-   TLN.topic_status,
-   TLN.topic_level AS topic_level_lN,
-   TLN.topic_order,
-   ps.progress_id,
-   ps.student_id,
-   ps.state_id AS progress_state_id,
-   ps.topic_id,
-   ps.topic_level,
-   ts.state_name,
-   CASE
-        WHEN EXISTS (
-            SELECT 1
-            FROM topic_level_N 
-            WHERE   TLN.topic_id=topic_level_N.top_level_topic_id
-        ) THEN FALSE
-        ELSE TRUE
-    END AS is_last
-  FROM topic_level_N TLN
-  LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id AND ps.topic_level = 2 AND ps.student_id = $1
-  LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
-  WHERE TLN.topic_level1_id = $2 AND TLN.topic_level=2;
-    `;
+      const query = sql.postgresql`
+        SELECT
+          TLN.topic_id AS topic_id_lN,
+          TLN.topic_title,
+          TLN.topic_description,
+          TLN.topic_status,
+          TLN.topic_level AS topic_level_lN,
+          TLN.topic_order,
+          ps.progress_id,
+          ps.student_id,
+          ps.state_id AS progress_state_id,
+          ps.topic_id,
+          ps.topic_level,
+          ts.state_name,
+          CASE
+            WHEN EXISTS (
+              SELECT
+                1
+              FROM
+                topic_level_N
+              WHERE
+                TLN.topic_id = topic_level_N.top_level_topic_id
+            ) THEN FALSE
+            ELSE TRUE
+          END AS is_last
+        FROM
+          topic_level_N TLN
+          LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id
+          AND ps.topic_level = 2
+          AND ps.student_id = $1
+          LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
+        WHERE
+          TLN.topic_level1_id = $2
+          AND TLN.topic_level = 2;
+      `;
       const values = [studentId, topic_level1_id];
       const result = await pool.query(query, values);
       if (result.rows.length === 0) {
@@ -313,18 +327,30 @@ router.get('/topic/:id', async (req, res) => {
   try {
     const topic_level1_id = req.params.id;
     // Extract student ID from the token and proceed with your logic
-    const query = `
-  SELECT topic_id, topic_title, topic_description, topic_status, topic_level,topic_order,
-   CASE
-        WHEN EXISTS (
-            SELECT 1
-            FROM topic_level_N TLN
-            WHERE TLN.top_level_topic_id = topic_level_N.topic_id
-        ) THEN FALSE
-        ELSE TRUE
-    END AS is_last
-  FROM topic_level_N
-  WHERE topic_level1_id = $1 AND topic_level=2;
+    const query = sql.postgresql`
+      SELECT
+        topic_id,
+        topic_title,
+        topic_description,
+        topic_status,
+        topic_level,
+        topic_order,
+        CASE
+          WHEN EXISTS (
+            SELECT
+              1
+            FROM
+              topic_level_N TLN
+            WHERE
+              TLN.top_level_topic_id = topic_level_N.topic_id
+          ) THEN FALSE
+          ELSE TRUE
+        END AS is_last
+      FROM
+        topic_level_N
+      WHERE
+        topic_level1_id = $1
+        AND topic_level = 2;
     `;
     const values = [topic_level1_id];
     const result = await pool.query(query, values);
@@ -386,33 +412,40 @@ router.get('/student/topicN/:id', async (req, res) => {
       if (!hasAccess) {
         return res.status(403).json('Access denied');
       }
-      const query = `
-  SELECT
-   TLN.topic_id AS topic_id_lN,
-   TLN.topic_title,
-   TLN.topic_description,
-   TLN.topic_status,
-   TLN.topic_level AS topic_level_lN,
-   TLN.topic_order,
-   ps.progress_id,
-   ps.student_id,
-   ps.state_id AS progress_state_id,
-   ps.topic_id,
-   ps.topic_level,
-   ts.state_name,
-   CASE
-        WHEN EXISTS (
-            SELECT 1
-            FROM topic_level_N 
-            WHERE   TLN.topic_id=topic_level_N.top_level_topic_id
-        ) THEN FALSE
-        ELSE TRUE
-    END AS is_last
-  FROM topic_level_N TLN
-  LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id AND ps.topic_level = TLN.topic_level AND ps.student_id = $1
-  LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
-  WHERE TLN.top_level_topic_id = $2;
-    `;
+      const query = sql.postgresql`
+        SELECT
+          TLN.topic_id AS topic_id_lN,
+          TLN.topic_title,
+          TLN.topic_description,
+          TLN.topic_status,
+          TLN.topic_level AS topic_level_lN,
+          TLN.topic_order,
+          ps.progress_id,
+          ps.student_id,
+          ps.state_id AS progress_state_id,
+          ps.topic_id,
+          ps.topic_level,
+          ts.state_name,
+          CASE
+            WHEN EXISTS (
+              SELECT
+                1
+              FROM
+                topic_level_N
+              WHERE
+                TLN.topic_id = topic_level_N.top_level_topic_id
+            ) THEN FALSE
+            ELSE TRUE
+          END AS is_last
+        FROM
+          topic_level_N TLN
+          LEFT JOIN Progress_Status ps ON TLN.topic_id = ps.topic_id
+          AND ps.topic_level = TLN.topic_level
+          AND ps.student_id = $1
+          LEFT JOIN Topic_States ts ON ps.state_id = ts.state_id
+        WHERE
+          TLN.top_level_topic_id = $2;
+      `;
       const values = [studentId, topic_levelN_id];
       const result = await pool.query(query, values);
       if (result.rows.length === 0) {
@@ -466,24 +499,29 @@ router.get('/topicN/:id', async (req, res) => {
   try {
     const topic_levelN_id = req.params.id;
     // Extract student ID from the token and proceed with your logic
-    const query = `
-SELECT
-   TLN.topic_id,
-   TLN.topic_title,
-   TLN.topic_description,
-   TLN.topic_status,
-   TLN.topic_level AS topic_level_lN,
-   TLN.topic_order,
-   CASE
-        WHEN EXISTS (
-            SELECT 1
-            FROM topic_level_N 
-            WHERE   TLN.topic_id=topic_level_N.top_level_topic_id
-        ) THEN FALSE
-        ELSE TRUE
-    END AS is_last
-  FROM topic_level_N TLN
-  WHERE TLN.top_level_topic_id = $1;
+    const query = sql.postgresql`
+      SELECT
+        TLN.topic_id,
+        TLN.topic_title,
+        TLN.topic_description,
+        TLN.topic_status,
+        TLN.topic_level AS topic_level_lN,
+        TLN.topic_order,
+        CASE
+          WHEN EXISTS (
+            SELECT
+              1
+            FROM
+              topic_level_N
+            WHERE
+              TLN.topic_id = topic_level_N.top_level_topic_id
+          ) THEN FALSE
+          ELSE TRUE
+        END AS is_last
+      FROM
+        topic_level_N TLN
+      WHERE
+        TLN.top_level_topic_id = $1;
     `;
     const values = [topic_levelN_id];
     const result = await pool.query(query, values);

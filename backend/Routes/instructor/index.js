@@ -1,14 +1,14 @@
 const router = require('express').Router();
-const coresContent = require('./Course Content/course_content');
-const courseStatus = require('./Course Info Page/course-stauts');
-const courseEnrollment = require('./Course Info Page/enrollment');
-const ShowReview = require('./Course Info Page/show-review');
-const createCouse = require('./createCourse/create-course');
+const coresContent = require('./course-content/course-content');
+const courseStatus = require('./course-info-page/course-stauts');
+const courseEnrollment = require('./course-info-page/enrollment');
+const ShowReview = require('./course-info-page/show-review');
+const createCouse = require('./create-course/create-course');
 const dashboard = require('./dashboard/dashboard');
-const editeCoursePage = require('./editCoursePage/edit-course-info');
+const editeCoursePage = require('./edit-course-page/edit-course-info');
 const register = require('./register/jwt-auth');
 const settings = require('./settings/setting');
-const showStudentProfile = require('./showingStudentProfile/student-profile');
+const showStudentProfile = require('./showing-student-profile/student-profile');
 
 /*Instructor*/
 // Course Content

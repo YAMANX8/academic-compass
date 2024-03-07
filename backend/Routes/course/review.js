@@ -1,7 +1,8 @@
 const router = require('express').Router();
-const pool = require('../../Database/db');
+const pool = require('../../database/db');
 const authorization = require('../../middleware/authorization');
 const checkPermission = require('../../middleware/check-permissions');
+const sql = require('pg-promise')();
 
 //  Insert And Update
 router.post('/edit_review/:course_id', authorization, async (req, res) => {
@@ -16,16 +17,33 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
       return res.status(403).json('Access denied');
     }
     // Get Enrollment_id.
-    const enrollmentQuery = `SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;`;
+    const enrollmentQuery = sql.postgresql`
+      SELECT
+        enrollment_id
+      FROM
+        enrollment
+      WHERE
+        student_id = $1
+        AND course_id = $2;
+    `;
     const enrollmentValues = [studentId, courseId];
-    const enrollmentResult = await pool.query(enrollmentQuery, enrollmentValues);
-    console.log(enrollmentResult);
+    const enrollmentResult = await pool.query(
+      enrollmentQuery,
+      enrollmentValues,
+    );
 
     if (enrollmentResult.rows.length !== 0) {
       const enrollmentId = enrollmentResult.rows[0].enrollment_id;
 
       // Get Rating_id.
-      const ratingQuery = `SELECT rating_id FROM rating WHERE enrollment_id = $1;`;
+      const ratingQuery = sql.postgresql`
+        SELECT
+          rating_id
+        FROM
+          rating
+        WHERE
+          enrollment_id = $1;
+      `;
       const ratingValues = [enrollmentId];
       const ratingResult = await pool.query(ratingQuery, ratingValues);
 
@@ -33,10 +51,15 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
         const ratingId = ratingResult.rows[0].rating_id;
 
         // Update the review.
-        const updateReviewQuery = `
-          UPDATE rating 
-          SET review = $1, stars_number = $2 
-          WHERE rating_id = $3 AND enrollment_id = $4;`;
+        const updateReviewQuery = sql.postgresql`
+          UPDATE rating
+          SET
+            review = $1,
+            stars_number = $2
+          WHERE
+            rating_id = $3
+            AND enrollment_id = $4;
+        `;
         const updateReviewValues = [
           review,
           stars_number,
@@ -48,9 +71,12 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
         return res.status(200).json({ status: 'Success, Updated Rating' });
       } else {
         // Insert a new review.
-        const insertReviewQuery = `
-          INSERT INTO rating (stars_number, review, enrollment_id) 
-          VALUES ($1, $2, $3);`;
+        const insertReviewQuery = sql.postgresql`
+          INSERT INTO
+            rating (stars_number, review, enrollment_id)
+          VALUES
+            ($1, $2, $3);
+        `;
         const insertReviewValues = [stars_number, review, enrollmentId];
         await pool.query(insertReviewQuery, insertReviewValues);
 
@@ -78,18 +104,21 @@ router.get('/show_review/:course_id', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
-    const show_review = `
-      SELECT 
-        Rating.stars_number AS rating, 
-        Rating.review, 
-        Student.first_name, 
-        Student.last_name, 
+    const show_review = sql.postgresql`
+      SELECT
+        Rating.stars_number AS rating,
+        Rating.review,
+        Student.first_name,
+        Student.last_name,
         Student.picture
-      FROM course 
+      FROM
+        course
         LEFT JOIN enrollment ON course.course_id = enrollment.course_id
         JOIN Student ON enrollment.student_id = Student.student_id
         JOIN rating ON enrollment.enrollment_id = rating.enrollment_id
-      WHERE course.course_id = $1 AND enrollment.student_id = $2;
+      WHERE
+        course.course_id = $1
+        AND enrollment.student_id = $2;
     `;
     const values = [course_id, studentId];
     const show_review_result = await pool.query(show_review, values);
@@ -124,17 +153,31 @@ router.delete('/delete_review/:course_id', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
-    const enrollmentQuery = `
-      SELECT enrollment_id FROM enrollment WHERE student_id = $1 AND course_id = $2;
+    const enrollmentQuery = sql.postgresql`
+      SELECT
+        enrollment_id
+      FROM
+        enrollment
+      WHERE
+        student_id = $1
+        AND course_id = $2;
     `;
     const enrollmentValues = [studentId, courseId];
-    const enrollmentResult = await pool.query(enrollmentQuery, enrollmentValues);
+    const enrollmentResult = await pool.query(
+      enrollmentQuery,
+      enrollmentValues,
+    );
 
     if (enrollmentResult.rows.length !== 0) {
       const enrollmentId = enrollmentResult.rows[0].enrollment_id;
 
-      const ratingQuery = `
-        SELECT rating_id FROM rating WHERE enrollment_id = $1;
+      const ratingQuery = sql.postgresql`
+        SELECT
+          rating_id
+        FROM
+          rating
+        WHERE
+          enrollment_id = $1;
       `;
       const ratingValues = [enrollmentId];
       const ratingResult = await pool.query(ratingQuery, ratingValues);
@@ -142,8 +185,11 @@ router.delete('/delete_review/:course_id', authorization, async (req, res) => {
       if (ratingResult.rows.length !== 0) {
         const ratingId = ratingResult.rows[0].rating_id;
 
-        const deleteReviewQuery = `
-          DELETE FROM rating WHERE enrollment_id = $1 AND rating_id = $2;
+        const deleteReviewQuery = sql.postgresql`
+          DELETE FROM rating
+          WHERE
+            enrollment_id = $1
+            AND rating_id = $2;
         `;
         const deleteReviewValues = [enrollmentId, ratingId];
         await pool.query(deleteReviewQuery, deleteReviewValues);

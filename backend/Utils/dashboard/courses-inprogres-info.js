@@ -1,4 +1,5 @@
-const pool = require('../../Database/db');
+const pool = require('../../database/db');
+const sql = require('pg-promise')();
 
 const InProgresCourseInfo = async (student_id) => {
   try {
@@ -47,26 +48,39 @@ const starsNumber = async (student_id) => {
   try {
     const Id = student_id;
     // * Get All Coures For student .
-    const courese_id = `SELECT
-    course.course_id
-    FROM Student
-    JOIN enrollment ON Student.student_id = Enrollment.student_id 
-    JOIN course ON Enrollment.course_id = course.course_id
-    WHERE student.student_id = '${Id}'`;
+    const courese_id = sql.postgresql`
+      SELECT
+        course.course_id
+      FROM
+        Student
+        JOIN enrollment ON Student.student_id = Enrollment.student_id
+        JOIN course ON Enrollment.course_id = course.course_id
+      WHERE
+        student.student_id = '${Id}'
+    `;
 
-    const query = `
-    SELECT
-    c.course_id,
-    ROUND(AVG(r.stars_number), 1) AS rating
-    FROM "course" c
-    JOIN "enrollment" e ON c.course_id = e.course_id
-    LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
-    WHERE
-    (e.progress_state IS NULL OR e.progress_state < c.items_count)
-    AND c.course_id IN (${courese_id})
-    AND (e.progress_state != c.items_count OR e.progress_state IS NULL)
-    GROUP BY c.course_id
-    ORDER BY c.course_title;
+    const query = sql.postgresql`
+      SELECT
+        c.course_id,
+        ROUND(AVG(r.stars_number), 1) AS rating
+      FROM
+        "course" c
+        JOIN "enrollment" e ON c.course_id = e.course_id
+        LEFT JOIN "rating" r ON e.enrollment_id = r.enrollment_id
+      WHERE
+        (
+          e.progress_state IS NULL
+          OR e.progress_state < c.items_count
+        )
+        AND c.course_id IN (${courese_id})
+        AND (
+          e.progress_state != c.items_count
+          OR e.progress_state IS NULL
+        )
+      GROUP BY
+        c.course_id
+      ORDER BY
+        c.course_title;
     `;
     const result = await pool.query(query);
     console.log(result);

@@ -25,3 +25,6 @@ dist-ssr
 
 # Upload folder
 backend/Upload/
+
+# Test files
+backend/test

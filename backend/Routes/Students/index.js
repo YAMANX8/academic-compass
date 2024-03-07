@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const home = require('./home/home.js');
-const studentDashboard = require('./dashboardStudent/dashboard.js');
-const studentRegister = require('./register/jwtAuth.js');
+const studentDashboard = require('./dashboard-student/dashboard.js');
+const studentRegister = require('./register/jwt-auth.js');
 const search = require('./search/search.js');
 const settings = require('./settings/setting.js');
 

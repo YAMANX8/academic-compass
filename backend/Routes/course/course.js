@@ -1,8 +1,9 @@
 const router = require('express').Router();
-const pool = require('../../Database/db');
+const pool = require('../../database/db');
 const jwt = require('jsonwebtoken');
 const checkPermission = require('../../middleware/check-permissions');
 const authorization = require('../../middleware/authorization');
+const sql = require('pg-promise')();
 
 router.get('/:courseId', async (req, res) => {
   try {
@@ -12,52 +13,67 @@ router.get('/:courseId', async (req, res) => {
     let Course_info;
     let values = [];
     if (!jwtToken) {
-      Course_info = `
-      SELECT
-      course.course_thumnail,
-      course.course_title,
-      course.subtitle,
-      ROUND(COALESCE(AVG(Rating.stars_number), 0), 0) AS average_rating,
-      COUNT(DISTINCT Rating.enrollment_id) AS rating_count,
-      course.course_duration,
-      course.items_count,
-      Levels.level_name,
-      Users.first_name,
-      Users.last_name,
-      item_counts.article_count,  
-      item_counts.video_count,    
-      item_counts.quiz_count ,     
-      course.course_description
-    FROM
-      course
-      JOIN Levels ON course.course_level = Levels.level_id
-      JOIN Users ON course.instructor_id = Users.user_id
-      LEFT JOIN Enrollment ON course.course_id = Enrollment.course_id
-      LEFT JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id
-      LEFT JOIN (
-        SELECT course_id,
-               COUNT(CASE WHEN item_type = 1 THEN 1 END) AS article_count,
-               COUNT(CASE WHEN item_type = 2 THEN 1 END) AS video_count,
-               COUNT(CASE WHEN item_type = 3 THEN 1 END) AS quiz_count
-        FROM items
-        GROUP BY course_id
-      ) AS item_counts ON course.course_id = item_counts.course_id
-    WHERE
-        -- enrollment_id = 12
-      course.course_id = $1
-    GROUP BY
-      course.course_thumnail,
-      course.course_title,
-      course.subtitle,
-      course.course_duration,
-      course.items_count,
-      Users.first_name,
-      Users.last_name,
-      Levels.level_name,
-      course.course_description,
-      item_counts.article_count,  
-      item_counts.video_count,    
-      item_counts.quiz_count;         
+      Course_info = sql.postgresql`
+        SELECT
+          course.course_thumnail,
+          course.course_title,
+          course.subtitle,
+          ROUND(COALESCE(AVG(Rating.stars_number), 0), 0) AS average_rating,
+          COUNT(DISTINCT Rating.enrollment_id) AS rating_count,
+          course.course_duration,
+          course.items_count,
+          Levels.level_name,
+          Users.first_name,
+          Users.last_name,
+          item_counts.article_count,
+          item_counts.video_count,
+          item_counts.quiz_count,
+          course.course_description
+        FROM
+          course
+          JOIN Levels ON course.course_level = Levels.level_id
+          JOIN Users ON course.instructor_id = Users.user_id
+          LEFT JOIN Enrollment ON course.course_id = Enrollment.course_id
+          LEFT JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id
+          LEFT JOIN (
+            SELECT
+              course_id,
+              COUNT(
+                CASE
+                  WHEN item_type = 1 THEN 1
+                END
+              ) AS article_count,
+              COUNT(
+                CASE
+                  WHEN item_type = 2 THEN 1
+                END
+              ) AS video_count,
+              COUNT(
+                CASE
+                  WHEN item_type = 3 THEN 1
+                END
+              ) AS quiz_count
+            FROM
+              items
+            GROUP BY
+              course_id
+          ) AS item_counts ON course.course_id = item_counts.course_id
+        WHERE
+          -- enrollment_id = 12
+          course.course_id = $1
+        GROUP BY
+          course.course_thumnail,
+          course.course_title,
+          course.subtitle,
+          course.course_duration,
+          course.items_count,
+          Users.first_name,
+          Users.last_name,
+          Levels.level_name,
+          course.course_description,
+          item_counts.article_count,
+          item_counts.video_count,
+          item_counts.quiz_count;
       `;
       values = [courseId];
     }
@@ -81,71 +97,135 @@ router.get('/:courseId', async (req, res) => {
       } catch (error) {
         console.log(error);
       }
-      Course_info = `
-      SELECT
-        course.course_thumnail,
-        course.course_title,
-        course.subtitle,
-        ROUND(COALESCE(AVG(Rating.stars_number), 0), 0) AS average_rating,
-        COUNT(DISTINCT Rating.enrollment_id) AS rating_count,
-        course.course_duration,
-        course.items_count,
-        Levels.level_name,
-        Users.first_name,
-        Users.last_name,
-        item_counts.article_count,  
-        item_counts.video_count,    
-        item_counts.quiz_count ,     
-        course.course_description,
-        COALESCE(IS_ENROLLED.is_enrolled, 0) AS is_enrolled
-      FROM
-        course
-        JOIN Levels ON course.course_level = Levels.level_id
-        JOIN Users ON course.instructor_id = Users.user_id
-        LEFT JOIN Enrollment ON course.course_id = Enrollment.course_id
-        LEFT JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id
-        LEFT JOIN (
-          SELECT course_id,
-                 COUNT(CASE WHEN item_type = 1 THEN 1 END) AS article_count,
-                 COUNT(CASE WHEN item_type = 2 THEN 1 END) AS video_count,
-                 COUNT(CASE WHEN item_type = 3 THEN 1 END) AS quiz_count
-          FROM items
-          GROUP BY course_id
-        ) AS item_counts ON course.course_id = item_counts.course_id
-        LEFT JOIN (
-          SELECT course_id,
-          -- * student_id = 9
-                 MAX(CASE WHEN student_id = $1  THEN 1 ELSE 0 END) AS is_enrolled
-          FROM Enrollment
-          GROUP BY course_id
-        ) AS IS_ENROLLED ON course.course_id = IS_ENROLLED.course_id
-      WHERE
+      Course_info = sql.postgresql`
+        SELECT
+          course.course_thumnail,
+          course.course_title,
+          course.subtitle,
+          ROUND(COALESCE(AVG(Rating.stars_number), 0), 0) AS average_rating,
+          COUNT(DISTINCT Rating.enrollment_id) AS rating_count,
+          course.course_duration,
+          course.items_count,
+          Levels.level_name,
+          Users.first_name,
+          Users.last_name,
+          item_counts.article_count,
+          item_counts.video_count,
+          item_counts.quiz_count,
+          course.course_description,
+          COALESCE(IS_ENROLLED.is_enrolled, 0) AS is_enrolled
+        FROM
+          course
+          JOIN Levels ON course.course_level = Levels.level_id
+          JOIN Users ON course.instructor_id = Users.user_id
+          LEFT JOIN Enrollment ON course.course_id = Enrollment.course_id
+          LEFT JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id
+          LEFT JOIN (
+            SELECT
+              course_id,
+              COUNT(
+                CASE
+                  WHEN item_type = 1 THEN 1
+                END
+              ) AS article_count,
+              COUNT(
+                CASE
+                  WHEN item_type = 2 THEN 1
+                END
+              ) AS video_count,
+              COUNT(
+                CASE
+                  WHEN item_type = 3 THEN 1
+                END
+              ) AS quiz_count
+            FROM
+              items
+            GROUP BY
+              course_id
+          ) AS item_counts ON course.course_id = item_counts.course_id
+          LEFT JOIN (
+            SELECT
+              course_id,
+              -- * student_id = 9
+              MAX(
+                CASE
+                  WHEN student_id = $1 THEN 1
+                  ELSE 0
+                END
+              ) AS is_enrolled
+            FROM
+              Enrollment
+            GROUP BY
+              course_id
+          ) AS IS_ENROLLED ON course.course_id = IS_ENROLLED.course_id
+        WHERE
           -- enrollment_id = 12
-        course.course_id = $2
-      GROUP BY
-        course.course_thumnail,
-        course.course_title,
-        course.subtitle,
-        course.course_duration,
-        course.items_count,
-        Users.first_name,
-        Users.last_name,
-        Levels.level_name,
-        course.course_description,
-        IS_ENROLLED.is_enrolled,
-        item_counts.article_count,  
-        item_counts.video_count,    
-        item_counts.quiz_count;     
+          course.course_id = $2
+        GROUP BY
+          course.course_thumnail,
+          course.course_title,
+          course.subtitle,
+          course.course_duration,
+          course.items_count,
+          Users.first_name,
+          Users.last_name,
+          Levels.level_name,
+          course.course_description,
+          IS_ENROLLED.is_enrolled,
+          item_counts.article_count,
+          item_counts.video_count,
+          item_counts.quiz_count;
       `;
       values = [studentId, courseId];
     }
     const Get_Course_info = `${Course_info}`;
-    const Get_Topic_content =
-      'SELECT Topic_Level_1.topic_level1_id, Topic_Level_1.topic_title AS tl1, Topic_Level_n.topic_id, Topic_Level_n.topic_title AS tln, Items.item_id, Items.item_title, Items.item_no, Items_Types.type_name FROM course JOIN items ON course.course_id= items.course_id JOIN Items_Types ON Items.item_type= Items_Types.type_id join Topic_Level_N ON items.topic_id= Topic_Level_N.topic_id join Topic_Level_1 ON Topic_Level_N.topic_level1_id= Topic_Level_1.topic_level1_id WHERE course.course_id = $1';
-    const Part_2From_Course_info =
-      'SELECT List_Type.type_name, Course_Lists.item_body, Course_Lists.item_order FROM course JOIN Course_Lists ON Course.course_id = Course_Lists.course_id JOIN List_Type ON Course_Lists.list_type= List_Type.type_id WHERE course.course_id = $1';
-    const Get_Review =
-      'SELECT Rating.rating_id, Student.first_name, Student.last_name, Student.picture, Rating.stars_number, Rating.review FROM course LEFT JOIN Enrollment ON Course.course_id = Enrollment.course_id JOIN Student ON Enrollment.student_id = Student.student_id JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id WHERE course.course_id = $1';
+    const Get_Topic_content = sql.postgresql`
+      SELECT
+        Topic_Level_1.topic_level1_id,
+        Topic_Level_1.topic_title AS tl1,
+        Topic_Level_n.topic_id,
+        Topic_Level_n.topic_title AS tln,
+        Items.item_id,
+        Items.item_title,
+        Items.item_no,
+        Items_Types.type_name
+      FROM
+        course
+        JOIN items ON course.course_id = items.course_id
+        JOIN Items_Types ON Items.item_type = Items_Types.type_id
+        join Topic_Level_N ON items.topic_id = Topic_Level_N.topic_id
+        join Topic_Level_1 ON Topic_Level_N.topic_level1_id = Topic_Level_1.topic_level1_id
+      WHERE
+        course.course_id = $1
+    `;
+    const Part_2From_Course_info = sql.postgresql`
+      SELECT
+        List_Type.type_name,
+        Course_Lists.item_body,
+        Course_Lists.item_order
+      FROM
+        course
+        JOIN Course_Lists ON Course.course_id = Course_Lists.course_id
+        JOIN List_Type ON Course_Lists.list_type = List_Type.type_id
+      WHERE
+        course.course_id = $1
+    `;
+    const Get_Review = sql.postgresql`
+      SELECT
+        Rating.rating_id,
+        Student.first_name,
+        Student.last_name,
+        Student.picture,
+        Rating.stars_number,
+        Rating.review
+      FROM
+        course
+        LEFT JOIN Enrollment ON Course.course_id = Enrollment.course_id
+        JOIN Student ON Enrollment.student_id = Student.student_id
+        JOIN Rating ON Enrollment.enrollment_id = Rating.enrollment_id
+      WHERE
+        course.course_id = $1
+    `;
     // const values = [studentId, courseId];
 
     const Get_Course_info_result = await pool.query(Get_Course_info, values);
@@ -276,17 +356,31 @@ router.post('/enroll', authorization, async (req, res) => {
     const startDate = new Date(); //
 
     //تجهيز استعلام للتحقق من أن الطالب قد قام مسبقاً بالاشتراك بالدورة
-    const checkEnrollmentQuery = `
-      SELECT student_id, course_id
-      FROM enrollment
-      WHERE student_id = '${studentId}' AND course_id = '${courseId}';
-      `;
+    const checkEnrollmentQuery = sql.postgresql`
+      SELECT
+        student_id,
+        course_id
+      FROM
+        enrollment
+      WHERE
+        student_id = '${studentId}'
+        AND course_id = '${courseId}';
+    `;
     const { rows } = await pool.query(checkEnrollmentQuery);
     if (rows.length === 0) {
-      const insertEnrollmentQuery = `
-      INSERT INTO enrollment (student_id, progress_state, strting_date ,course_id)
-      VALUES ($1, $2, $3, $4)
-      RETURNING enrollment_id;`;
+      const insertEnrollmentQuery = sql.postgresql`
+        INSERT INTO
+          enrollment (
+            student_id,
+            progress_state,
+            strting_date,
+            course_id
+          )
+        VALUES
+          ($1, $2, $3, $4)
+        RETURNING
+          enrollment_id;
+      `;
 
       const values = [studentId, progress, startDate, courseId];
       const result = await pool.query(insertEnrollmentQuery, values);

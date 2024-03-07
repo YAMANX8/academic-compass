@@ -10,4 +10,3 @@ const dbPool = new Pool({
 module.exports = {
   query: (text, params) => dbPool.query(text, params),
 };
-// todo update pass and name
