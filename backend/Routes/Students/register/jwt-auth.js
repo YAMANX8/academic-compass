@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../../Database/db.js');
+const pool = require('../../../database/db.js');
 const bcrypt = require('bcrypt');
 const jwtGenerator = require('../../../Utils/jwt-generator.js');
 const validInfo = require('../../../middleware/valid-info.js');
@@ -39,7 +39,7 @@ router.post('/student/register', validInfo, async (req, res) => {
     );
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
-      sameSite: 'None',
+      sameSite: 'Lax',
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });

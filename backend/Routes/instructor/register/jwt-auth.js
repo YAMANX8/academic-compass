@@ -54,7 +54,7 @@ router.post('/instructor/register', validInfo, async (req, res) => {
     );
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
-      sameSite: 'None',
+      sameSite: 'Lax',
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });

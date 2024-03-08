@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../Database/db');
+const pool = require('../../database/db');
 const uploadImage = require('../../lib/multer-image');
 const sql = require('pg-promise')();
 

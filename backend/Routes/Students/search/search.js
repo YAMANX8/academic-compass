@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../../Database/db');
+const pool = require('../../../database/db');
 const sql = require('pg-promise')();
 
 // todo Here we used dynamic query

@@ -3,12 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 const routes = require('./routes/index');
 const createUploadDirectory = require('./middleware/create-upload-directory');
 const app = express();
 
-//midleware
+// midleware
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(helmet()); // Disable tracking
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -22,7 +24,7 @@ app.use(cookieParser());
 // Create upload directories
 createUploadDirectory();
 
-//ROUTES//
+// ROUTES//
 app.use(routes);
 
 // eslint-disable-next-line no-undef

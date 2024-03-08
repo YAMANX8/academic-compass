@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../../Database/db');
+const pool = require('../../../database/db');
 const popularRoadmaps = require('../../../Utils/dashboard/popular-roadmaps');
 const sql = require('pg-promise')();
 
