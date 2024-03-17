@@ -1,10 +1,9 @@
 const pool = require('../../database/db');
-const sql = require('pg-promise')();
 
 // Bring (quiz video and artical) numbers Fro Studnet
 const qva = async (student_id) => {
   try {
-    const query = sql.postgresql`
+    const query = `
       SELECT
         COUNT(
           CASE

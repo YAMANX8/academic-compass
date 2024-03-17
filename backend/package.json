@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "npx eslint . --fix",
     "prettier": "npx prettier --write .",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "mocha"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +28,8 @@
     "nodemon": "^3.0.1",
     "path": "^0.12.7",
     "pg": "^8.11.2",
-    "pg-promise": "^11.5.4"
+    "pg-promise": "^11.5.4",
+    "sinon": "^17.0.1"
   },
   "devDependencies": {
     "chai": "^4.0.0",

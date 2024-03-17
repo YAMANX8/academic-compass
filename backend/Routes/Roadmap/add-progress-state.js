@@ -2,7 +2,6 @@ const router = require('express').Router();
 const pool = require('../../database/db');
 const authorization = require('../../middleware/authorization');
 const checkPermission = require('../../middleware/check-permissions');
-const sql = require('pg-promise')();
 
 router.post('/student/state', authorization, async (req, res) => {
   try {
@@ -20,7 +19,7 @@ router.post('/student/state', authorization, async (req, res) => {
     }
     // Verify before adding(true or false)
     const verify = await pool.query(
-      sql.postgresql`
+      `
         SELECT
           EXISTS (
             SELECT
@@ -40,7 +39,7 @@ router.post('/student/state', authorization, async (req, res) => {
       try {
         // update Progress_Status query
         await pool.query(
-          sql.postgresql`
+          `
             UPDATE Progress_Status
             SET
               topic_id = $1,
@@ -63,7 +62,7 @@ router.post('/student/state', authorization, async (req, res) => {
     }
     // newRodmapInfo
     await pool.query(
-      sql.postgresql`
+      `
         INSERT INTO
           Progress_Status (topic_id, topic_level, student_id, state_id)
         VALUES
@@ -100,7 +99,7 @@ router.delete(
       }
       // delete Progress_Status
       await pool.query(
-        sql.postgresql`
+        `
           DELETE FROM Progress_Status
           WHERE
             topic_id = $1

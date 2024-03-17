@@ -1,11 +1,10 @@
 const pool = require('../database/db');
-const sql = require('pg-promise')();
 
 const checkPermission = async (userId, permissionName, roleid) => {
   let userRoleQuery = '';
   //instructor
   if (roleid === 1) {
-    userRoleQuery = sql.postgresql`
+    userRoleQuery = `
       SELECT
         role_id
       FROM
@@ -16,7 +15,7 @@ const checkPermission = async (userId, permissionName, roleid) => {
   }
   //student
   else if (roleid === 2) {
-    userRoleQuery = sql.postgresql`
+    userRoleQuery = `
       SELECT
         role_id
       FROM
@@ -33,7 +32,7 @@ const checkPermission = async (userId, permissionName, roleid) => {
   }
   const roleId = userRole.rows[0].role_id;
   // * query for To verify whether the student has a certain authority or not(true or false)
-  const permissionQuery = sql.postgresql`
+  const permissionQuery = `
     SELECT
       EXISTS (
         SELECT
@@ -52,6 +51,7 @@ const checkPermission = async (userId, permissionName, roleid) => {
           )
       )
   `;
+  console.log(permissionQuery);
   const hasPermission = await pool.query(permissionQuery, [
     roleId,
     permissionName,

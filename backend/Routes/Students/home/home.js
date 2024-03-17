@@ -1,32 +1,31 @@
 const router = require('express').Router();
 const pool = require('../../../database/db');
 const popularRoadmaps = require('../../../Utils/dashboard/popular-roadmaps');
-const sql = require('pg-promise')();
 
 // * we don't need authorization in home page
 // todo we need to change role_id
 router.get('/', async (req, res) => {
   try {
     //get information to home page
-    const enrollment = await pool.query(sql.postgresql`
+    const enrollment = await pool.query(`
       SELECT
         COUNT(*)
       FROM
         Enrollment
     `);
-    const roadmap = await pool.query(sql.postgresql`
+    const roadmap = await pool.query(`
       SELECT
         COUNT(*)
       FROM
         roadmap
     `);
-    const course = await pool.query(sql.postgresql`
+    const course = await pool.query(`
       SELECT
         COUNT(*)
       FROM
         course
     `);
-    const instructor = await pool.query(sql.postgresql`
+    const instructor = await pool.query(`
       SELECT
         COUNT(*)
       FROM

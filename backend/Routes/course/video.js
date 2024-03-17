@@ -3,7 +3,6 @@ const pool = require('../../database/db');
 const authorization = require('../../middleware/authorization');
 const checkPermission = require('../../middleware/check-permissions');
 const Completed_Items_import = require('../../Utils/course/completed');
-const sql = require('pg-promise')();
 
 router.get('/:courseId/:itemId', authorization, async (req, res) => {
   try {
@@ -16,7 +15,7 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
-    const enrollmentQuery = sql.postgresql`
+    const enrollmentQuery = `
       SELECT
         enrollment_id
       FROM
@@ -32,7 +31,7 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
     );
     const enrollId = enrollmentResult.rows[0].enrollment_id;
 
-    const checkEnrollmentQuery = sql.postgresql`
+    const checkEnrollmentQuery = `
       SELECT
         course_id,
         enrollment_id
@@ -45,7 +44,7 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
     const { rows } = await pool.query(checkEnrollmentQuery);
     console.log(rows);
     if (rows.length !== 0) {
-      const query1 = sql.postgresql`
+      const query1 = `
         SELECT
           Topic_Level_1.topic_level1_id,
           Topic_Level_1.topic_title AS topicTitle1,
@@ -91,7 +90,7 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
         WHERE
           course.course_id = $2
       `;
-      const query2 = sql.postgresql`
+      const query2 = `
         SELECT
           items.item_title,
           Video.video_path

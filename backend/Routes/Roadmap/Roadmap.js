@@ -2,7 +2,6 @@ const router = require('express').Router();
 const pool = require('../../database/db');
 const jwt = require('jsonwebtoken');
 const checkPermission = require('../../middleware/check-permissions');
-const sql = require('pg-promise')();
 
 // Get all roadmaps
 router.get('/', async (req, res) => {
@@ -60,7 +59,7 @@ router.get('/student/:id', async (req, res) => {
       if (!hasAccess) {
         return res.status(403).json('Access denied');
       }
-      const query = sql.postgresql`
+      const query = `
         SELECT DISTINCT
           ON (r.roadmap_id, TL1.topic_level1_id) r.roadmap_id,
           r.roadmap_title,
@@ -161,7 +160,7 @@ router.get('/student/:id', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const roadmap_id = req.params.id;
-    const query = sql.postgresql`
+    const query = `
       SELECT
         Roadmap.*,
         TL1.*,
@@ -239,7 +238,7 @@ router.get('/student/topic/:id', async (req, res) => {
       if (!hasAccess) {
         return res.status(403).json('Access denied');
       }
-      const query = sql.postgresql`
+      const query = `
         SELECT
           TLN.topic_id AS topic_id_lN,
           TLN.topic_title,
@@ -327,7 +326,7 @@ router.get('/topic/:id', async (req, res) => {
   try {
     const topic_level1_id = req.params.id;
     // Extract student ID from the token and proceed with your logic
-    const query = sql.postgresql`
+    const query = `
       SELECT
         topic_id,
         topic_title,
@@ -412,7 +411,7 @@ router.get('/student/topicN/:id', async (req, res) => {
       if (!hasAccess) {
         return res.status(403).json('Access denied');
       }
-      const query = sql.postgresql`
+      const query = `
         SELECT
           TLN.topic_id AS topic_id_lN,
           TLN.topic_title,
@@ -499,7 +498,7 @@ router.get('/topicN/:id', async (req, res) => {
   try {
     const topic_levelN_id = req.params.id;
     // Extract student ID from the token and proceed with your logic
-    const query = sql.postgresql`
+    const query = `
       SELECT
         TLN.topic_id,
         TLN.topic_title,

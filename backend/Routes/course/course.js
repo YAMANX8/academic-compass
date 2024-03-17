@@ -3,7 +3,6 @@ const pool = require('../../database/db');
 const jwt = require('jsonwebtoken');
 const checkPermission = require('../../middleware/check-permissions');
 const authorization = require('../../middleware/authorization');
-const sql = require('pg-promise')();
 
 router.get('/:courseId', async (req, res) => {
   try {
@@ -13,7 +12,7 @@ router.get('/:courseId', async (req, res) => {
     let Course_info;
     let values = [];
     if (!jwtToken) {
-      Course_info = sql.postgresql`
+      Course_info = `
         SELECT
           course.course_thumnail,
           course.course_title,
@@ -97,7 +96,7 @@ router.get('/:courseId', async (req, res) => {
       } catch (error) {
         console.log(error);
       }
-      Course_info = sql.postgresql`
+      Course_info = `
         SELECT
           course.course_thumnail,
           course.course_title,
@@ -179,7 +178,7 @@ router.get('/:courseId', async (req, res) => {
       values = [studentId, courseId];
     }
     const Get_Course_info = `${Course_info}`;
-    const Get_Topic_content = sql.postgresql`
+    const Get_Topic_content = `
       SELECT
         Topic_Level_1.topic_level1_id,
         Topic_Level_1.topic_title AS tl1,
@@ -198,7 +197,7 @@ router.get('/:courseId', async (req, res) => {
       WHERE
         course.course_id = $1
     `;
-    const Part_2From_Course_info = sql.postgresql`
+    const Part_2From_Course_info = `
       SELECT
         List_Type.type_name,
         Course_Lists.item_body,
@@ -210,7 +209,7 @@ router.get('/:courseId', async (req, res) => {
       WHERE
         course.course_id = $1
     `;
-    const Get_Review = sql.postgresql`
+    const Get_Review = `
       SELECT
         Rating.rating_id,
         Student.first_name,
@@ -356,7 +355,7 @@ router.post('/enroll', authorization, async (req, res) => {
     const startDate = new Date(); //
 
     //تجهيز استعلام للتحقق من أن الطالب قد قام مسبقاً بالاشتراك بالدورة
-    const checkEnrollmentQuery = sql.postgresql`
+    const checkEnrollmentQuery = `
       SELECT
         student_id,
         course_id
@@ -368,7 +367,7 @@ router.post('/enroll', authorization, async (req, res) => {
     `;
     const { rows } = await pool.query(checkEnrollmentQuery);
     if (rows.length === 0) {
-      const insertEnrollmentQuery = sql.postgresql`
+      const insertEnrollmentQuery = `
         INSERT INTO
           enrollment (
             student_id,

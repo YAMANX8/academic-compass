@@ -1,12 +1,11 @@
 const pool = require('../../database/db');
-const sql = require('pg-promise')();
 
 // Bring All Performance Number
 const GetALlPerformanceNumber = async (instructoer_id) => {
   try {
     const value = [instructoer_id];
     //1- total enrollments
-    const query1 = sql.postgresql`
+    const query1 = `
       SELECT
         SUM(total_enrollments) AS total
       FROM
@@ -27,7 +26,7 @@ const GetALlPerformanceNumber = async (instructoer_id) => {
     `;
     const result1 = await pool.query(query1, value);
     //2- total reviews
-    const query2 = sql.postgresql`
+    const query2 = `
       SELECT
         SUM(total_reviews) AS total
       FROM
@@ -49,7 +48,7 @@ const GetALlPerformanceNumber = async (instructoer_id) => {
     `;
     const result2 = await pool.query(query2, value);
     //3- total courses
-    const query3 = sql.postgresql`
+    const query3 = `
       SELECT
         SUM(total_courses) AS total
       FROM
@@ -68,7 +67,7 @@ const GetALlPerformanceNumber = async (instructoer_id) => {
     `;
     const result3 = await pool.query(query3, value);
     //4- total students
-    const query4 = sql.postgresql`
+    const query4 = `
       SELECT
         COUNT(DISTINCT Enrollment.student_id) AS total_student
       FROM

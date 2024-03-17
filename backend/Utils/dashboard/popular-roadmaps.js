@@ -1,9 +1,8 @@
 const pool = require('../../database/db');
-const sql = require('pg-promise')();
 
 const popularRoadmapsInfo = async () => {
   try {
-    const query = sql.postgresql`
+    const query = `
       SELECT
         Roadmap.roadmap_id,
         Roadmap.roadmap_title,

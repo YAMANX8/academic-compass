@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const pool = require('../../../database/db');
-const sql = require('pg-promise')();
 
 // todo Here we used dynamic query
 router.post('/course', async (req, res) => {
@@ -26,7 +25,7 @@ router.post('/course', async (req, res) => {
       (Beginner !== '' || Intermediate !== '' || Expert !== '') &&
       (typeName1 !== '' || typeName2 !== '' || typeName3 !== '')
     ) {
-      condition1 = sql.postgresql`
+      condition1 = `
         (
           (
             l.level_name IS NOT NULL
@@ -39,7 +38,7 @@ router.post('/course', async (req, res) => {
         )
       `;
     } else if (Beginner !== '' || Intermediate !== '' || Expert !== '') {
-      condition2 = sql.postgresql`
+      condition2 = `
         (
           (
             l.level_name IS NOT NULL
@@ -52,7 +51,7 @@ router.post('/course', async (req, res) => {
         )
       `;
     } else if (typeName1 !== '' || typeName2 !== '' || typeName3 !== '') {
-      condition3 = sql.postgresql`
+      condition3 = `
         (
           (
             l.level_name IS NOT NULL
@@ -72,7 +71,7 @@ router.post('/course', async (req, res) => {
       typeName2 == '' &&
       typeName3 == ''
     ) {
-      condition4 = sql.postgresql`
+      condition4 = `
         (
           (
             l.level_name IS NOT NULL
@@ -91,13 +90,13 @@ router.post('/course', async (req, res) => {
     let condition6;
     let values = [];
     if (Rating == '') {
-      condition5 = sql.postgresql`
+      condition5 = `
         (
           c.course_title IS NOT NULL
           AND c.course_title ILIKE '%' || $7 || '%'
         )
       `;
-      condition6 = sql.postgresql`
+      condition6 = `
         RC.course_rank > (($8 - 1) * 4)
         AND RC.course_rank <= ($8 * 4)
       `;
@@ -112,7 +111,7 @@ router.post('/course', async (req, res) => {
         courseRank,
       ];
     } else {
-      condition5 = sql.postgresql`
+      condition5 = `
         (
           rt.rating_stars IS NOT NULL
           AND rt.rating_stars >= $7
@@ -122,7 +121,7 @@ router.post('/course', async (req, res) => {
           AND c.course_title ILIKE '%' || $8 || '%'
         )
       `;
-      condition6 = sql.postgresql`
+      condition6 = `
         RC.course_rank > (($9 - 1) * 4)
         AND RC.course_rank <= ($9 * 4)
       `;
@@ -172,7 +171,7 @@ router.post('/course', async (req, res) => {
     }
 
     // بناء الاستعلام النهائي باستخدام الشرط النهائي
-    const query = sql.postgresql`
+    const query = `
       WITH
         RankedCourses AS (
           SELECT DISTINCT
@@ -347,7 +346,7 @@ router.post('/topic', async (req, res) => {
       (Beginner !== '' || Intermediate !== '' || Expert !== '') &&
       (typeName1 !== '' || typeName2 !== '' || typeName3 !== '')
     ) {
-      condition1 = sql.postgresql`
+      condition1 = `
         (
           (
             l.level_name IS NOT NULL
@@ -360,7 +359,7 @@ router.post('/topic', async (req, res) => {
         )
       `;
     } else if (Beginner !== '' || Intermediate !== '' || Expert !== '') {
-      condition2 = sql.postgresql`
+      condition2 = `
         (
           (
             l.level_name IS NOT NULL
@@ -373,7 +372,7 @@ router.post('/topic', async (req, res) => {
         )
       `;
     } else if (typeName1 !== '' || typeName2 !== '' || typeName3 !== '') {
-      condition3 = sql.postgresql`
+      condition3 = `
         (
           (
             l.level_name IS NOT NULL
@@ -393,7 +392,7 @@ router.post('/topic', async (req, res) => {
       typeName2 == '' &&
       typeName3 == ''
     ) {
-      condition4 = sql.postgresql`
+      condition4 = `
         (
           (
             l.level_name IS NOT NULL
@@ -414,7 +413,7 @@ router.post('/topic', async (req, res) => {
     let topicId = 0;
     if (topiclevel_N !== '' && Rating !== '') {
       topicId = topiclevel_N;
-      condition5 = sql.postgresql`
+      condition5 = `
         (
           rt.rating_stars IS NOT NULL
           AND rt.rating_stars >= $7
@@ -424,7 +423,7 @@ router.post('/topic', async (req, res) => {
           AND TLN.topic_id = $8
         )
       `;
-      condition6 = sql.postgresql`
+      condition6 = `
         RC.course_rank > (($9 - 1) * 4)
         AND RC.course_rank <= ($9 * 4)
       `;
@@ -441,13 +440,13 @@ router.post('/topic', async (req, res) => {
       ];
     } else if (topiclevel_N !== '' && Rating == '') {
       topicId = topiclevel_N;
-      condition5 = sql.postgresql`
+      condition5 = `
         (
           TLN.topic_id IS NOT NULL
           AND TLN.topic_id = $7
         )
       `;
-      condition6 = sql.postgresql`
+      condition6 = `
         RC.course_rank > (($8 - 1) * 4)
         AND RC.course_rank <= ($8 * 4)
       `;
@@ -463,7 +462,7 @@ router.post('/topic', async (req, res) => {
       ];
     } else if (topiclevel_1 !== '' && Rating !== '') {
       topicId = topiclevel_1;
-      condition5 = sql.postgresql`
+      condition5 = `
         (
           rt.rating_stars IS NOT NULL
           AND rt.rating_stars >= $7
@@ -473,7 +472,7 @@ router.post('/topic', async (req, res) => {
           AND TL1.topic_level1_id = $8
         )
       `;
-      condition6 = sql.postgresql`
+      condition6 = `
         RC.course_rank > (($9 - 1) * 4)
         AND RC.course_rank <= ($9 * 4)
       `;
@@ -490,13 +489,13 @@ router.post('/topic', async (req, res) => {
       ];
     } else if (topiclevel_1 !== '' && Rating == '') {
       topicId = topiclevel_1;
-      condition5 = sql.postgresql`
+      condition5 = `
         (
           TL1.topic_level1_id IS NOT NULL
           AND TL1.topic_level1_id = $7
         )
       `;
-      condition6 = sql.postgresql`
+      condition6 = `
         RC.course_rank > (($8 - 1) * 4)
         AND RC.course_rank <= ($8 * 4)
       `;
@@ -545,7 +544,7 @@ router.post('/topic', async (req, res) => {
     }
 
     // بناء الاستعلام النهائي باستخدام الشرط النهائي
-    const query = sql.postgresql`
+    const query = `
       WITH
         RankedCourses AS (
           SELECT DISTINCT
@@ -636,7 +635,7 @@ router.post('/topic', async (req, res) => {
     let query2 = '';
     let values2;
     if (topiclevel_N !== '') {
-      query2 = sql.postgresql`
+      query2 = `
         SELECT
           topic_title
         FROM
@@ -646,7 +645,7 @@ router.post('/topic', async (req, res) => {
       `;
       values2 = [topiclevel_N];
     } else if (topiclevel_1 !== '') {
-      query2 = sql.postgresql`
+      query2 = `
         SELECT
           topic_title
         FROM

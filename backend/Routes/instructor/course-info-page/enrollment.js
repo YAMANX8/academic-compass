@@ -2,7 +2,6 @@ const router = require('express').Router();
 const pool = require('../../../database/db');
 const checkPermission = require('../../../middleware/check-permissions');
 const authorization = require('../../../middleware/authorization');
-const sql = require('pg-promise')();
 
 router.get('/', authorization, async (req, res) => {
   try {
@@ -20,7 +19,7 @@ router.get('/', authorization, async (req, res) => {
       return res.status(403).json('Access denied');
     }
 
-    const show_enrollment_query = sql.postgresql`
+    const show_enrollment_query = `
       SELECT
         Student.student_id AS id,
         Student.first_name,

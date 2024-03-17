@@ -1,11 +1,10 @@
 const pool = require('../../database/db');
-const sql = require('pg-promise')();
 
 const GetCoursesNumberInfo = async (student_id) => {
   try {
     const query =
       // eslint-disable-next-line no-undef
-      sql.postgresql`
+      `
         SELECT
           e.student_id,
           SUM(
@@ -49,7 +48,7 @@ const GetTotalPoit = async (student_id) => {
   try {
     const query =
       // eslint-disable-next-line no-undef
-      sql.postgresql`
+      `
         WITH
           PointsPerEnrollment AS (
             SELECT

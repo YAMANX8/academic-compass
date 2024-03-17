@@ -2,7 +2,6 @@ const router = require('express').Router();
 const pool = require('../../../database/db');
 const authorization = require('../../../middleware/authorization');
 const uploadVideo = require('../../../lib/multer-video');
-const sql = require('pg-promise')();
 
 // Get TL1 And TLN .
 // Items For Specific Insturctor And Course .
@@ -12,7 +11,7 @@ router.get('/show_items/:course_id', authorization, async (req, res) => {
     const instructorId = req.user.userId;
     const course_id = req.params.course_id;
     // show items with topic_level_n and topic_level_1
-    const show_items = sql.postgresql`
+    const show_items = `
       SELECT
         Topic_Level_1.topic_level1_id,
         Topic_Level_1.topic_title,
@@ -35,7 +34,7 @@ router.get('/show_items/:course_id', authorization, async (req, res) => {
     const result_show_items = await pool.query(show_items, Values_show_items);
 
     //  Assigning_Topics for instructor **
-    const show_tl1 = sql.postgresql`
+    const show_tl1 = `
       SELECT
         Assigning_Topics.instructor_id,
         Topic_Level_1.topic_title
@@ -50,7 +49,7 @@ router.get('/show_items/:course_id', authorization, async (req, res) => {
     await pool.query(show_tl1, Values_show_tl1);
 
     // select topic_level_n
-    const show_tln = sql.postgresql`
+    const show_tln = `
       SELECT
         Topic_Level_1.topic_level1_id,
         Topic_Level_1.topic_title,
@@ -134,7 +133,7 @@ router.post(
         content_type,
       } = req.body;
 
-      const query = sql.postgresql`
+      const query = `
         INSERT INTO
           items (
             item_title,
@@ -173,7 +172,7 @@ router.post(
         let video_path = null;
         video_path = encodeURIComponent(req.file.path);
         console.log(video_path);
-        const videoQuery = sql.postgresql`
+        const videoQuery = `
           INSERT INTO
             video (video_path, item_id)
           VALUES
@@ -182,7 +181,7 @@ router.post(
         const videoValues = [video_path, my_item_id];
         await pool.query(videoQuery, videoValues);
       } else {
-        const articleQuery = sql.postgresql`
+        const articleQuery = `
           INSERT INTO
             article (article_body, item_id)
           VALUES

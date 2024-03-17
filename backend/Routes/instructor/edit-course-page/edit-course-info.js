@@ -3,7 +3,6 @@ const pool = require('../../../database/db');
 const checkPermission = require('../../../middleware/check-permissions');
 const authorization = require('../../../middleware/authorization');
 const uploadImage = require('../../../lib/multer-image');
-const sql = require('pg-promise')();
 
 router.put(
   '/:id',
@@ -52,7 +51,7 @@ router.put(
         imageFilePath = encodeURIComponent(req.file.filename);
       }
       // get data from course
-      const getQuery1 = sql.postgresql`
+      const getQuery1 = `
         SELECT
           course_title,
           subtitle,
@@ -70,7 +69,7 @@ router.put(
 
       //* update course
       if (getResult && getResult.rows.length < 2) {
-        const updateQuery = sql.postgresql`
+        const updateQuery = `
           UPDATE course
           SET
             course_title = $1,
@@ -102,7 +101,7 @@ router.put(
       }
 
       // get data from Course_Lists
-      const getQuery2 = sql.postgresql`
+      const getQuery2 = `
         SELECT
           list_id,
           item_body,
@@ -117,7 +116,7 @@ router.put(
       // function to update data
       const update = async (item_body, course_id, list_id, list_type) => {
         try {
-          const update = sql.postgresql`
+          const update = `
             UPDATE Course_Lists
             SET
               item_body = $1
@@ -141,7 +140,7 @@ router.put(
       // function to insert data
       const insert = async (item_body, item_order, list_type) => {
         try {
-          const insertQuery = sql.postgresql`
+          const insertQuery = `
             INSERT INTO
               Course_Lists (item_body, item_order, list_type, course_id)
             VALUES
@@ -247,7 +246,7 @@ router.put(
       const getNewData = async (courseid) => {
         try {
           //course data
-          const newCoursequery = sql.postgresql`
+          const newCoursequery = `
             SELECT
               course_title,
               subtitle,
@@ -268,7 +267,7 @@ router.put(
           const Result = await pool.query(newCoursequery, courseValue);
 
           // Get new course list data
-          const getCourseListQuery = sql.postgresql`
+          const getCourseListQuery = `
             SELECT
               list_id,
               item_body,
@@ -369,7 +368,7 @@ router.get('/:id', authorization, async (req, res) => {
     }
 
     // Get course data
-    const getCourseQuery = sql.postgresql`
+    const getCourseQuery = `
       SELECT
         course_title,
         subtitle,
@@ -390,7 +389,7 @@ router.get('/:id', authorization, async (req, res) => {
     const courseResult = await pool.query(getCourseQuery, getCourseValues);
 
     // Get course list data
-    const getCourseListQuery = sql.postgresql`
+    const getCourseListQuery = `
       SELECT
         list_id,
         item_body,

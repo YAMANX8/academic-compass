@@ -1,5 +1,4 @@
 const pool = require('../../database/db');
-const sql = require('pg-promise')();
 
 const InProgresCourseInfo = async (student_id) => {
   try {
@@ -48,7 +47,7 @@ const starsNumber = async (student_id) => {
   try {
     const Id = student_id;
     // * Get All Coures For student .
-    const courese_id = sql.postgresql`
+    const courese_id = `
       SELECT
         course.course_id
       FROM
@@ -59,7 +58,7 @@ const starsNumber = async (student_id) => {
         student.student_id = '${Id}'
     `;
 
-    const query = sql.postgresql`
+    const query = `
       SELECT
         c.course_id,
         ROUND(AVG(r.stars_number), 1) AS rating

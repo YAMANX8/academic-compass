@@ -1,9 +1,8 @@
 const pool = require('../../database/db');
-const sql = require('pg-promise')();
 
 const GetCompletedCourse = async (student_id) => {
   try {
-    const query = sql.postgresql`
+    const query = `
       SELECT
         c.course_id,
         c.course_title,

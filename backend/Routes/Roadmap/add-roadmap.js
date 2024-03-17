@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const pool = require('../../database/db');
 const uploadImage = require('../../lib/multer-image');
-const sql = require('pg-promise')();
 
 router.post('/', uploadImage.single('image'), async (req, res) => {
   try {
@@ -10,7 +9,7 @@ router.post('/', uploadImage.single('image'), async (req, res) => {
 
     const newRodmapInfo = await pool.query(
       // eslint-disable-next-line no-undef
-      sql.postgresql`
+      `
         INSERT INTO
           roadmap (roadmap_title, roadmap_description, image_path)
         VALUES

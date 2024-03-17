@@ -1,12 +1,11 @@
 const pool = require('../../../database/db');
-const sql = require('pg-promise')();
 
 // Bring Non-completed Courses .
 const My_Non_completed_Courses = async (instructoer_id) => {
   try {
     const value = [instructoer_id];
 
-    const query = sql.postgresql`
+    const query = `
       SELECT
         course_id,
         course_title,

@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 const jwtGenerator = require('../../../Utils/jwt-generator.js');
 const validInfo = require('../../../middleware/valid-info');
 const authorization = require('../../../middleware/authorization.js');
-const sql = require('pg-promise')();
 
 //register route
 
@@ -16,7 +15,7 @@ router.post('/instructor/register', validInfo, async (req, res) => {
     const role_id = 1;
     // 2. check if instructor exist (if instructor exist then throw error)
     const instructor = await pool.query(
-      sql.postgresql`
+      `
         SELECT
           *
         FROM
@@ -36,7 +35,7 @@ router.post('/instructor/register', validInfo, async (req, res) => {
     const bcryptPassword = await bcrypt.hash(password, salt);
     // 4.enter the new student inside our database
     const newInstructor = await pool.query(
-      sql.postgresql`
+      `
         INSERT INTO
           Users (first_name, last_name, email, password, role_id)
         VALUES
@@ -75,7 +74,7 @@ router.post('/instructor/login', validInfo, async (req, res) => {
     const role_id = 1;
     // 2. check student doesn't exist (if not then throw error)
     const instructor = await pool.query(
-      sql.postgresql`
+      `
         SELECT
           *
         FROM

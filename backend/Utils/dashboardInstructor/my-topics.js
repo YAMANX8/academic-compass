@@ -1,5 +1,4 @@
 const pool = require('../../database/db');
-const sql = require('pg-promise')();
 
 // Bring Info & Rating's Instructoer.
 const GetMyTopics = async (instructoer_id) => {
@@ -7,7 +6,7 @@ const GetMyTopics = async (instructoer_id) => {
     const value = [instructoer_id];
 
     // Bring Avg Stra .
-    const query = sql.postgresql`
+    const query = `
       SELECT
         Assigning_Topics.topic_level1_id,
         Topic_Level_1.topic_title,

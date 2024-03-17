@@ -1,5 +1,4 @@
 const pool = require('../../database/db');
-const sql = require('pg-promise')();
 
 // Bring Info & Rating's Instructoer.
 const myProfile = async (instructoer_id) => {
@@ -7,7 +6,7 @@ const myProfile = async (instructoer_id) => {
     const value = [instructoer_id];
 
     // Bring Instructoer Infor .
-    const query1 = sql.postgresql`
+    const query1 = `
       select
         Users.first_name,
         Users.last_name,
@@ -22,7 +21,7 @@ const myProfile = async (instructoer_id) => {
     const result1 = await pool.query(query1, value);
 
     // Bring Avg Stra .
-    const query2 = sql.postgresql`
+    const query2 = `
       SELECT
         ROUND(avg(average), 1) AS avg
       FROM

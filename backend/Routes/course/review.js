@@ -2,7 +2,6 @@ const router = require('express').Router();
 const pool = require('../../database/db');
 const authorization = require('../../middleware/authorization');
 const checkPermission = require('../../middleware/check-permissions');
-const sql = require('pg-promise')();
 
 //  Insert And Update
 router.post('/edit_review/:course_id', authorization, async (req, res) => {
@@ -17,7 +16,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
       return res.status(403).json('Access denied');
     }
     // Get Enrollment_id.
-    const enrollmentQuery = sql.postgresql`
+    const enrollmentQuery = `
       SELECT
         enrollment_id
       FROM
@@ -36,7 +35,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
       const enrollmentId = enrollmentResult.rows[0].enrollment_id;
 
       // Get Rating_id.
-      const ratingQuery = sql.postgresql`
+      const ratingQuery = `
         SELECT
           rating_id
         FROM
@@ -51,7 +50,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
         const ratingId = ratingResult.rows[0].rating_id;
 
         // Update the review.
-        const updateReviewQuery = sql.postgresql`
+        const updateReviewQuery = `
           UPDATE rating
           SET
             review = $1,
@@ -71,7 +70,7 @@ router.post('/edit_review/:course_id', authorization, async (req, res) => {
         return res.status(200).json({ status: 'Success, Updated Rating' });
       } else {
         // Insert a new review.
-        const insertReviewQuery = sql.postgresql`
+        const insertReviewQuery = `
           INSERT INTO
             rating (stars_number, review, enrollment_id)
           VALUES
@@ -104,7 +103,7 @@ router.get('/show_review/:course_id', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
-    const show_review = sql.postgresql`
+    const show_review = `
       SELECT
         Rating.stars_number AS rating,
         Rating.review,
@@ -153,7 +152,7 @@ router.delete('/delete_review/:course_id', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
-    const enrollmentQuery = sql.postgresql`
+    const enrollmentQuery = `
       SELECT
         enrollment_id
       FROM
@@ -171,7 +170,7 @@ router.delete('/delete_review/:course_id', authorization, async (req, res) => {
     if (enrollmentResult.rows.length !== 0) {
       const enrollmentId = enrollmentResult.rows[0].enrollment_id;
 
-      const ratingQuery = sql.postgresql`
+      const ratingQuery = `
         SELECT
           rating_id
         FROM
@@ -185,7 +184,7 @@ router.delete('/delete_review/:course_id', authorization, async (req, res) => {
       if (ratingResult.rows.length !== 0) {
         const ratingId = ratingResult.rows[0].rating_id;
 
-        const deleteReviewQuery = sql.postgresql`
+        const deleteReviewQuery = `
           DELETE FROM rating
           WHERE
             enrollment_id = $1

@@ -2,7 +2,6 @@ const router = require('express').Router();
 const pool = require('../../../database/db');
 const checkPermission = require('../../../middleware/check-permissions');
 const authorization = require('../../../middleware/authorization');
-const sql = require('pg-promise')();
 
 router.get('/', authorization, async (req, res) => {
   try {
@@ -21,7 +20,7 @@ router.get('/', authorization, async (req, res) => {
     }
 
     // First query: Total item count
-    const itemQuery = sql.postgresql`
+    const itemQuery = `
       SELECT
         COUNT(items.item_id) AS item_count
       FROM
@@ -35,7 +34,7 @@ router.get('/', authorization, async (req, res) => {
     const totalItemCount = itemResult.rows[0].item_count;
 
     // Second query: Total enrollments
-    const enrollmentQuery = sql.postgresql`
+    const enrollmentQuery = `
       SELECT
         COUNT(enrollment.enrollment_id) AS total_enrollments
       FROM
@@ -48,7 +47,7 @@ router.get('/', authorization, async (req, res) => {
     const totalEnrollments = enrollmentResult.rows[0].total_enrollments;
 
     // Third query: Total reviews
-    const reviewQuery = sql.postgresql`
+    const reviewQuery = `
       SELECT
         COUNT(rating.rating_id) AS total_reviews
       FROM
