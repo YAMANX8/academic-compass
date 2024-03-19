@@ -14,6 +14,8 @@ import Button from "./interface/Button";
 import Preloader from "./interface/Preloader";
 import Modal from "./interface/Modal";
 import Switcher from "./interface/Switcher";
+import LoadingScreen from "./interface/loading-screen/LoadingScreen";
+import SplashScreen from "./interface/loading-screen/SplashScreen";
 // logic components
 import RequireAuth from "./logic/RequireAuth";
 import PersistLogin from "./logic/PersistLogin";
@@ -53,6 +55,8 @@ export {
   ReviewCards,
   Modal,
   Switcher,
+  LoadingScreen,
+  SplashScreen,
   RightLine,
   LeftLine,
   StartLine,
