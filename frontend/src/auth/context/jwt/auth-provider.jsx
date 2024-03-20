@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
 
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
-
+        // We need here to send the access token in the header. 
         const res = await axios.get(endpoints.auth.me);
 
         const { user } = res.data;
@@ -126,14 +126,14 @@ export function AuthProvider({ children }) {
     const data = {
       email,
       password,
-      firstName,
-      lastName,
+      first_name: firstName,
+      last_name: lastName,
     };
 
     const res = await axios.post(endpoints.auth.register, data);
 
     const { accessToken, user } = res.data;
-
+    // Why we don't use the setSession util here? 
     sessionStorage.setItem(STORAGE_KEY, accessToken);
 
     dispatch({
@@ -168,7 +168,7 @@ export function AuthProvider({ children }) {
       loading: status === "loading",
       authenticated: status === "authenticated",
       unauthenticated: status === "unauthenticated",
-      //
+      // Methods. 
       login,
       register,
       logout,

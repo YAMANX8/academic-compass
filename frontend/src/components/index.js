@@ -35,6 +35,20 @@ import Topic from "./roadmap/Topic";
 import General from "./setting/General";
 import Security from "./setting/Security";
 import Account from "./setting/Account";
+// animation components
+import MotionContainer from "./animations/motion-container";
+import { varBounce } from "./animations/bounce";
+import { varFade } from "./animations/fade";
+import { varZoom } from "./animations/zoom";
+import { varFlip } from "./animations/flip";
+import { varRotate } from "./animations/rotate";
+import { varSlide } from "./animations/slide";
+import { varScale } from "./animations/scale";
+import {
+  varTranHover,
+  varTranEnter,
+  varTranExit,
+} from "./animations/transition";
 
 export {
   Navbar,
@@ -68,4 +82,15 @@ export {
   ReviewForm,
   InstructorDataRetrieval,
   InstructorPersistLogin,
+  MotionContainer,
+  varBounce,
+  varFade,
+  varZoom,
+  varFlip,
+  varRotate,
+  varSlide,
+  varScale,
+  varTranHover,
+  varTranEnter,
+  varTranExit,
 };

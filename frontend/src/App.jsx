@@ -36,7 +36,6 @@ import {
 } from "./components";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {SplashScreen, LoadingScreen} from "./components";
 const Roles = {
   instructor: 1,
   student: 2,
@@ -49,7 +48,7 @@ const App = () => {
           <Route index element={<Navigate to="/student" />} />
           <Route path="student/login" element={<LoginStudent />} />
           <Route path="student/register" element={<RegisterStudent />} />
-          <Route path="student/test" element={<SplashScreen  />} />
+          <Route path="student/test" element={<NotFound  />} />
 
           {/* student pages path */}
           <Route
