@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 
 const Content = () => {
   const [data, setData] = useState([
@@ -87,8 +88,15 @@ const Content = () => {
       ],
     },
   ]);
-  console.table(data)
-  return <div>Content</div>;
+  console.table(data);
+  return (
+    <>
+      <Helmet>
+        <title>Editing: Curriculum</title>
+      </Helmet>
+      <div>Content</div>
+    </>
+  );
 };
 
 export default Content;

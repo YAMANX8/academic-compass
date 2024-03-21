@@ -21,6 +21,7 @@ import {
 import axios from "../../apis/axios";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 
 const SectionWrapper = ({ title, children }) => {
   return (
@@ -290,167 +291,174 @@ const CourseView = () => {
     }
   };
   return (
-    <section className="w-[1200px]">
-      <div className="  bg-secondary dark:bg-secondary-dark  shadow-[0px_-1000px_0px_1000px] dark:shadow-secondary-dark shadow-secondary text-dark dark:text-light duration-1000 ease-in-out-back">
-        <div className="flex gap-[32px]">
-          <div className="flex min-w-[400px] aspect-video">
-            <img className="object-contain" src={course.course_thumnail} />
-          </div>
-          <div className="flex flex-col flex-1 gap-4">
-            <h1 className="font-bold text-[32px] leading-[39px] tracking-tight">
-              {course.course_title}
-            </h1>
-            <p className="text-[24px] leading-l tracking-tight">
-              {course.subtitle}
-            </p>
-            <div className="flex gap-2">
-              <div className="flex gap-[5px]">
-                {[...Array(Math.floor(course.stars))].map((_, starIndex) => (
-                  <Full
-                    key={starIndex}
-                    className="text-yellow-500 text-[24px]"
-                  />
-                ))}
-                {course.stars % 1 !== 0 && (
-                  <Half className="text-yellow-500 text-[24px]" />
-                )}
-                {[...Array(5 - Math.ceil(course.stars))].map((_, starIndex) => (
-                  <Star
-                    key={starIndex}
-                    className="text-yellow-500 text-[24px]"
-                  />
-                ))}
+    <>
+      <Helmet>
+        <title>Academic Compass: {course.course_title}</title>
+      </Helmet>
+      <section className="w-[1200px]">
+        <div className="  bg-secondary dark:bg-secondary-dark  shadow-[0px_-1000px_0px_1000px] dark:shadow-secondary-dark shadow-secondary text-dark dark:text-light duration-1000 ease-in-out-back">
+          <div className="flex gap-[32px]">
+            <div className="flex min-w-[400px] aspect-video">
+              <img className="object-contain" src={course.course_thumnail} />
+            </div>
+            <div className="flex flex-col flex-1 gap-4">
+              <h1 className="font-bold text-[32px] leading-[39px] tracking-tight">
+                {course.course_title}
+              </h1>
+              <p className="text-[24px] leading-l tracking-tight">
+                {course.subtitle}
+              </p>
+              <div className="flex gap-2">
+                <div className="flex gap-[5px]">
+                  {[...Array(Math.floor(course.stars))].map((_, starIndex) => (
+                    <Full
+                      key={starIndex}
+                      className="text-yellow-500 text-[24px]"
+                    />
+                  ))}
+                  {course.stars % 1 !== 0 && (
+                    <Half className="text-yellow-500 text-[24px]" />
+                  )}
+                  {[...Array(5 - Math.ceil(course.stars))].map(
+                    (_, starIndex) => (
+                      <Star
+                        key={starIndex}
+                        className="text-yellow-500 text-[24px]"
+                      />
+                    )
+                  )}
+                </div>
+                <span>{course.stars}</span>
+                <span>{`(${course.ratingCount} ratings)`}</span>
               </div>
-              <span>{course.stars}</span>
-              <span>{`(${course.ratingCount} ratings)`}</span>
-            </div>
 
-            <div className="text-accent dark:text-accent-dark flex justify-between duration-1000 ease-in-out-back">
-              <span>
-                duration {course.courseDuration} hr • {course.itemsCount} items
-                • for {course.levelName}
+              <div className="text-accent dark:text-accent-dark flex justify-between duration-1000 ease-in-out-back">
+                <span>
+                  duration {course.courseDuration} hr • {course.itemsCount}{" "}
+                  items • for {course.levelName}
+                </span>
+                <cite>Created By: {course.instructor}</cite>
+              </div>
+            </div>
+          </div>
+
+          <div className="py-8 flex justify-between">
+            <div className=" flex items-center gap-8">
+              <span className="text-[20px] font-semibold tracking-tight">
+                This course contain:
               </span>
-              <cite>Created By: {course.instructor}</cite>
+
+              <div className=" flex items-center gap-4">
+                <Video />
+                {course.video_count} Videos
+              </div>
+              <div className=" flex items-center gap-4">
+                <Quiz />
+                {course.quiz_count} Quiz
+              </div>
+              <div className=" flex items-center gap-4">
+                <Articles />
+                {course.article_count} Articles
+              </div>
             </div>
+            {!course?.is_enrolled ? (
+              <Link
+                onClick={handleEnroll}
+                className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+              >
+                Enroll in This Course
+              </Link>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsOpen(true);
+                }}
+                className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+              >
+                Review this course
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="py-8 flex justify-between">
-          <div className=" flex items-center gap-8">
-            <span className="text-[20px] font-semibold tracking-tight">
-              This course contain:
-            </span>
+        {/* In this course you will learn the following */}
+        <SectionWrapper title="In this course you will learn the following:">
+          <ul className="text-[20px] tracking-tight flex flex-col gap-2">
+            {course.learn.map((item, index) => (
+              <li key={index}>
+                <span className="text-[25px] m-3">•</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </SectionWrapper>
 
-            <div className=" flex items-center gap-4">
-              <Video />
-              {course.video_count} Videos
-            </div>
-            <div className=" flex items-center gap-4">
-              <Quiz />
-              {course.quiz_count} Quiz
-            </div>
-            <div className=" flex items-center gap-4">
-              <Articles />
-              {course.article_count} Articles
-            </div>
+        {/* Description */}
+        <SectionWrapper title="Description">
+          <ul>
+            {descriptionArray.map((item, index) => (
+              <li key={index} className=" mb-8 text-[20px] tracking-tight">
+                {item.includes("<strong>") ? (
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: item.replace(
+                        "<strong>",
+                        '<strong class="font-bold text-lg">'
+                      ),
+                    }}
+                  />
+                ) : (
+                  item
+                )}
+              </li>
+            ))}
+          </ul>
+        </SectionWrapper>
+
+        {/* Who this course is for: */}
+        <SectionWrapper title="Who this course is for:">
+          <ul className="text-[20px] tracking-tight flex flex-col gap-2">
+            {course.forWho.map((item, index) => (
+              <li key={index}>
+                <span className="text-[25px] m-3">•</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </SectionWrapper>
+
+        {/* Requirements */}
+        <SectionWrapper title="Requirements">
+          <ul className="text-[20px] tracking-tight flex flex-col gap-2">
+            {course.requirements.map((item, index) => (
+              <li key={index}>
+                <span className="text-[25px] m-3">•</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </SectionWrapper>
+
+        {/* Course Content */}
+        <SectionWrapper title="Course Content">
+          <CourseContent courseContent={course.courseContent} />
+        </SectionWrapper>
+
+        {/* Reviews */}
+        <SectionWrapper title="Reviews">
+          <ReviewCards reviews={course.reviews} />
+          <div className="flex justify-center items-center mt-[16px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">
+            <button>Load more reviews</button>
           </div>
-          {!course?.is_enrolled ? (
-            <Link
-              onClick={handleEnroll}
-              className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-            >
-              Enroll in This Course
-            </Link>
-          ) : (
-            <button
-              onClick={() => {
-                setIsOpen(true);
-              }}
-              className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-            >
-              Review this course
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* In this course you will learn the following */}
-      <SectionWrapper title="In this course you will learn the following:">
-        <ul className="text-[20px] tracking-tight flex flex-col gap-2">
-          {course.learn.map((item, index) => (
-            <li key={index}>
-              <span className="text-[25px] m-3">•</span>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </SectionWrapper>
-
-      {/* Description */}
-      <SectionWrapper title="Description">
-        <ul>
-          {descriptionArray.map((item, index) => (
-            <li key={index} className=" mb-8 text-[20px] tracking-tight">
-              {item.includes("<strong>") ? (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: item.replace(
-                      "<strong>",
-                      '<strong class="font-bold text-lg">'
-                    ),
-                  }}
-                />
-              ) : (
-                item
-              )}
-            </li>
-          ))}
-        </ul>
-      </SectionWrapper>
-
-      {/* Who this course is for: */}
-      <SectionWrapper title="Who this course is for:">
-        <ul className="text-[20px] tracking-tight flex flex-col gap-2">
-          {course.forWho.map((item, index) => (
-            <li key={index}>
-              <span className="text-[25px] m-3">•</span>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </SectionWrapper>
-
-      {/* Requirements */}
-      <SectionWrapper title="Requirements">
-        <ul className="text-[20px] tracking-tight flex flex-col gap-2">
-          {course.requirements.map((item, index) => (
-            <li key={index}>
-              <span className="text-[25px] m-3">•</span>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </SectionWrapper>
-
-      {/* Course Content */}
-      <SectionWrapper title="Course Content">
-        <CourseContent courseContent={course.courseContent} />
-      </SectionWrapper>
-
-      {/* Reviews */}
-      <SectionWrapper title="Reviews">
-        <ReviewCards reviews={course.reviews} />
-        <div className="flex justify-center items-center mt-[16px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">
-          <button>Load more reviews</button>
-        </div>
-      </SectionWrapper>
-      <Modal
-        isOpen={isOpen}
-        content={<ReviewForm setIsOpen={setIsOpen} />}
-        title={`Leave a review:`}
-        close={() => setIsOpen(false)}
-      />
-    </section>
+        </SectionWrapper>
+        <Modal
+          isOpen={isOpen}
+          content={<ReviewForm setIsOpen={setIsOpen} />}
+          title={`Leave a review:`}
+          close={() => setIsOpen(false)}
+        />
+      </section>
+    </>
   );
 };
 

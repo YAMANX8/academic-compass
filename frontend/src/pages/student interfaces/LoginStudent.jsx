@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import axios from "../../apis/axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { Helmet } from "react-helmet-async";
 
 const LOGIN_URL = "/auth/student/login";
 
@@ -69,57 +70,62 @@ function LoginStudent() {
   };
 
   return (
-    <SignInUpWrapper title="Login">
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4">
-          <label className={`${labelStyle}`}>
-            Email:
-            <input
-              className={`${inputStyle}`}
-              type="email"
-              placeholder="example@something.com"
-              ref={emailRef}
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              autoComplete="username"
-              required
-            />
-          </label>
+    <>
+      <Helmet>
+        <title>Academic Compass: Login</title>
+      </Helmet>
+      <SignInUpWrapper title="Login">
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-4">
+            <label className={`${labelStyle}`}>
+              Email:
+              <input
+                className={`${inputStyle}`}
+                type="email"
+                placeholder="example@something.com"
+                ref={emailRef}
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                autoComplete="username"
+                required
+              />
+            </label>
 
-          <label className={`${labelStyle}`}>
-            Password:
-            <input
-              className={`${inputStyle}`}
-              type={isVisible ? "text" : "password"}
-              placeholder="********"
-              onChange={(e) => setPwd(e.target.value)}
-              value={pwd}
-              autoComplete="current-password"
-              required
-            />
-            <button
-              type="button"
-              className="absolute right-0 top-11 flex items-center px-4 text-gray-600"
-              onClick={() => setIsVisible((prev) => !prev)}
-            >
-              {isVisible ? <Show /> : <Hide />}
-            </button>
-          </label>
-        </div>
+            <label className={`${labelStyle}`}>
+              Password:
+              <input
+                className={`${inputStyle}`}
+                type={isVisible ? "text" : "password"}
+                placeholder="********"
+                onChange={(e) => setPwd(e.target.value)}
+                value={pwd}
+                autoComplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-0 top-11 flex items-center px-4 text-gray-600"
+                onClick={() => setIsVisible((prev) => !prev)}
+              >
+                {isVisible ? <Show /> : <Hide />}
+              </button>
+            </label>
+          </div>
 
-        <button className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px] text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50">
-          LOGIN
-          <ReturnLeft className="text-[24px]" />
-        </button>
-      </form>
-      <Link
-        className="text-[14px] underline text-primary dark:text-accent-dark"
-        to="/student/register"
-        style={{ alignSelf: "flex-start" }}
-      >
-        Register new Account
-      </Link>
-    </SignInUpWrapper>
+          <button className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px] text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50">
+            LOGIN
+            <ReturnLeft className="text-[24px]" />
+          </button>
+        </form>
+        <Link
+          className="text-[14px] underline text-primary dark:text-accent-dark"
+          to="/student/register"
+          style={{ alignSelf: "flex-start" }}
+        >
+          Register new Account
+        </Link>
+      </SignInUpWrapper>
+    </>
   );
 }
 

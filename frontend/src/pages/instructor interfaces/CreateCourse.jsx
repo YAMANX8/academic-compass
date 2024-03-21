@@ -6,6 +6,7 @@ import SecondStep from "./create course pages/SecondStep";
 import ThirdStep from "./create course pages/ThirdStep";
 import axios from "../../apis/axios";
 import useAuth from "../../hooks/useAuth";
+import { Helmet } from "react-helmet-async";
 
 function CreateCourse() {
   const navigate = useNavigate();
@@ -109,60 +110,65 @@ function CreateCourse() {
   console.table(courseData);
 
   return (
-    <form
-      className="w-[1200px] flex flex-col justify-between min-h-[75vh]"
-      onSubmit={handleSubmit}
-    >
-      <div>
-        <div className="flex flex-col gap-12">
-          <div>
-            <h1 className="py-4 text-[24px]">Step{currentStep}</h1>
-            <div className="h-[10px] w-full max-w-screen-xl m-auto bg-gray-300 rounded-[10px] relative">
-              <div
-                className="h-full bg-blue-800 rounded-[10px] transition-all duration-500 ease-in-out-back"
-                style={{ width: `${(currentStep / 3) * 100}%` }}
-              ></div>
+    <>
+      <Helmet>
+        <title>Create new course</title>
+      </Helmet>
+      <form
+        className="w-[1200px] flex flex-col justify-between min-h-[75vh]"
+        onSubmit={handleSubmit}
+      >
+        <div>
+          <div className="flex flex-col gap-12">
+            <div>
+              <h1 className="py-4 text-[24px]">Step{currentStep}</h1>
+              <div className="h-[10px] w-full max-w-screen-xl m-auto bg-gray-300 rounded-[10px] relative">
+                <div
+                  className="h-full bg-blue-800 rounded-[10px] transition-all duration-500 ease-in-out-back"
+                  style={{ width: `${(currentStep / 3) * 100}%` }}
+                ></div>
+              </div>
             </div>
+            {/* القسم الاول  */}
+            {currentStep === 1 && (
+              <FirstStep courseData={courseData} handleChange={handleChange} />
+            )}
+            {/* القسم الثاتي */}
+            {currentStep === 2 && (
+              <SecondStep
+                courseData={courseData}
+                handleChange={handleChange}
+                list={list.types}
+              />
+            )}
+            {/* القسم الثالث */}
+            {currentStep === 3 && (
+              <ThirdStep
+                courseData={courseData}
+                handleChange={handleChange}
+                list={list.levels}
+              />
+            )}
           </div>
-          {/* القسم الاول  */}
-          {currentStep === 1 && (
-            <FirstStep courseData={courseData} handleChange={handleChange} />
-          )}
-          {/* القسم الثاتي */}
-          {currentStep === 2 && (
-            <SecondStep
-              courseData={courseData}
-              handleChange={handleChange}
-              list={list.types}
-            />
-          )}
-          {/* القسم الثالث */}
-          {currentStep === 3 && (
-            <ThirdStep
-              courseData={courseData}
-              handleChange={handleChange}
-              list={list.levels}
-            />
-          )}
         </div>
-      </div>
-      <div className="relative flex justify-between py-4">
-        <hr className="absolute h-[2px] -left-40 -right-40 bg-dark/50 -top-[1px]" />
-        <Link
-          onClick={handleBackClick}
-          className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-primary bg-light border-primary border-[1px]"
-        >
-          {backBtn}
-        </Link>
-        <button
-          type={btn.type}
-          onClick={handleContinueClick}
-          className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-        >
-          {btn.title}
-        </button>
-      </div>
-    </form>
+        <div className="relative flex justify-between py-4">
+          <hr className="absolute h-[2px] -left-40 -right-40 bg-dark/50 -top-[1px]" />
+          <Link
+            onClick={handleBackClick}
+            className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-primary bg-light border-primary border-[1px]"
+          >
+            {backBtn}
+          </Link>
+          <button
+            type={btn.type}
+            onClick={handleContinueClick}
+            className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+          >
+            {btn.title}
+          </button>
+        </div>
+      </form>
+    </>
   );
 }
 

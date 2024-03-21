@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Imagesww from "../../assets/images/AI.svg";
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const ShowProfile = () => {
   const { id } = useParams();
@@ -83,45 +84,50 @@ const ShowProfile = () => {
   if (!displayedStudent) return <div>No student found with the given ID.</div>;
 
   return (
-    <div className="flex p-4">
-      <div className="flex flex-1 border rounded shadow">
-        <div className="p-[32px]">
-          <img
-            src={Imagesww}
-            alt={displayedStudent.first_name}
-            className="w-[300px] h-[300px] rounded-full"
-          />
-          <h2 className="text-[32px] pt-[65px]  font-medium text-accent items-center justify-center flex">
-            {displayedStudent.first_name} {displayedStudent.last_name}
-          </h2>
-        </div>
+    <>
+      <Helmet>
+        <title>Student Profile</title>
+      </Helmet>
+      <div className="flex p-4">
+        <div className="flex flex-1 border rounded shadow">
+          <div className="p-[32px]">
+            <img
+              src={Imagesww}
+              alt={displayedStudent.first_name}
+              className="w-[300px] h-[300px] rounded-full"
+            />
+            <h2 className="text-[32px] pt-[65px]  font-medium text-accent items-center justify-center flex">
+              {displayedStudent.first_name} {displayedStudent.last_name}
+            </h2>
+          </div>
 
-        <ul className="p-[32px] space-y-4 text-[24px] items-center justify-center flex-1">
-          <li>
-            <strong>ID:</strong> {displayedStudent.id}
-          </li>
-          <li>
-            <strong>Email:</strong> {displayedStudent.email}
-          </li>
-          <li>
-            <strong>Education:</strong> {displayedStudent.education}
-          </li>
-          <li>
-            <strong>Country:</strong> {displayedStudent.country}
-          </li>
-          <li>
-            <strong>City:</strong> {displayedStudent.city}
-          </li>
-          <li>
-            <strong>Birth Date:</strong> {displayedStudent.birth_date}
-          </li>
-          <li>
-            <strong>bio:</strong>
-            <br /> {displayedStudent.bio}
-          </li>
-        </ul>
+          <ul className="p-[32px] space-y-4 text-[24px] items-center justify-center flex-1">
+            <li>
+              <strong>ID:</strong> {displayedStudent.id}
+            </li>
+            <li>
+              <strong>Email:</strong> {displayedStudent.email}
+            </li>
+            <li>
+              <strong>Education:</strong> {displayedStudent.education}
+            </li>
+            <li>
+              <strong>Country:</strong> {displayedStudent.country}
+            </li>
+            <li>
+              <strong>City:</strong> {displayedStudent.city}
+            </li>
+            <li>
+              <strong>Birth Date:</strong> {displayedStudent.birth_date}
+            </li>
+            <li>
+              <strong>bio:</strong>
+              <br /> {displayedStudent.bio}
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

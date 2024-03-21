@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
+import { Helmet } from "react-helmet-async";
 
 const Quiz = () => {
   return (
-    <div>Quiz</div>
-  )
-}
+    <>
+      <Helmet>
+        <title>Item title</title>
+      </Helmet>
+      <div>Quiz</div>
+    </>
+  );
+};
 
-export default Quiz
+export default Quiz;

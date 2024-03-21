@@ -5,6 +5,7 @@ import { BsPlayCircleFill as Library } from "react-icons/bs";
 import { CourseContent } from "../../../components";
 import useAuth from "../../../hooks/useAuth";
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const VIDEO_URL = "/video";
 
@@ -73,25 +74,26 @@ function Video() {
     getData();
   }, []);
   const handleCompletion = async () => {
-      try {
-        const response = await axios.post(
-          `${VIDEO_URL}/Completed`,
-          { itemId: itemId },
-          {
-            headers: {
-              token: auth.accessToken,
-            },
-          }
-        );
-        
-      } catch (error) {
-        console.error(error);
-      }
-   
+    try {
+      const response = await axios.post(
+        `${VIDEO_URL}/Completed`,
+        { itemId: itemId },
+        {
+          headers: {
+            token: auth.accessToken,
+          },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <>
+      <Helmet>
+        <title>Item title</title>
+      </Helmet>
       <section className="w-full">
         <div className="flex">
           <div className="flex-1 flex justify-center">
@@ -121,7 +123,12 @@ function Video() {
                   }}
                 />
                 <div className="ml-[500px] py-[20px]">
-                  <button onClick={handleCompletion} className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">Completion Flag</button>
+                  <button
+                    onClick={handleCompletion}
+                    className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+                  >
+                    Completion Flag
+                  </button>
                 </div>
               </div>
             </div>

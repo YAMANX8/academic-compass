@@ -19,6 +19,7 @@ import {
 import axios from "../../../apis/axios";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 
 const LevelZero = () => {
   const navigate = useNavigate();
@@ -219,6 +220,9 @@ const LevelZero = () => {
   );
   return (
     <>
+      <Helmet>
+        <title>{title} roadmap</title>
+      </Helmet>
       {mergedData.map((topic, index) => {
         //the first topic rendering
         if (index == 0) {
