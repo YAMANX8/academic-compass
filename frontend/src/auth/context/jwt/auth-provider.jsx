@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useReducer, useCallback } from "react";
 
-import axios, { endpoints } from "src/utils/axios";
+import axios, { endpoints } from "../../../utils/axios";
 
 import { AuthContext } from "./auth-context";
 import { setSession, isValidToken } from "./utils";
@@ -61,7 +61,7 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
         // We need here to send the access token in the header. 
-        const res = await axios.get(endpoints.auth.me);
+        const res = await axios.get(endpoints.student.auth.me);
 
         const { user } = res.data;
 
@@ -104,7 +104,7 @@ export function AuthProvider({ children }) {
       password,
     };
 
-    const res = await axios.post(endpoints.auth.login, data);
+    const res = await axios.post(endpoints.student.auth.login, data);
 
     const { accessToken, user } = res.data;
 
@@ -130,7 +130,7 @@ export function AuthProvider({ children }) {
       last_name: lastName,
     };
 
-    const res = await axios.post(endpoints.auth.register, data);
+    const res = await axios.post(endpoints.student.auth.register, data);
 
     const { accessToken, user } = res.data;
     // Why we don't use the setSession util here? 
