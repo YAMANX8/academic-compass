@@ -51,7 +51,6 @@ const checkPermission = async (userId, permissionName, roleid) => {
           )
       )
   `;
-  console.log(permissionQuery);
   const hasPermission = await pool.query(permissionQuery, [
     roleId,
     permissionName,

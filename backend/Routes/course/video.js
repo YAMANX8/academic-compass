@@ -15,6 +15,7 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
+    
     const enrollmentQuery = `
       SELECT
         enrollment_id
@@ -29,21 +30,9 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
       enrollmentQuery,
       enrollmentValues,
     );
-    const enrollId = enrollmentResult.rows[0].enrollment_id;
 
-    const checkEnrollmentQuery = `
-      SELECT
-        course_id,
-        enrollment_id
-      FROM
-        enrollment
-      WHERE
-        course_id = '${courseId}'
-        AND enrollment_id = '${enrollId}';
-    `;
-    const { rows } = await pool.query(checkEnrollmentQuery);
-    console.log(rows);
-    if (rows.length !== 0) {
+    if (enrollmentResult.rows[0] !== undefined) {
+      const enrollId = enrollmentResult.rows[0].enrollment_id;
       const query1 = `
         SELECT
           Topic_Level_1.topic_level1_id,
@@ -98,75 +87,84 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
           items
           join Video ON items.item_id = Video.item_id
         WHERE
-          items.item_id = $1;
+          items.item_id = $1
+          AND items.course_id = $2;
       `;
       const values1 = [studentId, courseId, enrollId];
-      const values2 = [itemId];
+      const values2 = [itemId, courseId];
       const result1 = await pool.query(query1, values1);
       const result2 = await pool.query(query2, values2);
-      const videoPath = result2.rows[0].video_path;
+      let videoPath = '';
+      if (result2.rows[0] !== undefined) {
+        videoPath = result2.rows[0].video_path;
+        // Process the course content data
+        const courseContent = [];
 
-      // Process the course content data
-      const courseContent = [];
+        // Set لتتبع العناصر التي تم استخدامها بالفعل بناءً على topic_id
+        const usedTopicIds = new Set();
 
-      // Set لتتبع العناصر التي تم استخدامها بالفعل بناءً على topic_id
-      const usedTopicIds = new Set();
+        result1.rows.forEach((row) => {
+          const topicId = row.topic_level1_id;
+          const subTopicId = row.topic_id;
 
-      result1.rows.forEach((row) => {
-        const topicId = row.topic_level1_id;
-        const subTopicId = row.topic_id;
+          // التحقق مما إذا كان topic_id تم استخدامه بالفعل
+          if (!usedTopicIds.has(topicId)) {
+            courseContent.push({
+              id: topicId,
+              topicTitle: row.topictitle1,
+              subTopics: [],
+            });
+            // إضافة topic_id إلى مجموعة العناصر المستخدمة بالفعل
+            usedTopicIds.add(topicId);
+          }
 
-        // التحقق مما إذا كان topic_id تم استخدامه بالفعل
-        if (!usedTopicIds.has(topicId)) {
-          courseContent.push({
-            id: topicId,
-            topicTitle: row.topictitle1,
-            subTopics: [],
+          // البحث عن الموضوع الحالي في courseContent
+          const currentTopic = courseContent.find(
+            (topic) => topic.id === topicId,
+          );
+
+          // التحقق مما إذا كان subTopicId تم استخدامه بالفعل
+          if (
+            !currentTopic.subTopics.find(
+              (subTopic) => subTopic.id === subTopicId,
+            )
+          ) {
+            currentTopic.subTopics.push({
+              id: subTopicId,
+              title: row.topictitlen,
+              items: [],
+            });
+          }
+
+          // البحث عن الموضوع الفرعي الحالي في subTopics
+          const currentSubTopic = currentTopic.subTopics.find(
+            (subTopic) => subTopic.id === subTopicId,
+          );
+
+          currentSubTopic.items.push({
+            id: row.item_id,
+            title: row.item_title,
+            description: row.item_description,
+            order: row.item_no,
+            type: row.type_name,
+            is_completed: row.is_completed,
           });
-          // إضافة topic_id إلى مجموعة العناصر المستخدمة بالفعل
-          usedTopicIds.add(topicId);
-        }
-
-        // البحث عن الموضوع الحالي في courseContent
-        const currentTopic = courseContent.find(
-          (topic) => topic.id === topicId,
-        );
-
-        // التحقق مما إذا كان subTopicId تم استخدامه بالفعل
-        if (
-          !currentTopic.subTopics.find((subTopic) => subTopic.id === subTopicId)
-        ) {
-          currentTopic.subTopics.push({
-            id: subTopicId,
-            title: row.topictitlen,
-            items: [],
-          });
-        }
-
-        // البحث عن الموضوع الفرعي الحالي في subTopics
-        const currentSubTopic = currentTopic.subTopics.find(
-          (subTopic) => subTopic.id === subTopicId,
-        );
-
-        currentSubTopic.items.push({
-          id: row.item_id,
-          title: row.item_title,
-          description: row.item_description,
-          order: row.item_no,
-          type: row.type_name,
-          is_completed: row.is_completed,
         });
-      });
 
-      const response = {
-        video: `http://localhost:5000/videos/${videoPath}`,
-        courseContent: courseContent,
-      };
+        const response = {
+          video: `http://localhost:5000/videos/${videoPath}`,
+          courseContent: courseContent,
+        };
 
-      res.status(200).json({
-        is_enrolled: result1.rows[0].is_enroll,
-        response,
-      });
+        res.status(200).json({
+          is_enrolled: result1.rows[0].is_enroll,
+          response,
+        });
+      } else {
+        return res.status(403).json({
+          message: 'You are trying to access information for another course',
+        });
+      }
     } else {
       return res.status(401).json({ message: 'Access Denied' });
     }

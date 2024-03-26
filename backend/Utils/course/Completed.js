@@ -24,7 +24,6 @@ const completed_items = async (itemId, Id) => {
       values_Id[0],
       course_id,
     ]);
-    console.log(enrollmentResult);
     const enrollId = enrollmentResult.rows[0].enrollment_id;
 
     // Here I Need To Check From Enrollmnet If Has Done This Item .
@@ -63,7 +62,7 @@ const completed_items = async (itemId, Id) => {
       return true;
     }
   } catch (err) {
-    console.error('Error Insert Items');
+    res.status(500).json({ error: 'Server Error' });
   }
 };
 

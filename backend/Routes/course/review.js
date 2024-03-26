@@ -127,7 +127,7 @@ router.get('/show_review/:course_id', authorization, async (req, res) => {
         rating: null,
         review: '',
       };
-      res.status(200).json(jsonResult);
+      res.status(404).json(jsonResult);
       return;
     }
     const jsonResult = {

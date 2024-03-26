@@ -52,7 +52,6 @@ router.get('/:courseId/:itemId', authorization, async (req, res) => {
         checkEnrollmentQuery,
         checkEnrollmentQueryValues,
       );
-      console.log(rows);
       if (rows.length !== 0) {
         const query1 = `
           SELECT

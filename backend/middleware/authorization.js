@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
   try {
     const jwtToken = req.header('token');
     if (!jwtToken) {
-      return res.status(403).json('Not Authorize');
+      return res.status(401).json('Not Authorize');
     }
     // eslint-disable-next-line no-undef
     const payload = jwt.verify(jwtToken, process.env.jwtSecret);
@@ -16,7 +16,7 @@ module.exports = function (req, res, next) {
     };
   } catch (error) {
     console.error(error.message);
-    return res.status(403).json('Not Authorize');
+    return res.status(401).json('Not Authorize');
   }
   next();
 };

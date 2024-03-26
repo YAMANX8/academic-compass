@@ -57,7 +57,7 @@ router.post('/instructor/register', validInfo, async (req, res) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({ token, role_id });
+    res.status(200).json({ token, user: newInstructor.rows[0] });
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
@@ -71,7 +71,7 @@ router.post('/instructor/login', validInfo, async (req, res) => {
     // 1. destructure req.body
 
     const { email, password } = req.body;
-    const role_id = 1;
+    // const role_id = 1;
     // 2. check student doesn't exist (if not then throw error)
     const instructor = await pool.query(
       `
@@ -110,7 +110,7 @@ router.post('/instructor/login', validInfo, async (req, res) => {
         secure: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      return res.status(200).json({ token, role_id });
+      return res.status(200).json({ token, user: instructor.rows[0] });
     }
   } catch (error) {
     console.error(error);
@@ -119,9 +119,31 @@ router.post('/instructor/login', validInfo, async (req, res) => {
 });
 
 //  correct token
-router.get('/is-verify', authorization, async (req, res) => {
+router.get('/me', authorization, async (req, res) => {
   try {
-    res.json(true);
+    // user
+    const userId = req.user.userId;
+    const roleId = req.user.roleId;
+    let query = '';
+    let value;
+    // user is student
+    if (roleId === 2) {
+      query = `SELECT * FROM student WHERE student_id = $1`;
+      value = [userId];
+    } else if (roleId === 1) {
+      query = `SELECT * FROM users WHERE user_id = $1`;
+      value = [userId];
+    } else {
+      return res.status(403);
+    }
+    const Result = await pool.query(query, value);
+    if (Result.rows[0] !== undefined) {
+      return res.status(200).json({ token, user: Result.rows[0] });
+    } else {
+      return res.status(404);
+    }
+    // testing 401-403-404
+    // res.json(true);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');

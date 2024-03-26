@@ -43,7 +43,7 @@ router.post('/student/register', validInfo, async (req, res) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({ token, role_id });
+    res.status(200).json({ token, user: newStudent.rows[0] });
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
@@ -51,13 +51,12 @@ router.post('/student/register', validInfo, async (req, res) => {
 });
 
 //login route
-
 router.post('/student/login', validInfo, async (req, res) => {
   try {
     // 1. destructure req.body
 
     const { email, password } = req.body;
-    const role_id = 2;
+    // const role_id = 2;
     // 2. check student doesn't exist (if not then throw error)
     const student = await pool.query('SELECT * FROM student WHERE email=$1', [
       email,
@@ -82,14 +81,13 @@ router.post('/student/login', validInfo, async (req, res) => {
         student.rows[0].student_id,
         student.rows[0].role_id,
       );
-
       res.cookie('jwt', refreshToken, {
         httpOnly: true,
         sameSite: 'None',
         secure: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      return res.status(200).json({ token, role_id });
+      return res.status(200).json({ token, user: student.rows[0] });
     }
   } catch (error) {
     console.error(error);
@@ -98,9 +96,29 @@ router.post('/student/login', validInfo, async (req, res) => {
 });
 
 //  correct token
-router.get('/is-verify', authorization, async (req, res) => {
+router.get('/me', authorization, async (req, res) => {
   try {
-    res.json(true);
+    // user
+    const userId = req.user.userId;
+    const roleId = req.user.roleId;
+    let query = '';
+    let value;
+    // user is student
+    if (roleId === 2) {
+      query = `SELECT * FROM student WHERE student_id = $1`;
+      value = [userId];
+    } else if (roleId === 1) {
+      query = `SELECT * FROM users WHERE user_id = $1`;
+      value = [userId];
+    } else {
+      return res.status(403);
+    }
+    const Result = await pool.query(query, value);
+    if (Result.rows[0] !== undefined) {
+      return res.status(200).json({ token, user: Result.rows[0] });
+    } else {
+      return res.status(404);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
