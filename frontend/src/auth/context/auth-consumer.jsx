@@ -1,9 +1,8 @@
-import { SplashScreen } from 'src/components/loading-screen';
+import { SplashScreen } from "../../components";
 
-import { AuthContext } from './auth-context';
+import { AuthContext } from "./auth-context";
 
 // ----------------------------------------------------------------------
-
 
 export function AuthConsumer({ children }) {
   return (

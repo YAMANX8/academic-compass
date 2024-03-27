@@ -7,18 +7,22 @@ import { useRef, useState, useEffect } from "react";
 
 import { useNavigate, Link } from "react-router-dom";
 
+// import { Alert } from "../components/index";
 import { toast } from "react-toastify";
 
+import axios from "../../apis/axios";
+
+import useAuth from "../../hooks/useAuth";
 import { Helmet } from "react-helmet-async";
-import { useAuthContext } from "../../auth/hooks";
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PWD_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;
 
+const REGITER_URL = "/auth/student/register";
 function RegisterStudent() {
-  const { register } = useAuthContext();
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
 
   const nameRef = useRef();
@@ -93,7 +97,26 @@ function RegisterStudent() {
       return;
     }
     try {
-      await register(email, pwd, firstName, lastName);
+      const response = await axios.post(
+        REGITER_URL,
+        JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password: pwd,
+        }),
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const accessToken = response?.data?.token;
+      const role = response?.data?.role_id;
+
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("role", role);
+      setAuth({ role: role });
+      toast.success("Registration Completed Successfully");
+      navigate("/student/dashboard");
     } catch (error) {
       if (!error?.response) {
         toast.error("No Server Response");
@@ -102,7 +125,6 @@ function RegisterStudent() {
       } else {
         toast.error("Registration Failed");
       }
-
       // وهذا السطر مخصص لقراء الشاشة.
 
       errRef.current.focus();

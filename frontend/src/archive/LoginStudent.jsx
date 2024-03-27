@@ -5,14 +5,15 @@ import {
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import axios from "../../apis/axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../auth/hooks";
-
+import useAuth from "../../hooks/useAuth";
 import { Helmet } from "react-helmet-async";
 
+const LOGIN_URL = "/auth/student/login";
 
 function LoginStudent() {
-  const { login } = useAuthContext();
+  const { setIsAuth, setAuth } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,9 +37,24 @@ function LoginStudent() {
     e.preventDefault();
 
     try {
-      await login(email, pwd)
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify({ email: email, password: pwd }),
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const accessToken = response?.data?.token;
+      const role = response?.data?.role_id;
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("role", role);
+      setAuth({ email, pwd, accessToken });
+      setIsAuth(true);
+      setAuth({ role: role });
+      toast.success("Login successfully");
       setEmail("");
       setPwd("");
+      navigate(from, { replace: true, state: { from: location } });
     } catch (err) {
       if (!err?.response) {
         toast.error("No Server Response");

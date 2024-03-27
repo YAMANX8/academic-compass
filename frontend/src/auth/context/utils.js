@@ -1,4 +1,4 @@
-import { paths } from 'src/routes/paths';
+import { paths } from '../../routes/paths';
 
 import axios from 'src/utils/axios';
 
@@ -51,7 +51,7 @@ export const tokenExpired = (exp) => {
 
     sessionStorage.removeItem('accessToken');
 
-    window.location.href = paths.auth.jwt.login;
+    window.location.href = paths.auth.student.login;
   }, timeLeft);
 };
 

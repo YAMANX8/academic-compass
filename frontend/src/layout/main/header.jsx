@@ -14,7 +14,9 @@ import { Switcher } from "../../components";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { paths } from "../../routes/paths";
+import { useAuthContext } from "../../auth/hooks";
 const Header = () => {
+  const {authenticated, logout, user} = useAuthContext();
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { auth, setAuth, isAuth, setIsAuth } = useAuth();
@@ -28,22 +30,15 @@ const Header = () => {
     });
   };
   const handleLogout = () => {
-    // إزالة الرمز من المتصفح
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    // إعادة تعيين حالة المصادقة
-    setIsAuth(false);
-    setAuth({});
+    logout();
     setConfirmLogout(false); // لإغلاق النافذة
     setIsOpen(false);
-    toast("Logout Successfully");
-    navigate(paths.main.root);
   };
   const userInfo = {
-    firstName: auth.firstName == null ? "" : auth.firstName,
-    lastName: auth.lastName == null ? "" : auth.lastName,
+    firstName: user?.firstName == null ? "" : user?.firstName,
+    lastName: user?.lastName == null ? "" : user?.lastName,
     imagePath:
-      auth.image == "http://localhost:5000/image/null" ? "" : auth.image,
+    user?.image == "http://localhost:5000/image/null" ? "" : user?.image,
   };
   const btnStyle =
     "px-[20px] py-[10px] rounded-[5px] font-semibold	gap-[10px] items-center text-[16px]";
@@ -71,13 +66,13 @@ const Header = () => {
           />
           <Search className="font-semibold absolute left-[10px] top-[10px] text-[24px]" />
         </form>
-        <Link to="/roadmaps" className="font-semibold">
+        <Link to={paths.roadmaps} className="font-semibold">
           Roadmaps{" "}
         </Link>
         <Link to={paths.main.others} className="font-semibold">
           Become part of Academic compass
         </Link>
-        {!isAuth ? (
+        {!authenticated ? (
           <>
             <Link
               to={paths.auth.student.login}
@@ -99,7 +94,7 @@ const Header = () => {
             <div className="w-[1px] bg-dark dark:bg-light self-stretch transition-all duration-1000 ease-in-out-back rounded-full"></div>
             <Link
               to={
-                auth.role == 2 ? `/student/dashboard` : `/instructor/dashboard`
+                user.role == 2 ? `/student/dashboard` : `/instructor/dashboard`
               }
               className="flex justify-center items-center w-[45px] overflow-clip aspect-square rounded-full bg-primary text-light"
             >
@@ -143,7 +138,7 @@ const Header = () => {
                     <li
                       className={`${meunItemStyle}`}
                       onClick={() => {
-                        if (auth.role == 2) navigate("/student/settings");
+                        if (user.role == 2) navigate("/student/settings");
                         else navigate("/instructor/settings");
                         setIsOpen(false);
                       }}

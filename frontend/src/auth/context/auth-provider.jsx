@@ -1,16 +1,18 @@
 import { useMemo, useEffect, useReducer, useCallback } from "react";
 
-import axios, { endpoints } from "../../../utils/axios";
+import axios, { endpoints } from "../../utils/axios";
 
 import { AuthContext } from "./auth-context";
 import { setSession, isValidToken } from "./utils";
 
+import { toast } from "react-toastify";
+
 const Types = {
-  INITIAL : 'INITIAL',
-  LOGIN : 'LOGIN',
-  REGISTER : 'REGISTER',
-  LOGOUT : 'LOGOUT',
-}
+  INITIAL: "INITIAL",
+  LOGIN: "LOGIN",
+  REGISTER: "REGISTER",
+  LOGOUT: "LOGOUT",
+};
 
 // ----------------------------------------------------------------------
 
@@ -60,16 +62,19 @@ export function AuthProvider({ children }) {
 
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
-        // We need here to send the access token in the header. 
-        const res = await axios.get(endpoints.student.auth.me);
-
-        const { user } = res.data;
+        // We need here to send the access token in the header.
+        const res = await axios.get(endpoints.student.auth.me, {
+          headers: {
+            token: accessToken,
+          },
+        });
+        // const { user } = res.data;
 
         dispatch({
           type: Types.INITIAL,
           payload: {
             user: {
-              ...user,
+              // ...user,
               accessToken,
             },
           },
@@ -106,7 +111,8 @@ export function AuthProvider({ children }) {
 
     const res = await axios.post(endpoints.student.auth.login, data);
 
-    const { accessToken, user } = res.data;
+    const accessToken = res.data.token;
+    // const user = res.data.user;
 
     setSession(accessToken);
 
@@ -114,38 +120,46 @@ export function AuthProvider({ children }) {
       type: Types.LOGIN,
       payload: {
         user: {
-          ...user,
+          // ...user,
           accessToken,
         },
       },
     });
+
+    toast.success("Login successfully");
   }, []);
 
   // REGISTER
-  const register = useCallback(async (email, password, firstName, lastName) => {
-    const data = {
-      email,
-      password,
-      first_name: firstName,
-      last_name: lastName,
-    };
+  const register = useCallback(
+    async (email, password, first_name, last_name) => {
+      const data = {
+        email,
+        password,
+        first_name,
+        last_name,
+      };
 
-    const res = await axios.post(endpoints.student.auth.register, data);
+      const res = await axios.post(endpoints.student.auth.register, data);
 
-    const { accessToken, user } = res.data;
-    // Why we don't use the setSession util here? 
-    sessionStorage.setItem(STORAGE_KEY, accessToken);
+      const accessToken = res.data.token;
+      // const user = res.data.user;
 
-    dispatch({
-      type: Types.REGISTER,
-      payload: {
-        user: {
-          ...user,
-          accessToken,
+      // Why we don't use the setSession util here?
+      sessionStorage.setItem(STORAGE_KEY, accessToken);
+
+      dispatch({
+        type: Types.REGISTER,
+        payload: {
+          user: {
+            // ...user,
+            accessToken,
+          },
         },
-      },
-    });
-  }, []);
+      });
+      toast.success("Registration completed successfully☺");
+    },
+    []
+  );
 
   // LOGOUT
   const logout = useCallback(async () => {
@@ -153,6 +167,7 @@ export function AuthProvider({ children }) {
     dispatch({
       type: Types.LOGOUT,
     });
+    toast("Logout Successfully");
   }, []);
 
   // ----------------------------------------------------------------------
@@ -168,7 +183,7 @@ export function AuthProvider({ children }) {
       loading: status === "loading",
       authenticated: status === "authenticated",
       unauthenticated: status === "unauthenticated",
-      // Methods. 
+      // Methods.
       login,
       register,
       logout,
