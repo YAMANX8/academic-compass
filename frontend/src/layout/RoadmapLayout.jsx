@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
-const RoadmapLayout = () => {
+import { useParams } from "react-router-dom";
+const RoadmapLayout = ({ children }) => {
   const { topicL1Id } = useParams();
   const [title, setTitle] = useState("");
   return (
@@ -24,9 +24,7 @@ const RoadmapLayout = () => {
         <div className="w-full p-4 text-dark dark:text-light bg-secondary dark:bg-secondary-dark font-semibold tracking-tight text-center transition-all duration-1000 ease-in-out-back">
           Beginning
         </div>
-
-        <Outlet context={[title, setTitle]} />
-
+          {children}
         <div className="w-full p-4 text-dark dark:text-light bg-secondary dark:bg-secondary-dark font-semibold tracking-tight text-center transition-all duration-1000 ease-in-out-back">
           End
         </div>

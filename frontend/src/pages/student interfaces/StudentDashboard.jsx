@@ -13,7 +13,7 @@ import axios from "../../apis/axios.js";
 import { StudentPerformance } from "../../constants/StudentPerformance.js";
 import useAuth from "../../hooks/useAuth.jsx";
 import { Helmet } from "react-helmet-async";
-
+import { paths } from "../../routes/paths.js";
 const DASHBOARD_URL = "/studentDashboard";
 
 const cardColor = ["bg-primary", "bg-accent", "bg-green"];
@@ -121,7 +121,7 @@ function StudentDashboard() {
                   ))}
                 </div>
 
-                <Button page={"/student/roadmaps"}>
+                <Button page={paths.roadmaps}>
                   <Map className="text-[25px]" /> Explore Our Roadmap
                 </Button>
               </div>
@@ -188,7 +188,7 @@ function StudentDashboard() {
                     >
                       {roadmap.title}
                     </span>
-                    <Button page={`/student/roadmaps/${roadmap.id}`}>
+                    <Button page={`${paths.roadmaps}/${roadmap.id}`}>
                       View
                       <ReturnLeft className="text-[20px]" />
                     </Button>

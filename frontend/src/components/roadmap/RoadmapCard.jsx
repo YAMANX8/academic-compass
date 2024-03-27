@@ -1,5 +1,6 @@
 import { AiOutlineEnter as Enter } from "react-icons/ai";
 import { Button } from "../index";
+import { paths } from "../../routes/paths";
 
 const RoadmapCard = ({ id, title, order, description, img }) => {
   return (
@@ -23,7 +24,7 @@ const RoadmapCard = ({ id, title, order, description, img }) => {
           quibusdam eaque. Labore adipisci exercitationem officia iure?
         </p>
         <div className="mt-auto">
-          <Button page={`${id}`}>
+          <Button page={`${paths.roadmaps}/${id}`}>
             Discover <Enter />
           </Button>
         </div>

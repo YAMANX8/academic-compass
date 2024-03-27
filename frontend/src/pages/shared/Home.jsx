@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { RoadmapCard } from "../../components/index.js";
 import { Helmet } from 'react-helmet-async';
-
+import { paths } from "../../routes/paths.js";
 import axios from "../../apis/axios.js";
 function Home() {
   // style variables
@@ -54,7 +54,7 @@ function Home() {
             </p>
             {/* w-[262px] h-[44px]  bg-primary text-2xl ml-[120px] p-[6px] mr-[256px] mb-[207px] mt-[1px] font-medium items-center */}
             <Link
-              to="/student/roadmaps"
+              to={paths.roadmaps}
               className="flex gap-[10px] items-center font-semibold px-[20px] py-[10px] bg-primary text-light rounded-[5px]"
             >
               <Map className="text-[25px]" />
@@ -97,6 +97,7 @@ function Home() {
             {roadCards.map((card, index) => (
               <RoadmapCard
                 key={card.roadmap_id}
+                id={card.roadmap_id}
                 order={index}
                 title={card.roadmap_title}
                 description={card.roadmap_description}

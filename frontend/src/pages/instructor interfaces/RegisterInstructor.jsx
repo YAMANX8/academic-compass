@@ -5,7 +5,6 @@ import {
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 
-import { SignInUpWrapper } from "../../layout";
 import { useNavigate, Link } from "react-router-dom";
 
 // import { Alert } from "../components/index";
@@ -145,7 +144,6 @@ function RegisterInstructor() {
       <Helmet>
         <title>Academic Compass: Sign Up</title>
       </Helmet>
-      <SignInUpWrapper title="Register">
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4">
             <label className={`${labelStyle}`}>
@@ -358,7 +356,6 @@ function RegisterInstructor() {
         >
           Already have an Account
         </Link>
-      </SignInUpWrapper>
     </>
   );
 }

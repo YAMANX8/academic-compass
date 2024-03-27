@@ -12,7 +12,7 @@ import LoginStudent from "./student interfaces/LoginStudent";
 import RegisterStudent from "./student interfaces/RegisterStudent";
 import StudentSettings from "./student interfaces/StudentSettings";
 import StudentDashboard from "./student interfaces/StudentDashboard";
-import CourseView from "./student interfaces/CourseView";
+import CourseDetails from "./student interfaces/CourseDetails";
 import Article from "./student interfaces/course content pages/Article";
 import Video from "./student interfaces/course content pages/Video";
 import Quiz from "./student interfaces/course content pages/Quiz";
@@ -20,7 +20,7 @@ import Quiz from "./student interfaces/course content pages/Quiz";
 import LoginInstructor from "./instructor interfaces/LoginInstructor";
 import RegisterInstructor from "./instructor interfaces/RegisterInstructor";
 import InstructorDashboard from "./instructor interfaces/InstructorDashboard";
-import InstructorHome from "./instructor interfaces/InstructorHome";
+import OthersHome from "./shared/OthersHome";
 import Settings from "./instructor interfaces/Settings";
 import EditCourse from "./instructor interfaces/EditCourse";
 import CreateCourse from "./instructor interfaces/CreateCourse";
@@ -49,14 +49,14 @@ export {
   RegisterStudent,
   StudentSettings,
   StudentDashboard,
-  CourseView,
+  CourseDetails,
   Article,
   Video,
   Quiz,
   LoginInstructor,
   RegisterInstructor,
   InstructorDashboard,
-  InstructorHome,
+  OthersHome,
   Settings,
   EditCourse,
   CreateCourse,

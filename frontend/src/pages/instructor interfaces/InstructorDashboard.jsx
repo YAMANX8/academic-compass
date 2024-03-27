@@ -17,7 +17,7 @@ import { PerformanceInstructor } from "../../constants/PerformanceInstructor.js"
 import useAuth from "../../hooks/useAuth.jsx";
 import axios from "../../apis/axios.js";
 import { Helmet } from "react-helmet-async";
-
+import { paths } from "../../routes/paths.js";
 function InstructorDashboard() {
   const { auth } = useAuth();
   const [json, setJson] = useState({
@@ -46,9 +46,9 @@ function InstructorDashboard() {
     ],
     topics: [
       {
-        id: 0,
-        roadmap_id: 0,
-        title: "",
+        id: 2,
+        roadmap_id: 18,
+        title: "test",
       },
     ],
     non_completed_courses: [
@@ -106,7 +106,7 @@ function InstructorDashboard() {
   return (
     <>
       <Helmet>
-        <title>Dashboard: {auth?.firstName}</title>
+        <title>Dashboard: {auth?.firstName || "[user name]"}</title>
       </Helmet>
       <section className="max-w-[1200px] grid grid-cols-12 gap-[20px] grid-rows-9">
         <div className=" col-span-8 row-start-1 row-span-2">
@@ -171,7 +171,7 @@ function InstructorDashboard() {
                     </div>
                   </div>
                 </div>
-                <Button page={`/instructor/create-course`}>
+                <Button page={paths.course.manage.create}>
                   Create a course <Add className="text-3xl" />
                 </Button>
               </div>
@@ -232,7 +232,7 @@ function InstructorDashboard() {
                           </div>
                           <div className="">
                             <Button
-                              page={`/instructor/edit-course/${course.id}`}
+                              page={`${paths.course.manage.edit}/${course.id}`}
                             >
                               Continue Editing <Continue className="text-2xl" />
                             </Button>
@@ -262,7 +262,7 @@ function InstructorDashboard() {
                     className="justify-center items-center rounded-[10px] dark:bg-dark text-[24px]"
                   >
                     <Button
-                      page={`/student/roadmaps/${topic.roadmap_id}/${topic.id}`}
+                      page={`${paths.roadmaps}/${topic.roadmap_id}/${topic.id}`}
                     >
                       {topic.title}
                     </Button>
@@ -300,13 +300,13 @@ function InstructorDashboard() {
 
                       <div className="flex gap-4">
                         <div className="flex-1">
-                          <Button page={`/instructor/edit-course/${course.id}`}>
+                          <Button page={`${paths.course.manage.edit}/${course.id}`}>
                             Edit Again <Continue className="text-2xl" />
                           </Button>
                         </div>
                         <div className="flex-1">
-                          <Button page={`/instructor/course-info/${course.id}`}>
-                            Show Course Info <ReturnLeft className="text-2xl" />
+                          <Button page={`${paths.course.manage.monitor}/${course.id}`}>
+                            Monitor Course Info <ReturnLeft className="text-2xl" />
                           </Button>
                         </div>
                       </div>

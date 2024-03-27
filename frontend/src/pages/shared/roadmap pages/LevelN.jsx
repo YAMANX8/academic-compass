@@ -9,16 +9,11 @@ import {
   Topic,
   Modal,
 } from "../../../components";
-import {
-  useOutletContext,
-  useNavigate,
-  useParams,
-  useLocation,
-} from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "../../../apis/axios";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
-
+import { paths } from "../../../routes/paths";
 const LevelN = () => {
   const { auth, isAuth } = useAuth();
 
@@ -33,37 +28,41 @@ const LevelN = () => {
   //getting the data
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get(
-        `/roadmap/${
-          !isAuth ? `topicN/${topicLnId}` : `student/topicN/${topicLnId}`
-        }`,
-        {
-          headers: {
-            token: auth.accessToken,
-          },
-        }
-      );
-      // setLevelN(response.data.topics);
-      //consider if the user is not loged in so, I put "|| []"
-      const progress = (await response.data.progress) || [];
-
-      const mergedData = await response.data.topics.map((topic) => {
-        const matchingProgress = progress.find(
-          (item) => item.topic_id === topic.topic_id
+      try {
+        const response = await axios.get(
+          `/roadmap/${
+            !isAuth ? `topicN/${topicLnId}` : `student/topicN/${topicLnId}`
+          }`,
+          {
+            headers: {
+              token: auth.accessToken,
+            },
+          }
         );
-        return {
-          topic_id: topic.topic_id,
-          topic_title: topic.topic_title,
-          topic_description: topic.topic_description,
-          topic_status: topic.topic_status,
-          topic_order: topic.topic_order,
-          topic_category: topic.topic_category,
-          isItLast: topic.isItLast,
-          topic_level: topic.topic_level,
-          state_name: matchingProgress ? matchingProgress.state_name : "",
-        };
-      });
-      setMergedData(mergedData);
+        // setLevelN(response.data.topics);
+        //consider if the user is not loged in so, I put "|| []"
+        const progress = (await response.data.progress) || [];
+
+        const mergedData = await response.data.topics.map((topic) => {
+          const matchingProgress = progress.find(
+            (item) => item.topic_id === topic.topic_id
+          );
+          return {
+            topic_id: topic.topic_id,
+            topic_title: topic.topic_title,
+            topic_description: topic.topic_description,
+            topic_status: topic.topic_status,
+            topic_order: topic.topic_order,
+            topic_category: topic.topic_category,
+            isItLast: topic.isItLast,
+            topic_level: topic.topic_level,
+            state_name: matchingProgress ? matchingProgress.state_name : "",
+          };
+        });
+        setMergedData(mergedData);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getData();
   }, [countUpdate]);
@@ -108,17 +107,6 @@ const LevelN = () => {
   //     isItLast: true,
   //   },
   // ]);
-  //for the title of the page
-  const [title, setTitle] = useOutletContext();
-  // setTitle("FE") : I put it in a useEffect because of the warning in the console.
-  useEffect(
-    () =>
-      setTitle(
-        "topiC Level N"[0].toUpperCase() +
-          "topiC Level N".slice(1).toLowerCase()
-      ),
-    []
-  );
   //some styles
   const style =
     "p-4 rounded-md text-dark border-2 disabled:from-primary/50 disabled:to-accent/50";
@@ -156,8 +144,10 @@ const LevelN = () => {
       setIsOpen(false);
       toast.success(`topic state is updated successfully (${countUpdate})`);
     } catch (err) {
-      if (err.response.status === 403)
-        navigate("/student/login", { state: { from: location } });
+      if (err.response.status === 403) {
+        toast.error("Your need to login first!!");
+        navigate(paths.auth.student.login, { state: { from: location } });
+      }
     }
   };
   const handleReset = async () => {

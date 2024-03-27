@@ -1,38 +1,61 @@
 const ROOTS = {
-    AUTH: '/auth',
-    DASHBOARD: '/dashboard',
-  };
-  
-  // ----------------------------------------------------------------------
-  
-  export const paths = {
-    minimalUI: 'https://mui.com/store/items/minimal-dashboard/',
-    // MAIN
-    main: {
-      settings: '/settings',
+  AUTH: "/auth",
+  StUDENT_DASHBOARD: "/students",
+  INSTRUCTOR_DASHBOARD: "/instructors",
+  SUPERVISOR_DASHBOARD: "/supervisors",
+  MANAGER_DASHBOARD: "/managers",
+};
+
+// ----------------------------------------------------------------------
+
+export const paths = {
+  auth: {
+    student: {
+      login: `${ROOTS.AUTH}/student/login`,
+      register: `${ROOTS.AUTH}/student/register`,
     },
-    // AUTH
-    auth: {
-      firebase: {
-        login: `${ROOTS.AUTH}/login`,
-        register: `${ROOTS.AUTH}/register`,
-      },
-      jwt: {
-        login: `${ROOTS.AUTH}/jwt/login`,
-        register: `${ROOTS.AUTH}/jwt/register`,
-      },
+    instructor: {
+      login: `${ROOTS.AUTH}/instructor/login`,
+      register: `${ROOTS.AUTH}/instructor/register`,
     },
-    // DASHBOARD
-    dashboard: {
-      root: ROOTS.DASHBOARD,
-      one: `${ROOTS.DASHBOARD}/one`,
-      two: `${ROOTS.DASHBOARD}/two`,
-      three: `${ROOTS.DASHBOARD}/three`,
-      group: {
-        root: `${ROOTS.DASHBOARD}/group`,
-        five: `${ROOTS.DASHBOARD}/group/five`,
-        six: `${ROOTS.DASHBOARD}/group/six`,
-      },
+  },
+  main: {
+    root: "/",
+    others: "/other-users",
+    search: {
+      byTopic: "/search/by-topic",
+      byText: "/search/by-text",
     },
-  };
-  
+  },
+  course: {
+    details: "/course",
+    content: {
+      video: "content/video",
+      article: "content/article",
+      quiz: "content/quiz",
+    },
+    manage: {
+      create: "/course/create",
+      edit: "/course/edit",
+      monitor: "/course/monitor",
+    },
+  },
+  student: {
+    root: ROOTS.StUDENT_DASHBOARD,
+    settings: `${ROOTS.StUDENT_DASHBOARD}/settings`,
+  },
+  instructor: {
+    root: ROOTS.INSTRUCTOR_DASHBOARD,
+    settings: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings`,
+    show: { student: `${ROOTS.INSTRUCTOR_DASHBOARD}/show-student` },
+  },
+  supervisor: {
+    root: ROOTS.SUPERVISOR_DASHBOARD,
+    settings: `${ROOTS.SUPERVISOR_DASHBOARD}/settings`,
+  },
+  manager: {
+    root: ROOTS.MANAGER_DASHBOARD,
+    settings: `${ROOTS.MANAGER_DASHBOARD}/settings`,
+  },
+  roadmaps: "/roadmaps",
+};

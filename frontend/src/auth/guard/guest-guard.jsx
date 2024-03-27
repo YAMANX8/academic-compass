@@ -1,9 +1,9 @@
 import { useEffect, useCallback } from 'react';
 
-import { paths } from 'src/routes/paths';
-import { useRouter, useSearchParams } from 'src/routes/hooks';
+import { paths } from '../../routes/paths';
+import { useRouter, useSearchParams } from '../../routes/hooks';
 
-import { SplashScreen } from 'src/components/loading-screen';
+import { SplashScreen } from '../../components';
 
 import { useAuthContext } from '../hooks';
 
@@ -22,7 +22,7 @@ function Container({ children }) {
 
   const searchParams = useSearchParams();
 
-  const returnTo = searchParams.get('returnTo') || paths.dashboard.root;
+  const returnTo = searchParams.get('returnTo') || '/';
 
   const { authenticated } = useAuthContext();
 

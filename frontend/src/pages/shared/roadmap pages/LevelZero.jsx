@@ -9,18 +9,12 @@ import {
   Topic,
   Modal,
 } from "../../../components";
-import {
-  Link,
-  useOutletContext,
-  useParams,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "../../../apis/axios";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
-
+import { paths } from "../../../routes/paths";
 const LevelZero = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,32 +26,36 @@ const LevelZero = () => {
   const [mergedData, setMergedData] = useState([]);
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get(
-        `/roadmap/${!isAuth ? `${roadmapId}` : `student/${roadmapId}`}`,
-        {
-          headers: {
-            token: auth.accessToken,
-          },
-        }
-      );
-      //consider if the user is not loged in so, I put "|| []"
-      const progress = (await response.data.progress) || [];
-
-      const mergedData = await response.data.topics.map((topic) => {
-        const matchingProgress = progress.find(
-          (item) => item.topic_id === topic.topic_level1_id
+      try {
+        const response = await axios.get(
+          `/roadmap/${!isAuth ? `${roadmapId}` : `student/${roadmapId}`}`,
+          {
+            headers: {
+              token: auth.accessToken,
+            },
+          }
         );
-        return {
-          topic_level1_id: topic.topic_level1_id,
-          topic_title: topic.topic_title,
-          topic_description: topic.topic_description,
-          topic_status: topic.topic_status,
-          topic_order: topic.topic_order,
-          topic_category: topic.topic_category,
-          state_name: matchingProgress ? matchingProgress.state_name : "",
-        };
-      });
-      setMergedData(mergedData);
+        //consider if the user is not loged in so, I put "|| []"
+        const progress = (await response.data.progress) || [];
+
+        const mergedData = await response.data.topics.map((topic) => {
+          const matchingProgress = progress.find(
+            (item) => item.topic_id === topic.topic_level1_id
+          );
+          return {
+            topic_level1_id: topic.topic_level1_id,
+            topic_title: topic.topic_title,
+            topic_description: topic.topic_description,
+            topic_status: topic.topic_status,
+            topic_order: topic.topic_order,
+            topic_category: topic.topic_category,
+            state_name: matchingProgress ? matchingProgress.state_name : "",
+          };
+        });
+        setMergedData(mergedData);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getData();
   }, [countUpdate]);
@@ -102,15 +100,6 @@ const LevelZero = () => {
   const style = "p-4 rounded-md text-dark border-2";
   const important = "bg-gradient-to-r from-primary to-accent text-light";
 
-  //for the title of the page
-  const [title, setTitle] = useOutletContext();
-  // setTitle("FE") : I put it in a useEffect because of the warning in the console.
-  useEffect(
-    () =>
-      setTitle("fronTEnd"[0].toUpperCase() + "fronTEnd".slice(1).toLowerCase()),
-    []
-  );
-
   //for the modal:
   //the first is for the opening state of the modal
   const [isOpen, setIsOpen] = useState(false);
@@ -144,8 +133,10 @@ const LevelZero = () => {
       setIsOpen(false);
       toast.success(`topic state is updated successfully (${countUpdate})`);
     } catch (err) {
-      if (err.response.status === 403)
-        navigate("/student/login", { state: { from: location } });
+      if (err.response.status === 403) {
+        toast.error("Your need to login first!!");
+        navigate(paths.auth.student.login, { state: { from: location } });
+      }
     }
   };
   const handleReset = async () => {
@@ -221,7 +212,7 @@ const LevelZero = () => {
   return (
     <>
       <Helmet>
-        <title>{title} roadmap</title>
+        <title>[title] roadmap</title>
       </Helmet>
       {mergedData.map((topic, index) => {
         //the first topic rendering

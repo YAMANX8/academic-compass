@@ -10,7 +10,7 @@ import {
 import Card from "../../assets/images/Rectangle 63.png";
 import axios from "../../apis/axios";
 import { Helmet } from "react-helmet-async";
-
+import { paths } from "../../routes/paths";
 // An array containing possible ratings
 const ratingsList = ["4.5", "4.0", "3.5", "3.0"];
 
@@ -437,7 +437,7 @@ const Search = () => {
                 >
                   {result.courses.map((course) => (
                     <Link
-                      to={`/student/courseview/${course.id}`}
+                      to={`${paths.course.details}/${course.id}`}
                       key={course.id}
                       className="py-8 px-4 shadow-[5px_5px_5px_0] bg-light dark:bg-dark shadow-black/20 hover:scale-[1.02] [transition:background-color_1s_cubic-bezier(0.780,-0.375,0.260,1.320),transform_.3s_cubic-bezier(0.780,-0.375,0.260,1.320)]"
                     >

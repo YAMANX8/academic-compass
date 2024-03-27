@@ -1,13 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-
+import { paths } from "../../../routes/paths";
 const Enrollments = ({ data }) => {
   const navigate = useNavigate();
 
   const handleSelectStudent = (user) => {
-    navigate(`/instructor/student-profile/${user.id}`);
-    console.log(`/student-profile/${user.id}`);
+    navigate(`${paths.instructor.show.student}/${user.id}`);
   };
 
   return (

@@ -32,7 +32,7 @@ const SectionWrapper = ({ title, children }) => {
   );
 };
 
-const CourseView = () => {
+const CourseDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -462,4 +462,4 @@ const CourseView = () => {
   );
 };
 
-export default CourseView;
+export default CourseDetails;

@@ -5,8 +5,8 @@ import Images2 from "../../assets/images/supervision.svg";
 import Images3 from "../../assets/images/manager.svg";
 import { Button } from "../../components";
 import { Helmet } from "react-helmet-async";
-
-function InstructorHome() {
+import { paths } from "../../routes/paths";
+function OthersHome() {
   return (
     <>
       <Helmet>
@@ -24,12 +24,12 @@ function InstructorHome() {
             </p>
 
             <div className="flex gap-4">
-              <Button page="/instructor/register">
+              <Button page={paths.auth.instructor.register}>
                 {" "}
                 <Person />
                 Become an Instructor
               </Button>{" "}
-              <Button isOutline={true} page="/instructor/login">
+              <Button isOutline={true} page={paths.auth.instructor.login}>
                 <ArrowRight /> Already an Instructor
               </Button>
             </div>
@@ -54,12 +54,12 @@ function InstructorHome() {
             </p>
 
             <div className="flex gap-4">
-              <Button page="/instructor/register">
+              <Button page="/not-found">
                 {" "}
                 <Person />
                 Become a Supervisor
               </Button>{" "}
-              <Button isOutline={true} page="/instructor/login">
+              <Button isOutline={true} page="/not-found">
                 <ArrowRight /> Already a Supervisor
               </Button>
             </div>
@@ -78,12 +78,12 @@ function InstructorHome() {
             </p>
 
             <div className="flex gap-4">
-              <Button page="/instructor/register">
+              <Button page="/not-found">
                 {" "}
                 <Person />
                 Become a Director
               </Button>{" "}
-              <Button isOutline={true} page="/instructor/login">
+              <Button isOutline={true} page="/not-found">
                 <ArrowRight /> Already a Director
               </Button>
             </div>
@@ -97,4 +97,4 @@ function InstructorHome() {
   );
 }
 
-export default InstructorHome;
+export default OthersHome;
