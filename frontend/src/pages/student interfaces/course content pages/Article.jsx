@@ -3,13 +3,13 @@ import axios from "../../../apis/axios";
 
 import { CourseContent } from "../../../components";
 import { useParams } from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
 
 const ARTICLE_URL = "/article";
 
 function Article() {
-  const { auth } = useAuth();
+  const { user } = useAuthContext();
   const { id, itemId } = useParams();
   const [data, setData] = useState({
     article: ``,
@@ -42,7 +42,7 @@ function Article() {
         { itemId: itemId, courseId: id },
         {
           headers: {
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );
@@ -63,7 +63,7 @@ function Article() {
         { itemId: itemId },
         {
           headers: {
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );

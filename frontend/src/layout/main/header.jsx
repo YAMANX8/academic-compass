@@ -11,15 +11,12 @@ import {
 } from "react-icons/bs";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { Switcher } from "../../components";
-import useAuth from "../../hooks/useAuth";
-import { toast } from "react-toastify";
 import { paths } from "../../routes/paths";
 import { useAuthContext } from "../../auth/hooks";
 const Header = () => {
   const {authenticated, logout, user} = useAuthContext();
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { auth, setAuth, isAuth, setIsAuth } = useAuth();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
@@ -35,7 +32,7 @@ const Header = () => {
     setIsOpen(false);
   };
   const userInfo = {
-    firstName: user?.firstName == null ? "" : user?.firstName,
+    firstName: user?.firstName == null ? "user" : user?.firstName,
     lastName: user?.lastName == null ? "" : user?.lastName,
     imagePath:
     user?.image == "http://localhost:5000/image/null" ? "" : user?.image,
@@ -94,7 +91,7 @@ const Header = () => {
             <div className="w-[1px] bg-dark dark:bg-light self-stretch transition-all duration-1000 ease-in-out-back rounded-full"></div>
             <Link
               to={
-                user.role == 2 ? `/student/dashboard` : `/instructor/dashboard`
+                user.role == 2 ? paths.student.root : paths.instructor.root
               }
               className="flex justify-center items-center w-[45px] overflow-clip aspect-square rounded-full bg-primary text-light"
             >

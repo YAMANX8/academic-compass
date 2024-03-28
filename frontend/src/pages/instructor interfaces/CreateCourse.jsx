@@ -5,12 +5,12 @@ import FirstStep from "./create course pages/FirstStep";
 import SecondStep from "./create course pages/SecondStep";
 import ThirdStep from "./create course pages/ThirdStep";
 import axios from "../../apis/axios";
-import useAuth from "../../hooks/useAuth";
+import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
 
 function CreateCourse() {
   const navigate = useNavigate();
-  const { auth } = useAuth();
+  const { user } = useAuthContext();
   const [currentStep, setCurrentStep] = useState(1);
   const [btn, setBtn] = useState({
     type: "button",
@@ -81,7 +81,7 @@ function CreateCourse() {
         },
         {
           headers: {
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );
@@ -97,7 +97,7 @@ function CreateCourse() {
       try {
         const res = await axios.get(`/instructor/createCourse`, {
           headers: {
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         });
         setList(res.data);

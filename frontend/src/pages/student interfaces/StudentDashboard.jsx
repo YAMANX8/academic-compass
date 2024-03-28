@@ -11,7 +11,7 @@ import { FaRegMap as Map } from "react-icons/fa";
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
 import axios from "../../apis/axios.js";
 import { StudentPerformance } from "../../constants/StudentPerformance.js";
-import useAuth from "../../hooks/useAuth.jsx";
+import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
 import { paths } from "../../routes/paths.js";
 const DASHBOARD_URL = "/studentDashboard";
@@ -20,7 +20,7 @@ const cardColor = ["bg-primary", "bg-accent", "bg-green"];
 const cardTitle = ["Completed Courses", "In Progress Courses", "Total Points"];
 
 function StudentDashboard() {
-  const { auth } = useAuth();
+  const { user } = useAuthContext();
   const [profileData, setProfileData] = useState([]);
 
   const [performanceData, setPerformanceData] = useState([]);
@@ -30,7 +30,7 @@ function StudentDashboard() {
   const getData = async () => {
     try {
       const response = await axios.get(DASHBOARD_URL, {
-        headers: { token: localStorage.token },
+        headers: { token: user?.accessToken },
       });
       const data = await response.data;
       setProfileData(data.profileData.counts);
@@ -63,10 +63,10 @@ function StudentDashboard() {
   const transition = "transition-colors duration-1000 ease-in-out-back";
 
   const userInfo = {
-    firstName: auth.firstName == null ? "" : auth.firstName,
-    lastName: auth.lastName == null ? "" : auth.lastName,
+    firstName: user.firstName == null ? "" : user.firstName,
+    lastName: user.lastName == null ? "" : user.lastName,
     imagePath:
-      auth.image == "http://localhost:5000/image/null" ? "" : auth.image,
+      user.image == "http://localhost:5000/image/null" ? "" : user.image,
   };
   return (
     <>
@@ -105,7 +105,7 @@ function StudentDashboard() {
                   <p>
                     {userInfo.firstName} {userInfo.lastName}
                   </p>
-                  <p className="text-primary">{`${auth.city}, ${auth.country}`}</p>
+                  <p className="text-primary">{`${user.city}, ${user.country}`}</p>
                 </div>
               </div>
 

@@ -7,7 +7,7 @@ import { BsPerson as Person } from "react-icons/bs";
 import { General, Security, Account } from "../../components";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
 import axios from "../../apis/axios";
-import useAuth from "../../hooks/useAuth";
+import { useAuthContext } from "src/auth/hooks";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 
@@ -15,7 +15,7 @@ const SETTINGS_URL = "/instructor/setting";
 
 function Settings() {
   const navigate = useNavigate();
-  const { auth } = useAuth();
+  const { user } = useAuthContext();
   const [selectedLink, setSelectedLink] = useState("general");
   const [formData, setFormData] = useState({
     first_name: "",
@@ -35,17 +35,17 @@ function Settings() {
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
-      first_name: auth.firstName == null ? "" : auth.firstName,
-      last_name: auth.lastName == null ? "" : auth.lastName,
-      education: auth.education == null ? "" : auth.education,
-      email: auth.email == null ? "" : auth.email,
-      bio: auth.bio == null ? "" : auth.bio,
-      birth_date: auth.birthDate == null ? "" : auth.birthDate,
-      country: auth.country == null ? "" : auth.country,
-      city: auth.city == null ? "" : auth.city,
+      first_name: user.firstName == null ? "" : user.firstName,
+      last_name: user.lastName == null ? "" : user.lastName,
+      education: user.education == null ? "" : user.education,
+      email: user.email == null ? "" : user.email,
+      bio: user.bio == null ? "" : user.bio,
+      birth_date: user.birthDate == null ? "" : user.birthDate,
+      country: user.country == null ? "" : user.country,
+      city: user.city == null ? "" : user.city,
     }));
     setImage(
-      auth.image == "http://localhost:5000/image/null" ? "" : auth.image
+      user.image == "http://localhost:5000/image/null" ? "" : user.image
     );
   }, []);
 
@@ -66,7 +66,7 @@ function Settings() {
     try {
       const response = await axios.put(SETTINGS_URL, formdata, {
         headers: {
-          token: localStorage.token,
+          token: user?.accessToken,
           "Content-Type": "multipart/form-data",
         },
       });

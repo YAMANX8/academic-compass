@@ -8,8 +8,6 @@ import PerformanceChart from "./dashboard/PerformanceChart";
 import CourseCard from "./dashboard/CourseCard";
 import PerformanceCard from "./dashboard/PerformanceCard";
 // interface components
-import Navbar from "./interface/Navbar";
-import Footer from "./interface/Footer";
 import Button from "./interface/Button";
 import Preloader from "./interface/Preloader";
 import Modal from "./interface/Modal";
@@ -51,8 +49,6 @@ import {
 } from "./animations/transition";
 
 export {
-  Navbar,
-  Footer,
   RoadmapCard,
   ProfileCard,
   PerformanceChart,

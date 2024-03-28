@@ -14,12 +14,12 @@ import {
 } from "react-icons/bs";
 import { DashboardWrapper } from "../../layout/index.js";
 import { PerformanceInstructor } from "../../constants/PerformanceInstructor.js";
-import useAuth from "../../hooks/useAuth.jsx";
+import { useAuthContext } from "src/auth/hooks";
 import axios from "../../apis/axios.js";
 import { Helmet } from "react-helmet-async";
 import { paths } from "../../routes/paths.js";
 function InstructorDashboard() {
-  const { auth } = useAuth();
+  const { user } = useAuthContext();
   const [json, setJson] = useState({
     instructor_rating: 4.5,
     performance: [
@@ -82,17 +82,17 @@ function InstructorDashboard() {
     ],
   };
   const userInfo = {
-    firstName: auth.firstName == null ? "" : auth.firstName,
-    lastName: auth.lastName == null ? "" : auth.lastName,
+    firstName: user.firstName == null ? "" : user.firstName,
+    lastName: user.lastName == null ? "" : user.lastName,
     imagePath:
-      auth.image == "http://localhost:5000/image/null" ? "" : auth.image,
+      user.image == "http://localhost:5000/image/null" ? "" : user.image,
   };
   useEffect(() => {
     setPerformanceData(PerformanceInstructor);
     const getData = async () => {
       const res = await axios.get(`/instructor/dashboard`, {
         headers: {
-          token: auth.accessToken,
+          token: user?.accessToken,
         },
       });
       setJson(res.data);
@@ -106,13 +106,13 @@ function InstructorDashboard() {
   return (
     <>
       <Helmet>
-        <title>Dashboard: {auth?.firstName || "[user name]"}</title>
+        <title>Dashboard: {user?.firstName || "[user name]"}</title>
       </Helmet>
       <section className="max-w-[1200px] grid grid-cols-12 gap-[20px] grid-rows-9">
         <div className=" col-span-8 row-start-1 row-span-2">
           <DashboardWrapper
             heading="My Profile"
-            optionalText={`Welcome back, ${auth?.firstName}`}
+            optionalText={`Welcome back, ${user?.firstName}`}
           >
             <div className="flex gap-8 mt-auto">
               <div className="flex flex-col gap-4 text-center justify-center">
@@ -132,9 +132,9 @@ function InstructorDashboard() {
                 </div>
                 <div className="font-semibold leading-l tracking-tight flex flex-col gap-2">
                   <p>
-                    {auth.firstName} {auth.lastName}
+                    {user.firstName} {user.lastName}
                   </p>
-                  <p className="text-primary">{`${auth.city}, ${auth.country}`}</p>
+                  <p className="text-primary">{`${user.city}, ${user.country}`}</p>
                 </div>
               </div>
               <div className="flex flex-col gap-8 flex-1">

@@ -11,12 +11,12 @@ import {
 } from "../../../components";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "../../../apis/axios";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthContext } from "../../../auth/hooks";
 import { toast } from "react-toastify";
 import { paths } from "../../../routes/paths";
 const LevelOne = () => {
   const location = useLocation();
-  const { auth, isAuth } = useAuth();
+  const { user, authenticated } = useAuthContext();
   const { topicL1Id } = useParams();
   const navigate = useNavigate();
   //a state for holding the response message when changing the topics state!
@@ -29,11 +29,11 @@ const LevelOne = () => {
       try {
         const response = await axios.get(
           `/roadmap/${
-            !isAuth ? `topic/${topicL1Id}` : `student/topic/${topicL1Id}`
+            !authenticated ? `topic/${topicL1Id}` : `student/topic/${topicL1Id}`
           }`,
           {
             headers: {
-              token: auth.accessToken,
+              token: user?.accessToken,
             },
           }
         );
@@ -133,7 +133,7 @@ const LevelOne = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );
@@ -154,7 +154,7 @@ const LevelOne = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );

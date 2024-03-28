@@ -1,7 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
-import { GuestGuard } from "../../auth/guard";
 import MainLayout from "../../layout/main";
 import RoadmapLayout from "../../layout/roadmap";
 
@@ -29,11 +28,9 @@ const roadmaps = {
   children: [
     {
       element: (
-        <GuestGuard>
           <MainLayout>
             <Roadmaps />
           </MainLayout>
-        </GuestGuard>
       ),
       index: true,
     },
@@ -43,11 +40,9 @@ const roadmaps = {
       children: [
         {
           element: (
-            <GuestGuard>
               <RoadmapLayout>
                 <LevelZero />
               </RoadmapLayout>
-            </GuestGuard>
           ),
           index: true,
         },
@@ -57,22 +52,18 @@ const roadmaps = {
           children: [
             {
               element: (
-                <GuestGuard>
                   <RoadmapLayout>
                     <LevelOne />
                   </RoadmapLayout>
-                </GuestGuard>
               ),
               index: true,
             },
             {
               path: ":topicLnId",
               element: (
-                <GuestGuard>
                   <RoadmapLayout>
                     <LevelN />
                   </RoadmapLayout>
-                </GuestGuard>
               ),
             },
           ],

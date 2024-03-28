@@ -11,11 +11,11 @@ import {
 } from "../../../components";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "../../../apis/axios";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthContext } from "../../../auth/hooks";
 import { toast } from "react-toastify";
 import { paths } from "../../../routes/paths";
 const LevelN = () => {
-  const { auth, isAuth } = useAuth();
+  const { user, authenticated } = useAuthContext();
 
   const { roadmapId, topicL1Id, topicLnId } = useParams();
   const navigate = useNavigate();
@@ -31,11 +31,11 @@ const LevelN = () => {
       try {
         const response = await axios.get(
           `/roadmap/${
-            !isAuth ? `topicN/${topicLnId}` : `student/topicN/${topicLnId}`
+            !authenticated ? `topicN/${topicLnId}` : `student/topicN/${topicLnId}`
           }`,
           {
             headers: {
-              token: auth.accessToken,
+              token: user?.accessToken,
             },
           }
         );
@@ -136,7 +136,7 @@ const LevelN = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );
@@ -157,7 +157,7 @@ const LevelN = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );

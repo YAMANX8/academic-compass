@@ -11,14 +11,14 @@ import {
 } from "../../../components";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "../../../apis/axios";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthContext } from "../../../auth/hooks";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 import { paths } from "../../../routes/paths";
 const LevelZero = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { auth, isAuth } = useAuth();
+  const { user, authenticated } = useAuthContext();
   const { roadmapId } = useParams();
   //a state for holding the response message when changing the topics state!
   const [countUpdate, setCountUpdate] = useState(1);
@@ -28,10 +28,10 @@ const LevelZero = () => {
     const getData = async () => {
       try {
         const response = await axios.get(
-          `/roadmap/${!isAuth ? `${roadmapId}` : `student/${roadmapId}`}`,
+          `/roadmap/${!authenticated ? `${roadmapId}` : `student/${roadmapId}`}`,
           {
             headers: {
-              token: auth.accessToken,
+              token: user?.accessToken,
             },
           }
         );
@@ -125,7 +125,7 @@ const LevelZero = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );
@@ -146,7 +146,7 @@ const LevelZero = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );

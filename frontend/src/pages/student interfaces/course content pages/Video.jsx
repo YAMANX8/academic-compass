@@ -3,14 +3,14 @@ import ReactPlayer from "react-player";
 import axios from "../../../apis/axios";
 import { BsPlayCircleFill as Library } from "react-icons/bs";
 import { CourseContent } from "../../../components";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthContext } from "src/auth/hooks";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 const VIDEO_URL = "/video";
 
 function Video() {
-  const { auth } = useAuth();
+  const { user } = useAuthContext();
   const { id, itemId } = useParams();
 
   const [courseContent, setCourseContent] = useState({
@@ -59,7 +59,7 @@ function Video() {
         { itemId: itemId, courseId: id },
         {
           headers: {
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );
@@ -80,7 +80,7 @@ function Video() {
         { itemId: itemId },
         {
           headers: {
-            token: auth.accessToken,
+            token: user?.accessToken,
           },
         }
       );

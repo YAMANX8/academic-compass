@@ -6,14 +6,14 @@ import {
 } from "react-icons/bs";
 import { AiOutlineCheck as Check, AiOutlineClose as X } from "react-icons/ai";
 import { BiEdit as Edit } from "react-icons/bi";
-import useAuth from "../../../hooks/useAuth";
+import { useAuthContext } from "src/auth/hooks";
 import axios from "../../../apis/axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 
 const Info = () => {
-  const { auth } = useAuth();
+  const { user } = useAuthContext();
   const { id } = useParams();
   const photo = useRef();
   const [data, setData] = useState({
@@ -120,13 +120,13 @@ const Info = () => {
     try {
       const res = await axios.get(`/instructor/createCourse`, {
         headers: {
-          token: auth.accessToken,
+          token: user?.accessToken,
         },
       });
       setList(res.data);
       const res2 = await axios.get(`/instructor/editeCourseInfo/${id}`, {
         headers: {
-          token: auth.accessToken,
+          token: user?.accessToken,
         },
       });
       const level = await res.data.levels.find(
@@ -193,7 +193,7 @@ const Info = () => {
         formdata,
         {
           headers: {
-            token: auth.accessToken,
+            token: user?.accessToken,
             "Content-Type": "multipart/form-data",
           },
         }

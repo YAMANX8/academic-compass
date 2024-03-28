@@ -19,7 +19,7 @@ import {
   Modal,
 } from "../../components";
 import axios from "../../apis/axios";
-import useAuth from "../../hooks/useAuth";
+import { useAuthContext } from "src/auth/hooks";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 
@@ -36,7 +36,7 @@ const CourseDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { auth } = useAuth();
+  const { user } = useAuthContext();
   const [course, setCourse] = useState({
     course_thumnail: Card,
     course_title:
@@ -254,7 +254,7 @@ const CourseDetails = () => {
       try {
         const res = await axios.get(`/course/${id}`, {
           headers: {
-            token: auth.accessToken,
+            token: user?.accessToken,
             "Content-Type": "application/json",
           },
         });
@@ -274,7 +274,7 @@ const CourseDetails = () => {
         }),
         {
           headers: {
-            token: auth.accessToken,
+            token: user?.accessToken,
             "Content-Type": "application/json",
           },
         }
