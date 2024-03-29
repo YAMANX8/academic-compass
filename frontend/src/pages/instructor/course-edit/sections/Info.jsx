@@ -7,7 +7,7 @@ import {
 import { AiOutlineCheck as Check, AiOutlineClose as X } from "react-icons/ai";
 import { BiEdit as Edit } from "react-icons/bi";
 import { useAuthContext } from "src/auth/hooks";
-import axios from "../../../apis/axios";
+import axios from "src/apis/axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";

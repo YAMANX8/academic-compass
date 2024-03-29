@@ -5,15 +5,15 @@ import {
   PerformanceCard,
   CourseCard,
   Button,
-} from "../../components/index.js";
-import { DashboardWrapper } from "../../layout/index.js";
+} from "src/components/index.js";
+import { DashboardWrapper } from "src/layout/index.js";
 import { FaRegMap as Map } from "react-icons/fa";
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
-import axios from "../../apis/axios.js";
-import { StudentPerformance } from "../../constants/StudentPerformance.js";
+import axios from "src/apis/axios.js";
+import { StudentPerformance } from "src/constants/StudentPerformance.js";
 import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
-import { paths } from "../../routes/paths.js";
+import { paths } from "src/routes/paths.js";
 const DASHBOARD_URL = "/studentDashboard";
 
 const cardColor = ["bg-primary", "bg-accent", "bg-green"];

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import axios from "../../../apis/axios";
+import axios from "src/apis/axios";
 
-import { CourseContent } from "../../../components";
+import { CourseContent } from "src/components";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";

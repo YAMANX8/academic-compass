@@ -1,23 +1,23 @@
 import { lazy, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
-import { GuestGuard } from "../../auth/guard";
-import AuthLayout from "../../layout/auth";
+import { GuestGuard } from "src/auth/guard";
+import AuthLayout from "src/layout/auth";
 
-import { SplashScreen } from "../../components";
+import { SplashScreen } from "src/components";
 // ----------------------------------------------------------------------
 
 const LoginStudent = lazy(() =>
-  import("../../pages/student interfaces/LoginStudent")
+  import("../../pages/student/login/LoginStudent")
 );
 const RegisterStudent = lazy(() =>
-  import("../../pages/student interfaces/RegisterStudent")
+  import("../../pages/student/register/RegisterStudent")
 );
 const LoginInstructor = lazy(() =>
-  import("../../pages/instructor interfaces/LoginInstructor")
+  import("../../pages/instructor/login/LoginInstructor")
 );
 const RegisterInstructor = lazy(() =>
-  import("../../pages/instructor interfaces/RegisterInstructor")
+  import("../../pages/instructor/register/RegisterInstructor")
 );
 
 // ----------------------------------------------------------------------

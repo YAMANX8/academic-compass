@@ -10,9 +10,9 @@ import { useNavigate, Link } from "react-router-dom";
 // import { Alert } from "../components/index";
 import { toast } from "react-toastify";
 
-import axios from "../../apis/axios";
+import axios from "src/apis/axios";
 
-import useAuth from "../../hooks/useAuth";
+import useAuth from "src/hooks/useAuth";
 import { Helmet } from "react-helmet-async";
 
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;

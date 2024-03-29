@@ -3,7 +3,7 @@ import { useMemo, useEffect, useReducer, useCallback } from "react";
 import axios, { endpoints } from "../../utils/axios";
 
 import { AuthContext } from "./auth-context";
-import { setSession, isValidToken } from "./utils";
+import { setSession, isValidToken, jwtDecode } from "./utils";
 
 import { toast } from "react-toastify";
 
@@ -59,6 +59,7 @@ export function AuthProvider({ children }) {
   const initialize = useCallback(async () => {
     try {
       const accessToken = sessionStorage.getItem(STORAGE_KEY);
+      // console.log(jwtDecode(accessToken))
 
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
@@ -115,7 +116,7 @@ export function AuthProvider({ children }) {
     // const user = res.data.user;
 
     setSession(accessToken);
-
+    // console.log(jwtDecode(accessToken))
     dispatch({
       type: Types.LOGIN,
       payload: {
@@ -146,6 +147,7 @@ export function AuthProvider({ children }) {
 
       // Why we don't use the setSession util here?
       sessionStorage.setItem(STORAGE_KEY, accessToken);
+      // console.log(jwtDecode(accessToken))
 
       dispatch({
         type: Types.REGISTER,

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Enrollments from "./course info pages/Enrollments";
-import Reviews from "./course info pages/Reviews";
-import Status from "./course info pages/Status";
+import Enrollments from "./sections/Enrollments";
+import Reviews from "./sections/Reviews";
+import Status from "./sections/Status";
 const CourseInfo = () => {
   const [currentView, setCurrentView] = useState("Enrollments");
   const [courseReviews, setCourseReviews] = useState([]);

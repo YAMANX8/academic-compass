@@ -4,16 +4,16 @@ import { IoIosInformationCircleOutline as InformationIcon } from "react-icons/io
 import { MdOutlineSecurity as SecurityIcon } from "react-icons/md";
 import { BsPerson as Person } from "react-icons/bs";
 
-import { General, Security, Account } from "../../components";
+import { General, Security, Account } from "src/components";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
-import axios from "../../apis/axios";
+import axios from "src/apis/axios";
 import { useAuthContext } from "src/auth/hooks";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 
-const SETTINGS_URL = "/student/setting";
+const SETTINGS_URL = "/instructor/setting";
 
-function StudentSettings() {
+function Settings() {
   const navigate = useNavigate();
   const { user } = useAuthContext();
   const [selectedLink, setSelectedLink] = useState("general");
@@ -57,7 +57,6 @@ function StudentSettings() {
         [name]: value,
       };
     });
-    console.log([name], value);
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -177,4 +176,4 @@ function StudentSettings() {
   );
 }
 
-export default StudentSettings;
+export default Settings;

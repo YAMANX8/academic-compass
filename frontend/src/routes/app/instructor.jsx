@@ -7,13 +7,13 @@ import { SplashScreen } from "../../components";
 // ----------------------------------------------------------------------
 
 const InstructorDashboard = lazy(() =>
-  import("../../pages/instructor interfaces/InstructorDashboard")
+  import("../../pages/instructor/dashboard/InstructorDashboard")
 );
 const Settings = lazy(() =>
-  import("../../pages/instructor interfaces/Settings")
+  import("../../pages/instructor/settings/Settings")
 );
 const ShowProfile = lazy(() =>
-  import("../../pages/instructor interfaces/ShowProfile")
+  import("../../pages/instructor/show-profile/ShowProfile")
 );
 
 // ----------------------------------------------------------------------

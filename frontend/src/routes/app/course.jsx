@@ -1,31 +1,31 @@
 import { lazy, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
-import MainLayout from "../../layout/main";
+import MainLayout from "src/layout/main";
 
-import { SplashScreen } from "../../components";
+import { SplashScreen } from "src/components";
 // ----------------------------------------------------------------------
 
 const CourseDetails = lazy(() =>
-  import("../../pages/student interfaces/CourseDetails")
+  import("../../pages/student/course-details/CourseDetails")
 );
 const Video = lazy(() =>
-  import("../../pages/student interfaces/course content pages/Video")
+  import("../../pages/student/video/Video")
 );
 const Article = lazy(() =>
-  import("../../pages/student interfaces/course content pages/Article")
+  import("../../pages/student/article/Article")
 );
 const Quiz = lazy(() =>
-  import("../../pages/student interfaces/course content pages/Quiz")
+  import("../../pages/student/quiz/Quiz")
 );
 const CourseInfo = lazy(() =>
-  import("../../pages/instructor interfaces/CourseInfo")
+  import("../../pages/instructor/course-info/CourseInfo")
 );
 const CreateCourse = lazy(() =>
-  import("../../pages/instructor interfaces/CreateCourse")
+  import("../../pages/instructor/course-create/CreateCourse")
 );
 const EditCourse = lazy(() =>
-  import("../../pages/instructor interfaces/EditCourse")
+  import("../../pages/instructor/course-edit/EditCourse")
 );
 
 // ----------------------------------------------------------------------

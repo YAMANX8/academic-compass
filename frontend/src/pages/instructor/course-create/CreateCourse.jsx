@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import FirstStep from "./create course pages/FirstStep";
-import SecondStep from "./create course pages/SecondStep";
-import ThirdStep from "./create course pages/ThirdStep";
-import axios from "../../apis/axios";
+import FirstStep from "./sections/FirstStep";
+import SecondStep from "./sections/SecondStep";
+import ThirdStep from "./sections/ThirdStep";
+import axios from "src/apis/axios";
 import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
 

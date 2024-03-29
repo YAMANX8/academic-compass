@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
-import axios from "../../../apis/axios";
+import axios from "src/apis/axios";
 import { BsPlayCircleFill as Library } from "react-icons/bs";
-import { CourseContent } from "../../../components";
+import { CourseContent } from "src/components";
 import { useAuthContext } from "src/auth/hooks";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";

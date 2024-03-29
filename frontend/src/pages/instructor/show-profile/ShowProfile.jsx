@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Imagesww from "../../assets/images/AI.svg";
+import Imagesww from "src/assets/images/AI.svg";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 

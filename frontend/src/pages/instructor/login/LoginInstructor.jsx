@@ -5,18 +5,19 @@ import {
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import axios from "src/apis/axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../auth/hooks";
-
+import useAuth from "src/hooks/useAuth";
 import { Helmet } from "react-helmet-async";
 
+const LOGIN_URL = "/auth2/instructor/login";
 
-function LoginStudent() {
-  const { login } = useAuthContext();
+function LoginInstructor() {
+  const { setIsAuth, setAuth } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/student/dashboard";
+  const from = location.state?.from?.pathname || "/instructor/dashboard";
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [isVisible, setIsVisible] = useState(false);
@@ -36,9 +37,24 @@ function LoginStudent() {
     e.preventDefault();
 
     try {
-      await login(email, pwd)
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify({ email: email, password: pwd }),
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const accessToken = response?.data?.token;
+      const role = response?.data?.role_id;
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("role", role);
+      // setAuth({ email, pwd, accessToken });
+      setIsAuth(true);
+      setAuth({ role: role });
+      toast.success("Login successfully");
       setEmail("");
       setPwd("");
+      navigate(from, { replace: true, state: { from: location } });
     } catch (err) {
       if (!err?.response) {
         toast.error("No Server Response");
@@ -57,7 +73,6 @@ function LoginStudent() {
       <Helmet>
         <title>Academic Compass: Login</title>
       </Helmet>
-
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">
           <label className={`${labelStyle}`}>
@@ -102,7 +117,7 @@ function LoginStudent() {
       </form>
       <Link
         className="text-[14px] underline text-primary dark:text-accent-dark"
-        to="/student/register"
+        to="/instructor/register"
         style={{ alignSelf: "flex-start" }}
       >
         Register new Account
@@ -111,4 +126,4 @@ function LoginStudent() {
   );
 }
 
-export default LoginStudent;
+export default LoginInstructor;

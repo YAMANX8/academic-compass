@@ -4,7 +4,7 @@ import {
   BsFillStarFill as Full,
   BsStar as Star,
 } from "react-icons/bs";
-import Modal from "../../../components/interface/Modal";
+import Modal from "src/components/interface/Modal";
 import { Helmet } from "react-helmet-async";
 
 const Reviews = ({ data }) => {

@@ -26,7 +26,7 @@ export const endpoints = {
   home: "/home",
   student: {
     auth: {
-      me: "/auth/is-verify",
+      me: "/auth/me",
       login: "/auth/student/login",
       register: "/auth/student/register",
     },

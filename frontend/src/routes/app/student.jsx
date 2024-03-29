@@ -7,10 +7,10 @@ import { SplashScreen } from "../../components";
 // ----------------------------------------------------------------------
 
 const StudentDashboard = lazy(() =>
-  import("../../pages/student interfaces/StudentDashboard")
+  import("../../pages/student/dashboard/StudentDashboard")
 );
 const StudentSettings = lazy(() =>
-  import("../../pages/student interfaces/StudentSettings")
+  import("../../pages/student/settings/StudentSettings")
 );
 
 // ----------------------------------------------------------------------

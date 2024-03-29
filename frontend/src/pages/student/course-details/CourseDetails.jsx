@@ -9,16 +9,16 @@ import {
   BsBook as Articles,
 } from "react-icons/bs";
 
-import Card from "../../assets/images/Rectangle 63.png";
-import Profile from "../../assets/images/profile.png";
+import Card from "src/assets/images/Rectangle 63.png";
+import Profile from "src/assets/images/profile.png";
 
 import {
   CourseContent,
   ReviewCards,
   ReviewForm,
   Modal,
-} from "../../components";
-import axios from "../../apis/axios";
+} from "src/components";
+import axios from "src/apis/axios";
 import { useAuthContext } from "src/auth/hooks";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";

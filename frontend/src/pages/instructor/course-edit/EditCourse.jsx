@@ -3,7 +3,8 @@ import {
   BsCaretDownSquareFill as DownSquareFill,
   BsPlus as Add,
 } from "react-icons/bs";
-import { Content, Info } from "../index";
+import Content from "./sections/Content";
+import Info from "./sections/Info";
 function EditCourse() {
   const [selectedTab, setSelectedTab] = useState(1);
   const [isOpen, setIsOpen] = useState(false);

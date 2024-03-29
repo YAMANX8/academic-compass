@@ -3,7 +3,7 @@ import {
   PerformanceChart,
   PerformanceCard,
   Button,
-} from "../../components/index.js";
+} from "src/components/index.js";
 import {
   BsStarHalf as Half,
   BsFillStarFill as Full,
@@ -12,12 +12,12 @@ import {
   BsFillPencilFill as Continue,
   BsArrowReturnLeft as ReturnLeft,
 } from "react-icons/bs";
-import { DashboardWrapper } from "../../layout/index.js";
-import { PerformanceInstructor } from "../../constants/PerformanceInstructor.js";
+import { DashboardWrapper } from "src/layout/index.js";
+import { PerformanceInstructor } from "src/constants/PerformanceInstructor.js";
 import { useAuthContext } from "src/auth/hooks";
-import axios from "../../apis/axios.js";
+import axios from "src/apis/axios.js";
 import { Helmet } from "react-helmet-async";
-import { paths } from "../../routes/paths.js";
+import { paths } from "src/routes/paths.js";
 function InstructorDashboard() {
   const { user } = useAuthContext();
   const [json, setJson] = useState({
@@ -82,10 +82,10 @@ function InstructorDashboard() {
     ],
   };
   const userInfo = {
-    firstName: user.firstName == null ? "" : user.firstName,
-    lastName: user.lastName == null ? "" : user.lastName,
+    firstName: user?.firstName == null ? "" : user?.firstName,
+    lastName: user?.lastName == null ? "" : user?.lastName,
     imagePath:
-      user.image == "http://localhost:5000/image/null" ? "" : user.image,
+      user?.image == "http://localhost:5000/image/null" ? "" : user?.image,
   };
   useEffect(() => {
     setPerformanceData(PerformanceInstructor);
@@ -132,9 +132,9 @@ function InstructorDashboard() {
                 </div>
                 <div className="font-semibold leading-l tracking-tight flex flex-col gap-2">
                   <p>
-                    {user.firstName} {user.lastName}
+                    {user?.firstName} {user?.lastName}
                   </p>
-                  <p className="text-primary">{`${user.city}, ${user.country}`}</p>
+                  <p className="text-primary">{`${user?.city}, ${user?.country}`}</p>
                 </div>
               </div>
               <div className="flex flex-col gap-8 flex-1">
