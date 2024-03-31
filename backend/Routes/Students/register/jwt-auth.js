@@ -115,7 +115,7 @@ router.get('/me', authorization, async (req, res) => {
     }
     const Result = await pool.query(query, value);
     if (Result.rows[0] !== undefined) {
-      return res.status(200).json({ token, user: Result.rows[0] });
+      return res.status(200).json({ user: Result.rows[0] });
     } else {
       return res.status(404);
     }
