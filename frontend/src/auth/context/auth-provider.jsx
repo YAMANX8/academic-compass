@@ -69,13 +69,13 @@ export function AuthProvider({ children }) {
             token: accessToken,
           },
         });
-        // const { user } = res.data;
+        const user = res.data.user;
 
         dispatch({
           type: Types.INITIAL,
           payload: {
             user: {
-              // ...user,
+              ...user,
               accessToken,
             },
           },
@@ -104,7 +104,7 @@ export function AuthProvider({ children }) {
   }, [initialize]);
 
   // LOGIN
-  const login = useCallback(async (email, password) => {
+  const studentLogin = useCallback(async (email, password) => {
     const data = {
       email,
       password,
@@ -113,7 +113,33 @@ export function AuthProvider({ children }) {
     const res = await axios.post(endpoints.student.auth.login, data);
 
     const accessToken = res.data.token;
-    // const user = res.data.user;
+    const user = res.data.user;
+
+    setSession(accessToken);
+    // console.log("decoded jwt: ",jwtDecode(accessToken))
+    dispatch({
+      type: Types.LOGIN,
+      payload: {
+        user: {
+          ...user,
+          accessToken,
+        },
+      },
+    });
+    
+    toast.success("Login successfully");
+  }, []);
+  
+  const instructorLogin = useCallback(async (email, password) => {
+    const data = {
+      email,
+      password,
+    };
+
+    const res = await axios.post(endpoints.instructor.auth.login, data);
+
+    const accessToken = res.data.token;
+    const user = res.data.user;
 
     setSession(accessToken);
     // console.log(jwtDecode(accessToken))
@@ -121,7 +147,7 @@ export function AuthProvider({ children }) {
       type: Types.LOGIN,
       payload: {
         user: {
-          // ...user,
+          ...user,
           accessToken,
         },
       },
@@ -131,7 +157,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   // REGISTER
-  const register = useCallback(
+  const studentRegister = useCallback(
     async (email, password, first_name, last_name) => {
       const data = {
         email,
@@ -143,7 +169,7 @@ export function AuthProvider({ children }) {
       const res = await axios.post(endpoints.student.auth.register, data);
 
       const accessToken = res.data.token;
-      // const user = res.data.user;
+      const user = res.data.user;
 
       // Why we don't use the setSession util here?
       sessionStorage.setItem(STORAGE_KEY, accessToken);
@@ -153,7 +179,38 @@ export function AuthProvider({ children }) {
         type: Types.REGISTER,
         payload: {
           user: {
-            // ...user,
+            ...user,
+            accessToken,
+          },
+        },
+      });
+      toast.success("Registration completed successfully☺");
+    },
+    []
+  );
+  const instructorRegister = useCallback(
+    async (email, password, first_name, last_name) => {
+      const data = {
+        email,
+        password,
+        first_name,
+        last_name,
+      };
+
+      const res = await axios.post(endpoints.instructor.auth.register, data);
+
+      const accessToken = res.data.token;
+      const user = res.data.user;
+
+      // Why we don't use the setSession util here?
+      sessionStorage.setItem(STORAGE_KEY, accessToken);
+      // console.log(jwtDecode(accessToken))
+
+      dispatch({
+        type: Types.REGISTER,
+        payload: {
+          user: {
+            ...user,
             accessToken,
           },
         },
@@ -166,6 +223,8 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback(async () => {
     setSession(null);
+    const res = await axios.get(endpoints.logout)
+    // console.log(res)
     dispatch({
       type: Types.LOGOUT,
     });
@@ -186,11 +245,21 @@ export function AuthProvider({ children }) {
       authenticated: status === "authenticated",
       unauthenticated: status === "unauthenticated",
       // Methods.
-      login,
-      register,
+      studentLogin,
+      instructorLogin,
+      studentRegister,
+      instructorRegister,
       logout,
     }),
-    [login, logout, register, state.user, status]
+    [
+      studentLogin,
+      instructorLogin,
+      logout,
+      studentRegister,
+      instructorRegister,
+      state.user,
+      status,
+    ]
   );
 
   return (

@@ -4,16 +4,11 @@ import {
   BsEye as Show,
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
-
-import { useNavigate, Link } from "react-router-dom";
-
-// import { Alert } from "../components/index";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
-import axios from "src/apis/axios";
-
-import useAuth from "src/hooks/useAuth";
+import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
+import { paths } from "src/routes/paths";
 
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
@@ -21,14 +16,10 @@ const EMAIL_REGEX =
 const PWD_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;
 
-const REGITER_URL = "/auth2/instructor/register";
 function RegisterInstructor() {
-  const { setAuth } = useAuth();
-  const navigate = useNavigate();
-
+  const { instructorRegister } = useAuthContext();
   const nameRef = useRef();
   const errRef = useRef();
-
   // states
   const [firstName, setFirstName] = useState("");
   const [validFirstName, setValidFirstName] = useState(false);
@@ -98,26 +89,7 @@ function RegisterInstructor() {
       return;
     }
     try {
-      const response = await axios.post(
-        REGITER_URL,
-        JSON.stringify({
-          first_name: firstName,
-          last_name: lastName,
-          email,
-          password: pwd,
-        }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      const accessToken = response?.data?.token;
-      const role = response?.data?.role_id;
-
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("role", role);
-      setAuth({ role: role });
-      toast.success("Registration Completed Successfully");
-      navigate("/instructor/dashboard");
+      await instructorRegister(email, pwd, firstName, lastName)
     } catch (error) {
       if (!error?.response) {
         toast.error("No Server Response");
@@ -351,7 +323,7 @@ function RegisterInstructor() {
         </form>
         <Link
           className="text-[14px] underline text-primary dark:text-accent-dark"
-          to="/instructor/login"
+          to={paths.auth.instructor.login}
           style={{ alignSelf: "flex-start" }}
         >
           Already have an Account

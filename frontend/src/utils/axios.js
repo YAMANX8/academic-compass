@@ -34,6 +34,7 @@ export const endpoints = {
     // This endpoint has get and put methods
     settings: "/student/setting",
   },
+  logout: "/logout",
   instructor: {
     auth: {
       me: "/auth2/instructor/me",

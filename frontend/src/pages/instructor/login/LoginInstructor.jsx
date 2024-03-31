@@ -5,19 +5,13 @@ import {
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import axios from "src/apis/axios";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import useAuth from "src/hooks/useAuth";
+import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-
-const LOGIN_URL = "/auth2/instructor/login";
+import { useAuthContext } from "../../../auth/hooks";
 
 function LoginInstructor() {
-  const { setIsAuth, setAuth } = useAuth();
+  const { instructorLogin } = useAuthContext();
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/instructor/dashboard";
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [isVisible, setIsVisible] = useState(false);
@@ -37,24 +31,9 @@ function LoginInstructor() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ email: email, password: pwd }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      const accessToken = response?.data?.token;
-      const role = response?.data?.role_id;
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("role", role);
-      // setAuth({ email, pwd, accessToken });
-      setIsAuth(true);
-      setAuth({ role: role });
-      toast.success("Login successfully");
+      await instructorLogin(email, pwd);
       setEmail("");
       setPwd("");
-      navigate(from, { replace: true, state: { from: location } });
     } catch (err) {
       if (!err?.response) {
         toast.error("No Server Response");

@@ -32,10 +32,10 @@ const Header = () => {
     setIsOpen(false);
   };
   const userInfo = {
-    firstName: user?.firstName == null ? "user" : user?.firstName,
-    lastName: user?.lastName == null ? "" : user?.lastName,
+    firstName: user?.first_name == null ? "user" : user?.first_name,
+    lastName: user?.last_name == null ? "" : user?.last_name,
     imagePath:
-    user?.image == "http://localhost:5000/image/null" ? "" : user?.image,
+    user?.picture == "http://localhost:5000/image/null" ? "" : user?.picture,
   };
   const btnStyle =
     "px-[20px] py-[10px] rounded-[5px] font-semibold	gap-[10px] items-center text-[16px]";
@@ -91,7 +91,7 @@ const Header = () => {
             <div className="w-[1px] bg-dark dark:bg-light self-stretch transition-all duration-1000 ease-in-out-back rounded-full"></div>
             <Link
               to={
-                user.role == 2 ? paths.student.root : paths.instructor.root
+                user.role_id == 2 ? paths.student.root : paths.instructor.root
               }
               className="flex justify-center items-center w-[45px] overflow-clip aspect-square rounded-full bg-primary text-light"
             >
@@ -135,8 +135,8 @@ const Header = () => {
                     <li
                       className={`${meunItemStyle}`}
                       onClick={() => {
-                        if (user.role == 2) navigate("/student/settings");
-                        else navigate("/instructor/settings");
+                        if (user.role_id == 2) navigate(paths.student.settings);
+                        else navigate(paths.instructor.settings);
                         setIsOpen(false);
                       }}
                     >

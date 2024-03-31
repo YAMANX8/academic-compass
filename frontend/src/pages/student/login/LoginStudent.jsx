@@ -5,18 +5,15 @@ import {
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuthContext } from "src/auth/hooks";
 
 import { Helmet } from "react-helmet-async";
-
+import { paths } from "src/routes/paths";
 
 function LoginStudent() {
-  const { login } = useAuthContext();
+  const { studentLogin } = useAuthContext();
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/student/dashboard";
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [isVisible, setIsVisible] = useState(false);
@@ -36,7 +33,7 @@ function LoginStudent() {
     e.preventDefault();
 
     try {
-      await login(email, pwd)
+      await studentLogin(email, pwd);
       setEmail("");
       setPwd("");
     } catch (err) {
@@ -102,7 +99,7 @@ function LoginStudent() {
       </form>
       <Link
         className="text-[14px] underline text-primary dark:text-accent-dark"
-        to="/student/register"
+        to={paths.auth.student.register}
         style={{ alignSelf: "flex-start" }}
       >
         Register new Account

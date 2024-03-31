@@ -82,10 +82,10 @@ function InstructorDashboard() {
     ],
   };
   const userInfo = {
-    firstName: user?.firstName == null ? "" : user?.firstName,
-    lastName: user?.lastName == null ? "" : user?.lastName,
+    firstName: user?.first_name == null ? "" : user?.first_name,
+    lastName: user?.last_name == null ? "" : user?.last_name,
     imagePath:
-      user?.image == "http://localhost:5000/image/null" ? "" : user?.image,
+      user?.picture == "http://localhost:5000/image/null" ? "" : user?.picture,
   };
   useEffect(() => {
     setPerformanceData(PerformanceInstructor);
@@ -106,13 +106,13 @@ function InstructorDashboard() {
   return (
     <>
       <Helmet>
-        <title>Dashboard: {user?.firstName || "[user name]"}</title>
+        <title>Dashboard: {user?.first_name || "[user name]"}</title>
       </Helmet>
       <section className="max-w-[1200px] grid grid-cols-12 gap-[20px] grid-rows-9">
         <div className=" col-span-8 row-start-1 row-span-2">
           <DashboardWrapper
             heading="My Profile"
-            optionalText={`Welcome back, ${user?.firstName}`}
+            optionalText={`Welcome back, ${user?.first_name}`}
           >
             <div className="flex gap-8 mt-auto">
               <div className="flex flex-col gap-4 text-center justify-center">
@@ -132,7 +132,7 @@ function InstructorDashboard() {
                 </div>
                 <div className="font-semibold leading-l tracking-tight flex flex-col gap-2">
                   <p>
-                    {user?.firstName} {user?.lastName}
+                    {user?.first_name} {user?.last_name}
                   </p>
                   <p className="text-primary">{`${user?.city}, ${user?.country}`}</p>
                 </div>

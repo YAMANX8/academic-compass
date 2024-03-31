@@ -4,13 +4,12 @@ import {
   BsEye as Show,
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
-
-import { useNavigate, Link } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import { Helmet } from "react-helmet-async";
+import { paths } from "src/routes/paths";
 import { useAuthContext } from "src/auth/hooks";
+
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -18,12 +17,9 @@ const PWD_REGEX =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;
 
 function RegisterStudent() {
-  const { register } = useAuthContext();
-  const navigate = useNavigate();
-
+  const { studentRegister } = useAuthContext();
   const nameRef = useRef();
   const errRef = useRef();
-
   // states
   const [firstName, setFirstName] = useState("");
   const [validFirstName, setValidFirstName] = useState(false);
@@ -47,7 +43,7 @@ function RegisterStudent() {
   const [matchPwdFocus, setMatchPwdFocus] = useState(false);
   const [isMatchVisible, setIsMatchVisible] = useState(false);
 
-  // التركيز التلقائي على حقل الاسم الأول عند التحميل.
+  //auto focus on the first name field on load
   useEffect(() => {
     nameRef.current.focus();
   }, []);
@@ -70,7 +66,7 @@ function RegisterStudent() {
     setValidEmail(result);
   }, [email]);
 
-  // هنا نتحقق من حقل كلمة المرور وحقل التأكيد معًا.
+  //auto focus on the first name field on load
   useEffect(() => {
     const result = PWD_REGEX.test(pwd);
     setValidPwd(result);
@@ -81,7 +77,7 @@ function RegisterStudent() {
   //send data to the backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // نتحقق مرة أخرى لأنه إذا قام المستخدم بالتلاعب بالوحدة النمطية وغير شيئًا وفعّل زر الإرسال.
+    //we check again because if the user play with the console and change something and enables the submit btn
     if (
       !NAME_REGEX.test(firstName) ||
       !NAME_REGEX.test(lastName) ||
@@ -93,7 +89,7 @@ function RegisterStudent() {
       return;
     }
     try {
-      await register(email, pwd, firstName, lastName);
+      await studentRegister(email, pwd, firstName, lastName);
     } catch (error) {
       if (!error?.response) {
         toast.error("No Server Response");
@@ -103,7 +99,7 @@ function RegisterStudent() {
         toast.error("Registration Failed");
       }
 
-      // وهذا السطر مخصص لقراء الشاشة.
+      //and this line for screen readers
 
       errRef.current.focus();
     }
@@ -328,7 +324,7 @@ function RegisterStudent() {
       </form>
       <Link
         className="text-[14px] underline text-primary dark:text-accent-dark"
-        to="/student/login"
+        to={paths.auth.student.login}
         style={{ alignSelf: "flex-start" }}
       >
         Already have an Account
