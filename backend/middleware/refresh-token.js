@@ -9,7 +9,7 @@ async function refreshTokenMiddleware(req, res) {
   console.log(refreshToken);
 
   if (!refreshToken) {
-    return res.status(403).json('Not Authorized');
+    return res.status(401).json('Not Authorized');
   }
   try {
     // eslint-disable-next-line no-undef
@@ -20,7 +20,7 @@ async function refreshTokenMiddleware(req, res) {
     return res.json({ token });
   } catch (error) {
     console.error(error.message);
-    return res.status(403).json('Not Authorized');
+    return res.status(401).json('Not Authorized');
   }
 }
 
