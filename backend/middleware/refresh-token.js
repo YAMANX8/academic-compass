@@ -5,7 +5,8 @@ dotenv.config();
 
 // Middleware to handle token refresh
 async function refreshTokenMiddleware(req, res) {
-  const refreshToken = req.cookies.jwt;
+  const cookies = req.cookies;
+  const refreshToken = cookies.jwt
   console.log(refreshToken);
 
   if (!refreshToken) {

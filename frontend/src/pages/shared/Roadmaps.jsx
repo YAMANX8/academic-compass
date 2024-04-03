@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { RoadmapCard } from "../../components/index.js";
-import axios from "../../apis/axios.js";
 import { Helmet } from "react-helmet-async";
+import useAxios from "../../hooks/use-axios.js";
 
 function Roadmaps() {
   const [roadCards, setRoadCards] = useState([]);
-
+  const axios = useAxios()
   useEffect(() => {
     async function fetchData() {
       try {

@@ -12,6 +12,12 @@ axiosInstance.interceptors.response.use(
     )
 );
 
+export const axiosPrivate = axios.create({
+  baseURL: ACADEMIC_COMPASS_HOST_API,
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true,
+});
+
 export default axiosInstance;
 
 export const fetcher = async (args) => {
@@ -91,9 +97,9 @@ export const endpoints = {
         // This endpoint needs /:id
         student: "/roadmap/student/topicN",
       },
-      addState: "/roadmap/addState/student/state",
+      newState: "/roadmap/student/state",
       // This endpoint needs /:topicId/:level
-      resetState: "/roadmap/addState/student/reset",
+      resetState: "/roadmap/student/reset",
     },
   },
 };

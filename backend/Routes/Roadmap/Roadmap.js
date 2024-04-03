@@ -2,6 +2,7 @@ const router = require('express').Router();
 const pool = require('../../database/db');
 const jwt = require('jsonwebtoken');
 const checkPermission = require('../../middleware/check-permissions');
+const authorization = require('../../middleware/authorization.js');
 
 // Get all roadmaps
 router.get('/', async (req, res) => {
@@ -32,30 +33,17 @@ router.get('/', async (req, res) => {
 });
 
 //* Returns topics with login by roadmapID
-router.get('/student/:id', async (req, res) => {
+router.get('/student/:id', authorization, async (req, res) => {
   try {
+    const Id = req.user.userId;
+    const role_id = req.user.roleId;
     const roadmapId = req.params.id;
-    const jwtToken = req.header('token');
-    // eslint-disable-next-line no-undef
-    const payload = jwt.verify(jwtToken, process.env.jwtSecret);
-    const role_id = payload.roleId;
-    console.log(role_id);
-    if (!jwtToken || role_id === 1) {
-      // If there is no valid authentication (student is not authenticated)
-      // Redirect the request to another API endpoint
+    if (!role_id === 2) {
       return res.redirect(
         `http://localhost:5000/AcademicCompass/roadmap/${roadmapId}`,
       );
     } else {
-      // Extract student ID from the token and proceed with your logic
-      const studentId = payload.userId;
-      console.log(studentId);
-      //permission
-      const hasAccess = await checkPermission(
-        studentId,
-        'show_roadmap',
-        role_id,
-      );
+      const hasAccess = await checkPermission(Id, 'show_roadmap', role_id);
       if (!hasAccess) {
         return res.status(403).json('Access denied');
       }
@@ -102,7 +90,7 @@ router.get('/student/:id', async (req, res) => {
           TL1.topic_level1_id,
           ps.progress_id;
       `;
-      const values = [studentId, roadmapId];
+      const values = [Id, roadmapId];
       const result = await pool.query(query, values);
       if (result.rows.length === 0) {
         res.status(404).json({
@@ -149,10 +137,7 @@ router.get('/student/:id', async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({
-      status: 'error',
-      message: 'An error occurred',
-    });
+    res.status(500).json('Server error');
   }
 });
 
@@ -212,26 +197,18 @@ router.get('/:id', async (req, res) => {
 });
 
 // * Returns topics from the second level with login
-router.get('/student/topic/:id', async (req, res) => {
+router.get('/student/topic/:id', authorization, async (req, res) => {
   try {
-    const jwtToken = req.header('token');
+    const Id = req.user.userId;
+    const role_id = req.user.roleId;
     const topic_level1_id = req.params.id;
-    // eslint-disable-next-line no-undef
-    const payload = jwt.verify(jwtToken, process.env.jwtSecret);
-    const role_id = payload.roleId;
-    console.log(role_id);
-    if (!jwtToken || role_id === 1) {
-      // If there is no valid authentication (student is not authenticated)
-      // Redirect the request to another API endpoint
+    if (!role_id === 2) {
       return res.redirect(
         `http://localhost:5000/AcademicCompass/roadmap/topic/${topic_level1_id}`,
       );
     } else {
-      // Extract student ID from the token and proceed with your logic
-      const studentId = payload.userId;
-      //permission
       const hasAccess = await checkPermission(
-        studentId,
+        Id,
         'show_roadmap',
         role_id,
       );
@@ -273,7 +250,7 @@ router.get('/student/topic/:id', async (req, res) => {
           TLN.topic_level1_id = $2
           AND TLN.topic_level = 2;
       `;
-      const values = [studentId, topic_level1_id];
+      const values = [Id, topic_level1_id];
       const result = await pool.query(query, values);
       if (result.rows.length === 0) {
         res.status(404).json({
@@ -314,10 +291,7 @@ router.get('/student/topic/:id', async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({
-      status: 'error',
-      message: 'An error occurred',
-    });
+    res.status(500).json("Server error");
   }
 });
 
@@ -386,25 +360,18 @@ router.get('/topic/:id', async (req, res) => {
   }
 });
 // * Returns topics from the N level with login
-router.get('/student/topicN/:id', async (req, res) => {
+router.get('/student/topicN/:id', authorization, async (req, res) => {
   try {
-    const jwtToken = req.header('token');
+    const Id = req.user.userId;
+    const role_id = req.user.roleId;
     const topic_levelN_id = req.params.id;
-    // eslint-disable-next-line no-undef
-    const payload = jwt.verify(jwtToken, process.env.jwtSecret);
-    const role_id = payload.roleId;
-    if (!jwtToken || role_id === 1) {
-      // If there is no valid authentication (student is not authenticated)
-      // Redirect the request to another API endpoint
+    if (!role_id === 2) {
       return res.redirect(
         `http://localhost:5000/AcademicCompass/roadmap/topicN/${topic_levelN_id}`,
       );
     } else {
-      // Extract student ID from the token and proceed with your logic
-      const studentId = payload.userId;
-      //permission
       const hasAccess = await checkPermission(
-        studentId,
+        Id,
         'show_roadmap',
         role_id,
       );
@@ -445,7 +412,7 @@ router.get('/student/topicN/:id', async (req, res) => {
         WHERE
           TLN.top_level_topic_id = $2;
       `;
-      const values = [studentId, topic_levelN_id];
+      const values = [Id, topic_levelN_id];
       const result = await pool.query(query, values);
       if (result.rows.length === 0) {
         res.status(404).json({
@@ -486,10 +453,7 @@ router.get('/student/topicN/:id', async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({
-      status: 'error',
-      message: 'An error occurred',
-    });
+    res.status(500).json("Server error");
   }
 });
 

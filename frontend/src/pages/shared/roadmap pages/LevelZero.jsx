@@ -10,12 +10,16 @@ import {
   Modal,
 } from "../../../components";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
-import axios from "../../../apis/axios";
 import { useAuthContext } from "../../../auth/hooks";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 import { paths } from "../../../routes/paths";
+import useAxios from "../../../hooks/use-axios.js";
+import { endpoints } from "../../../utils/axios";
+
 const LevelZero = () => {
+    const axios = useAxios()
+
   const navigate = useNavigate();
   const location = useLocation();
   const { user, authenticated } = useAuthContext();
@@ -116,7 +120,7 @@ const LevelZero = () => {
   const handleState = async (state) => {
     try {
       const res = await axios.post(
-        "/roadmap/addState/student/state",
+        endpoints.roadmaps.topics.newState,
         JSON.stringify({
           topic_id: modalData.id,
           topic_level: modalData.level,
@@ -142,7 +146,7 @@ const LevelZero = () => {
   const handleReset = async () => {
     try {
       const res = await axios.delete(
-        `/roadmap/addState/student/reset/${modalData.id}/${modalData.level}`,
+        `${endpoints.roadmaps.topics.resetState}/${modalData.id}/${modalData.level}`,
         {
           headers: {
             "Content-Type": "application/json",

@@ -3,8 +3,13 @@ import { useMemo, useEffect, useReducer, useCallback } from "react";
 import axios, { endpoints } from "../../utils/axios";
 
 import { AuthContext } from "./auth-context";
-import { setSession, isValidToken, jwtDecode } from "./utils";
-
+import { isValidToken } from "./utils";
+import { useRefreshToken } from "../hooks/use-refresh";
+import {
+  setStorage,
+  removeStorage,
+  getStorage,
+} from "../../hooks/use-local-storage";
 import { toast } from "react-toastify";
 
 const Types = {
@@ -12,6 +17,7 @@ const Types = {
   LOGIN: "LOGIN",
   REGISTER: "REGISTER",
   LOGOUT: "LOGOUT",
+  UPDATE: "UPDATE",
 };
 
 // ----------------------------------------------------------------------
@@ -40,6 +46,12 @@ const reducer = (state, action) => {
       user: action.payload.user,
     };
   }
+  if (action.type === Types.UPDATE) {
+    return {
+      ...state,
+      user: action.payload.user,
+    };
+  }
   if (action.type === Types.LOGOUT) {
     return {
       ...state,
@@ -51,19 +63,19 @@ const reducer = (state, action) => {
 
 // ----------------------------------------------------------------------
 
-const STORAGE_KEY = "accessToken";
+const STORAGE_KEY = "in";
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const loggedIn = getStorage(STORAGE_KEY);
+  const refresh = useRefreshToken();
   const initialize = useCallback(async () => {
     try {
-      const accessToken = sessionStorage.getItem(STORAGE_KEY);
-      // console.log(jwtDecode(accessToken))
-
+      let accessToken;
+      if (loggedIn) {
+        accessToken = await refresh();
+      }
       if (accessToken && isValidToken(accessToken)) {
-        setSession(accessToken);
-        // We need here to send the access token in the header.
         const res = await axios.get(endpoints.student.auth.me, {
           headers: {
             token: accessToken,
@@ -110,13 +122,16 @@ export function AuthProvider({ children }) {
       password,
     };
 
-    const res = await axios.post(endpoints.student.auth.login, data);
+    const res = await axios.post(endpoints.student.auth.login, data, {
+      withCredentials: true,
+    });
 
     const accessToken = res.data.token;
     const user = res.data.user;
 
-    setSession(accessToken);
     // console.log("decoded jwt: ",jwtDecode(accessToken))
+    setStorage(STORAGE_KEY, true);
+
     dispatch({
       type: Types.LOGIN,
       payload: {
@@ -126,23 +141,26 @@ export function AuthProvider({ children }) {
         },
       },
     });
-    
+
     toast.success("Login successfully");
   }, []);
-  
+
   const instructorLogin = useCallback(async (email, password) => {
     const data = {
       email,
       password,
     };
 
-    const res = await axios.post(endpoints.instructor.auth.login, data);
+    const res = await axios.post(endpoints.instructor.auth.login, data, {
+      withCredentials: true,
+    });
 
     const accessToken = res.data.token;
     const user = res.data.user;
 
-    setSession(accessToken);
     // console.log(jwtDecode(accessToken))
+    setStorage(STORAGE_KEY, true);
+
     dispatch({
       type: Types.LOGIN,
       payload: {
@@ -166,14 +184,15 @@ export function AuthProvider({ children }) {
         last_name,
       };
 
-      const res = await axios.post(endpoints.student.auth.register, data);
+      const res = await axios.post(endpoints.student.auth.register, data, {
+        withCredentials: true,
+      });
 
       const accessToken = res.data.token;
       const user = res.data.user;
 
-      // Why we don't use the setSession util here?
-      sessionStorage.setItem(STORAGE_KEY, accessToken);
       // console.log(jwtDecode(accessToken))
+      setStorage(STORAGE_KEY, true);
 
       dispatch({
         type: Types.REGISTER,
@@ -197,14 +216,15 @@ export function AuthProvider({ children }) {
         last_name,
       };
 
-      const res = await axios.post(endpoints.instructor.auth.register, data);
+      const res = await axios.post(endpoints.instructor.auth.register, data, {
+        withCredentials: true,
+      });
 
       const accessToken = res.data.token;
       const user = res.data.user;
 
-      // Why we don't use the setSession util here?
-      sessionStorage.setItem(STORAGE_KEY, accessToken);
       // console.log(jwtDecode(accessToken))
+      setStorage(STORAGE_KEY, true);
 
       dispatch({
         type: Types.REGISTER,
@@ -222,8 +242,10 @@ export function AuthProvider({ children }) {
 
   // LOGOUT
   const logout = useCallback(async () => {
-    setSession(null);
-    const res = await axios.get(endpoints.logout)
+    removeStorage(STORAGE_KEY);
+    const res = await axios.get(endpoints.logout, {
+      withCredentials: true,
+    });
     // console.log(res)
     dispatch({
       type: Types.LOGOUT,
@@ -231,6 +253,23 @@ export function AuthProvider({ children }) {
     toast("Logout Successfully");
   }, []);
 
+  // Function to update access token
+  const updateAccessToken = useCallback(
+    (newAccessToken) => {
+      if (newAccessToken) {
+        dispatch({
+          type: Types.UPDATE,
+          payload: {
+            user: {
+              ...state.user,
+              accessToken: newAccessToken,
+            },
+          },
+        });
+      }
+    },
+    [state.user]
+  );
   // ----------------------------------------------------------------------
 
   const checkAuthenticated = state.user ? "authenticated" : "unauthenticated";
@@ -250,6 +289,7 @@ export function AuthProvider({ children }) {
       studentRegister,
       instructorRegister,
       logout,
+      updateAccessToken,
     }),
     [
       studentLogin,
@@ -257,6 +297,7 @@ export function AuthProvider({ children }) {
       logout,
       studentRegister,
       instructorRegister,
+      updateAccessToken,
       state.user,
       status,
     ]

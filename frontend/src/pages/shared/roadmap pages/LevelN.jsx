@@ -10,11 +10,14 @@ import {
   Modal,
 } from "../../../components";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import axios from "../../../apis/axios";
+import useAxios from "../../../hooks/use-axios.js";
 import { useAuthContext } from "../../../auth/hooks";
 import { toast } from "react-toastify";
 import { paths } from "../../../routes/paths";
+import { endpoints } from "../../../utils/axios";
+
 const LevelN = () => {
+  const axios = useAxios();
   const { user, authenticated } = useAuthContext();
 
   const { roadmapId, topicL1Id, topicLnId } = useParams();
@@ -31,7 +34,9 @@ const LevelN = () => {
       try {
         const response = await axios.get(
           `/roadmap/${
-            !authenticated ? `topicN/${topicLnId}` : `student/topicN/${topicLnId}`
+            !authenticated
+              ? `topicN/${topicLnId}`
+              : `student/topicN/${topicLnId}`
           }`,
           {
             headers: {
@@ -127,7 +132,7 @@ const LevelN = () => {
   const handleState = async (state) => {
     try {
       const res = await axios.post(
-        "/roadmap/addState/student/state",
+        endpoints.roadmaps.topics.newState,
         JSON.stringify({
           topic_id: modalData.id,
           topic_level: modalData.level,
@@ -153,7 +158,7 @@ const LevelN = () => {
   const handleReset = async () => {
     try {
       const res = await axios.delete(
-        `/roadmap/addState/student/reset/${modalData.id}/${modalData.level}`,
+        `${endpoints.roadmaps.topics.resetState}/${modalData.id}/${modalData.level}`,
         {
           headers: {
             "Content-Type": "application/json",
