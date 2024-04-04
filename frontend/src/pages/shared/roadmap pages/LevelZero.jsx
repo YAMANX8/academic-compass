@@ -9,105 +9,18 @@ import {
   Topic,
   Modal,
 } from "../../../components";
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAuthContext } from "../../../auth/hooks";
-import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
-import { paths } from "../../../routes/paths";
-import useAxios from "../../../hooks/use-axios.js";
-import { endpoints } from "../../../utils/axios";
-
+import { useMapContext } from "../../../context/hooks/use-roadmap-context.js";
+// ___________________________________________________________________________
 const LevelZero = () => {
-    const axios = useAxios()
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { user, authenticated } = useAuthContext();
+  const { getTopics0, topics0, handleState, handleReset } = useMapContext();
+  const { authenticated } = useAuthContext();
   const { roadmapId } = useParams();
-  //a state for holding the response message when changing the topics state!
-  const [countUpdate, setCountUpdate] = useState(1);
-  //the actual roadmap data
-  const [mergedData, setMergedData] = useState([]);
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await axios.get(
-          `/roadmap/${!authenticated ? `${roadmapId}` : `student/${roadmapId}`}`,
-          {
-            headers: {
-              token: user?.accessToken,
-            },
-          }
-        );
-        //consider if the user is not loged in so, I put "|| []"
-        const progress = (await response.data.progress) || [];
-
-        const mergedData = await response.data.topics.map((topic) => {
-          const matchingProgress = progress.find(
-            (item) => item.topic_id === topic.topic_level1_id
-          );
-          return {
-            topic_level1_id: topic.topic_level1_id,
-            topic_title: topic.topic_title,
-            topic_description: topic.topic_description,
-            topic_status: topic.topic_status,
-            topic_order: topic.topic_order,
-            topic_category: topic.topic_category,
-            state_name: matchingProgress ? matchingProgress.state_name : "",
-          };
-        });
-        setMergedData(mergedData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getData();
-  }, [countUpdate]);
-
-  // {
-  //   topic_level1_id: 1,
-  //   topic_title: "internet",
-  //   topic_description:
-  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-  //   topic_order: 1,
-  //   topic_status: "Trending",
-  //   topic_category: "Basic",
-  // },
-  // {
-  //   topic_level1_id: 2,
-  //   topic_title: "react.js",
-  //   topic_description:
-  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-  //   topic_order: 2,
-  //   topic_status: "Trending",
-  //   topic_category: "Advance",
-  // },
-  // {
-  //   topic_level1_id: 3,
-  //   topic_title: "jquery",
-  //   topic_description:
-  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-  //   topic_order: 3,
-  //   topic_status: "Deprecated",
-  //   topic_category: "Advance",
-  // },
-  // {
-  //   topic_level1_id: 4,
-  //   topic_title: "typescript",
-  //   topic_description:
-  //     "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-  //   topic_order: 3,
-  //   topic_status: "Cutting-edge",
-  //   topic_category: "Aditional",
-  // },
-  //some styles
+  const [isOpen, setIsOpen] = useState(false);
   const style = "p-4 rounded-md text-dark border-2";
   const important = "bg-gradient-to-r from-primary to-accent text-light";
-
-  //for the modal:
-  //the first is for the opening state of the modal
-  const [isOpen, setIsOpen] = useState(false);
-  //modal data
   const [modalData, setModalData] = useState({
     id: "",
     level: "",
@@ -116,54 +29,10 @@ const LevelZero = () => {
     search: "/",
   });
 
-  //handling the states of the topics
-  const handleState = async (state) => {
-    try {
-      const res = await axios.post(
-        endpoints.roadmaps.topics.newState,
-        JSON.stringify({
-          topic_id: modalData.id,
-          topic_level: modalData.level,
-          state_id: state,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            token: user?.accessToken,
-          },
-        }
-      );
-      setCountUpdate((prev) => prev + 1);
-      setIsOpen(false);
-      toast.success(`topic state is updated successfully (${countUpdate})`);
-    } catch (err) {
-      if (err.response.status === 403) {
-        toast.error("Your need to login first!!");
-        navigate(paths.auth.student.login, { state: { from: location } });
-      }
-    }
-  };
-  const handleReset = async () => {
-    try {
-      const res = await axios.delete(
-        `${endpoints.roadmaps.topics.resetState}/${modalData.id}/${modalData.level}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            token: user?.accessToken,
-          },
-        }
-      );
-      setCountUpdate((prev) => prev + 1);
-      setIsOpen(false);
-      toast.success(`topic state is updated successfully (${countUpdate})`);
-    } catch (err) {
-      if (err.response.status === 403)
-        navigate("/student/login", { state: { from: location } });
-    }
-  };
+  useEffect(() => {
+    getTopics0(roadmapId);
+  }, [authenticated]);
 
-  //and this variable is for the markup inside the modal
   let modalTemplate = (
     <div className="flex flex-col text-[20px] gap-6">
       <div>
@@ -171,25 +40,33 @@ const LevelZero = () => {
         <div className="flex justify-evenly mt-4">
           <button
             className={`${style} border-primary`}
-            onClick={() => handleReset()}
+            onClick={() =>
+              handleReset(modalData.id, modalData.level, setIsOpen)
+            }
           >
             Reset
           </button>
           <button
             className={`${style} border-accent`}
-            onClick={() => handleState(3)}
+            onClick={() =>
+              handleState(3, modalData.id, modalData.level, setIsOpen)
+            }
           >
             Done
           </button>
           <button
             className={`${style} border-green`}
-            onClick={() => handleState(2)}
+            onClick={() =>
+              handleState(2, modalData.id, modalData.level, setIsOpen)
+            }
           >
             Inprogress
           </button>
           <button
             className={`${style} border-advance`}
-            onClick={() => handleState(1)}
+            onClick={() =>
+              handleState(1, modalData.id, modalData.level, setIsOpen)
+            }
           >
             Skip it
           </button>
@@ -198,7 +75,6 @@ const LevelZero = () => {
       <div className="border-t-2 border-dark/20 pt-4">
         <h3>Or make another action:</h3>
         <div className="flex justify-evenly mt-4">
-          {/* here we use the links state that we declare before */}
           <Link
             to={modalData.search}
             className={`${style} ${important}`}
@@ -213,19 +89,20 @@ const LevelZero = () => {
       </div>
     </div>
   );
+
   return (
     <>
       <Helmet>
         <title>[title] roadmap</title>
       </Helmet>
-      {mergedData.map((topic, index) => {
+      {topics0.map((topic, index) => {
         //the first topic rendering
         if (index == 0) {
           return (
-            <div key={topic.topic_level1_id} className="w-full">
+            <div key={topic.topic_id} className="w-full">
               <StartLine />
               <Topic
-                topicId={topic.topic_level1_id}
+                topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}
@@ -238,13 +115,13 @@ const LevelZero = () => {
             </div>
           );
           //the last topic rendering
-        } else if (index == mergedData.length - 1) {
+        } else if (index == topics0.length - 1) {
           //checking if the last topic is even (Means that the topic is in the right side)
           if (index % 2 == 0)
             return (
-              <div key={topic.topic_level1_id} className="w-full">
+              <div key={topic.topic_id} className="w-full">
                 <Topic
-                  topicId={topic.topic_level1_id}
+                  topicId={topic.topic_id}
                   setIsOpen={setIsOpen}
                   topicTitle={topic.topic_title}
                   topicDescription={topic.topic_description}
@@ -259,9 +136,9 @@ const LevelZero = () => {
           //if its not, so it is in left side
           else
             return (
-              <div key={topic.topic_level1_id} className="w-full">
+              <div key={topic.topic_id} className="w-full">
                 <Topic
-                  topicId={topic.topic_level1_id}
+                  topicId={topic.topic_id}
                   setIsOpen={setIsOpen}
                   topicTitle={topic.topic_title}
                   topicDescription={topic.topic_description}
@@ -277,9 +154,9 @@ const LevelZero = () => {
           //the even topic rendering (right side)
         } else if (index % 2 == 0) {
           return (
-            <div key={topic.topic_level1_id} className="w-full">
+            <div key={topic.topic_id} className="w-full">
               <Topic
-                topicId={topic.topic_level1_id}
+                topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}
@@ -294,9 +171,9 @@ const LevelZero = () => {
           //the final case is the left side topic rendering
         } else {
           return (
-            <div key={topic.topic_level1_id} className="w-full">
+            <div key={topic.topic_id} className="w-full">
               <Topic
-                topicId={topic.topic_level1_id}
+                topicId={topic.topic_id}
                 setIsOpen={setIsOpen}
                 topicTitle={topic.topic_title}
                 topicDescription={topic.topic_description}

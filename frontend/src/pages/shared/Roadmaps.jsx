@@ -1,21 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { RoadmapCard } from "../../components/index.js";
 import { Helmet } from "react-helmet-async";
-import useAxios from "../../hooks/use-axios.js";
-
+import { useMapContext } from "../../context/hooks/use-roadmap-context.js";
+// ________________________________________________________________________
 function Roadmaps() {
-  const [roadCards, setRoadCards] = useState([]);
-  const axios = useAxios()
+  const { getAllRoadmaps, roadmaps } = useMapContext();
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get("/roadmap");
-        setRoadCards(response.data.data.dataresult);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    fetchData();
+    getAllRoadmaps();
   }, []);
 
   return (
@@ -28,16 +19,22 @@ function Roadmaps() {
           Our Roadmaps
         </h2>
         <div className="flex flex-col gap-12">
-          {roadCards.map((card, index) => (
-            <RoadmapCard
-              key={card.roadmap_id}
-              id={card.roadmap_id}
-              order={index}
-              title={card.roadmap_title}
-              description={card.roadmap_description}
-              img={card.image_path}
-            />
-          ))}
+          {roadmaps.length > 0 ? (
+            roadmaps.map((card, index) => (
+              <RoadmapCard
+                key={card.roadmap_id}
+                id={card.roadmap_id}
+                order={index}
+                title={card.roadmap_title}
+                description={card.roadmap_description}
+                img={card.image_path}
+              />
+            ))
+          ) : (
+            <p className="font-thin text-[20px] text-dark/70 dark:text-light/70 m-auto">
+              There isn't any roadmap
+            </p>
+          )}
         </div>
       </section>
     </>

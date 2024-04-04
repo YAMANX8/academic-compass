@@ -108,11 +108,12 @@ router.get('/student/:id', authorization, async (req, res) => {
 
       const topics = result.rows
         .map((row) => ({
-          topic_level1_id: row.topic_level1_id,
+          topic_id: row.topic_level1_id,
           topic_title: row.topic_title,
           topic_description: row.topic_description,
           topic_status: row.topic_status,
           topic_order: row.topic_order,
+          topic_level: 1,
           topic_category: row.category_name,
           isItLast: row.is_last,
         }))
@@ -174,11 +175,12 @@ router.get('/:id', async (req, res) => {
     };
 
     const topics = result.rows.map((row) => ({
-      topic_level1_id: row.topic_level1_id,
+      topic_id: row.topic_level1_id,
       topic_title: row.topic_title,
       topic_description: row.topic_description,
       topic_status: row.topic_status,
       topic_order: row.topic_order,
+      topic_level: 1,
       topic_category: row.category_name,
     }));
 
@@ -341,7 +343,7 @@ router.get('/topic/:id', async (req, res) => {
         topic_title: row.topic_title,
         topic_description: row.topic_description,
         topic_status: row.topic_status,
-        topic_level: row.topic_level_ln,
+        topic_level: row.topic_level,
         topic_order: row.topic_order,
         isItLast: row.is_last,
       }))
