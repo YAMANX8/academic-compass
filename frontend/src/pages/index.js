@@ -7,34 +7,34 @@ import Roadmaps from "./shared/Roadmaps";
 import LevelZero from "./shared/roadmap pages/LevelZero";
 import LevelOne from "./shared/roadmap pages/LevelOne";
 import LevelN from "./shared/roadmap pages/LevelN";
+import OthersHome from "./shared/OthersHome";
 // student pages
-import LoginStudent from "./student interfaces/LoginStudent";
-import RegisterStudent from "./student interfaces/RegisterStudent";
-import StudentSettings from "./student interfaces/StudentSettings";
-import StudentDashboard from "./student interfaces/StudentDashboard";
-import CourseView from "./student interfaces/CourseView";
-import Article from "./student interfaces/course content pages/Article";
-import Video from "./student interfaces/course content pages/Video";
-import Quiz from "./student interfaces/course content pages/Quiz";
+import LoginStudent from "./student/login/LoginStudent";
+import RegisterStudent from "./student/register/RegisterStudent";
+import StudentSettings from "./student/settings/StudentSettings";
+import StudentDashboard from "./student/dashboard/StudentDashboard";
+import CourseDetails from "./student/course-details/CourseDetails";
+import Article from "./student/article/Article";
+import Video from "./student/video/Video";
+import Quiz from "./student/quiz/Quiz";
 // instructor pages
-import LoginInstructor from "./instructor interfaces/LoginInstructor";
-import RegisterInstructor from "./instructor interfaces/RegisterInstructor";
-import InstructorDashboard from "./instructor interfaces/InstructorDashboard";
-import InstructorHome from "./instructor interfaces/InstructorHome";
-import Settings from "./instructor interfaces/Settings";
-import EditCourse from "./instructor interfaces/EditCourse";
-import CreateCourse from "./instructor interfaces/CreateCourse";
-import CourseInfo from "./instructor interfaces/CourseInfo";
-import ShowProfile from "./instructor interfaces/ShowProfile";
+import LoginInstructor from "./instructor/login/LoginInstructor";
+import RegisterInstructor from "./instructor/register/RegisterInstructor";
+import InstructorDashboard from "./instructor/dashboard/InstructorDashboard";
+import Settings from "./instructor/settings/Settings";
+import EditCourse from "./instructor/course-edit/EditCourse";
+import CreateCourse from "./instructor/course-create/CreateCourse";
+import CourseInfo from "./instructor/course-info/CourseInfo";
+import ShowProfile from "./instructor/show-profile/ShowProfile";
 // instructor custom pages
-import Content from "./instructor interfaces/edit course pages/Content";
-import Info from "./instructor interfaces/edit course pages/Info";
-import Enrollments from "./instructor interfaces/course info pages/Enrollments";
-import Reviews from "./instructor interfaces/course info pages/Reviews";
-import Status from "./instructor interfaces/course info pages/Status";
-import FirstStep from "./instructor interfaces/create course pages/FirstStep";
-import SecondStep from "./instructor interfaces/create course pages/SecondStep";
-import ThirdStep from "./instructor interfaces/create course pages/ThirdStep";
+import Content from "./instructor/course-edit/sections/Content";
+import Info from "./instructor/course-edit/sections/Info";
+import Enrollments from "./instructor/course-info/sections/Enrollments";
+import Reviews from "./instructor/course-info/sections/Reviews";
+import Status from "./instructor/course-info/sections/Status";
+import FirstStep from "./instructor/course-create/sections/FirstStep";
+import SecondStep from "./instructor/course-create/sections/SecondStep";
+import ThirdStep from "./instructor/course-create/sections/ThirdStep";
 // student
 export {
   Home,
@@ -49,14 +49,14 @@ export {
   RegisterStudent,
   StudentSettings,
   StudentDashboard,
-  CourseView,
+  CourseDetails,
   Article,
   Video,
   Quiz,
   LoginInstructor,
   RegisterInstructor,
   InstructorDashboard,
-  InstructorHome,
+  OthersHome,
   Settings,
   EditCourse,
   CreateCourse,

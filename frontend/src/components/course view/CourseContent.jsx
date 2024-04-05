@@ -8,7 +8,7 @@ import {
   BsChevronDown as ChevronDown,
   BsFillCheckSquareFill as Check,
 } from "react-icons/bs";
-
+import { paths } from "../../routes/paths";
 const CourseContent = ({ courseContent }) => {
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState(
@@ -73,10 +73,10 @@ const CourseContent = ({ courseContent }) => {
                     key={item.id}
                     to={
                       item.type == "video"
-                        ? `/student/courseview/${id}/video/${item.id}`
+                        ? `${paths.course.details}/${id}/${paths.course.content.video}/${item.id}`
                         : item.type == "article"
-                        ? `/student/courseview/${id}/article/${item.id}`
-                        : `/student/courseview/${id}/quiz/${item.id}`
+                        ? `${paths.course.details}/${id}/${paths.course.content.article}/${item.id}`
+                        : `${paths.course.details}/${id}/${paths.course.content.quiz}/${item.id}`
                     }
                     className={`bg-light dark:bg-dark text-dark dark:text-light flex p-4 items-center justify-between transition-all duration-1000 ease-in-out-back `}
                   >

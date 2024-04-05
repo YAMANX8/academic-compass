@@ -8,12 +8,12 @@ import PerformanceChart from "./dashboard/PerformanceChart";
 import CourseCard from "./dashboard/CourseCard";
 import PerformanceCard from "./dashboard/PerformanceCard";
 // interface components
-import Navbar from "./interface/Navbar";
-import Footer from "./interface/Footer";
 import Button from "./interface/Button";
 import Preloader from "./interface/Preloader";
 import Modal from "./interface/Modal";
 import Switcher from "./interface/Switcher";
+import LoadingScreen from "./interface/loading-screen/LoadingScreen";
+import SplashScreen from "./interface/loading-screen/SplashScreen";
 // logic components
 import RequireAuth from "./logic/RequireAuth";
 import PersistLogin from "./logic/PersistLogin";
@@ -33,10 +33,22 @@ import Topic from "./roadmap/Topic";
 import General from "./setting/General";
 import Security from "./setting/Security";
 import Account from "./setting/Account";
+// animation components
+import MotionContainer from "./animations/motion-container";
+import { varBounce } from "./animations/bounce";
+import { varFade } from "./animations/fade";
+import { varZoom } from "./animations/zoom";
+import { varFlip } from "./animations/flip";
+import { varRotate } from "./animations/rotate";
+import { varSlide } from "./animations/slide";
+import { varScale } from "./animations/scale";
+import {
+  varTranHover,
+  varTranEnter,
+  varTranExit,
+} from "./animations/transition";
 
 export {
-  Navbar,
-  Footer,
   RoadmapCard,
   ProfileCard,
   PerformanceChart,
@@ -53,6 +65,8 @@ export {
   ReviewCards,
   Modal,
   Switcher,
+  LoadingScreen,
+  SplashScreen,
   RightLine,
   LeftLine,
   StartLine,
@@ -64,4 +78,15 @@ export {
   ReviewForm,
   InstructorDataRetrieval,
   InstructorPersistLogin,
+  MotionContainer,
+  varBounce,
+  varFade,
+  varZoom,
+  varFlip,
+  varRotate,
+  varSlide,
+  varScale,
+  varTranHover,
+  varTranEnter,
+  varTranExit,
 };

@@ -6,6 +6,7 @@ import {
   BsDownload as Download,
 } from "react-icons/bs";
 import { Button } from "../index";
+import { paths } from "../../routes/paths";
 const transition = "transition-colors duration-1000 ease-in-out-back";
 const CourseCard = ({ id, image, title, subtitle, progress = -1, stars = -1 }) => {
   return progress > -1 ? (
@@ -54,7 +55,7 @@ const CourseCard = ({ id, image, title, subtitle, progress = -1, stars = -1 }) =
             </div>
           </div>
 
-          <Button page={`/student/courseview/${id}`}>
+          <Button page={`${paths.course.details}/${id}`}>
             Resume
             <ReturnLeft className="text-[20px]" />
           </Button>

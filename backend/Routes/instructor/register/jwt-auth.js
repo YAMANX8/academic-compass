@@ -53,8 +53,8 @@ router.post('/instructor/register', validInfo, async (req, res) => {
     );
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
-      sameSite: 'Lax',
-      secure: true,
+      // sameSite: 'Lax',
+      // secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
     res.status(200).json({ token, user: newInstructor.rows[0] });
@@ -106,7 +106,7 @@ router.post('/instructor/login', validInfo, async (req, res) => {
 
       res.cookie('jwt', refreshToken, {
         httpOnly: true,
-        sameSite: 'None',
+        // sameSite: 'None',
         // secure: true,
         maxAge: 24 * 60 * 60 * 1000,
       });

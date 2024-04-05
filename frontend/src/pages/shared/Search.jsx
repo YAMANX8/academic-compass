@@ -9,7 +9,8 @@ import {
 } from "react-icons/bs";
 import Card from "../../assets/images/Rectangle 63.png";
 import axios from "../../apis/axios";
-
+import { Helmet } from "react-helmet-async";
+import { paths } from "../../routes/paths";
 // An array containing possible ratings
 const ratingsList = ["4.5", "4.0", "3.5", "3.0"];
 
@@ -267,194 +268,199 @@ const Search = () => {
   }, [formData]);
 
   return (
-    <section className="w-[1200px]">
-      <h1 className="font-semibold text-[48px] tracking-tight p-[16px]">
-        {results.total_courses} Result for “
-        {location.state.byText ? text : results.topicTitle}”
-      </h1>
-      <div className="flex">
-        <div className="flex flex-col gap-4 p-4 min-w-[282px] bg-secondary dark:bg-secondary-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back min-h-screen">
-          <div>
-            <h2 className="text-[32px] font-semibold tracking-tight">
-              By Level
-            </h2>
-            <div className="flex gap-[10px] py-[16px]">
-              <div className="w-6 h-6 flex items-center justify-center">
-                <input
-                  id="Beginner"
-                  name="Beginner"
-                  className=" w-full h-full cursor-pointer"
-                  checked={formData.Beginner}
-                  value="Beginner"
-                  type="checkbox"
-                  onChange={handleChange}
-                />
+    <>
+      <Helmet>
+        <title>Academic Compass: Search</title>
+      </Helmet>
+      <section className="w-[1200px]">
+        <h1 className="font-semibold text-[48px] tracking-tight p-[16px]">
+          {results.total_courses} Result for “
+          {location.state.byText ? text : results.topicTitle}”
+        </h1>
+        <div className="flex">
+          <div className="flex flex-col gap-4 p-4 min-w-[282px] bg-secondary dark:bg-secondary-dark text-dark dark:text-light transition-all duration-1000 ease-in-out-back min-h-screen">
+            <div>
+              <h2 className="text-[32px] font-semibold tracking-tight">
+                By Level
+              </h2>
+              <div className="flex gap-[10px] py-[16px]">
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <input
+                    id="Beginner"
+                    name="Beginner"
+                    className=" w-full h-full cursor-pointer"
+                    checked={formData.Beginner}
+                    value="Beginner"
+                    type="checkbox"
+                    onChange={handleChange}
+                  />
+                </div>
+                <label htmlFor="Beginner">Beginner</label>
               </div>
-              <label htmlFor="Beginner">Beginner</label>
-            </div>
-            <div className="flex gap-[10px] py-[16px]">
-              <div className="w-6 h-6 flex items-center justify-center">
-                <input
-                  id="Intermediate"
-                  name="Intermediate"
-                  className=" w-full h-full cursor-pointer"
-                  checked={formData.Intermediate}
-                  value="Intermediate"
-                  type="checkbox"
-                  onChange={handleChange}
-                />
+              <div className="flex gap-[10px] py-[16px]">
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <input
+                    id="Intermediate"
+                    name="Intermediate"
+                    className=" w-full h-full cursor-pointer"
+                    checked={formData.Intermediate}
+                    value="Intermediate"
+                    type="checkbox"
+                    onChange={handleChange}
+                  />
+                </div>
+                <label htmlFor="Intermediate">Intermediate</label>
               </div>
-              <label htmlFor="Intermediate">Intermediate</label>
-            </div>
-            <div className="flex gap-[10px] py-[16px]">
-              <div className="w-6 h-6 flex items-center justify-center">
-                <input
-                  id="Expert"
-                  name="Expert"
-                  className=" w-full h-full cursor-pointer"
-                  checked={formData.Expert}
-                  value="Expert"
-                  type="checkbox"
-                  onChange={handleChange}
-                />
+              <div className="flex gap-[10px] py-[16px]">
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <input
+                    id="Expert"
+                    name="Expert"
+                    className=" w-full h-full cursor-pointer"
+                    checked={formData.Expert}
+                    value="Expert"
+                    type="checkbox"
+                    onChange={handleChange}
+                  />
+                </div>
+                <label htmlFor="Expert">Expert</label>
               </div>
-              <label htmlFor="Expert">Expert</label>
             </div>
-          </div>
-          <div>
-            <h2 className="text-[32px] font-semibold tracking-tight">
-              By Type
-            </h2>
-            <div className="flex gap-[10px] py-[16px]">
-              <div className="w-6 h-6 flex items-center justify-center">
-                <input
-                  id="Project"
-                  name="Project"
-                  className=" w-full h-full cursor-pointer"
-                  checked={formData.Project}
-                  value="Project"
-                  type="checkbox"
-                  onChange={handleChange}
-                />
+            <div>
+              <h2 className="text-[32px] font-semibold tracking-tight">
+                By Type
+              </h2>
+              <div className="flex gap-[10px] py-[16px]">
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <input
+                    id="Project"
+                    name="Project"
+                    className=" w-full h-full cursor-pointer"
+                    checked={formData.Project}
+                    value="Project"
+                    type="checkbox"
+                    onChange={handleChange}
+                  />
+                </div>
+                <label htmlFor="Project">Project Based</label>
               </div>
-              <label htmlFor="Project">Project Based</label>
-            </div>
-            <div className="flex gap-[10px] py-[16px]">
-              <div className="w-6 h-6 flex items-center justify-center">
-                <input
-                  id="Challenge"
-                  name="Challenge"
-                  className=" w-full h-full cursor-pointer"
-                  checked={formData.Challenge}
-                  value="Challenge"
-                  type="checkbox"
-                  onChange={handleChange}
-                />
+              <div className="flex gap-[10px] py-[16px]">
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <input
+                    id="Challenge"
+                    name="Challenge"
+                    className=" w-full h-full cursor-pointer"
+                    checked={formData.Challenge}
+                    value="Challenge"
+                    type="checkbox"
+                    onChange={handleChange}
+                  />
+                </div>
+                <label htmlFor="Challenge">Challenge Based</label>
               </div>
-              <label htmlFor="Challenge">Challenge Based</label>
-            </div>
-            <div className="flex gap-[10px] py-[16px]">
-              <div className="w-6 h-6 flex items-center justify-center">
-                <input
-                  id="Observational"
-                  name="Observational"
-                  className=" w-full h-full cursor-pointer"
-                  checked={formData.Observational}
-                  value="Observational"
-                  type="checkbox"
-                  onChange={handleChange}
-                />
+              <div className="flex gap-[10px] py-[16px]">
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <input
+                    id="Observational"
+                    name="Observational"
+                    className=" w-full h-full cursor-pointer"
+                    checked={formData.Observational}
+                    value="Observational"
+                    type="checkbox"
+                    onChange={handleChange}
+                  />
+                </div>
+                <label htmlFor="Observational">Observational Based</label>
               </div>
-              <label htmlFor="Observational">Observational Based</label>
             </div>
-          </div>
-          {/*  */}
-          <div>
-            <h2 className="text-[32px] font-semibold tracking-tight">
-              {" "}
-              Ratings
-            </h2>
-            <div className="pb-[16px]">
-              {ratingsList.map((item, index) => (
-                <div className="flex gap-[10px] py-[16px]" key={index}>
-                  <div className="w-6 h-6 flex items-center justify-center">
-                    <input
-                      className="w-full h-full cursor-pointer"
-                      type="radio"
-                      id={item}
-                      name="rating"
-                      value={item}
-                      checked={formData.rating === item}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <label htmlFor={item} className="flex gap-[5px]">
-                    {[...Array(Math.floor(item))].map((_, starIndex) => (
-                      <Full
-                        key={starIndex}
-                        className="text-yellow-500 text-[24px]"
+            {/*  */}
+            <div>
+              <h2 className="text-[32px] font-semibold tracking-tight">
+                {" "}
+                Ratings
+              </h2>
+              <div className="pb-[16px]">
+                {ratingsList.map((item, index) => (
+                  <div className="flex gap-[10px] py-[16px]" key={index}>
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      <input
+                        className="w-full h-full cursor-pointer"
+                        type="radio"
+                        id={item}
+                        name="rating"
+                        value={item}
+                        checked={formData.rating === item}
+                        onChange={handleChange}
                       />
-                    ))}
-                    {item % 1 !== 0 && (
-                      <Half className="text-yellow-500 text-[24px]" />
-                    )}
-                    {[...Array(5 - Math.ceil(item))].map(
-                      (_, emptyStarIndex) => (
-                        <Star
-                          key={emptyStarIndex}
+                    </div>
+                    <label htmlFor={item} className="flex gap-[5px]">
+                      {[...Array(Math.floor(item))].map((_, starIndex) => (
+                        <Full
+                          key={starIndex}
                           className="text-yellow-500 text-[24px]"
                         />
-                      )
-                    )}
-                    <span className="ml-[10px] text-xl">{item} & up</span>
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 flex flex-col gap-1">
-          {results.data.map((result, index) => (
-            <details
-              key={result.id}
-              className="bg-primary text-light cursor-pointer"
-              open={true}
-            >
-              <summary
-                className="flex justify-between py-[13px] px-4 font-medium text-[28px] tracking-tight items-center"
-                onClick={() => toggleDetails(index)}
-              >
-                {result.roadmap}{" "}
-                {isOpen[index] ? <ChevronUp /> : <ChevronDown />}
-              </summary>
-              <div
-                className={`bg-light dark:bg-dark flex flex-col gap-4 transition-all duration-1000 ease-in-out-back`}
-              >
-                {result.courses.map((course) => (
-                  <Link
-                    to={`/student/courseview/${course.id}`}
-                    key={course.id}
-                    className="py-8 px-4 shadow-[5px_5px_5px_0] bg-light dark:bg-dark shadow-black/20 hover:scale-[1.02] [transition:background-color_1s_cubic-bezier(0.780,-0.375,0.260,1.320),transform_.3s_cubic-bezier(0.780,-0.375,0.260,1.320)]"
-                  >
-                    <CourseCard
-                      title={course.title}
-                      subtitle={course.subtitle}
-                      ratings={course.ratings}
-                      duration={course.duration}
-                      itemsCount={course.itemsCount}
-                      level={course.level}
-                      instructor={course.instructor}
-                      topics={course.topics}
-                      thumnail={course.thumnail}
-                    />
-                  </Link>
+                      ))}
+                      {item % 1 !== 0 && (
+                        <Half className="text-yellow-500 text-[24px]" />
+                      )}
+                      {[...Array(5 - Math.ceil(item))].map(
+                        (_, emptyStarIndex) => (
+                          <Star
+                            key={emptyStarIndex}
+                            className="text-yellow-500 text-[24px]"
+                          />
+                        )
+                      )}
+                      <span className="ml-[10px] text-xl">{item} & up</span>
+                    </label>
+                  </div>
                 ))}
               </div>
-            </details>
-          ))}
+            </div>
+          </div>
+          <div className="flex-1 flex flex-col gap-1">
+            {results.data.map((result, index) => (
+              <details
+                key={result.id}
+                className="bg-primary text-light cursor-pointer"
+                open={true}
+              >
+                <summary
+                  className="flex justify-between py-[13px] px-4 font-medium text-[28px] tracking-tight items-center"
+                  onClick={() => toggleDetails(index)}
+                >
+                  {result.roadmap}{" "}
+                  {isOpen[index] ? <ChevronUp /> : <ChevronDown />}
+                </summary>
+                <div
+                  className={`bg-light dark:bg-dark flex flex-col gap-4 transition-all duration-1000 ease-in-out-back`}
+                >
+                  {result.courses.map((course) => (
+                    <Link
+                      to={`${paths.course.details}/${course.id}`}
+                      key={course.id}
+                      className="py-8 px-4 shadow-[5px_5px_5px_0] bg-light dark:bg-dark shadow-black/20 hover:scale-[1.02] [transition:background-color_1s_cubic-bezier(0.780,-0.375,0.260,1.320),transform_.3s_cubic-bezier(0.780,-0.375,0.260,1.320)]"
+                    >
+                      <CourseCard
+                        title={course.title}
+                        subtitle={course.subtitle}
+                        ratings={course.ratings}
+                        duration={course.duration}
+                        itemsCount={course.itemsCount}
+                        level={course.level}
+                        instructor={course.instructor}
+                        topics={course.topics}
+                        thumnail={course.thumnail}
+                      />
+                    </Link>
+                  ))}
+                </div>
+              </details>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

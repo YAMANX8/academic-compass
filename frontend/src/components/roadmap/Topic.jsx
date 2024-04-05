@@ -1,3 +1,4 @@
+import { paths } from "../../routes/paths";
 const Topic = ({
   topicId,
   setIsOpen,
@@ -26,7 +27,7 @@ const Topic = ({
             title: `${
               topicTitle[0].toUpperCase() + topicTitle.slice(1).toLowerCase()
             } (${topicStatus})`,
-            search: `/student/search/by-topic/${topicId}`,
+            search: `${paths.main.search.byTopic}/${topicId}`,
             deeper: `${topicId}`,
           });
 

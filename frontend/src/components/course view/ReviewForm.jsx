@@ -3,13 +3,13 @@ import { FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
 import axios from "../../apis/axios";
 import { useParams } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import { useAuthContext } from "src/auth/hooks";
 const ReviewForm = ({ setIsOpen }) => {
   const [data, setData] = useState({
     rating: 0,
     review: "",
   });
-  const { auth } = useAuth();
+  const { user } = useAuthContext();
   const { id } = useParams();
   const [hover, setHover] = useState(0);
   const [hasReviewed, setHasReviewed] = useState(false);
@@ -21,7 +21,7 @@ const ReviewForm = ({ setIsOpen }) => {
         `/review/edit_review/${id}`,
         { stars_number: data.rating, review: data.review },
         {
-          headers: { token: auth.accessToken },
+          headers: { token: user?.accessToken },
         }
       );
       toast.success(`your rating: ${data.rating}, your review: ${data.review}`);
@@ -34,7 +34,7 @@ const ReviewForm = ({ setIsOpen }) => {
     e.preventDefault();
     try {
       const res = await axios.delete(`/review/delete_review/${id}`, {
-        headers: { token: auth.accessToken },
+        headers: { token: user?.accessToken },
       });
       toast.success(`Your review is deleted successfully!`);
       setIsOpen(false);
@@ -46,7 +46,7 @@ const ReviewForm = ({ setIsOpen }) => {
     const getReview = async () => {
       try {
         const res = await axios.get(`/review/show_review/${id}`, {
-          headers: { token: auth.accessToken },
+          headers: { token: user?.accessToken },
         });
         if (res.data.rating != null) setHasReviewed(true);
         const starsNumber = (await res?.data?.rating) || 0;

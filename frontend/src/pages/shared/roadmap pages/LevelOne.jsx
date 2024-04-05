@@ -9,122 +9,21 @@ import {
   Topic,
   Modal,
 } from "../../../components";
-import {
-  useOutletContext,
-  useNavigate,
-  useParams,
-  useLocation,
-} from "react-router-dom";
-import axios from "../../../apis/axios";
-import useAuth from "../../../hooks/useAuth";
-import { toast } from "react-toastify";
-
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuthContext } from "../../../auth/hooks";
+import { useMapContext } from "../../../context/hooks/use-roadmap-context.js";
+// ___________________________________________________________________________
 const LevelOne = () => {
-  const location = useLocation();
-  const { auth, isAuth } = useAuth();
+  const { getTopics1, topics1, handleState, handleReset } = useMapContext();
+  const { authenticated } = useAuthContext();
   const { topicL1Id } = useParams();
   const navigate = useNavigate();
-  //a state for holding the response message when changing the topics state!
-  const [countUpdate, setCountUpdate] = useState(1);
-  //the actual roadmap data
-  const [mergedData, setMergedData] = useState([]);
-  //getting the data
-  useEffect(() => {
-    const getData = async () => {
-      const response = await axios.get(
-        `/roadmap/${
-          !isAuth ? `topic/${topicL1Id}` : `student/topic/${topicL1Id}`
-        }`,
-        {
-          headers: {
-            token: auth.accessToken,
-          },
-        }
-      );
-      // setLevelOne(response.data.topics);
-      //consider if the user is not loged in so, I put "|| []"
-      const progress = (await response.data.progress) || [];
-
-      const mergedData = await response.data.topics.map((topic) => {
-        const matchingProgress = progress.find(
-          (item) => item.topic_id === topic.topic_id
-        );
-        return {
-          topic_id: topic.topic_id,
-          topic_title: topic.topic_title,
-          topic_description: topic.topic_description,
-          topic_status: topic.topic_status,
-          topic_order: topic.topic_order,
-          topic_category: topic.topic_category,
-          isItLast: topic.isItLast,
-          topic_level: topic.topic_level,
-          state_name: matchingProgress ? matchingProgress.state_name : "",
-        };
-      });
-      setMergedData(mergedData);
-    };
-    getData();
-  }, [countUpdate]);
-  //to know if the topic is in the last level
-  const [isLast, setIsLast] = useState(false);
-  // const [levelOne, setLevelOne] = useState([
-  //   {
-  //     topic_id: 1,
-  //     topic_title: "topic title",
-  //     topic_description:
-  //       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-  //     topic_order: 1,
-  //     topic_status: "Trending",
-  //     isItLast: false,
-  //   },
-  //   {
-  //     topic_id: 2,
-  //     topic_title: "topic title",
-  //     topic_description:
-  //       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-  //     topic_order: 2,
-  //     topic_status: "Stable",
-  //     isItLast: true,
-  //   },
-  //   {
-  //     topic_id: 3,
-  //     topic_title: "topic title",
-  //     topic_description:
-  //       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-  //     topic_order: 3,
-  //     topic_status: "Stable",
-  //     isItLast: true,
-  //   },
-  //   {
-  //     topic_id: 4,
-  //     topic_title: "topic title",
-  //     topic_description:
-  //       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos impedit distinctio ut, dolores ratione libero sint reprehenderit dolorem suscipit! Aspernatur aut dolorum deleniti sapiente eligendi? Alias reprehenderit nam ipsum placeat.",
-  //     topic_order: 3,
-  //     topic_status: "deprecated",
-  //     isItLast: true,
-  //   },
-  // ]);
-  //for the title of the page
-  const [title, setTitle] = useOutletContext();
-  // setTitle("FE") : I put it in a useEffect because of the warning in the console.
-  useEffect(
-    () =>
-      setTitle(
-        "topiC Level 1"[0].toUpperCase() +
-          "topiC Level 1".slice(1).toLowerCase()
-      ),
-    []
-  );
   //some styles
   const style =
     "p-4 rounded-md text-dark border-2 disabled:from-primary/50 disabled:to-accent/50";
   const important = "bg-gradient-to-r from-primary to-accent text-light";
-
-  //for the modal:
-  //the first is for the opening state of the modal
+  const [isLast, setIsLast] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  //modal data
   const [modalData, setModalData] = useState({
     id: "",
     level: "",
@@ -132,52 +31,11 @@ const LevelOne = () => {
     deeper: "/",
     search: "/",
   });
-  //handling the states of the topics
-  const handleState = async (state) => {
-    try {
-      const res = await axios.post(
-        "/roadmap/addState/student/state",
-        JSON.stringify({
-          topic_id: modalData.id,
-          topic_level: modalData.level,
-          state_id: state,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            token: auth.accessToken,
-          },
-        }
-      );
-      setCountUpdate((prev) => prev + 1);
-      setIsOpen(false);
-      toast.success(`topic state is updated successfully (${countUpdate})`);
-    } catch (err) {
-      if (err.response.status === 403)
-        navigate("/student/login", { state: { from: location } });
-    }
-  };
-  const handleReset = async () => {
-    try {
-      const res = await axios.delete(
-        `/roadmap/addState/student/reset/${modalData.id}/${modalData.level}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            token: auth.accessToken,
-          },
-        }
-      );
-      setCountUpdate((prev) => prev + 1);
-      setIsOpen(false);
-      toast.success(`topic state is updated successfully (${countUpdate})`);
-    } catch (err) {
-      if (err.response.status === 403)
-        navigate("/student/login", { state: { from: location } });
-    }
-  };
 
-  //and this variable is for the markup inside the modal
+  useEffect(() => {
+    getTopics1(topicL1Id);
+  }, [authenticated]);
+
   let modalTemplate = (
     <div className="flex flex-col text-[20px] gap-6">
       <div>
@@ -185,25 +43,33 @@ const LevelOne = () => {
         <div className="flex justify-evenly mt-4">
           <button
             className={`${style} border-primary`}
-            onClick={() => handleReset()}
+            onClick={() =>
+              handleReset(modalData.id, modalData.level, setIsOpen)
+            }
           >
             Reset
           </button>
           <button
             className={`${style} border-accent`}
-            onClick={() => handleState(3)}
+            onClick={() =>
+              handleState(3, modalData.id, modalData.level, setIsOpen)
+            }
           >
             Done
           </button>
           <button
             className={`${style} border-green`}
-            onClick={() => handleState(2)}
+            onClick={() =>
+              handleState(2, modalData.id, modalData.level, setIsOpen)
+            }
           >
             Inprogress
           </button>
           <button
             className={`${style} border-advance`}
-            onClick={() => handleState(1)}
+            onClick={() =>
+              handleState(1, modalData.id, modalData.level, setIsOpen)
+            }
           >
             Skip it
           </button>
@@ -212,7 +78,6 @@ const LevelOne = () => {
       <div className="border-t-2 border-dark/20 pt-4">
         <h3>Or make another action:</h3>
         <div className="flex justify-evenly mt-4">
-          {/* here we use the links state that we declare before */}
           <button
             onClick={() =>
               navigate(modalData.search, {
@@ -234,11 +99,12 @@ const LevelOne = () => {
       </div>
     </div>
   );
+
   return (
     <>
-      {mergedData.map((topic, index) => {
+      {topics1.map((topic, index) => {
         //if there is just one topic
-        if (mergedData.length == 1) {
+        if (topics1.length == 1) {
           return (
             <div key={topic.topic_id} className="w-full">
               <StartLineLeft />
@@ -281,7 +147,7 @@ const LevelOne = () => {
             </div>
           );
           //the last topic rendering
-        } else if (index == mergedData.length - 1) {
+        } else if (index == topics1.length - 1) {
           //checking if the last topic is even (Means that the topic is in the right side)
           if (index % 2 == 0)
             return (
