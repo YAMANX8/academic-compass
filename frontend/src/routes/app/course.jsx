@@ -2,6 +2,8 @@ import { lazy, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
 import MainLayout from "src/layout/main";
+import { AuthGuard, RoleBasedGuard } from "../../auth/guard";
+import { roles } from "../../config-global";
 
 import { SplashScreen } from "src/components";
 // ----------------------------------------------------------------------
@@ -9,15 +11,9 @@ import { SplashScreen } from "src/components";
 const CourseDetails = lazy(() =>
   import("../../pages/student/course-details/CourseDetails")
 );
-const Video = lazy(() =>
-  import("../../pages/student/video/Video")
-);
-const Article = lazy(() =>
-  import("../../pages/student/article/Article")
-);
-const Quiz = lazy(() =>
-  import("../../pages/student/quiz/Quiz")
-);
+const Video = lazy(() => import("../../pages/student/video/Video"));
+const Article = lazy(() => import("../../pages/student/article/Article"));
+const Quiz = lazy(() => import("../../pages/student/quiz/Quiz"));
 const CourseInfo = lazy(() =>
   import("../../pages/instructor/course-info/CourseInfo")
 );
@@ -33,17 +29,19 @@ const EditCourse = lazy(() =>
 const courseDetails = {
   path: ":id",
   element: (
-    <Suspense fallback={<SplashScreen />}>
-      <Outlet />
-    </Suspense>
+    <MainLayout>
+      <AuthGuard>
+        <RoleBasedGuard roles={roles.student}>
+          <Suspense fallback={<SplashScreen />}>
+            <Outlet />
+          </Suspense>
+        </RoleBasedGuard>
+      </AuthGuard>
+    </MainLayout>
   ),
   children: [
     {
-      element: (
-          <MainLayout>
-            <CourseDetails />
-          </MainLayout>
-      ),
+      element: <CourseDetails />,
       index: true,
     },
     {
@@ -51,27 +49,15 @@ const courseDetails = {
       children: [
         {
           path: "video/:itemId",
-          element: (
-              <MainLayout>
-                <Video />
-              </MainLayout>
-          ),
+          element: <Video />,
         },
         {
           path: "article/:itemId",
-          element: (
-              <MainLayout>
-                <Article />
-              </MainLayout>
-          ),
+          element: <Article />,
         },
         {
           path: "quiz/:itemId",
-          element: (
-              <MainLayout>
-                <Quiz />
-              </MainLayout>
-          ),
+          element: <Quiz />,
         },
       ],
     },
@@ -80,34 +66,28 @@ const courseDetails = {
 
 const courseManagement = {
   element: (
-    <Suspense fallback={<SplashScreen />}>
-      <Outlet />
-    </Suspense>
+    <MainLayout>
+      <AuthGuard>
+        <RoleBasedGuard roles={roles.instructor}>
+          <Suspense fallback={<SplashScreen />}>
+            <Outlet />
+          </Suspense>
+        </RoleBasedGuard>
+      </AuthGuard>
+    </MainLayout>
   ),
   children: [
     {
       path: "edit/:id",
-      element: (
-          <MainLayout>
-            <EditCourse />
-          </MainLayout>
-      ),
+      element: <EditCourse />,
     },
     {
       path: "monitor/:id",
-      element: (
-          <MainLayout>
-            <CourseInfo />
-          </MainLayout>
-      ),
+      element: <CourseInfo />,
     },
     {
       path: "create",
-      element: (
-          <MainLayout>
-            <CreateCourse />
-          </MainLayout>
-      ),
+      element: <CreateCourse />,
     },
   ],
 };

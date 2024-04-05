@@ -63,10 +63,10 @@ function StudentDashboard() {
   const transition = "transition-colors duration-1000 ease-in-out-back";
 
   const userInfo = {
-    firstName: user.first_name == null ? "" : user.first_name,
-    lastName: user.last_name == null ? "" : user.last_name,
+    firstName: user?.first_name == null ? "" : user?.first_name,
+    lastName: user?.last_name == null ? "" : user?.last_name,
     imagePath:
-      user.picture == "http://localhost:5000/image/null" ? "" : user.picture,
+      user?.picture == "http://localhost:5000/image/null" ? "" : user?.picture,
   };
   return (
     <>
@@ -105,7 +105,7 @@ function StudentDashboard() {
                   <p>
                     {userInfo.firstName} {userInfo.lastName}
                   </p>
-                  <p className="text-primary">{`${user.city}, ${user.country}`}</p>
+                  <p className="text-primary">{`${user?.city}, ${user?.country}`}</p>
                 </div>
               </div>
 

@@ -1,13 +1,11 @@
 import { NotAuthorized } from "src/pages";
-
+import { useAuthContext } from "../hooks";
 // ----------------------------------------------------------------------
 
-export default function RoleBasedGuard({ hasContent, roles, children, sx }) {
-  // Logic here to get current user role
-  const user = { role: "student" };
+export default function RoleBasedGuard({ hasContent = true, roles, children }) {
 
-  // const currentRole = 'user';
-  const currentRole = user?.role; // admin;
+  const { user } = useAuthContext();
+  const currentRole = user?.role_id;
 
   if (typeof roles !== "undefined" && !roles.includes(currentRole)) {
     return hasContent ? <NotAuthorized /> : null;

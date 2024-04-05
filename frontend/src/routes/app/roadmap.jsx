@@ -28,22 +28,22 @@ const roadmaps = {
   children: [
     {
       element: (
-          <MainLayout>
-            <Roadmaps />
-          </MainLayout>
+        <MainLayout>
+          <Roadmaps />
+        </MainLayout>
       ),
       index: true,
     },
     {
       path: ":roadmapId",
-      element: <Outlet />,
+      element: (
+        <RoadmapLayout>
+          <Outlet />
+        </RoadmapLayout>
+      ),
       children: [
         {
-          element: (
-              <RoadmapLayout>
-                <LevelZero />
-              </RoadmapLayout>
-          ),
+          element: <LevelZero />,
           index: true,
         },
         {
@@ -51,20 +51,12 @@ const roadmaps = {
           element: <Outlet />,
           children: [
             {
-              element: (
-                  <RoadmapLayout>
-                    <LevelOne />
-                  </RoadmapLayout>
-              ),
+              element: <LevelOne />,
               index: true,
             },
             {
               path: ":topicLnId",
-              element: (
-                  <RoadmapLayout>
-                    <LevelN />
-                  </RoadmapLayout>
-              ),
+              element: <LevelN />,
             },
           ],
         },

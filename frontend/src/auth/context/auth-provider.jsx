@@ -276,9 +276,12 @@ export function AuthProvider({ children }) {
 
   const status = state.loading ? "loading" : checkAuthenticated;
 
+  const role = state?.user?.role_id == 1 ? "instructor" : "student";
+
   const memoizedValue = useMemo(
     () => ({
       user: state.user,
+      role: role,
       method: "jwt",
       loading: status === "loading",
       authenticated: status === "authenticated",
@@ -302,7 +305,7 @@ export function AuthProvider({ children }) {
       status,
     ]
   );
-
+  console.log(memoizedValue);
   return (
     <AuthContext.Provider value={memoizedValue}>
       {children}
