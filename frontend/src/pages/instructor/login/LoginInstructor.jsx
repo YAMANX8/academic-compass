@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useAuthContext } from "../../../auth/hooks";
+import { paths } from "../../../routes/paths";
 
 function LoginInstructor() {
   const { instructorLogin } = useAuthContext();
@@ -96,7 +97,7 @@ function LoginInstructor() {
       </form>
       <Link
         className="text-[14px] underline text-primary dark:text-accent-dark"
-        to="/instructor/register"
+        to={paths.auth.instructor.register}
         style={{ alignSelf: "flex-start" }}
       >
         Register new Account

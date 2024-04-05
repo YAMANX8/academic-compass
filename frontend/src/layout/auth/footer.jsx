@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "/logo.svg";
+import { Logo } from "../../components";
 import { FaFacebookF as Facebook } from "react-icons/fa";
 import {
   AiOutlineInstagram as Instagram,
@@ -16,7 +16,7 @@ function Footer() {
     <footer>
       <div className="w-full px-[120px] py-[90px] flex items-center justify-between tracking-tight leading-6  bg-secondary dark:bg-secondary-dark transition-all duration-1000 ease-in-out-back whitespace-nowrap">
         <div className="flex flex-col items-center gap-[16px]">
-          <img src={Logo} alt="logo" className="w-[203px]" />
+          <Logo className="w-[203px]" />
           <div className="flex gap-8">
             <Facebook className={`${social}`} />
             <Instagram className={`${social}`} />

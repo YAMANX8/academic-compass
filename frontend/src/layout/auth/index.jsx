@@ -1,6 +1,6 @@
 import Footer from "./footer";
 import Header from "./header";
-import Logo from "/logo.svg";
+import { Logo } from "../../components";
 
 const AuthLayout = ({ subtitle, title, children }) => {
   return (
@@ -19,7 +19,7 @@ const AuthLayout = ({ subtitle, title, children }) => {
               </p>
             </div>
             <div className="flex flex-col items-center justify-center gap-4 py-8 px-4 bg-secondary dark:bg-secondary-dark rounded-tr-[20px] rounded-br-[20px] text-dark dark:text-light transition-colors duration-1000 ease-in-out-back">
-              <img src={Logo} alt="logo" className="w-[203px]" />
+              <Logo disabledLink className="w-[203px]" />
               {children}
             </div>
           </div>
