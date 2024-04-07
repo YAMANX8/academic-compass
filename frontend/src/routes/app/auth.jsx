@@ -25,35 +25,33 @@ const RegisterInstructor = lazy(() =>
 const studentAuth = {
   path: "student",
   element: (
-    <Suspense fallback={<SplashScreen />}>
-      <Outlet />
-    </Suspense>
+    <GuestGuard>
+      <Suspense fallback={<SplashScreen />}>
+        <Outlet />
+      </Suspense>
+    </GuestGuard>
   ),
   children: [
     {
       path: "login",
       element: (
-        <GuestGuard>
-          <AuthLayout
-            subtitle="Chart Your Learning Journey with Interactive Educational Roadmaps"
-            title="LOGIN"
-          >
-            <LoginStudent />
-          </AuthLayout>
-        </GuestGuard>
+        <AuthLayout
+          subtitle="Chart Your Learning Journey with Interactive Educational Roadmaps"
+          title="LOGIN"
+        >
+          <LoginStudent />
+        </AuthLayout>
       ),
     },
     {
       path: "register",
       element: (
-        <GuestGuard>
-          <AuthLayout
-            subtitle="Chart Your Learning Journey with Interactive Educational Roadmaps"
-            title="SIGN UP"
-          >
-            <RegisterStudent />
-          </AuthLayout>
-        </GuestGuard>
+        <AuthLayout
+          subtitle="Chart Your Learning Journey with Interactive Educational Roadmaps"
+          title="SIGN UP"
+        >
+          <RegisterStudent />
+        </AuthLayout>
       ),
     },
   ],
@@ -61,35 +59,33 @@ const studentAuth = {
 const instructorAuth = {
   path: "instructor",
   element: (
-    <Suspense fallback={<SplashScreen />}>
-      <Outlet />
-    </Suspense>
+    <GuestGuard>
+      <Suspense fallback={<SplashScreen />}>
+        <Outlet />
+      </Suspense>
+    </GuestGuard>
   ),
   children: [
     {
       path: "login",
       element: (
-        <GuestGuard>
-          <AuthLayout
-            subtitle="Chart Your Learning Journey with Interactive Educational Roadmaps"
-            title="LOGIN"
-          >
-            <LoginInstructor />
-          </AuthLayout>
-        </GuestGuard>
+        <AuthLayout
+          subtitle="Chart Your Learning Journey with Interactive Educational Roadmaps"
+          title="LOGIN"
+        >
+          <LoginInstructor />
+        </AuthLayout>
       ),
     },
     {
       path: "register",
       element: (
-        <GuestGuard>
-          <AuthLayout
-            subtitle="Chart Your Learning Journey with Interactive Educational Roadmaps"
-            title="SIGN UP"
-          >
-            <RegisterInstructor />
-          </AuthLayout>
-        </GuestGuard>
+        <AuthLayout
+          subtitle="Chart Your Learning Journey with Interactive Educational Roadmaps"
+          title="SIGN UP"
+        >
+          <RegisterInstructor />
+        </AuthLayout>
       ),
     },
   ],

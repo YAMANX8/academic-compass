@@ -1,12 +1,10 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { RouterLink } from "src/routes/components";
-const Logo = React.forwardRef(({ disabledLink = false, className, ...other }, ref) => {
+import { paths } from "../../routes/paths";
+const Logo = (({ disabledLink = false, className, ...other }) => {
   const logo = (
     <img
-      ref={ref}
-      src="/logo.svg"
-      className={`w-12 h-12 cursor-pointer ${className}`}
+      src="/logo/primary.png"
+      className={`w-12 ${className}`}
       {...other}
     />
   );
@@ -16,7 +14,7 @@ const Logo = React.forwardRef(({ disabledLink = false, className, ...other }, re
   }
 
   return (
-    <Link component={RouterLink} href="/" className="inline-block">
+    <Link to={paths.main.root} className="inline-block">
       {logo}
     </Link>
   );

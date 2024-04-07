@@ -2,6 +2,8 @@ import { lazy, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
 import MainLayout from "../../layout/main";
+import { AuthGuard, RoleBasedGuard } from "../../auth/guard";
+import { roles } from "../../config-global";
 
 import { SplashScreen } from "../../components";
 // ----------------------------------------------------------------------
@@ -18,30 +20,24 @@ const StudentSettings = lazy(() =>
 const students = {
   path: "students",
   element: (
-    <Suspense fallback={<SplashScreen />}>
-      <Outlet />
-    </Suspense>
+    <MainLayout>
+      <AuthGuard>
+        <RoleBasedGuard roles={roles.student}>
+          <Suspense fallback={<SplashScreen />}>
+            <Outlet />
+          </Suspense>
+        </RoleBasedGuard>
+      </AuthGuard>
+    </MainLayout>
   ),
   children: [
     {
-      element: (
-        
-          <MainLayout>
-            <StudentDashboard />
-          </MainLayout>
-        
-      ),
+      element: <StudentDashboard />,
       index: true,
     },
     {
       path: "settings",
-      element: (
-        
-          <MainLayout>
-            <StudentSettings />
-          </MainLayout>
-        
-      ),
+      element: <StudentSettings />,
     },
   ],
 };

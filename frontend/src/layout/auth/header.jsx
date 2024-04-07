@@ -1,20 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 
 import React, { useState } from "react";
-import Logo from "/logo.svg";
+import { Logo } from "../../components";
 import { CiLogin as Login } from "react-icons/ci";
 import { AiOutlineSearch as Search } from "react-icons/ai";
-import {
-  BsPerson as Person,
-  BsMoon as Moon,
-  BsSun as Sun,
-} from "react-icons/bs";
+import { BsPerson as Person } from "react-icons/bs";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { Switcher } from "../../components";
 import { paths } from "../../routes/paths";
 import { useAuthContext } from "../../auth/hooks";
 const Header = () => {
-  const {authenticated, logout, user} = useAuthContext();
+  const { authenticated, logout, user } = useAuthContext();
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -35,18 +31,16 @@ const Header = () => {
     firstName: user?.first_name == null ? "user" : user?.first_name,
     lastName: user?.last_name == null ? "" : user?.last_name,
     imagePath:
-    user?.picture == "http://localhost:5000/image/null" ? "" : user?.picture,
+      user?.picture == "http://localhost:5000/image/null" ? "" : user?.picture,
   };
   const btnStyle =
     "px-[20px] py-[10px] rounded-[5px] font-semibold	gap-[10px] items-center text-[16px]";
   const meunItemStyle =
     "cursor-pointer px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900 active:bg-accent active:text-light";
   return (
-    <nav className=" px-[120px] py-[28px] flex justify-between transition-colors duration-1000 ease-in-out-back text-dark  dark:text-light bg-light dark:bg-dark shadow-[0_0_20px_rgba(0,0,0)] sticky w-full top-0 z-50">
+    <nav className=" px-[120px] py-4 flex justify-between transition-colors duration-1000 ease-in-out-back text-dark  dark:text-light bg-light dark:bg-dark shadow-[0_0_20px_rgba(0,0,0)] sticky w-full top-0 z-50">
       <div>
-        <Link to="/">
-          <img src={Logo} alt="logo" className="w-[203px]" />
-        </Link>
+        <Logo className="w-[150px]" />
       </div>
       <div className="flex gap-[16px] items-center">
         <form

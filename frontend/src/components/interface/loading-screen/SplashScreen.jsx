@@ -31,7 +31,7 @@ const SplashScreen = ({ className, ...other }) => {
             repeat: Infinity,
           }}
         >
-          <Logo disabledLink className="w-32 h-32" />
+          <Logo disabledLink className="w-32" />
         </motion.div>
         <motion.div
           animate={{
