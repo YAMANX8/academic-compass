@@ -10,92 +10,30 @@ export const useGetRoadmaps = () => {
   };
   return getData;
 };
+// TODO: refactor to use this hook instead of the previous hooks.
 // ___________________________________________________________
-export const useGetTopics0 = () => {
+export const useGetTopicsByLevel = (level) => {
   const axios = useAxios();
   const { user, authenticated } = useAuthContext();
 
   const getData = async (id) => {
-    let response;
-    if (!authenticated)
-      response = await axios.get(
-        `${endpoints.roadmaps.topics.levelZero.user}/${id}`
-      );
-    else
-      response = await axios.get(
-        `${endpoints.roadmaps.topics.levelZero.student}/${id}`,
-        {
-          headers: {
-            token: user?.accessToken,
-          },
-        }
-      );
-    const topics = response.data.topics;
-    let progress = [];
-    if (authenticated) {
-      progress = await response.data.progress;
+    const levelKey = `level${level}`;
+    const endpointType = authenticated ? "student" : "user";
+    const endpoint =
+      endpoints.roadmaps.topics?.[levelKey]?.[endpointType] ||
+      endpoints.roadmaps.topics.levelN?.[endpointType];
+
+    try {
+      const response = await axios.get(`${endpoint}/${id}`, {
+        headers: authenticated ? { token: user?.accessToken } : {},
+      });
+
+      const { topics, progress = [] } = response.data;
+      return { topics, progress };
+    } catch (error) {
+      console.error(`Failed to fetch topics for level ${level}:`, error);
+      throw error;
     }
-    return { topics, progress };
-  };
-
-  return getData;
-};
-// ___________________________________________________________
-export const useGetTopics1 = () => {
-  const axios = useAxios();
-  const { user, authenticated } = useAuthContext();
-
-  const getData = async (id) => {
-    let response;
-    if (!authenticated)
-      response = await axios.get(
-        `${endpoints.roadmaps.topics.levelOne.user}/${id}`
-      );
-    else
-      response = await axios.get(
-        `${endpoints.roadmaps.topics.levelOne.student}/${id}`,
-        {
-          headers: {
-            token: user?.accessToken,
-          },
-        }
-      );
-    const topics = response.data.topics;
-    let progress = [];
-    if (authenticated) {
-      progress = await response.data.progress;
-    }
-    return { topics, progress };
-  };
-
-  return getData;
-};
-// ___________________________________________________________
-export const useGetTopicsN = () => {
-  const axios = useAxios();
-  const { user, authenticated } = useAuthContext();
-
-  const getData = async (id) => {
-    let response;
-    if (!authenticated)
-      response = await axios.get(
-        `${endpoints.roadmaps.topics.levelN.user}/${id}`
-      );
-    else
-      response = await axios.get(
-        `${endpoints.roadmaps.topics.levelN.student}/${id}`,
-        {
-          headers: {
-            token: user?.accessToken,
-          },
-        }
-      );
-    const topics = response.data.topics;
-    let progress = [];
-    if (authenticated) {
-      progress = await response.data.progress;
-    }
-    return { topics, progress };
   };
 
   return getData;

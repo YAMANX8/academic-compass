@@ -4,11 +4,9 @@ import { MapContext } from "./map-context";
 
 import {
   useGetRoadmaps,
-  useGetTopics0,
   useHandleState,
   useHandleReset,
-  useGetTopics1,
-  useGetTopicsN,
+  useGetTopicsByLevel,
 } from "../../apis/roadmap.js";
 
 import { toast } from "react-toastify";
@@ -108,9 +106,9 @@ const reducer = (state, action) => {
 // ----------------------------------------------------------------------
 export function MapProvider({ children }) {
   const get_roadmaps = useGetRoadmaps();
-  const get_topics0 = useGetTopics0();
-  const get_topics1 = useGetTopics1();
-  const get_topicsN = useGetTopicsN();
+  const get_topics0 = useGetTopicsByLevel("Zero");
+  const get_topics1 = useGetTopicsByLevel("One");
+  const get_topicsN = useGetTopicsByLevel("N");
   const handle_topics_state = useHandleState();
   const handle_reset = useHandleReset();
   const { authenticated } = useAuthContext();
