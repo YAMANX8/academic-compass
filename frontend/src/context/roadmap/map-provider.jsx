@@ -124,8 +124,9 @@ export function MapProvider({ children }) {
           roadmaps: data,
         },
       });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+      console.error(error);
       dispatch({
         type: Types.INITIAL,
       });
@@ -149,6 +150,7 @@ export function MapProvider({ children }) {
           },
         });
       } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
         console.log(error);
       }
     },
@@ -172,6 +174,7 @@ export function MapProvider({ children }) {
           },
         });
       } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
         console.log(error);
       }
     },
@@ -196,6 +199,7 @@ export function MapProvider({ children }) {
         });
       } catch (error) {
         console.log(error);
+        toast.error(error.response?.data?.message || error.message);
       }
     },
     [authenticated]
@@ -220,10 +224,11 @@ export function MapProvider({ children }) {
             topicLevel: topicLevel,
           },
         });
-        toast.success(`Topic state is updated successfully`);
-      } catch (err) {
-        if (err == "Not Authorized") toast.error("Your need to login first!!");
-        else toast.error("Something went wrong!");
+        const message = handleState?.data?.message || "success";
+        toast.info(message);
+      } catch (error) {
+        console.error(error.response?.data?.error);
+        toast.error(error.response?.data?.message || error.message);
       }
     },
     []
@@ -231,7 +236,7 @@ export function MapProvider({ children }) {
 
   const handleReset = useCallback(async (topicId, topicLevel, modalWindow) => {
     try {
-      const handleReset = await handle_reset(topicId, topicLevel);
+      await handle_reset(topicId, topicLevel);
 
       modalWindow(false);
       dispatch({
@@ -242,10 +247,10 @@ export function MapProvider({ children }) {
           topicLevel: topicLevel,
         },
       });
-      toast.success(`Topic state is updated successfully`);
-    } catch (err) {
-      if (err == "Not Authorized") toast.error("Your need to login first!!");
-      else toast.error("Something went wrong!");
+      toast.info("The topic state has been successfully reset");
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+      console.error(error);
     }
   }, []);
 

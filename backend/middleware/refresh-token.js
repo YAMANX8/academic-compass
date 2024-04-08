@@ -6,14 +6,15 @@ dotenv.config();
 // Middleware to handle token refresh
 async function refreshTokenMiddleware(req, res) {
   const cookies = req.cookies;
-  const refreshToken = cookies.jwt
-  console.log(refreshToken);
+  const refreshToken = cookies.jwt;
 
   if (!refreshToken) {
-    return res.status(401).json('Not Authorized');
+    return res.status(403).json({
+      error: 'Not Authorized: No refresh token provided.',
+      message: 'Access denied due to missing credentials.',
+    });
   }
   try {
-    // eslint-disable-next-line no-undef
     const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const { token } = jwtGenerator(payload.userId, payload.roleId);
 
@@ -21,7 +22,15 @@ async function refreshTokenMiddleware(req, res) {
     return res.json({ token });
   } catch (error) {
     console.error(error.message);
-    return res.status(401).json('Not Authorized');
+    // Determine the type of error and respond accordingly
+    const errorText =
+      error.name === 'TokenExpiredError'
+        ? 'Refresh token expired.'
+        : 'Not Authorized: Invalid refresh token.';
+    return res.status(403).json({
+      error: errorText,
+      message: 'Access denied due to invalid credentials.',
+    });
   }
 }
 

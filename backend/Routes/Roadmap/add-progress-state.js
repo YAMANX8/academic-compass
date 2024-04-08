@@ -15,7 +15,7 @@ router.post('/student/state', authorization, async (req, res) => {
       roleId,
     );
     if (!hasAccess) {
-      return res.status(403).json('Access denied');
+      return res.status(403).json({ message: 'Access denied' });
     }
     // Verify before adding(true or false)
     const verify = await pool.query(
@@ -54,10 +54,15 @@ router.post('/student/state', authorization, async (req, res) => {
         );
         return res
           .status(200)
-          .json({ status: 'success: topic was updated state' });
+          .json({
+            message: 'The state of the topic has been successfully updated.',
+          });
       } catch (error) {
         console.error(error);
-        res.status(500).json({ status: 'error', message: 'An error occurred' });
+        res.status(500).json({
+          status: 'error',
+          message: 'A server error has occurred. Please try again later.',
+        });
       }
     }
     // newRodmapInfo
@@ -71,10 +76,15 @@ router.post('/student/state', authorization, async (req, res) => {
       [topic_id, topic_level, studentId, state_id],
     );
 
-    res.status(200).json({ status: 'success: topic was added state' });
+    res
+      .status(200)
+      .json({ message: 'The state has been successfully added to the topic.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ status: 'error', message: 'An error occurred' });
+    res.status(500).json({
+      status: 'error',
+      message: 'A server error has occurred. Please try again later.',
+    });
   }
 });
 
@@ -95,7 +105,7 @@ router.delete(
         roleId,
       );
       if (!hasAccess) {
-        return res.status(403).json('Access denied');
+        return res.status(403).json({ message: 'Access denied' });
       }
       // delete Progress_Status
       await pool.query(
@@ -109,10 +119,13 @@ router.delete(
         [topic_id, studentId, level],
       );
 
-      res.status(204).json({ status: 'success: topic was reset' });
+      res.status(204).send();
     } catch (err) {
       console.error(err);
-      res.status(500).json({ status: 'error', message: 'An error occurred' });
+      res.status(500).json({
+        status: 'error',
+        message: 'A server error has occurred. Please try again later.',
+      });
     }
   },
 );

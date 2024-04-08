@@ -2,7 +2,10 @@ import axios from "axios";
 
 import { ACADEMIC_COMPASS_HOST_API } from "src/config-global";
 
-const axiosInstance = axios.create({ baseURL: ACADEMIC_COMPASS_HOST_API });
+const axiosInstance = axios.create({
+  baseURL: ACADEMIC_COMPASS_HOST_API,
+  withCredentials: true,
+});
 
 axiosInstance.interceptors.response.use(
   (res) => res,

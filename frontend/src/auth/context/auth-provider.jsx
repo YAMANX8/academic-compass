@@ -78,7 +78,7 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         const res = await axios.get(endpoints.student.auth.me, {
           headers: {
-            token: accessToken,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
         const user = res.data.user;
@@ -122,9 +122,7 @@ export function AuthProvider({ children }) {
       password,
     };
 
-    const res = await axios.post(endpoints.student.auth.login, data, {
-      withCredentials: true,
-    });
+    const res = await axios.post(endpoints.student.auth.login, data);
 
     const accessToken = res.data.token;
     const user = res.data.user;
@@ -151,9 +149,7 @@ export function AuthProvider({ children }) {
       password,
     };
 
-    const res = await axios.post(endpoints.instructor.auth.login, data, {
-      withCredentials: true,
-    });
+    const res = await axios.post(endpoints.instructor.auth.login, data);
 
     const accessToken = res.data.token;
     const user = res.data.user;
@@ -184,9 +180,7 @@ export function AuthProvider({ children }) {
         last_name,
       };
 
-      const res = await axios.post(endpoints.student.auth.register, data, {
-        withCredentials: true,
-      });
+      const res = await axios.post(endpoints.student.auth.register, data);
 
       const accessToken = res.data.token;
       const user = res.data.user;
@@ -216,9 +210,7 @@ export function AuthProvider({ children }) {
         last_name,
       };
 
-      const res = await axios.post(endpoints.instructor.auth.register, data, {
-        withCredentials: true,
-      });
+      const res = await axios.post(endpoints.instructor.auth.register, data);
 
       const accessToken = res.data.token;
       const user = res.data.user;
@@ -243,9 +235,7 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback(async () => {
     removeStorage(STORAGE_KEY);
-    const res = await axios.get(endpoints.logout, {
-      withCredentials: true,
-    });
+    const res = await axios.get(endpoints.logout);
     // console.log(res)
     dispatch({
       type: Types.LOGOUT,
@@ -305,7 +295,6 @@ export function AuthProvider({ children }) {
       status,
     ]
   );
-  console.log(memoizedValue);
   return (
     <AuthContext.Provider value={memoizedValue}>
       {children}

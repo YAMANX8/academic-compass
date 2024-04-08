@@ -17,17 +17,15 @@ router.get('/', async (req, res) => {
     });
 
     res.status(200).json({
-      status: 'success',
       result: queryResult.rows.length,
-      data: {
-        dataresult: decodedData,
-      },
+      roadmaps: decodedData,
+      message: 'Roadmap details fetched successfully.',
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({
       status: 'error',
-      message: 'An error occurred',
+      message: 'A server error has occurred. Please try again later.',
     });
   }
 });
@@ -45,7 +43,10 @@ router.get('/student/:id', authorization, async (req, res) => {
     } else {
       const hasAccess = await checkPermission(Id, 'show_roadmap', role_id);
       if (!hasAccess) {
-        return res.status(403).json('Access denied');
+        return res.status(403).json({
+          status: 'error',
+          message: 'Access denied',
+        });
       }
       const query = `
         SELECT DISTINCT
@@ -117,7 +118,7 @@ router.get('/student/:id', authorization, async (req, res) => {
           topic_category: row.category_name,
           isItLast: row.is_last,
         }))
-        .filter((topic) => topic.topic_level1_id !== null);
+        .filter((topic) => topic.topic_id !== null);
 
       const progressData = result.rows
         .map((row) => ({
@@ -130,7 +131,6 @@ router.get('/student/:id', authorization, async (req, res) => {
         .filter((progress) => progress.progress_id !== null);
       console.log(result.rows);
       res.status(200).json({
-        status: 'success',
         roadmap: roadmapData,
         topics: topics,
         progress: progressData,
@@ -138,7 +138,10 @@ router.get('/student/:id', authorization, async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json('Server error');
+    res.status(500).json({
+      status: 'error',
+      message: 'A server error has occurred. Please try again later.',
+    });
   }
 });
 
@@ -193,7 +196,7 @@ router.get('/:id', async (req, res) => {
     console.log(err);
     res.status(500).json({
       status: 'error',
-      message: 'An error occurred',
+      message: 'A server error has occurred. Please try again later.',
     });
   }
 });
@@ -209,13 +212,12 @@ router.get('/student/topic/:id', authorization, async (req, res) => {
         `http://localhost:5000/AcademicCompass/roadmap/topic/${topic_level1_id}`,
       );
     } else {
-      const hasAccess = await checkPermission(
-        Id,
-        'show_roadmap',
-        role_id,
-      );
+      const hasAccess = await checkPermission(Id, 'show_roadmap', role_id);
       if (!hasAccess) {
-        return res.status(403).json('Access denied');
+        return res.status(403).json({
+          status: 'error',
+          message: 'Access denied',
+        });
       }
       const query = `
         SELECT
@@ -257,7 +259,7 @@ router.get('/student/topic/:id', authorization, async (req, res) => {
       if (result.rows.length === 0) {
         res.status(404).json({
           status: 'error',
-          message: 'topic not found',
+          message: 'Topics not found',
         });
         return;
       }
@@ -293,7 +295,10 @@ router.get('/student/topic/:id', authorization, async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json("Server error");
+    res.status(500).json({
+      status: 'error',
+      message: 'A server error has occurred. Please try again later.',
+    });
   }
 });
 
@@ -332,7 +337,7 @@ router.get('/topic/:id', async (req, res) => {
     if (result.rows.length === 0) {
       res.status(404).json({
         status: 'error',
-        message: 'topic not found',
+        message: 'Topics not found',
       });
       return;
     }
@@ -357,7 +362,7 @@ router.get('/topic/:id', async (req, res) => {
     console.log(err);
     res.status(500).json({
       status: 'error',
-      message: 'An error occurred',
+      message: 'A server error has occurred. Please try again later.',
     });
   }
 });
@@ -372,13 +377,12 @@ router.get('/student/topicN/:id', authorization, async (req, res) => {
         `http://localhost:5000/AcademicCompass/roadmap/topicN/${topic_levelN_id}`,
       );
     } else {
-      const hasAccess = await checkPermission(
-        Id,
-        'show_roadmap',
-        role_id,
-      );
+      const hasAccess = await checkPermission(Id, 'show_roadmap', role_id);
       if (!hasAccess) {
-        return res.status(403).json('Access denied');
+        return res.status(403).json({
+          status: 'error',
+          message: 'Access denied',
+        });
       }
       const query = `
         SELECT
@@ -419,7 +423,7 @@ router.get('/student/topicN/:id', authorization, async (req, res) => {
       if (result.rows.length === 0) {
         res.status(404).json({
           status: 'error',
-          message: 'topic not found',
+          message: 'Topics not found',
         });
         return;
       }
@@ -455,7 +459,10 @@ router.get('/student/topicN/:id', authorization, async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json("Server error");
+    res.status(500).json({
+      status: 'error',
+      message: 'A server error has occurred. Please try again later.',
+    });
   }
 });
 
@@ -493,7 +500,7 @@ router.get('/topicN/:id', async (req, res) => {
     if (result.rows.length === 0) {
       res.status(404).json({
         status: 'error',
-        message: 'topic not found',
+        message: 'Topics not found',
       });
       return;
     }
@@ -518,7 +525,7 @@ router.get('/topicN/:id', async (req, res) => {
     console.log(err);
     res.status(500).json({
       status: 'error',
-      message: 'An error occurred',
+      message: 'A server error has occurred. Please try again later.',
     });
   }
 });
