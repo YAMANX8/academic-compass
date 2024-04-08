@@ -29,8 +29,8 @@ export const useGetTopicsByLevel = (level) => {
     try {
       const response = await axios.get(`${endpoint}/${id}`);
 
-      const { topics, progress = [] } = response.data;
-      return { topics, progress };
+      const { topics, progress = [], roadmap } = response.data;
+      return { topics, progress, roadmap };
     } catch (error) {
       throw error;
     }

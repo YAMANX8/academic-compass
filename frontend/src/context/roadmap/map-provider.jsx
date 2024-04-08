@@ -25,6 +25,7 @@ const Types = {
 
 const initialState = {
   roadmaps: [],
+  roadmapName: "",
   topics0: [],
   topics1: [],
   topicsN: [],
@@ -50,6 +51,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         topics0: action.payload.topics,
+        roadmapName: action.payload.enteredRoadmap,
       };
     }
     case "SET_TOPICS_1": {
@@ -136,7 +138,7 @@ export function MapProvider({ children }) {
   const getTopics0 = useCallback(
     async (roadmapId) => {
       try {
-        const { topics, progress } = await get_topics0(roadmapId);
+        const { topics, progress, roadmap } = await get_topics0(roadmapId);
 
         const topicsAfterMerging = await mergeTopicsWithProgress(
           progress,
@@ -147,6 +149,7 @@ export function MapProvider({ children }) {
           type: "SET_TOPICS_0",
           payload: {
             topics: topicsAfterMerging,
+            enteredRoadmap: roadmap.roadmap_title,
           },
         });
       } catch (error) {
@@ -265,6 +268,7 @@ export function MapProvider({ children }) {
       topics0: state.topics0,
       topics1: state.topics1,
       topicsN: state.topicsN,
+      roadmapName: state.roadmapName,
       loading: status === "loading",
       count: status === "yes" ? state.roadmaps.length : 0,
       // Methods.
@@ -286,6 +290,7 @@ export function MapProvider({ children }) {
       state.topics0,
       state.topics1,
       state.topicsN,
+      state.roadmapName,
       status,
     ]
   );
