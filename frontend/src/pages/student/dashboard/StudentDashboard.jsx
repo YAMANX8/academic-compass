@@ -9,7 +9,7 @@ import {
 import { DashboardWrapper } from "src/layout/index.js";
 import { FaRegMap as Map } from "react-icons/fa";
 import { BsArrowReturnLeft as ReturnLeft } from "react-icons/bs";
-import axios from "src/apis/axios.js";
+import useAxios from "../../../hooks/use-axios"
 import { StudentPerformance } from "src/constants/StudentPerformance.js";
 import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
@@ -20,6 +20,7 @@ const cardColor = ["bg-primary", "bg-accent", "bg-green"];
 const cardTitle = ["Completed Courses", "In Progress Courses", "Total Points"];
 
 function StudentDashboard() {
+  const axios = useAxios();
   const { user } = useAuthContext();
   const [profileData, setProfileData] = useState([]);
 
@@ -29,9 +30,7 @@ function StudentDashboard() {
   const [myRoadmaps, setMyRoadmaps] = useState([]);
   const getData = async () => {
     try {
-      const response = await axios.get(DASHBOARD_URL, {
-        headers: { token: user?.accessToken },
-      });
+      const response = await axios.get(DASHBOARD_URL);
       const data = await response.data;
       setProfileData(data.profileData.counts);
       setPerformanceData(data.performance);

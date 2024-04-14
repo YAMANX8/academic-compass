@@ -7,7 +7,7 @@ import {
   useHandleState,
   useHandleReset,
   useGetTopicsByLevel,
-} from "../../apis/roadmap.js";
+} from "../../apis";
 
 import { toast } from "react-toastify";
 import { mergeTopicsWithProgress, updateTopicState } from "./utils.js";
@@ -29,7 +29,6 @@ const initialState = {
   topics0: [],
   topics1: [],
   topicsN: [],
-  loading: true,
 };
 
 const reducer = (state, action) => {
@@ -37,14 +36,12 @@ const reducer = (state, action) => {
     case "INITIAL": {
       return {
         roadmaps: [],
-        loading: false,
       };
     }
     case "SET_ROADMAPS": {
       return {
         ...state,
         roadmaps: action.payload.roadmaps,
-        loading: false,
       };
     }
     case "SET_TOPICS_0": {
@@ -259,9 +256,7 @@ export function MapProvider({ children }) {
 
   // ----------------------------------------------------------------------
 
-  const checkRoadmaps = state.roadmaps ? "yes" : "no";
 
-  const status = state.loading ? "loading" : checkRoadmaps;
   const memoizedValue = useMemo(
     () => ({
       roadmaps: state.roadmaps,
@@ -269,8 +264,6 @@ export function MapProvider({ children }) {
       topics1: state.topics1,
       topicsN: state.topicsN,
       roadmapName: state.roadmapName,
-      loading: status === "loading",
-      count: status === "yes" ? state.roadmaps.length : 0,
       // Methods.
       getAllRoadmaps,
       getTopics0,
@@ -291,9 +284,9 @@ export function MapProvider({ children }) {
       state.topics1,
       state.topicsN,
       state.roadmapName,
-      status,
     ]
   );
+  console.log(memoizedValue)
   return (
     <MapContext.Provider value={memoizedValue}>{children}</MapContext.Provider>
   );
