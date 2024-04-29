@@ -4,12 +4,10 @@ import { MapContext } from "./map-context";
 
 import {
   useGetRoadmaps,
-  useGetTopics0,
   useHandleState,
   useHandleReset,
-  useGetTopics1,
-  useGetTopicsN,
-} from "../../apis/roadmap.js";
+  useGetTopicsByLevel,
+} from "../../apis";
 
 import { toast } from "react-toastify";
 import { mergeTopicsWithProgress, updateTopicState } from "./utils.js";
@@ -27,10 +25,10 @@ const Types = {
 
 const initialState = {
   roadmaps: [],
+  roadmapName: "",
   topics0: [],
   topics1: [],
   topicsN: [],
-  loading: true,
 };
 
 const reducer = (state, action) => {
@@ -38,20 +36,19 @@ const reducer = (state, action) => {
     case "INITIAL": {
       return {
         roadmaps: [],
-        loading: false,
       };
     }
     case "SET_ROADMAPS": {
       return {
         ...state,
         roadmaps: action.payload.roadmaps,
-        loading: false,
       };
     }
     case "SET_TOPICS_0": {
       return {
         ...state,
         topics0: action.payload.topics,
+        roadmapName: action.payload.enteredRoadmap,
       };
     }
     case "SET_TOPICS_1": {
@@ -108,9 +105,9 @@ const reducer = (state, action) => {
 // ----------------------------------------------------------------------
 export function MapProvider({ children }) {
   const get_roadmaps = useGetRoadmaps();
-  const get_topics0 = useGetTopics0();
-  const get_topics1 = useGetTopics1();
-  const get_topicsN = useGetTopicsN();
+  const get_topics0 = useGetTopicsByLevel("Zero");
+  const get_topics1 = useGetTopicsByLevel("One");
+  const get_topicsN = useGetTopicsByLevel("N");
   const handle_topics_state = useHandleState();
   const handle_reset = useHandleReset();
   const { authenticated } = useAuthContext();
@@ -126,8 +123,9 @@ export function MapProvider({ children }) {
           roadmaps: data,
         },
       });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+      console.error(error);
       dispatch({
         type: Types.INITIAL,
       });
@@ -137,7 +135,7 @@ export function MapProvider({ children }) {
   const getTopics0 = useCallback(
     async (roadmapId) => {
       try {
-        const { topics, progress } = await get_topics0(roadmapId);
+        const { topics, progress, roadmap } = await get_topics0(roadmapId);
 
         const topicsAfterMerging = await mergeTopicsWithProgress(
           progress,
@@ -148,9 +146,11 @@ export function MapProvider({ children }) {
           type: "SET_TOPICS_0",
           payload: {
             topics: topicsAfterMerging,
+            enteredRoadmap: roadmap.roadmap_title,
           },
         });
       } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
         console.log(error);
       }
     },
@@ -174,6 +174,7 @@ export function MapProvider({ children }) {
           },
         });
       } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
         console.log(error);
       }
     },
@@ -198,6 +199,7 @@ export function MapProvider({ children }) {
         });
       } catch (error) {
         console.log(error);
+        toast.error(error.response?.data?.message || error.message);
       }
     },
     [authenticated]
@@ -222,10 +224,11 @@ export function MapProvider({ children }) {
             topicLevel: topicLevel,
           },
         });
-        toast.success(`Topic state is updated successfully`);
-      } catch (err) {
-        if (err == "Not Authorized") toast.error("Your need to login first!!");
-        else toast.error("Something went wrong!");
+        const message = handleState?.data?.message || "success";
+        toast.info(message);
+      } catch (error) {
+        console.error(error.response?.data?.error);
+        toast.error(error.response?.data?.message || error.message);
       }
     },
     []
@@ -233,7 +236,7 @@ export function MapProvider({ children }) {
 
   const handleReset = useCallback(async (topicId, topicLevel, modalWindow) => {
     try {
-      const handleReset = await handle_reset(topicId, topicLevel);
+      await handle_reset(topicId, topicLevel);
 
       modalWindow(false);
       dispatch({
@@ -244,26 +247,23 @@ export function MapProvider({ children }) {
           topicLevel: topicLevel,
         },
       });
-      toast.success(`Topic state is updated successfully`);
-    } catch (err) {
-      if (err == "Not Authorized") toast.error("Your need to login first!!");
-      else toast.error("Something went wrong!");
+      toast.info("The topic state has been successfully reset");
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+      console.error(error);
     }
   }, []);
 
   // ----------------------------------------------------------------------
 
-  const checkRoadmaps = state.roadmaps ? "yes" : "no";
 
-  const status = state.loading ? "loading" : checkRoadmaps;
   const memoizedValue = useMemo(
     () => ({
       roadmaps: state.roadmaps,
       topics0: state.topics0,
       topics1: state.topics1,
       topicsN: state.topicsN,
-      loading: status === "loading",
-      count: status === "yes" ? state.roadmaps.length : 0,
+      roadmapName: state.roadmapName,
       // Methods.
       getAllRoadmaps,
       getTopics0,
@@ -283,9 +283,10 @@ export function MapProvider({ children }) {
       state.topics0,
       state.topics1,
       state.topicsN,
-      status,
+      state.roadmapName,
     ]
   );
+  console.log(memoizedValue)
   return (
     <MapContext.Provider value={memoizedValue}>{children}</MapContext.Provider>
   );

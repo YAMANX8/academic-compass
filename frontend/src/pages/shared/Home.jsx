@@ -1,62 +1,36 @@
 import { FaRegMap as Map } from "react-icons/fa";
 import Hero from "../../assets/images/hero.svg";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { RoadmapCard } from "../../components/index.js";
-import { Helmet } from 'react-helmet-async';
-import { paths } from "../../routes/paths.js";
-import axios from "../../apis/axios.js";
+import { Helmet } from "react-helmet-async";
+import { useMainContext } from "../../context/hooks/use-main-context.js";
+// ______________________________________________________________________
 function Home() {
-  // style variables
+  const { status, popularRoadmaps } = useMainContext();
   const heading = "text-[3rem] font-semibold tracking-tight leading-[125%]";
-  const status =
+  const statusStyle =
     "flex flex-col gap-4 items-center text-[32px] tracking-tight leading-[125%]";
-  // states
-  const [enrollments, setEnrollments] = useState(0);
-  const [roadmaps, setRoadmaps] = useState(0);
-  const [courses, setCourses] = useState(0);
-  const [instructors, setInstructors] = useState(0);
-  const [roadCards, setRoadCards] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get("/home");
-        // setRestaurants(response.data.data.restaurants);
-        const count = response.data.count;
-        setCourses(count.course.count);
-        setInstructors(count.instructor.count);
-        setRoadmaps(count.roadmap.count);
-        setEnrollments(count.enrollment.count);
-        setRoadCards(count.popularRoadmap);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    fetchData();
-  }, []);
   return (
     <>
       <Helmet>
         <title>Academic Compass: Home</title>
       </Helmet>
       <main className="w-[1200px]">
-        <section className="w-full flex gap-4 justify-between items-center">
+        <section className="flex w-full items-center justify-between gap-4">
           {/* ************************************************************ */}
-          <div className="flex flex-col gap-5 items-start">
+          <div className="flex flex-col items-start gap-5">
             <h1 className={`${heading} w-[488px]`}>
-              <span className="text-primary ">A Roadmap-Driven</span> Online
+              <span className="text-primary">A Roadmap-Driven</span> Online
               Education Platform
             </h1>
 
-            <p className="text-[32px] font-medium leading-[125%] w-[488px]">
+            <p className="w-[488px] text-[32px] font-medium leading-[125%]">
               Unlocking Knowledge and Success Through Guided Learning Paths
             </p>
-            {/* w-[262px] h-[44px]  bg-primary text-2xl ml-[120px] p-[6px] mr-[256px] mb-[207px] mt-[1px] font-medium items-center */}
             <Link
               // to={paths.roadmaps}
               to="/test"
-              className="flex gap-[10px] items-center font-semibold px-[20px] py-[10px] bg-primary text-light rounded-[5px]"
+              className="flex items-center gap-[10px] rounded-[5px] bg-primary px-[20px] py-[10px] font-semibold text-light"
             >
               <Map className="text-[25px]" />
               Explore Our Roadmaps
@@ -64,38 +38,38 @@ function Home() {
           </div>
 
           {/* ******************************************************** */}
-          <div className="w-[696px] h-[696px] ">
+          <div className="h-[696px] w-[696px] ">
             <img src={Hero} />
           </div>
         </section>
 
         {/* status section */}
-        <section className="dark py-[27px] flex justify-between w-full bg-dark dark:bg-secondary-dark text-light shadow-[1000px_0_0_0,-1000px_0_0_0] dark:shadow-secondary-dark shadow-dark transition-all duration-1000 ease-in-out-back">
-          <div className={`${status}`}>
-            <span>{enrollments}</span>
+        <section className="dark flex w-full justify-between bg-dark py-[27px] text-light shadow-[1000px_0_0_0,-1000px_0_0_0] shadow-dark transition-all duration-1000 ease-in-out-back dark:bg-secondary-dark dark:shadow-secondary-dark">
+          <div className={`${statusStyle}`}>
+            <span>{status.enrollments}</span>
             <p>Enrollments</p>
           </div>
-          <div className={`${status}`}>
-            <span>{roadmaps}</span>
+          <div className={`${statusStyle}`}>
+            <span>{status.roadmaps}</span>
             <p>Roadmaps</p>
           </div>
-          <div className={`${status}`}>
-            <span>{courses}</span>
+          <div className={`${statusStyle}`}>
+            <span>{status.courses}</span>
             <p>Courses</p>
           </div>
-          <div className={`${status}`}>
-            <span>{instructors}</span>
+          <div className={`${statusStyle}`}>
+            <span>{status.instructors}</span>
             <p>Instructors</p>
           </div>
         </section>
 
         {/* popular roadmaps section */}
         <section className="py-[48px]">
-          <h2 className="text-[48px] font-semibold leading-[125%] tracking-tight mb-12">
+          <h2 className="mb-12 text-[48px] font-semibold leading-[125%] tracking-tight">
             Popular Roadmaps
           </h2>
           <div className="flex flex-col gap-[60px]">
-            {roadCards.map((card, index) => (
+            {popularRoadmaps.map((card, index) => (
               <RoadmapCard
                 key={card.roadmap_id}
                 id={card.roadmap_id}

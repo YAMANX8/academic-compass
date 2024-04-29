@@ -10,7 +10,7 @@ function jwtGenerator(user_id, roleid) {
 
   //access token
   // eslint-disable-next-line no-undef
-  const token = jwt.sign(payload, process.env.jwtSecret, {
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: '5m',
   });
   // eslint-disable-next-line no-undef

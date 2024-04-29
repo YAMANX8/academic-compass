@@ -15,7 +15,7 @@ import { Helmet } from "react-helmet-async";
 import { useMapContext } from "../../../context/hooks/use-roadmap-context.js";
 // ___________________________________________________________________________
 const LevelZero = () => {
-  const { getTopics0, topics0, handleState, handleReset } = useMapContext();
+  const { getTopics0, topics0, handleState, handleReset, roadmapName } = useMapContext();
   const { authenticated } = useAuthContext();
   const { roadmapId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
@@ -93,7 +93,7 @@ const LevelZero = () => {
   return (
     <>
       <Helmet>
-        <title>[title] roadmap</title>
+        <title>{`${roadmapName}`} roadmap</title>
       </Helmet>
       {topics0.map((topic, index) => {
         //the first topic rendering

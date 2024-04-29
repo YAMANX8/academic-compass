@@ -8,7 +8,7 @@ router.get('/:courseId', async (req, res) => {
   try {
     // const studentId = req.params.studentId;
     const courseId = req.params.courseId;
-    const jwtToken = req.header('token');
+    const jwtToken = req.header('Authorization').split(' ')[1];
     let Course_info;
     let values = [];
     if (!jwtToken) {
@@ -80,7 +80,7 @@ router.get('/:courseId', async (req, res) => {
     else {
       // Extract student ID from the token and proceed with your logic
       // eslint-disable-next-line no-undef
-      const payload = jwt.verify(jwtToken, process.env.jwtSecret);
+      const payload = jwt.verify(jwtToken, process.env.JWT_SECRET);
       const studentId = payload.userId;
       const roleId = payload.roleId;
       try {

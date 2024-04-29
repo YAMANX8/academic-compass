@@ -4,12 +4,13 @@ import { useRefreshToken, useAuthContext } from "../auth/hooks";
 
 const useAxios = () => {
   const refresh = useRefreshToken();
-  const { user } = useAuthContext();
+  const { user, authenticated } = useAuthContext();
+
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
-        if (!config.headers["token"]) {
-          config.headers["token"] = user?.accessToken;
+        if (!config.headers["Authorization"]) {
+          config.headers["Authorization"] = `Bearer ${user?.accessToken || ""}`;
         }
         return config;
       },
@@ -20,10 +21,10 @@ const useAxios = () => {
       (response) => response,
       async (error) => {
         const prevRequest = error?.config;
-        if (error?.response?.status === 401 && !prevRequest?.sent) {
+        if (error?.response?.status === 401 && !prevRequest?.sent && authenticated) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
-          prevRequest.headers["token"] = newAccessToken;
+          prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevRequest);
         }
         return Promise.reject(error);
