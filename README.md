@@ -25,7 +25,7 @@ Academic Compass is a comprehensive educational platform designed to enhance the
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/yamanx8/academic-compass.git
+git clone https://github.com/YAMANX8/academic-compass.git
 ```
 
 2. **Navigate to the project directory**
