@@ -59,6 +59,7 @@ npm install
 - To run the backend:
 
 ```bash
+cd backend
 npm run dev
 ```
 
@@ -69,7 +70,7 @@ cd frontend
 npm run dev
 ```
 
-The application should now be running on `localhost:5000` (or another port specified in your environment variables).
+The client should now be running on `localhost:5173`, and the server should be running on `localhost:5000`.
 
 ## Technologies Used
 
@@ -79,7 +80,7 @@ The application should now be running on `localhost:5000` (or another port speci
 
 ## License
 
-This project is licensed under the MIT License.
+This project does not have any license.
 
 ## Acknowledgments
 
