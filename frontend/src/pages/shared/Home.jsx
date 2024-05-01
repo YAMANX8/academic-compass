@@ -44,7 +44,7 @@ function Home() {
         </section>
 
         {/* status section */}
-        <section className="dark flex w-full justify-between bg-dark py-[27px] text-light shadow-[1000px_0_0_0,-1000px_0_0_0] shadow-dark transition-all duration-1000 ease-in-out-back dark:bg-secondary-dark dark:shadow-secondary-dark">
+        <section className=" flex w-full justify-between bg-dark py-[27px] text-light shadow-[1000px_0_0_0,-1000px_0_0_0] shadow-dark transition-all duration-1000 ease-in-out-back">
           <div className={`${statusStyle}`}>
             <span>{status.enrollments}</span>
             <p>Enrollments</p>

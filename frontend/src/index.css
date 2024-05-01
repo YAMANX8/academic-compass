@@ -3,6 +3,59 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --color-primary-lighter: 212, 219, 252;
+    --color-primary-light: 122, 139, 242;
+    --color-primary-main: 37, 58, 212;
+    --color-primary-dark: 18, 31, 152;
+    --color-primary-darker: 7, 13, 101;
+
+    --color-secondary-lighter: 249, 251, 254;
+    --color-secondary-light: 238, 243, 252;
+    --color-secondary-main: 224, 231, 247;
+    --color-secondary-dark: 112, 128, 177;
+    --color-secondary-darker: 43, 56, 118;
+
+    --color-accent-lighter: 240, 209, 250;
+    --color-accent-light: 188, 116, 230;
+    --color-accent-main: 106, 30, 173;
+    --color-accent-dark: 61, 15, 124;
+    --color-accent-darker: 30, 5, 83;
+
+    --color-success-lighter: 236, 253, 212;
+    --color-success-light: 181, 244, 125;
+    --color-success-main: 103, 219, 41;
+    --color-success-dark: 51, 157, 20;
+    --color-success-darker: 17, 105, 7;
+
+    --color-info-lighter: 203, 254, 252;
+    --color-info-light: 101, 240, 254;
+    --color-info-main: 0, 193, 252;
+    --color-info-dark: 0, 112, 181;
+    --color-info-darker: 0, 57, 120;
+
+    --color-warning-lighter: 254, 246, 204;
+    --color-warning-light: 254, 220, 102;
+    --color-warning-main: 252, 181, 2;
+    --color-warning-dark: 181, 119, 1;
+    --color-warning-darker: 120, 72, 0;
+
+    --color-error-lighter: 254, 230, 212;
+    --color-error-light: 252, 160, 128;
+    --color-error-main: 247, 64, 44;
+    --color-error-dark: 177, 22, 32;
+    --color-error-darker: 118, 8, 33;
+
+    --color-dark: 7, 11, 39;
+    --color-light: 238, 239, 252;
+  }
+  .dark {
+
+    --color-dark: 238, 239, 252;
+    --color-light: 7, 11, 39;
+  }
+}
 body {
   padding: 0;
   margin: 0;
@@ -22,7 +75,7 @@ body::-webkit-scrollbar-track {
   border-radius: 0;
 }
 .dark body::-webkit-scrollbar-track {
-  background: #0D1832;
+  background: #0d1832;
 }
 
 /* Handle */
