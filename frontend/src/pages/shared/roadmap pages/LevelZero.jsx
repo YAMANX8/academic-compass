@@ -8,19 +8,21 @@ import {
   EndLineLeft,
   Topic,
   Modal,
+  Button,
 } from "../../../components";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuthContext } from "../../../auth/hooks";
 import { Helmet } from "react-helmet-async";
 import { useMapContext } from "../../../context/hooks/use-roadmap-context.js";
+import { MdSearch, MdOutlineZoomInMap } from "react-icons/md";
+
 // ___________________________________________________________________________
 const LevelZero = () => {
-  const { getTopics0, topics0, handleState, handleReset, roadmapName } = useMapContext();
+  const { getTopics0, topics0, handleState, handleReset, roadmapName } =
+    useMapContext();
   const { authenticated } = useAuthContext();
   const { roadmapId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const style = "p-4 rounded-md text-dark border-2";
-  const important = "bg-gradient-to-r from-primary to-accent text-light";
   const [modalData, setModalData] = useState({
     id: "",
     level: "",
@@ -34,57 +36,67 @@ const LevelZero = () => {
   }, [authenticated]);
 
   let modalTemplate = (
-    <div className="flex flex-col text-[20px] gap-6">
+    <div className="flex flex-col gap-6 text-[20px]">
       <div>
         <h3>Change the state:</h3>
-        <div className="flex justify-evenly mt-4">
-          <button
-            className={`${style} border-primary`}
+        <div className="mt-4 flex justify-evenly">
+          <Button
+            color="error"
+            variant="soft"
+            size="lg"
             onClick={() =>
               handleReset(modalData.id, modalData.level, setIsOpen)
             }
           >
             Reset
-          </button>
-          <button
-            className={`${style} border-accent`}
+          </Button>
+          <Button
+            variant="soft"
+            size="lg"
             onClick={() =>
               handleState(3, modalData.id, modalData.level, setIsOpen)
             }
           >
             Done
-          </button>
-          <button
-            className={`${style} border-green`}
+          </Button>
+          <Button
+            color="accent"
+            variant="soft"
+            size="lg"
             onClick={() =>
               handleState(2, modalData.id, modalData.level, setIsOpen)
             }
           >
             Inprogress
-          </button>
-          <button
-            className={`${style} border-advance`}
+          </Button>
+          <Button
+            color="warning"
+            variant="soft"
+            size="lg"
             onClick={() =>
               handleState(1, modalData.id, modalData.level, setIsOpen)
             }
           >
             Skip it
-          </button>
+          </Button>
         </div>
       </div>
       <div className="border-t-2 border-dark/20 pt-4">
         <h3>Or make another action:</h3>
-        <div className="flex justify-evenly mt-4">
-          <Link
-            to={modalData.search}
-            className={`${style} ${important}`}
+        <div className="mt-4 flex justify-evenly">
+          <Button
+            variant="outlined"
+            size="lg"
+            page={modalData.search}
             state={{ byText: false, level1: true }}
           >
+            <MdSearch size={24} />
             Search for a course that cover this topic
-          </Link>
-          <Link to={modalData.deeper} className={`${style} ${important}`}>
+          </Button>
+          <Button size="lg" page={modalData.deeper}>
+            <MdOutlineZoomInMap size={24} />
             Go Deeper!
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

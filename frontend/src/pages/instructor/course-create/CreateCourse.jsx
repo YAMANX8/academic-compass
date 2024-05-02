@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import FirstStep from "./sections/FirstStep";
 import SecondStep from "./sections/SecondStep";
@@ -7,6 +7,7 @@ import ThirdStep from "./sections/ThirdStep";
 import axios from "src/apis/axios";
 import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
+import { Button } from "../../../components";
 
 function CreateCourse() {
   const navigate = useNavigate();
@@ -48,8 +49,6 @@ function CreateCourse() {
       setBtn((prev) => ({ ...prev, type: "submit" }));
     }
   };
-  //  شكل ابو راتب
-  // أي على عيني حارتك ☻ أبو حميد
   const handleBackClick = () => {
     if (currentStep > 2) {
       setBtn((prev) => ({ ...prev, type: "button", title: "Continue" }));
@@ -70,7 +69,7 @@ function CreateCourse() {
         throw new Error("Course title is required!");
       if (courseData.title.length > 60)
         throw new Error(
-          "Your course title should not exceed 60 characters in length"
+          "Your course title should not exceed 60 characters in length",
         );
       const res = await axios.post(
         `/instructor/createCourse`,
@@ -83,7 +82,7 @@ function CreateCourse() {
           headers: {
             token: user?.accessToken,
           },
-        }
+        },
       );
       toast.success("Course created successfully");
       navigate(`/instructor/dashboard`);
@@ -115,25 +114,23 @@ function CreateCourse() {
         <title>Create new course</title>
       </Helmet>
       <form
-        className="w-[1200px] flex flex-col justify-between min-h-[75vh]"
+        className="flex min-h-[75vh] w-[1200px] flex-col justify-between"
         onSubmit={handleSubmit}
       >
         <div>
           <div className="flex flex-col gap-12">
             <div>
               <h1 className="py-4 text-[24px]">Step{currentStep}</h1>
-              <div className="h-[10px] w-full max-w-screen-xl m-auto bg-gray-300 rounded-[10px] relative">
+              <div className="relative m-auto h-[10px] w-full max-w-screen-xl rounded-[10px] bg-gray-300">
                 <div
-                  className="h-full bg-blue-800 rounded-[10px] transition-all duration-500 ease-in-out-back"
+                  className="h-full rounded-[10px] bg-blue-800 transition-all duration-500 ease-in-out-back"
                   style={{ width: `${(currentStep / 3) * 100}%` }}
                 ></div>
               </div>
             </div>
-            {/* القسم الاول  */}
             {currentStep === 1 && (
               <FirstStep courseData={courseData} handleChange={handleChange} />
             )}
-            {/* القسم الثاتي */}
             {currentStep === 2 && (
               <SecondStep
                 courseData={courseData}
@@ -141,7 +138,6 @@ function CreateCourse() {
                 list={list.types}
               />
             )}
-            {/* القسم الثالث */}
             {currentStep === 3 && (
               <ThirdStep
                 courseData={courseData}
@@ -152,20 +148,13 @@ function CreateCourse() {
           </div>
         </div>
         <div className="relative flex justify-between py-4">
-          <hr className="absolute h-[2px] -left-40 -right-40 bg-dark/50 -top-[1px]" />
-          <Link
-            onClick={handleBackClick}
-            className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-primary bg-light border-primary border-[1px]"
-          >
+          <hr className="absolute -left-40 -right-40 -top-[1px] h-[2px] bg-dark/50" />
+          <Button size="lg" variant="outlined" type="button" onClick={handleBackClick}>
             {backBtn}
-          </Link>
-          <button
-            type={btn.type}
-            onClick={handleContinueClick}
-            className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-          >
+          </Button>
+          <Button size="lg" type={btn.type} onClick={handleContinueClick}>
             {btn.title}
-          </button>
+          </Button>
         </div>
       </form>
     </>

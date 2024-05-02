@@ -5,7 +5,7 @@ import { CourseContent } from "src/components";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
-
+import { Button } from "../../../components";
 const ARTICLE_URL = "/article";
 
 function Article() {
@@ -44,7 +44,7 @@ function Article() {
           headers: {
             token: user?.accessToken,
           },
-        }
+        },
       );
 
       setData(response.data.response);
@@ -65,7 +65,7 @@ function Article() {
           headers: {
             token: user?.accessToken,
           },
-        }
+        },
       );
     } catch (error) {
       console.error(error);
@@ -78,28 +78,25 @@ function Article() {
       </Helmet>
       <section className="w-full ">
         <div className=" flex  ">
-          <div className="flex-1 flex justify-center ">
+          <div className="flex flex-1 justify-center ">
             <div>
-              <div className="max-w-3xl w-full mx-auto p-[24px] bg-white shadow-lg rounded-lg overflow-hidden">
-                <div className="mb-6 overflow-y-auto custom-scrollbar h-96">
-                  <p className="text-gray-700 hover:text-blue-800 text-lg  leading-relaxed  transition duration-300">
+              <div className="mx-auto w-full max-w-3xl overflow-hidden rounded-lg bg-white p-[24px] shadow-lg">
+                <div className="custom-scrollbar mb-6 h-96 overflow-y-auto">
+                  <p className="text-lg leading-relaxed text-gray-700  transition  duration-300 hover:text-blue-800">
                     {data.article}
                   </p>
                 </div>
               </div>
               <div className="ml-[510px] py-[20px]">
-                <button
-                  onClick={handleCompletion}
-                  className="flex justify-center items-center gap-[10px] px-[70px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-                >
+                <Button size="lg" onClick={handleCompletion}>
                   Completion Flag
-                </button>
+                </Button>
               </div>
             </div>
           </div>
 
           <div>
-            <div className="bg-secondary dark:bg-secondary-dark h-full w-[400px] transition-all duration-1000 ease-in-out-back">
+            <div className="h-full w-[400px] bg-secondary transition-all duration-1000 ease-in-out-back dark:bg-secondary-dark">
               <CourseContent courseContent={data.courseContent} />
             </div>
           </div>

@@ -22,16 +22,16 @@ const General = ({
 
   return (
     <>
-      <h3 className="text-[32px] tracking-tight font-semibold ">
+      <h3 className="text-[32px] font-semibold tracking-tight ">
         General Information
       </h3>
 
       <div>
-        <h4 className="text-[22px] tracking-tight font-semibold mb-4">
+        <h4 className="mb-4 text-[22px] font-semibold tracking-tight">
           Profile Picture Upload
         </h4>
         <div className="flex gap-8">
-          <div className=" w-[162px] aspect-square flex justify-center items-center overflow-hidden rounded-full bg-primary text-light text-[36px] font-semibold">
+          <div className=" flex aspect-square w-[162px] items-center justify-center overflow-hidden rounded-full bg-primary text-[36px] font-semibold text-light">
             {image ? (
               <img
                 className="object-cover"
@@ -48,16 +48,12 @@ const General = ({
           </div>
           <div className="flex flex-col justify-between tracking-tight">
             <div>
-              <p className="font-medium text-[20px]">{`${firstName} ${lastName}`}</p>
+              <p className="text-[20px] font-medium">{`${firstName} ${lastName}`}</p>
               <p className="pt-[16px] text-dark/50 dark:text-light/50">
                 {(city || country) && `${city}, ${country}`}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => photo.current.click()}
-              className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-            >
+            <Button type="button" onClick={() => photo.current.click()}>
               <input
                 type="file"
                 name="image"
@@ -67,20 +63,20 @@ const General = ({
               />
               Upload New Photo
               <Upload />
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
       <div>
-        <h4 className="text-[22px] tracking-tight font-semibold mb-4">
+        <h4 className="mb-4 text-[22px] font-semibold tracking-tight">
           Address
         </h4>
-        <div className="flex gap-4 justify-between">
-          <div className="grid gap-2 flex-1">
+        <div className="flex justify-between gap-4">
+          <div className="grid flex-1 gap-2">
             <label
               htmlFor="country"
-              className="font-medium text-[22px] leading-l"
+              className="text-[22px] font-medium leading-l"
             >
               Country
             </label>
@@ -94,8 +90,8 @@ const General = ({
               onChange={handleChange}
             />
           </div>
-          <div className="grid gap-2 flex-1">
-            <label htmlFor="city" className="font-medium text-[22px] leading-l">
+          <div className="grid flex-1 gap-2">
+            <label htmlFor="city" className="text-[22px] font-medium leading-l">
               City
             </label>
             <input

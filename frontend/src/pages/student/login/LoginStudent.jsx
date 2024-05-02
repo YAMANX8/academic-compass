@@ -5,11 +5,11 @@ import {
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 import { useAuthContext } from "src/auth/hooks";
 
 import { Helmet } from "react-helmet-async";
 import { paths } from "src/routes/paths";
+import { Button } from "../../../components";
 
 function LoginStudent() {
   const { studentLogin } = useAuthContext();
@@ -92,18 +92,19 @@ function LoginStudent() {
           </label>
         </div>
 
-        <button className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px] text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50">
+        <Button size="lg" className="mt-[16px] w-full">
           LOGIN
-          <ReturnLeft className="text-[24px]" />
-        </button>
+          <ReturnLeft size={24} />
+        </Button>
       </form>
-      <Link
-        className="text-[14px] underline text-primary dark:text-accent-dark"
-        to={paths.auth.student.register}
+      <Button
+        variant="text"
+        size="sm"
+        page={paths.auth.student.register}
         style={{ alignSelf: "flex-start" }}
       >
         Register new Account
-      </Link>
+      </Button>
     </>
   );
 }

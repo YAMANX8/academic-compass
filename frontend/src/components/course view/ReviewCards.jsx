@@ -4,7 +4,7 @@ import {
   BsFillStarFill as Full,
   BsStar as Star,
 } from "react-icons/bs";
-import { Modal } from "../index";
+import { Modal, Button } from "../index";
 
 const ReviewCards = ({ reviews }) => {
   // هذه الجزء من الكود مُعد لمعرفة ما إذا كان التعليق يتجاوز الحد المحدد أم لا.
@@ -31,21 +31,21 @@ const ReviewCards = ({ reviews }) => {
       {reviews.map((review, index) => (
         <div
           key={review.id}
-          className="p-[16px] shadow-[0_4px_4px] shadow-black/20 tracking-tight"
+          className="p-[16px] tracking-tight shadow-[0_4px_4px] shadow-black/20"
         >
           <div className="flex gap-4">
             <div className="max-w-[50px]">
               <img
                 src={review.img}
                 alt="Profile"
-                className="aspect-square object-cover rounded-full"
+                className="aspect-square rounded-full object-cover"
               />
             </div>
             <div>
               <span>
                 {review.fname} {review.lname}
               </span>
-              <div className="flex gap-[5px] items-center text-[12px]">
+              <div className="flex items-center gap-[5px] text-[12px]">
                 {[...Array(Math.floor(review.stars))].map((_, starIndex) => (
                   <Full key={starIndex} className="text-yellow-500" />
                 ))}
@@ -67,7 +67,7 @@ const ReviewCards = ({ reviews }) => {
             <p
               className={`comment-overflow relative ${
                 overflowStatus[index] &&
-                "before:absolute before:bg-gradient-to-b before:from-transparent before:to-light/90 dark:before:to-dark/90 before:pointer-events-none before:h-full before:w-full"
+                "before:pointer-events-none before:absolute before:h-full before:w-full before:bg-gradient-to-b before:from-transparent before:to-light/90 dark:before:to-dark/90"
               }`}
               ref={(el) => (containerRefs.current[index] = el)}
               style={{}}
@@ -75,15 +75,15 @@ const ReviewCards = ({ reviews }) => {
               {review.comment}
             </p>
             {overflowStatus[index] && (
-              <button
-                className="flex justify-center items-center mt-[16px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+              <Button
+                size="sm"
                 onClick={() => {
                   setIsOpen(true);
                   setModalContent(review.comment);
                 }}
               >
                 Show more
-              </button>
+              </Button>
             )}
           </div>
         </div>

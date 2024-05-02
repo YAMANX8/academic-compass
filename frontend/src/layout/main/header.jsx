@@ -6,7 +6,7 @@ import { CiLogin as Login } from "react-icons/ci";
 import { AiOutlineSearch as Search } from "react-icons/ai";
 import { BsPerson as Person } from "react-icons/bs";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { Switcher } from "../../components";
+import { Switcher, Button } from "../../components";
 import { paths } from "../../routes/paths";
 import { useAuthContext } from "../../auth/hooks";
 const Header = () => {
@@ -38,14 +38,14 @@ const Header = () => {
   const meunItemStyle =
     "cursor-pointer px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900 active:bg-accent active:text-light";
   return (
-    <nav className=" px-[120px] py-4 flex justify-between transition-colors duration-1000 ease-in-out-back text-dark  dark:text-light bg-light dark:bg-dark shadow-[0_0_20px_rgba(0,0,0)] sticky w-full top-0 z-50">
+    <nav className=" sticky top-0 z-50 flex w-full justify-between bg-light px-[120px]  py-4 text-dark shadow-[0_0_20px_rgba(0,0,0)] transition-colors duration-1000 ease-in-out-back dark:bg-dark dark:text-light">
       <div>
         <Logo className="w-[150px]" />
       </div>
-      <div className="flex gap-[16px] items-center">
+      <div className="flex items-center gap-[16px]">
         <form
           onSubmit={handleSubmit}
-          className="flex relative rounded-full w-11 focus-within:w-[250px] focus-within:bg-secondary dark:focus-within:bg-secondary-dark transition-all duration-1000 ease-in-out-back text-dark dark:text-light"
+          className="relative flex w-11 rounded-full text-dark transition-all duration-1000 ease-in-out-back focus-within:w-[250px] focus-within:bg-secondary dark:text-light dark:focus-within:bg-secondary-dark"
         >
           <input
             type="search"
@@ -53,41 +53,35 @@ const Header = () => {
             onChange={(e) => {
               setSearch(e.target.value);
             }}
-            className="w-full py-[10px] pl-9 pr-[10px] rounded-full bg-transparent outline-none z-10"
+            className="z-10 w-full rounded-full bg-transparent py-[10px] pl-9 pr-[10px] outline-none"
           />
-          <Search className="font-semibold absolute left-[10px] top-[10px] text-[24px]" />
+          <Search className="absolute left-[10px] top-[10px] text-[24px] font-semibold" />
         </form>
-        <Link to={paths.roadmaps} className="font-semibold">
+        <Button variant="text" page={paths.roadmaps} className="!text-dark">
           Roadmaps{" "}
-        </Link>
-        <Link to={paths.main.others} className="font-semibold">
+        </Button>
+        <Button variant="text" page={paths.main.others} className="!text-dark">
           Become part of Academic compass
-        </Link>
+        </Button>
         {!authenticated ? (
           <>
-            <Link
-              to={paths.auth.student.login}
-              className={`flex bg-light text-primary border-primary border-[1px] border-solid ${btnStyle}`}
-            >
-              <Login className="text-[24px]" />
+            <Button variant="outlined" page={paths.auth.student.login}>
+              <Login size={24} />
               Log in
-            </Link>
-            <Link
-              to={paths.auth.student.register}
-              className={`flex bg-primary text-light ${btnStyle}`}
-            >
-              <Person className="text-[24px]" />
+            </Button>
+            <Button page={paths.auth.student.register}>
+              <Person size={24} />
               Sign up
-            </Link>
+            </Button>
           </>
         ) : (
-          <div className="flex justify-between gap-4 items-center">
-            <div className="w-[1px] bg-dark dark:bg-light self-stretch transition-all duration-1000 ease-in-out-back rounded-full"></div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="w-[1px] self-stretch rounded-full bg-dark transition-all duration-1000 ease-in-out-back dark:bg-light"></div>
             <Link
               to={
                 user.role_id == 2 ? paths.student.root : paths.instructor.root
               }
-              className="flex justify-center items-center w-[45px] overflow-clip aspect-square rounded-full bg-primary text-light"
+              className="flex aspect-square w-[45px] items-center justify-center overflow-clip rounded-full bg-primary text-light"
             >
               {userInfo.imagePath ? (
                 <img
@@ -101,29 +95,30 @@ const Header = () => {
                 </span>
               )}
             </Link>
-            <p className="font-semibold tracking-tight text-primary dark:text-accent-dark transition-all duration-1000 ease-in-out-back">
+            <p className="font-semibold tracking-tight text-primary transition-all duration-1000 ease-in-out-back dark:text-accent-dark">
               {userInfo.firstName} {userInfo.lastName}
             </p>
 
             {/* menu */}
             <div className="relative text-center">
               <div>
-                <button
+                <Button
                   type="button"
-                  className="w-full rounded-[10px] px-4 py-2  text-sm font-medium  hover:bg-secondary dark:hover:bg-secondary-dark focus:outline-none"
+                  size="sm"
+                  variant="text"
                   onClick={() => setIsOpen(!isOpen)}
                 >
                   {isOpen ? (
-                    <BiChevronUp className="text-[24px]" />
+                    <BiChevronUp className="text-[24px] text-dark" />
                   ) : (
-                    <BiChevronDown className="text-[24px]" />
+                    <BiChevronDown className="text-[24px] text-dark" />
                   )}
-                </button>
+                </Button>
               </div>
 
               {isOpen && (
                 <div
-                  className={`absolute right-0 mt-2 w-56 rounded-md shadow-lg text-dark dark:text-light bg-secondary dark:bg-secondary-dark ring-1 ring-dark/20 dark:ring-light/20  focus:outline-none transition-all duration-1000 ease-in-out-back`}
+                  className={`absolute right-0 mt-2 w-56 rounded-md bg-secondary text-dark shadow-lg ring-1 ring-dark/20 transition-all duration-1000 ease-in-out-back  focus:outline-none dark:bg-secondary-dark dark:text-light dark:ring-light/20`}
                 >
                   <ul className="py-1">
                     <li
@@ -145,7 +140,7 @@ const Header = () => {
                     </li>
 
                     {confirmLogout && (
-                      <ul className="border-t border-dark/20 dark:border-light/20 mt-2 pt-2">
+                      <ul className="mt-2 border-t border-dark/20 pt-2 dark:border-light/20">
                         <li
                           className={`${meunItemStyle} text-red-500`}
                           onClick={handleLogout}
