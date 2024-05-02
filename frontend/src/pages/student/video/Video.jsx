@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import axios from "src/apis/axios";
 import { BsPlayCircleFill as Library } from "react-icons/bs";
-import { CourseContent } from "src/components";
+import { CourseContent, Button } from "../../../components";
 import { useAuthContext } from "src/auth/hooks";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -61,7 +61,7 @@ function Video() {
           headers: {
             token: user?.accessToken,
           },
-        }
+        },
       );
 
       setCourseContent(response.data.response);
@@ -82,7 +82,7 @@ function Video() {
           headers: {
             token: user?.accessToken,
           },
-        }
+        },
       );
     } catch (error) {
       console.error(error);
@@ -96,12 +96,12 @@ function Video() {
       </Helmet>
       <section className="w-full">
         <div className="flex">
-          <div className="flex-1 flex justify-center">
+          <div className="flex flex-1 justify-center">
             <div>
               <div>
-                <span className="font-semibold text-[48px]">Item title</span>
+                <span className="text-[48px] font-semibold">Item title</span>
               </div>
-              <div className="mt-[48px] mb-[32px]">
+              <div className="mb-[32px] mt-[48px]">
                 <ReactPlayer
                   url={courseContent.video}
                   style={{
@@ -123,18 +123,15 @@ function Video() {
                   }}
                 />
                 <div className="ml-[500px] py-[20px]">
-                  <button
-                    onClick={handleCompletion}
-                    className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-                  >
+                  <Button size="lg" onClick={handleCompletion}>
                     Completion Flag
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
           <div>
-            <div className="bg-secondary dark:bg-secondary-dark h-full w-[400px] transition-all duration-1000 ease-in-out-back">
+            <div className="h-full w-[400px] bg-secondary transition-all duration-1000 ease-in-out-back dark:bg-secondary-dark">
               <CourseContent courseContent={courseContent.courseContent} />
             </div>
           </div>

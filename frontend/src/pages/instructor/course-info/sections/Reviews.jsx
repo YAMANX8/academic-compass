@@ -6,6 +6,7 @@ import {
 } from "react-icons/bs";
 import Modal from "src/components/interface/Modal";
 import { Helmet } from "react-helmet-async";
+import { Button } from "../../../../components";
 
 const Reviews = ({ data }) => {
   const containerRefs = useRef([]);
@@ -35,28 +36,28 @@ const Reviews = ({ data }) => {
       </Helmet>
       <div>
         <div className="grid grid-cols-2 gap-4">
-          {data.slice(0, displayedReviewsCount).map((review, index) => (
+          {data?.slice(0, displayedReviewsCount).map((review, index) => (
             <div
               key={review.id}
-              className="p-[16px] shadow-[0_4px_4px] shadow-black/20 tracking-tight"
+              className="p-[16px] tracking-tight shadow-[0_4px_4px] shadow-black/20"
             >
               <div className="flex gap-4">
                 <div className="max-w-[50px]">
                   <img
                     src={review.img}
                     alt={`${review.fname} ${review.lname}`}
-                    className="aspect-square object-cover rounded-full"
+                    className="aspect-square rounded-full object-cover"
                   />
                 </div>
                 <div>
                   <span>
                     {review.fname} {review.lname}
                   </span>
-                  <div className="flex gap-[5px] items-center text-[12px]">
+                  <div className="flex items-center gap-[5px] text-[12px]">
                     {[...Array(Math.floor(review.stars))].map(
                       (_, starIndex) => (
                         <Full key={starIndex} className="text-yellow-500" />
-                      )
+                      ),
                     )}
                     {review.stars % 1 !== 0 && (
                       <Half className="text-yellow-500" />
@@ -64,7 +65,7 @@ const Reviews = ({ data }) => {
                     {[...Array(5 - Math.ceil(review.stars))].map(
                       (_, starIndex) => (
                         <Star key={starIndex} className="text-yellow-500" />
-                      )
+                      ),
                     )}
                     <span className="ml-2 text-accent/70 dark:text-accent-dark/70">
                       {review.stars}
@@ -78,33 +79,32 @@ const Reviews = ({ data }) => {
 
               <div>
                 <p
-                  className="comment-overflow relative overflow-hidden max-h-[100px]"
+                  className="comment-overflow relative max-h-[100px] overflow-hidden"
                   ref={(el) => (containerRefs.current[index] = el)}
                 >
                   {review.comment}
                 </p>
                 {(overflowStatus[index] || review.comment.length > 100) && (
-                  <button
-                    className="flex justify-center items-center mt-[16px] px-[20px] py-[10px] font-semibold rounded-[5px] text-primary border border-accent bg-gradient-to-r"
+                  <Button
+                    className="mt-[16px]"
                     onClick={() => {
                       setIsOpen(true);
                       setModalContent(review.comment);
                     }}
                   >
-                    Show more
-                  </button>
+                    Show More
+                  </Button>
                 )}
               </div>
             </div>
           ))}
         </div>
 
-        {/* إذا كان هناك المزيد من التعليقات للعرض، فسيظهر الزر */}
         <div
           onClick={() => setDisplayedReviewsCount(displayedReviewsCount + 4)}
-          className="flex justify-center items-center mt-[16px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
+          className="mt-[16px]"
         >
-          <button>Load more reviews</button>
+          <Button>Load more reviews</Button>
         </div>
 
         <Modal

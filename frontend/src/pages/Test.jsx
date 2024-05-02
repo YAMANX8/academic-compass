@@ -1,10 +1,19 @@
 import React from "react";
 import { useRefreshToken } from "../auth/hooks";
-import { Logo, SplashScreen } from "../components";
+import { Logo, SplashScreen, Button } from "../components";
 const Test = () => {
   const refresh = useRefreshToken();
 
-  return <Logo className="w-[500px]" />;
+  return (
+    <>
+      <Button color="primary">Hello world!</Button>
+      <Button color="secondary">Hello world!</Button>
+      <Button color="accent">Hello world!</Button>
+      <Button color="success">Hello world!</Button>
+      <Button color="info">Hello world!</Button>
+      <Button color="warning">Hello world!</Button>
+    </>
+  );
 };
 
 export default Test;

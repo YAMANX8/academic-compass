@@ -4,7 +4,7 @@ import { IoIosInformationCircleOutline as InformationIcon } from "react-icons/io
 import { MdOutlineSecurity as SecurityIcon } from "react-icons/md";
 import { BsPerson as Person } from "react-icons/bs";
 
-import { General, Security, Account } from "src/components";
+import { General, Security, Account, Button } from "../../../components";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
 import axios from "src/apis/axios";
 import { useAuthContext } from "src/auth/hooks";
@@ -45,7 +45,7 @@ function StudentSettings() {
       city: user.city == null ? "" : user.city,
     }));
     setImage(
-      user.image == "http://localhost:5000/image/null" ? "" : user.image
+      user.image == "http://localhost:5000/image/null" ? "" : user.image,
     );
   }, []);
 
@@ -84,12 +84,12 @@ function StudentSettings() {
         <title>Settings</title>
       </Helmet>
       <form className="w-[1200px]" onSubmit={handleSubmit}>
-        <h2 className="pb-[16px] font-semibold text-[48px] leading-l tracking-tight text-dark dark:text-light">
+        <h2 className="pb-[16px] text-[48px] font-semibold leading-l tracking-tight text-dark dark:text-light">
           Settings
         </h2>
 
-        <div className="bg-secondary rounded-[10px] dark:bg-secondary-dark text-dark dark:text-light flex transition-all duration-1000 ease-in-out-back">
-          <ul className="p-8 flex flex-col gap-8">
+        <div className="flex rounded-[10px] bg-secondary text-dark transition-all duration-1000 ease-in-out-back dark:bg-secondary-dark dark:text-light">
+          <ul className="flex flex-col gap-8 p-8">
             <li>
               <Link
                 className={`${tabStyle} ${
@@ -131,9 +131,9 @@ function StudentSettings() {
           </ul>
 
           {/* line */}
-          <div className="border-l border-r border-dark/10 dark:border-light/10 my-8"></div>
+          <div className="my-8 border-l border-r border-dark/10 dark:border-light/10"></div>
 
-          <div className="p-8 flex flex-col gap-8 flex-1 ">
+          <div className="flex flex-1 flex-col gap-8 p-8 ">
             {selectedLink === "general" && (
               <General
                 country={formData.country}
@@ -164,12 +164,9 @@ function StudentSettings() {
                 handleChange={handleChange}
               />
             )}
-            <button
-              type="submit"
-              className="self-end flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-            >
+            <Button type="submit" className="self-end">
               Save Changes <Solid className="text-[25px]" />
-            </button>
+            </Button>
           </div>
         </div>
       </form>

@@ -1,18 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import React, { useState } from "react";
 import { Logo } from "../../components";
 import { CiLogin as Login } from "react-icons/ci";
 import { AiOutlineSearch as Search } from "react-icons/ai";
 import { BsPerson as Person } from "react-icons/bs";
-import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { Switcher } from "../../components";
+import { Switcher, Button } from "../../components";
 import { paths } from "../../routes/paths";
-import { useAuthContext } from "../../auth/hooks";
 const Header = () => {
-  const { authenticated, logout, user } = useAuthContext();
-  const [confirmLogout, setConfirmLogout] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
@@ -22,30 +17,16 @@ const Header = () => {
       state: { byText: true },
     });
   };
-  const handleLogout = () => {
-    logout();
-    setConfirmLogout(false); // لإغلاق النافذة
-    setIsOpen(false);
-  };
-  const userInfo = {
-    firstName: user?.first_name == null ? "user" : user?.first_name,
-    lastName: user?.last_name == null ? "" : user?.last_name,
-    imagePath:
-      user?.picture == "http://localhost:5000/image/null" ? "" : user?.picture,
-  };
-  const btnStyle =
-    "px-[20px] py-[10px] rounded-[5px] font-semibold	gap-[10px] items-center text-[16px]";
-  const meunItemStyle =
-    "cursor-pointer px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900 active:bg-accent active:text-light";
+
   return (
-    <nav className=" px-[120px] py-4 flex justify-between transition-colors duration-1000 ease-in-out-back text-dark  dark:text-light bg-light dark:bg-dark shadow-[0_0_20px_rgba(0,0,0)] sticky w-full top-0 z-50">
+    <nav className=" sticky top-0 z-50 flex w-full justify-between bg-light px-[120px]  py-4 text-dark shadow-[0_0_20px_rgba(0,0,0)] transition-colors duration-1000 ease-in-out-back dark:bg-dark dark:text-light">
       <div>
         <Logo className="w-[150px]" />
       </div>
-      <div className="flex gap-[16px] items-center">
+      <div className="flex items-center gap-[16px]">
         <form
           onSubmit={handleSubmit}
-          className="flex relative rounded-full w-11 focus-within:w-[250px] focus-within:bg-secondary dark:focus-within:bg-secondary-dark transition-all duration-1000 ease-in-out-back text-dark dark:text-light"
+          className="relative flex w-11 rounded-full text-dark transition-all duration-1000 ease-in-out-back focus-within:w-[250px] focus-within:bg-secondary dark:text-light dark:focus-within:bg-secondary-dark"
         >
           <input
             type="search"
@@ -53,120 +34,26 @@ const Header = () => {
             onChange={(e) => {
               setSearch(e.target.value);
             }}
-            className="w-full py-[10px] pl-9 pr-[10px] rounded-full bg-transparent outline-none z-10"
+            className="z-10 w-full rounded-full bg-transparent py-[10px] pl-9 pr-[10px] outline-none"
           />
-          <Search className="font-semibold absolute left-[10px] top-[10px] text-[24px]" />
+          <Search className="absolute left-[10px] top-[10px] text-[24px] font-semibold" />
         </form>
-        <Link to={paths.roadmaps} className="font-semibold">
+        <Button variant="text" page={paths.roadmaps} className="!text-dark">
           Roadmaps{" "}
-        </Link>
-        <Link to={paths.main.others} className="font-semibold">
+        </Button>
+        <Button variant="text" page={paths.main.others} className="!text-dark">
           Become part of Academic compass
-        </Link>
-        {!authenticated ? (
-          <>
-            <Link
-              to={paths.auth.student.login}
-              className={`flex bg-light text-primary border-primary border-[1px] border-solid ${btnStyle}`}
-            >
-              <Login className="text-[24px]" />
-              Log in
-            </Link>
-            <Link
-              to={paths.auth.student.register}
-              className={`flex bg-primary text-light ${btnStyle}`}
-            >
-              <Person className="text-[24px]" />
-              Sign up
-            </Link>
-          </>
-        ) : (
-          <div className="flex justify-between gap-4 items-center">
-            <div className="w-[1px] bg-dark dark:bg-light self-stretch transition-all duration-1000 ease-in-out-back rounded-full"></div>
-            <Link
-              to={
-                user.role_id == 2 ? paths.student.root : paths.instructor.root
-              }
-              className="flex justify-center items-center w-[45px] overflow-clip aspect-square rounded-full bg-primary text-light"
-            >
-              {userInfo.imagePath ? (
-                <img
-                  src={userInfo.imagePath}
-                  className="object-cover"
-                  alt="profile picture"
-                />
-              ) : (
-                <span>
-                  {userInfo.firstName.charAt(0)} {userInfo.lastName.charAt(0)}
-                </span>
-              )}
-            </Link>
-            <p className="font-semibold tracking-tight text-primary dark:text-accent-dark transition-all duration-1000 ease-in-out-back">
-              {userInfo.firstName} {userInfo.lastName}
-            </p>
+        </Button>
 
-            {/* menu */}
-            <div className="relative text-center">
-              <div>
-                <button
-                  type="button"
-                  className="w-full rounded-[10px] px-4 py-2  text-sm font-medium  hover:bg-secondary dark:hover:bg-secondary-dark focus:outline-none"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  {isOpen ? (
-                    <BiChevronUp className="text-[24px]" />
-                  ) : (
-                    <BiChevronDown className="text-[24px]" />
-                  )}
-                </button>
-              </div>
+        <Button variant="outlined" page={paths.auth.student.login}>
+          <Login size={24} />
+          Log in
+        </Button>
+        <Button page={paths.auth.student.register}>
+          <Person size={24} />
+          Sign up
+        </Button>
 
-              {isOpen && (
-                <div
-                  className={`absolute right-0 mt-2 w-56 rounded-md shadow-lg text-dark dark:text-light bg-secondary dark:bg-secondary-dark ring-1 ring-dark/20 dark:ring-light/20  focus:outline-none transition-all duration-1000 ease-in-out-back`}
-                >
-                  <ul className="py-1">
-                    <li
-                      className={`${meunItemStyle}`}
-                      onClick={() => {
-                        if (user.role_id == 2) navigate(paths.student.settings);
-                        else navigate(paths.instructor.settings);
-                        setIsOpen(false);
-                      }}
-                    >
-                      Settings
-                    </li>
-
-                    <li
-                      className={`${meunItemStyle}`}
-                      onClick={() => setConfirmLogout(true)}
-                    >
-                      Log Out
-                    </li>
-
-                    {confirmLogout && (
-                      <ul className="border-t border-dark/20 dark:border-light/20 mt-2 pt-2">
-                        <li
-                          className={`${meunItemStyle} text-red-500`}
-                          onClick={handleLogout}
-                        >
-                          Yes, Log Out
-                        </li>
-
-                        <li
-                          className={`${meunItemStyle}`}
-                          onClick={() => setConfirmLogout(false)}
-                        >
-                          No, Stay Logged In
-                        </li>
-                      </ul>
-                    )}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
         <Switcher />
       </div>
     </nav>

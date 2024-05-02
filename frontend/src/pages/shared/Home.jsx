@@ -1,7 +1,6 @@
 import { FaRegMap as Map } from "react-icons/fa";
 import Hero from "../../assets/images/hero.svg";
-import { Link } from "react-router-dom";
-import { RoadmapCard } from "../../components/index.js";
+import { RoadmapCard, Button } from "../../components/index.js";
 import { Helmet } from "react-helmet-async";
 import { useMainContext } from "../../context/hooks/use-main-context.js";
 // ______________________________________________________________________
@@ -27,14 +26,14 @@ function Home() {
             <p className="w-[488px] text-[32px] font-medium leading-[125%]">
               Unlocking Knowledge and Success Through Guided Learning Paths
             </p>
-            <Link
+            <Button
               // to={paths.roadmaps}
-              to="/test"
-              className="flex items-center gap-[10px] rounded-[5px] bg-primary px-[20px] py-[10px] font-semibold text-light"
+              page="/test"
+              size="lg"
             >
               <Map className="text-[25px]" />
               Explore Our Roadmaps
-            </Link>
+            </Button>
           </div>
 
           {/* ******************************************************** */}

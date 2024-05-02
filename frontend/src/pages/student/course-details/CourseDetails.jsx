@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   BsStarHalf as Half,
   BsFillStarFill as Full,
@@ -17,7 +17,8 @@ import {
   ReviewCards,
   ReviewForm,
   Modal,
-} from "src/components";
+  Button,
+} from "../../../components";
 import axios from "src/apis/axios";
 import { useAuthContext } from "src/auth/hooks";
 import { toast } from "react-toastify";
@@ -25,8 +26,8 @@ import { Helmet } from "react-helmet-async";
 
 const SectionWrapper = ({ title, children }) => {
   return (
-    <article className="py-8 flex flex-col gap-4">
-      <h2 className="font-bold text-[32px] tracking-tight">{title}</h2>
+    <article className="flex flex-col gap-4 py-8">
+      <h2 className="text-[32px] font-bold tracking-tight">{title}</h2>
       <div>{children}</div>
     </article>
   );
@@ -277,7 +278,7 @@ const CourseDetails = () => {
             token: user?.accessToken,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
       toast.success("You enrolled successfully!");
       navigate("/student/dashboard");
@@ -296,13 +297,13 @@ const CourseDetails = () => {
         <title>Academic Compass: {course.course_title}</title>
       </Helmet>
       <section className="w-[1200px]">
-        <div className="  bg-secondary dark:bg-secondary-dark  shadow-[0px_-1000px_0px_1000px] dark:shadow-secondary-dark shadow-secondary text-dark dark:text-light duration-1000 ease-in-out-back">
+        <div className="  bg-secondary text-dark  shadow-[0px_-1000px_0px_1000px] shadow-secondary duration-1000 ease-in-out-back dark:bg-secondary-dark dark:text-light dark:shadow-secondary-dark">
           <div className="flex gap-[32px]">
-            <div className="flex min-w-[400px] aspect-video">
+            <div className="flex aspect-video min-w-[400px]">
               <img className="object-contain" src={course.course_thumnail} />
             </div>
-            <div className="flex flex-col flex-1 gap-4">
-              <h1 className="font-bold text-[32px] leading-[39px] tracking-tight">
+            <div className="flex flex-1 flex-col gap-4">
+              <h1 className="text-[32px] font-bold leading-[39px] tracking-tight">
                 {course.course_title}
               </h1>
               <p className="text-[24px] leading-l tracking-tight">
@@ -313,26 +314,26 @@ const CourseDetails = () => {
                   {[...Array(Math.floor(course.stars))].map((_, starIndex) => (
                     <Full
                       key={starIndex}
-                      className="text-yellow-500 text-[24px]"
+                      className="text-[24px] text-yellow-500"
                     />
                   ))}
                   {course.stars % 1 !== 0 && (
-                    <Half className="text-yellow-500 text-[24px]" />
+                    <Half className="text-[24px] text-yellow-500" />
                   )}
                   {[...Array(5 - Math.ceil(course.stars))].map(
                     (_, starIndex) => (
                       <Star
                         key={starIndex}
-                        className="text-yellow-500 text-[24px]"
+                        className="text-[24px] text-yellow-500"
                       />
-                    )
+                    ),
                   )}
                 </div>
                 <span>{course.stars}</span>
                 <span>{`(${course.ratingCount} ratings)`}</span>
               </div>
 
-              <div className="text-accent dark:text-accent-dark flex justify-between duration-1000 ease-in-out-back">
+              <div className="flex justify-between text-accent duration-1000 ease-in-out-back dark:text-accent-dark">
                 <span>
                   duration {course.courseDuration} hr • {course.itemsCount}{" "}
                   items • for {course.levelName}
@@ -342,7 +343,7 @@ const CourseDetails = () => {
             </div>
           </div>
 
-          <div className="py-8 flex justify-between">
+          <div className="flex justify-between py-8">
             <div className=" flex items-center gap-8">
               <span className="text-[20px] font-semibold tracking-tight">
                 This course contain:
@@ -362,31 +363,29 @@ const CourseDetails = () => {
               </div>
             </div>
             {!course?.is_enrolled ? (
-              <Link
-                onClick={handleEnroll}
-                className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-              >
+              <Button size="lg" onClick={handleEnroll}>
                 Enroll in This Course
-              </Link>
+              </Button>
             ) : (
-              <button
+              <Button
+                color="accent"
+                size="lg"
                 onClick={() => {
                   setIsOpen(true);
                 }}
-                className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
               >
                 Review this course
-              </button>
+              </Button>
             )}
           </div>
         </div>
 
         {/* In this course you will learn the following */}
         <SectionWrapper title="In this course you will learn the following:">
-          <ul className="text-[20px] tracking-tight flex flex-col gap-2">
+          <ul className="flex flex-col gap-2 text-[20px] tracking-tight">
             {course.learn.map((item, index) => (
               <li key={index}>
-                <span className="text-[25px] m-3">•</span>
+                <span className="m-3 text-[25px]">•</span>
                 {item}
               </li>
             ))}
@@ -403,7 +402,7 @@ const CourseDetails = () => {
                     dangerouslySetInnerHTML={{
                       __html: item.replace(
                         "<strong>",
-                        '<strong class="font-bold text-lg">'
+                        '<strong class="font-bold text-lg">',
                       ),
                     }}
                   />
@@ -417,10 +416,10 @@ const CourseDetails = () => {
 
         {/* Who this course is for: */}
         <SectionWrapper title="Who this course is for:">
-          <ul className="text-[20px] tracking-tight flex flex-col gap-2">
+          <ul className="flex flex-col gap-2 text-[20px] tracking-tight">
             {course.forWho.map((item, index) => (
               <li key={index}>
-                <span className="text-[25px] m-3">•</span>
+                <span className="m-3 text-[25px]">•</span>
                 {item}
               </li>
             ))}
@@ -429,10 +428,10 @@ const CourseDetails = () => {
 
         {/* Requirements */}
         <SectionWrapper title="Requirements">
-          <ul className="text-[20px] tracking-tight flex flex-col gap-2">
+          <ul className="flex flex-col gap-2 text-[20px] tracking-tight">
             {course.requirements.map((item, index) => (
               <li key={index}>
-                <span className="text-[25px] m-3">•</span>
+                <span className="m-3 text-[25px]">•</span>
                 {item}
               </li>
             ))}
@@ -447,9 +446,8 @@ const CourseDetails = () => {
         {/* Reviews */}
         <SectionWrapper title="Reviews">
           <ReviewCards reviews={course.reviews} />
-          <div className="flex justify-center items-center mt-[16px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">
-            <button>Load more reviews</button>
-          </div>
+
+          <Button className="mt-4 w-full">Load more reviews</Button>
         </SectionWrapper>
         <Modal
           isOpen={isOpen}

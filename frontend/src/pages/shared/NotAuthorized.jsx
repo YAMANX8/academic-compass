@@ -3,7 +3,7 @@ import { m, motion } from "framer-motion";
 
 import NotFoundImg from "../../assets/images/403.svg";
 import { Helmet } from "react-helmet-async";
-import { varBounce, MotionContainer } from "../../components";
+import { varBounce, MotionContainer, Button } from "../../components";
 
 const NotAuthorized = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const NotAuthorized = () => {
       <Helmet>
         <title>Access Denied</title>
       </Helmet>
-      <MotionContainer className="text-center text-dark dark:text-light bg-light dark:bg-dark text-[24px] flex flex-col gap-4 transition-all duration-1000 ease-in-out-back">
+      <MotionContainer className="flex flex-col gap-4 bg-light text-center text-[24px] text-dark transition-all duration-1000 ease-in-out-back dark:bg-dark dark:text-light">
         <motion.div variants={varBounce().inDown}>
           <img src={NotFoundImg} alt="not found" />
         </motion.div>
@@ -24,12 +24,7 @@ const NotAuthorized = () => {
           </p>
         </motion.div>
         <motion.div variants={varBounce().inUp} className="self-center">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-          >
-            Go Back
-          </button>{" "}
+          <Button onClick={() => navigate(-1)}>Go Back</Button>{" "}
         </motion.div>
       </MotionContainer>
     </>

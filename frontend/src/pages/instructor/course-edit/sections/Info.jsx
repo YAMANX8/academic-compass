@@ -4,14 +4,15 @@ import {
   BsPlus as Add,
   BsCloudUpload as Upload,
 } from "react-icons/bs";
-import { AiOutlineCheck as Check, AiOutlineClose as X } from "react-icons/ai";
+import { MdOutlineSave } from "react-icons/md";
+
 import { BiEdit as Edit } from "react-icons/bi";
 import { useAuthContext } from "src/auth/hooks";
 import axios from "src/apis/axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
-
+import { Button } from "../../../../components";
 const Info = () => {
   const { user } = useAuthContext();
   const { id } = useParams();
@@ -79,7 +80,7 @@ const Info = () => {
     setArray,
     status,
     setStatus,
-    type
+    type,
   ) => {
     const updatedIsEdited = [...status];
     updatedIsEdited[index] = !updatedIsEdited[index];
@@ -130,18 +131,18 @@ const Info = () => {
         },
       });
       const level = await res.data.levels.find(
-        (i) => i.title == res2.data.level
+        (i) => i.title == res2.data.level,
       );
       const type = await res.data.types.find((i) => i.title == res2.data.type);
       const data = await res2.data;
       const sortedWhatLearn = [...data.whatLearn].sort(
-        (a, b) => a.item_order - b.item_order
+        (a, b) => a.item_order - b.item_order,
       );
       const sortedWhoFor = [...data.whoFor].sort(
-        (a, b) => a.item_order - b.item_order
+        (a, b) => a.item_order - b.item_order,
       );
       const sortedPre = [...data.prerequisites].sort(
-        (a, b) => a.item_order - b.item_order
+        (a, b) => a.item_order - b.item_order,
       );
 
       setData(() => ({
@@ -158,7 +159,7 @@ const Info = () => {
         type: type.id,
       }));
       setImage(
-        data?.thumbnail ? `http://localhost:5000/image/${data.thumbnail}` : ""
+        data?.thumbnail ? `http://localhost:5000/image/${data.thumbnail}` : "",
       );
       setPreStatus(new Array(data.prerequisites.length).fill(false));
       setWhoForStatus(new Array(data.whoFor.length).fill(false));
@@ -196,7 +197,7 @@ const Info = () => {
             token: user?.accessToken,
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
       setWhatLearn([]);
       setWhoFor([]);
@@ -219,7 +220,7 @@ const Info = () => {
       <Helmet>
         <title>Editing: Course details</title>
       </Helmet>
-      <form className="grid-cols-2 grid gap-12" onSubmit={handleSubmit}>
+      <form className="grid grid-cols-2 gap-12" onSubmit={handleSubmit}>
         {/* course title input */}
         <div className="flex flex-col gap-4">
           <h2 className={headings}>Course title</h2>
@@ -255,7 +256,7 @@ const Info = () => {
               value={data.level}
               onChange={handleChange}
               name="level"
-              className={`${inputs} appearance-none w-full h-[60px] text-dark dark:text-light bg-light dark:bg-dark rounded-[6px] border border-dark/50 dark:border-light/50 transition-all duration-1000 ease-in-out-back tracking-tight leading-l p-[10px]`}
+              className={`${inputs} h-[60px] w-full appearance-none rounded-[6px] border border-dark/50 bg-light p-[10px] leading-l tracking-tight text-dark transition-all duration-1000 ease-in-out-back dark:border-light/50 dark:bg-dark dark:text-light`}
             >
               <option value="">-- Select Level --</option>
               {list.levels.map((item) => (
@@ -266,7 +267,7 @@ const Info = () => {
             </select>
 
             <DownSquareFill
-              className="absolute top-0 right-0 pointer-events-none"
+              className="pointer-events-none absolute right-0 top-0"
               size={60}
             />
           </div>
@@ -281,7 +282,7 @@ const Info = () => {
               value={data.type}
               onChange={handleChange}
               name="type"
-              className={`${inputs} appearance-none w-full h-[60px] text-dark dark:text-light bg-light dark:bg-dark rounded-[6px] border border-dark/50 dark:border-light/50 transition-all duration-1000 ease-in-out-back tracking-tight leading-l p-[10px]`}
+              className={`${inputs} h-[60px] w-full appearance-none rounded-[6px] border border-dark/50 bg-light p-[10px] leading-l tracking-tight text-dark transition-all duration-1000 ease-in-out-back dark:border-light/50 dark:bg-dark dark:text-light`}
             >
               <option value="">-- Select Type --</option>
               {list.types.map((item) => (
@@ -292,14 +293,14 @@ const Info = () => {
             </select>
 
             <DownSquareFill
-              className="absolute top-0 right-0 pointer-events-none"
+              className="pointer-events-none absolute right-0 top-0"
               size={60}
             />
           </div>
         </div>
 
         {/* course description input */}
-        <div className="flex flex-col gap-4 col-span-2">
+        <div className="col-span-2 flex flex-col gap-4">
           <h2 className={headings}>Course description</h2>
           <textarea
             name="description"
@@ -313,10 +314,10 @@ const Info = () => {
         </div>
 
         {/* what you will learn list */}
-        <div className="flex flex-col gap-4 col-span-2">
+        <div className="col-span-2 flex flex-col gap-4">
           <h2 className={headings}>What’s taught in your course?</h2>
           {data.whatLearn.map((item, index) => (
-            <div className="relative group" key={index}>
+            <div className="group relative" key={index}>
               <input
                 type="text"
                 value={
@@ -348,10 +349,10 @@ const Info = () => {
                     setUpdateWhatLearn,
                     whatLearnStatus,
                     setWhatLearnStatus,
-                    1
+                    1,
                   )
                 }
-                className="absolute right-[10px] top-[50%] -translate-y-1/2 hidden group-hover:block"
+                className="absolute right-[10px] top-[50%] hidden -translate-y-1/2 group-hover:block"
               >
                 {whatLearnStatus.length > 0 && whatLearnStatus[index] ? null : (
                   <Edit size={50} />
@@ -379,25 +380,27 @@ const Info = () => {
           placeholder="Ex: how to style a website using ..."
           className={inputs}
         /> */}
-          <button
+          <Button
             type="button"
+            variant="outlined"
+            size="lg"
             onClick={() =>
               handleAddClick(setWhatLearn, learnCount + 1, 1, setLearnCount)
             }
-            className="p-[10px] self-start border border-primary bg-light rounded-[5px] text-primary flex items-center gap-2"
+            className="self-start"
           >
-            <Add />
-            <span>insert one more item</span>
-          </button>
+            <Add size={24} />
+            <span>Insert New Item</span>
+          </Button>
         </div>
 
         {/* prerequisites list */}
-        <div className="flex flex-col gap-4 col-span-2">
+        <div className="col-span-2 flex flex-col gap-4">
           <h2 className={headings}>
             What are the prerequisites for your course?
           </h2>
           {data.prerequisites.map((item, index) => (
-            <div className="relative group" key={index}>
+            <div className="group relative" key={index}>
               <input
                 type="text"
                 value={
@@ -416,7 +419,7 @@ const Info = () => {
                   handleEditChange(
                     setUpdatePrerequisites,
                     index,
-                    e.target.value
+                    e.target.value,
                   )
                 }
                 disabled={
@@ -432,10 +435,10 @@ const Info = () => {
                     setUpdatePrerequisites,
                     preStatus,
                     setPreStatus,
-                    3
+                    3,
                   )
                 }
-                className="absolute right-[10px] top-[50%] -translate-y-1/2 hidden group-hover:block"
+                className="absolute right-[10px] top-[50%] hidden -translate-y-1/2 group-hover:block"
               >
                 {preStatus.length > 0 && preStatus[index] ? null : (
                   <Edit size={50} />
@@ -463,25 +466,27 @@ const Info = () => {
           placeholder="Ex: familiarity with HTML, CSS, and JavaScript"
           className={inputs}
         /> */}
-          <button
+          <Button
             type="button"
+            variant="outlined"
+            size="lg"
             onClick={() =>
               handleAddClick(setPrerequisites, preCount + 1, 3, setPreCount)
             }
-            className="p-[10px] self-start border border-primary bg-light rounded-[5px] text-primary flex items-center gap-2"
+            className="self-start"
           >
-            <Add />
-            <span>insert one more item</span>
-          </button>
+            <Add size={24} />
+            <span>Insert New Item</span>
+          </Button>
         </div>
 
         {/* who for list */}
-        <div className="flex flex-col gap-4 col-span-2">
+        <div className="col-span-2 flex flex-col gap-4">
           <h2 className={headings}>
             Who is the intended audience for this course?
           </h2>
           {data.whoFor.map((item, index) => (
-            <div className="relative group" key={index}>
+            <div className="group relative" key={index}>
               <input
                 type="text"
                 value={
@@ -511,10 +516,10 @@ const Info = () => {
                     setUpdateWhoFor,
                     whoForStatus,
                     setWhoForStatus,
-                    2
+                    2,
                   )
                 }
-                className="absolute right-[10px] top-[50%] -translate-y-1/2 hidden group-hover:block"
+                className="absolute right-[10px] top-[50%] hidden -translate-y-1/2 group-hover:block"
               >
                 {whoForStatus.length > 0 && whoForStatus[index] ? null : (
                   <Edit size={50} />
@@ -542,23 +547,25 @@ const Info = () => {
           placeholder="Ex: frontend developers who love to extend their skill set"
           className={inputs}
         /> */}
-          <button
+          <Button
             type="button"
+            variant="outlined"
+            size="lg"
             onClick={() =>
               handleAddClick(setWhoFor, whoCount + 1, 2, setWhoCount)
             }
-            className="p-[10px] self-start border border-primary bg-light rounded-[5px] text-primary flex items-center gap-2"
+            className="flex items-center gap-2 self-start rounded-[5px] border border-primary bg-light p-[10px] text-primary"
           >
-            <Add />
-            <span>insert one more item</span>
-          </button>
+            <Add size={24} />
+            <span>Insert New Item</span>
+          </Button>
         </div>
 
         {/* course thumbnail input */}
-        <div className="flex flex-col gap-4 col-span-2">
+        <div className="col-span-2 flex flex-col gap-4">
           <h2 className={headings}>Course thumbnail</h2>
           <div className="flex gap-8">
-            <div className="w-[600px] aspect-video flex justify-center items-center overflow-hidden">
+            <div className="flex aspect-video w-[600px] items-center justify-center overflow-hidden">
               <img
                 className="object-contain"
                 src={
@@ -567,9 +574,9 @@ const Info = () => {
                 alt="course thumbnail"
               />
             </div>
-            <div className="flex-1 flex flex-col justify-between">
+            <div className="flex flex-1 flex-col justify-between">
               <div className="text-[32px]">
-                <h3 className="mb-4 font-medium text-accent/80 leading-[38.73px]">
+                <h3 className="mb-4 font-medium leading-[38.73px] text-accent/80">
                   Video Thumbnail Size
                 </h3>
                 <p className="leading-[39px]">
@@ -578,11 +585,7 @@ const Info = () => {
                   ratio of 16:9
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => photo.current.click()}
-                className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent"
-              >
+              <Button type="button" onClick={() => photo.current.click()}>
                 <input
                   type="file"
                   name="image"
@@ -592,17 +595,17 @@ const Info = () => {
                 />
                 Upload course thumbnail
                 <Upload />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
 
         {/* course activation toggle */}
-        <div className="flex flex-col gap-4 col-span-2">
+        <div className="col-span-2 flex flex-col gap-4">
           <h2 className={headings}>Would you like to publish your course ?</h2>
           <button
             type="button"
-            className={`w-[106px] h-[56px] rounded-full relative ${
+            className={`relative h-[56px] w-[106px] rounded-full ${
               data.isActive ? `bg-primary` : `bg-gray-400`
             } transition-all duration-500`}
             onClick={() =>
@@ -610,17 +613,18 @@ const Info = () => {
             }
           >
             <div
-              className={`absolute top-[3px] left-[3px] w-[50px] aspect-square rounded-full bg-light ${
+              className={`absolute left-[3px] top-[3px] aspect-square w-[50px] rounded-full bg-light ${
                 data.isActive && `left-[calc(100%-53px)]`
               } transition-all duration-500`}
             />
           </button>
         </div>
 
-        <div className="flex flex-row-reverse col-span-2">
-          <button className="flex justify-center items-center gap-[10px] px-[20px] py-[10px] font-semibold rounded-[5px] text-light bg-gradient-to-r from-primary to-accent">
-            Sava
-          </button>
+        <div className="col-span-2 flex flex-row-reverse">
+          <Button size="lg">
+            <MdOutlineSave size={24} />
+            Save
+          </Button>
         </div>
       </form>
     </>

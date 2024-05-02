@@ -4,11 +4,11 @@ import {
   BsEye as Show,
 } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 import { paths } from "src/routes/paths";
 import { useAuthContext } from "src/auth/hooks";
+import { Button } from "../../../components";
 
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
@@ -306,8 +306,10 @@ function RegisterStudent() {
           </label>
         </div>
 
-        <button
-          className="flex justify-center items-center gap-[10px] mt-[16px] font-medium w-full rounded-[5px] py-[10px]  text-light bg-primary disabled:bg-accent/50 disabled:text-dark/50"
+        <Button
+          size="lg"
+          color="accent"
+          className="mt-4 w-full"
           disabled={
             !validFirstName ||
             !validLastName ||
@@ -319,16 +321,17 @@ function RegisterStudent() {
           }
         >
           SIGN UP
-          <ReturnLeft className="text-[24px]" />
-        </button>
+          <ReturnLeft size={24} />
+        </Button>
       </form>
-      <Link
-        className="text-[14px] underline text-primary dark:text-accent-dark"
-        to={paths.auth.student.login}
+      <Button
+        variant="text"
+        size="sm"
+        page={paths.auth.student.login}
         style={{ alignSelf: "flex-start" }}
       >
         Already have an Account
-      </Link>
+      </Button>
     </>
   );
 }

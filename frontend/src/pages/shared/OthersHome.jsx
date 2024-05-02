@@ -29,7 +29,7 @@ function OthersHome() {
                 <Person />
                 Become an Instructor
               </Button>{" "}
-              <Button isOutline={true} page={paths.auth.instructor.login}>
+              <Button variant="outlined" page={paths.auth.instructor.login}>
                 <ArrowRight /> Already an Instructor
               </Button>
             </div>
@@ -59,7 +59,7 @@ function OthersHome() {
                 <Person />
                 Become a Supervisor
               </Button>{" "}
-              <Button isOutline={true} page="/not-found">
+              <Button variant="outlined" page="/not-found">
                 <ArrowRight /> Already a Supervisor
               </Button>
             </div>
@@ -83,13 +83,13 @@ function OthersHome() {
                 <Person />
                 Become a Director
               </Button>{" "}
-              <Button isOutline={true} page="/not-found">
+              <Button variant="outlined" page="/not-found">
                 <ArrowRight /> Already a Director
               </Button>
             </div>
           </div>
           <div className="flex justify-center items-center w-[500px]">
-            <img src={Images1} alt="instructor char" />
+            <img src={Images3} alt="instructor char" />
           </div>
         </section>
       </main>
