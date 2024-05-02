@@ -78,9 +78,15 @@ export default {
         "out-expo": "cubic-bezier(0.19, 1, 0.22, 1)",
         "in-out-back": "cubic-bezier(0.780, -0.375, 0.260, 1.320)",
       },
-    },
-    fontFamily: {
-      poppins: ["Poppins", "sans-serif"],
+      keyframes: {
+        'spin-slow': {
+          from: { transform: 'rotate(0deg)' },
+          to: { transform: 'rotate(360deg)' },
+        },
+      },
+      animation: {
+        'spin-slow': 'spin-slow 10s linear infinite',
+      },
     },
     letterSpacing: {
       tightest: "-.075em",
