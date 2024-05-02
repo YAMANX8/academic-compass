@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -51,66 +51,60 @@
     --color-light: 238, 239, 252;
   }
   .dark {
-
     --color-dark: 238, 239, 252;
     --color-light: 7, 11, 39;
   }
-}
-body {
-  padding: 0;
-  margin: 0;
-}
-::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
-}
+  body {
+    padding: 0;
+    margin: 0;
+    font-family: "Fira Code", monospace;
+  }
+  ::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+  }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #eeeffc;
-  border-radius: 100px;
-}
-body::-webkit-scrollbar-track {
-  background: #e0e7f7;
-  border-radius: 0;
-}
-.dark body::-webkit-scrollbar-track {
-  background: #0d1832;
-}
+  ::-webkit-scrollbar-track {
+    background: #eeeffc;
+    border-radius: 100px;
+  }
+  body::-webkit-scrollbar-track {
+    background: #e0e7f7;
+    border-radius: 0;
+  }
+  .dark body::-webkit-scrollbar-track {
+    background: #0d1832;
+  }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #253ad4;
-  border-radius: 100px;
-}
-body::-webkit-scrollbar-thumb:vertical {
-  background: #253ad4;
-  border-radius: 0;
-}
+  ::-webkit-scrollbar-thumb {
+    background: #253ad4;
+    border-radius: 100px;
+  }
+  body::-webkit-scrollbar-thumb:vertical {
+    background: #253ad4;
+    border-radius: 0;
+  }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #6a1ead;
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6a1ead;
+  }
+  body::-webkit-scrollbar-thumb:hover {
+    background: #6a1ead;
+  }
 }
-body::-webkit-scrollbar-thumb:hover {
-  background: #6a1ead;
+@layer components {
+  .comment-overflow {
+    --max-lines: 4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--max-lines);
+  }
 }
-
-/* إخفاء الأيقونة المثلثة الافتراضية */
 details > summary::before {
   display: none;
 }
 
-/* تجنب إظهار نقطة قبل العنوان في بعض المتصفحات */
 details > summary {
   list-style: none;
-}
-
-/* for hiding the review text if overflow */
-.comment-overflow {
-  --max-lines: 4;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--max-lines);
 }

@@ -79,9 +79,6 @@ export default {
         "in-out-back": "cubic-bezier(0.780, -0.375, 0.260, 1.320)",
       },
     },
-    fontFamily: {
-      poppins: ["Poppins", "sans-serif"],
-    },
     letterSpacing: {
       tightest: "-.075em",
       tighter: "-.05em",
