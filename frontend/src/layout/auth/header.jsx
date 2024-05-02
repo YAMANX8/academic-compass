@@ -5,7 +5,7 @@ import SearchForm from "../components/SearchForm";
 
 const Header = () => {
   return (
-    <nav className="sticky top-0 z-50 flex w-full justify-between bg-light px-20  py-4 text-dark shadow-lg transition-colors duration-1000 ease-in-out-back dark:bg-dark dark:text-light">
+    <nav className="sticky top-0 z-50 flex w-full justify-between bg-light px-20  py-4 text-dark shadow-lg transition-colors duration-1000 ease-in-out-back">
       <div>
         <Logo className="w-[150px]" />
       </div>

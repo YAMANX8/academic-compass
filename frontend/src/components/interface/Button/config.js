@@ -1,6 +1,6 @@
 // Define base classes for all buttons
 export const baseClasses =
-  "flex items-center justify-center gap-2 rounded-lg text-base font-semibold transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2";
+  "flex items-center justify-center gap-2 rounded-lg text-base font-semibold transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2";
 
 // Size classes
 export const sizeClasses = {

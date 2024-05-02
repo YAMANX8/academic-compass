@@ -26,7 +26,10 @@ const SearchForm = () => {
         }}
         className="z-10 w-full cursor-pointer rounded-full bg-transparent py-[10px] pl-9 pr-[10px] outline-none"
       />
-      <Search className="absolute left-[10px] top-[10px] text-[24px] font-semibold" />
+      <Search
+        size={24}
+        className="absolute left-[10px] top-[10px] font-semibold text-dark duration-1000 ease-in-out-back"
+      />
     </form>
   );
 };
