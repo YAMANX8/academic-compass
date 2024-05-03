@@ -37,7 +37,7 @@ const Topic = ({
         }}
         className={`w-[400px] text-[32px] text-center ${
           category == "Advance" && "bg-accent"
-        } ${category == "Aditional" && "bg-advance"} ${
+        } ${category == "Aditional" && "bg-error"} ${
           category == "Basic" && "bg-primary"
         } text-light py-[26px] rounded-full ${
           progressState == "Completed" &&

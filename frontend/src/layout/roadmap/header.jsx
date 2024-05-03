@@ -4,11 +4,16 @@ import { paths } from "../../routes/paths";
 import AuthenticatedUserSection from "../components/AuthenticatedUserSection";
 import UnauthenticatedUserSection from "../components/UnauthenticatedUserSection";
 import SearchForm from "../components/SearchForm";
+import { useOffSetTop } from "../../hooks/use-off-set-top";
 
 const Header = () => {
   const { authenticated } = useAuthContext();
+  const hasScrolledPastHeight = useOffSetTop(100);
   return (
-    <nav className="sticky top-0 z-50 flex w-full justify-between bg-light px-20  py-4 text-dark shadow-lg transition-colors duration-1000 ease-in-out-back">
+    <nav
+      className={`sticky top-0 z-50 flex w-full justify-between bg-light px-20 py-4 text-dark shadow-lg transition-all duration-1000 ease-in-out-back
+       ${hasScrolledPastHeight && "mb-4 bg-light/80 !py-2 duration-300"}`}
+    >
       <div>
         <Logo className="w-[150px]" />
       </div>
