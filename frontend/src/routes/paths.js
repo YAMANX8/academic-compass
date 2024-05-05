@@ -46,6 +46,9 @@ export const paths = {
   },
   instructor: {
     root: ROOTS.INSTRUCTOR_DASHBOARD,
+    myStudents: `${ROOTS.INSTRUCTOR_DASHBOARD}/my-students`,
+    completedCourses: `${ROOTS.INSTRUCTOR_DASHBOARD}/completed-courses`,
+    inprogressCourses: `${ROOTS.INSTRUCTOR_DASHBOARD}/inprogress-courses`,
     settings: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings`,
     show: { student: `${ROOTS.INSTRUCTOR_DASHBOARD}/show-student` },
   },

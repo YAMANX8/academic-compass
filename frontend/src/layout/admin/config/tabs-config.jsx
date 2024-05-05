@@ -7,12 +7,12 @@ export const useTabsConfig = () => {
       items: [
         {
           title: "overview",
-          path: "/test",
+          path: paths.instructor.root,
           icon: "mdi:view-dashboard",
         },
         {
           title: "my students",
-          path: paths.instructor.root,
+          path: paths.instructor.myStudents,
           icon: "mdi:account-school",
         },
       ],
@@ -22,12 +22,12 @@ export const useTabsConfig = () => {
       items: [
         {
           title: "completed courses",
-          path: paths.instructor.root,
+          path: paths.instructor.completedCourses,
           icon: "mdi:presentation-play",
         },
         {
           title: "inprogress courses",
-          path: paths.instructor.root,
+          path: paths.instructor.inprogressCourses,
           icon: "mdi:page-next-outline",
         },
       ],
