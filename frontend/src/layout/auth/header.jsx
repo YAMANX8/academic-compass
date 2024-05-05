@@ -1,7 +1,7 @@
-import { Logo, Switcher, Button } from "../../components";
+import { Logo, Button } from "../../components";
 import { paths } from "../../routes/paths";
-import UnauthenticatedUserSection from "../components/UnauthenticatedUserSection";
-import SearchForm from "../components/SearchForm";
+import UnauthenticatedUserSection from "../components/unauthenticated-user-section";
+import SearchForm from "../components/search-form";
 import { useOffSetTop } from "../../hooks/use-off-set-top";
 
 const Header = () => {
@@ -27,8 +27,6 @@ const Header = () => {
           loginPath={paths.auth.student.login}
           registerPath={paths.auth.student.register}
         />
-
-        <Switcher />
       </div>
     </nav>
   );

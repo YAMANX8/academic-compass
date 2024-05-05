@@ -16,24 +16,19 @@ const Button = ({
 
   // Construct the className string
   // TODO: Test to add VariantColorClasses that not contained.
-  const style = `${baseClasses} ${sizeClasses[size]} ${variantColorClasses[variant][color]} ${disabledClasses}`;
+  const style = `${baseClasses} ${sizeClasses[size]} ${variantColorClasses[variant][color]} ${disabledClasses} ${className}`;
 
   // Conditionally render as a Link or button
   const component = page ? "Link" : "button";
 
   if (component == "Link")
     return (
-      <Link
-        to={page}
-        disabled={disabled}
-        className={`${style} ${className}`}
-        {...props}
-      >
+      <Link to={page} disabled={disabled} className={`${style}`} {...props}>
         {children}
       </Link>
     );
   return (
-    <button className={`${style} ${className}`} disabled={disabled} {...props}>
+    <button className={`${style}`} disabled={disabled} {...props}>
       {children}
     </button>
   );

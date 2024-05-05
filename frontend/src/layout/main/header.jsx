@@ -1,9 +1,9 @@
 import { useAuthContext } from "../../auth/hooks";
-import { Logo, Switcher, Button } from "../../components";
+import { Logo, Button } from "../../components";
 import { paths } from "../../routes/paths";
-import AuthenticatedUserSection from "../components/AuthenticatedUserSection";
-import UnauthenticatedUserSection from "../components/UnauthenticatedUserSection";
-import SearchForm from "../components/SearchForm";
+import AuthenticatedUserSection from "../components/authenticated-user-section";
+import UnauthenticatedUserSection from "../components/unauthenticated-user-section";
+import SearchForm from "../components/search-form";
 import { useOffSetTop } from "../../hooks/use-off-set-top";
 const Header = () => {
   const { authenticated } = useAuthContext();
@@ -32,7 +32,6 @@ const Header = () => {
         ) : (
           <AuthenticatedUserSection />
         )}
-        <Switcher />
       </div>
     </nav>
   );
