@@ -14,7 +14,7 @@ const ProfileAvatar = ({ imagePath, firstName = "John", lastName = "Doe" }) => {
           className="h-full w-full object-cover"
         />
       ) : (
-        <span className="text-center text-light">{`${firstName.charAt(0)}${lastName.charAt(0)}`}</span>
+        <span className="text-center text-white">{`${firstName.charAt(0)}${lastName.charAt(0)}`}</span>
       )}
     </div>
   );

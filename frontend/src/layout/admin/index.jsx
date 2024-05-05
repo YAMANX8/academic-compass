@@ -1,7 +1,9 @@
 import Main from "./main";
 import Header from "./header";
 import NavVertical from "./nav-vertical";
-const AdminLayout = ({ children, role, option }) => {
+import { useAuthContext } from "../../auth/hooks";
+const AdminLayout = ({ children, option }) => {
+  const { role } = useAuthContext();
   return (
     <div className="container flex h-screen max-h-screen flex-col overflow-hidden bg-light text-dark">
       <Header />

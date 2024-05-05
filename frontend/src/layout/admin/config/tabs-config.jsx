@@ -50,6 +50,57 @@ export const useTabsConfig = () => {
       ],
     },
   ];
+  const supervisorNav = [
+    {
+      subheader: "dashboard",
+      items: [
+        {
+          title: "",
+          path: "",
+          icon: "",
+        },
+      ],
+    },
+  ];
+  const academicManagerNav = [
+    {
+      subheader: "dashboard",
+      items: [
+        {
+          title: "",
+          path: "",
+          icon: "",
+        },
+      ],
+    },
+  ];
+  const managerNav = [
+    {
+      subheader: "dashboard",
+      items: [
+        {
+          title: "",
+          path: "",
+          icon: "",
+        },
+      ],
+    },
+  ];
+  const test = [
+    {
+      subheader: "test",
+      items: [
+        {
+          title: "test",
+          path: paths.main.root,
+          icon: "mdi:book-open",
+        },
+      ],
+    },
+  ];
 
-  return { 1: { noOption: instructorNav, courseManage: courseManageNav } };
+  return {
+    instructor: { noOption: instructorNav, courseManage: courseManageNav },
+    user: { noOption: test },
+  };
 };

@@ -199,7 +199,7 @@ export function AuthProvider({ children }) {
       });
       toast.success("Registration completed successfully☺");
     },
-    []
+    [],
   );
   const instructorRegister = useCallback(
     async (email, password, first_name, last_name) => {
@@ -229,7 +229,7 @@ export function AuthProvider({ children }) {
       });
       toast.success("Registration completed successfully☺");
     },
-    []
+    [],
   );
 
   // LOGOUT
@@ -258,7 +258,7 @@ export function AuthProvider({ children }) {
         });
       }
     },
-    [state.user]
+    [state.user],
   );
   // ----------------------------------------------------------------------
 
@@ -266,7 +266,19 @@ export function AuthProvider({ children }) {
 
   const status = state.loading ? "loading" : checkAuthenticated;
 
-  const role = state?.user?.role_id == 1 ? "instructor" : "student";
+  let role = "user";
+  switch (state?.user?.role_id) {
+    case 1:
+      role = "instructor";
+      break;
+    case 2:
+      role = "student";
+      break;
+
+    default:
+      role = "user";
+      break;
+  }
 
   const memoizedValue = useMemo(
     () => ({
@@ -293,7 +305,7 @@ export function AuthProvider({ children }) {
       updateAccessToken,
       state.user,
       status,
-    ]
+    ],
   );
   return (
     <AuthContext.Provider value={memoizedValue}>

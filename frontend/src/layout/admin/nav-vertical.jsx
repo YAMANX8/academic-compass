@@ -3,7 +3,7 @@ import TabsMapper from "../components/tabs-mapper";
 import { Button } from "../../components";
 import { Icon } from "@iconify/react";
 import { paths } from "../../routes/paths";
-const NavVertical = ({ role, option }) => {
+const NavVertical = ({ role, option = "noOption" }) => {
   const tabsData = useTabsConfig();
   return (
     <nav className="flex top-0 w-64 flex-col gap-4 border-r border-dashed border-gray-300 p-4">

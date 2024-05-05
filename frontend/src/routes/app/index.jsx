@@ -44,7 +44,7 @@ export default function Router() {
     {
       path: "test",
       element: (
-        <AdminLayout role={1} option="noOption">
+        <AdminLayout>
           <Test />
         </AdminLayout>
       ),
