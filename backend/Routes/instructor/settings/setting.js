@@ -86,7 +86,7 @@ router.put(
       //handling the image
       if (req.file && req.file.filename) {
         imageFilePath = encodeURIComponent(req.file.filename);
-        query = `${query} picture = 'http://localhost:5000/image/${imageFilePath}',`;
+        query = `${query} picture = '${imageFilePath}',`;
       }
 
       //the rest of data

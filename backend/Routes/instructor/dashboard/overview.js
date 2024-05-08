@@ -3,11 +3,9 @@ const authorization = require('../../../middleware/authorization');
 const checkPermission = require('../../../middleware/check-permissions');
 const getMyPerformanceNumber = require('../../../Utils/dashboardInstructor/my-performance');
 const getMyProfile = require('../../../Utils/dashboardInstructor/my-profile');
-const get_Non_completed_Courses = require('../../../Utils/dashboardInstructor/course/my-non-completed-courses');
-const get_Completed_Courses = require('../../../Utils/dashboardInstructor/course/completed-courses');
 const getMyTopics = require('../../../Utils/dashboardInstructor/my-topics');
 
-router.get('/', authorization, async (req, res) => {
+router.get('/overview', authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
     const roleId = req.user.roleId;
@@ -25,11 +23,6 @@ router.get('/', authorization, async (req, res) => {
       await getMyPerformanceNumber.GetALlPerformanceNumber(Id);
     // Get Genral Info About Instructor .
     const myProfile = await getMyProfile.myProfile(Id);
-    // Get My_Non_completed_Courses .
-    const My_Non_completed_Courses =
-      await get_Non_completed_Courses.My_Non_completed_Courses(Id);
-    // Get Completed_Courses .
-    const Completed_Courses = await get_Completed_Courses.Completed_Courses(Id);
     //Get My topics
     const myTopics = await getMyTopics.GetMyTopics(Id);
 
@@ -63,21 +56,6 @@ router.get('/', authorization, async (req, res) => {
         roadmap_id: topic.roadmap_id,
         title: topic.topic_title,
       })),
-      non_completed_courses:
-        My_Non_completed_Courses.Data.Non_completed_Courses.map((course) => ({
-          id: course.course_id,
-          title: course.course_title,
-          progress: ((course.progress * 100) / 12).toFixed(1),
-          thumnail: course.course_thumnail,
-        })),
-      completed_courses: Completed_Courses.Data.Completed_Courses.map(
-        (course) => ({
-          id: course.course_id,
-          title: course.course_title,
-          subtitle: course.subtitle,
-          thumnail: course.course_thumnail,
-        }),
-      ),
     };
 
     res.status(200).json(formattedData);

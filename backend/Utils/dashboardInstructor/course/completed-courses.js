@@ -10,9 +10,9 @@ const Completed_Courses = async (instructoer_id) => {
         c.course_id,
         c.course_title,
         c.subtitle,
-        course_thumnail
+        c.course_thumnail
       FROM
-        Course c
+        course c
         JOIN Course_Lists cl ON c.course_id = cl.course_id
         JOIN List_Type lt ON cl.list_type = lt.type_id
         JOIN Items I ON c.course_id = I.course_id
@@ -24,7 +24,7 @@ const Completed_Courses = async (instructoer_id) => {
       WHERE
         c.instructor_id = $1
         AND c.subtitle IS NOT NULL
-        AND c.c.course_title IS NOT NULL
+        AND c.course_title IS NOT NULL
         AND c.course_description IS NOT NULL
         AND c.course_level IS NOT NULL
         AND c.course_type IS NOT NULL

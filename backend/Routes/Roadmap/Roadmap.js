@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const pool = require('../../database/db');
+const pool = require('../../database/db.js');
 const jwt = require('jsonwebtoken');
-const checkPermission = require('../../middleware/check-permissions');
+const checkPermission = require('../../middleware/check-permissions.js');
 const authorization = require('../../middleware/authorization.js');
 
 // Get all roadmaps
