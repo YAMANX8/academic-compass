@@ -4,7 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const routes = require('./routes/index');
+const routes = require('./Routes/index');
 const createUploadDirectory = require('./middleware/create-upload-directory');
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(morgan('dev'));
 
 // Serve uploaded images && video
 app.use('/image', express.static('Upload/Images'));
-app.use('/video', express.static('Upload/Video'));
+app.use('/video', express.static('Upload/Videos'));
 
 // middleware for cookies
 app.use(cookieParser());

@@ -2647,7 +2647,216 @@ INSERT INTO Course_Lists (item_body,item_order,list_type,course_id)
     where items.course_id =$1 And  course.instructor_id = $2;
 
 
+-- test
+SELECT
+        Topic_Level_1.topic_level1_id,
+        Topic_Level_1.topic_title,
+        Topic_Level_N.topic_id,
+        Topic_Level_N.topic_title,
+        Parent_Topic.topic_id AS parent_topic_id,
+        Parent_Topic.topic_title AS parent_topic_title,
+        Items.item_id,
+        Items.item_title,
+        Items.item_no,
+        Items.item_type
+      FROM
+        course
+        LEFT join Items ON course.course_id = items.course_id
+        LEFT JOIN Topic_Level_N ON Items.topic_id = Topic_Level_N.topic_id 
+        LEFT JOIN Topic_Level_1 ON Topic_Level_N.topic_level1_id = Topic_Level_1.topic_level1_id
+        LEFT JOIN Topic_Level_N AS Parent_Topic ON Topic_Level_N.top_level_topic_id = Parent_Topic.topic_id
+      where
+        course.course_id = 14;
+--
+SELECT
+    Topic_Level_1.topic_level1_id,
+    Topic_Level_1.topic_title,
+    Topic_Level_N.topic_id AS sub_topic_id,
+    Topic_Level_N.topic_title AS sub_topic_title,
+    Parent_Topic.topic_id AS parent_topic_id,
+    Parent_Topic.topic_title AS parent_topic_title,
+    Items.item_id,
+    Items.item_title,
+    Items.item_no,
+    Items.item_type
+FROM
+    Course
+    LEFT JOIN Items ON Course.course_id = Items.course_id
+    LEFT JOIN Topic_Level_N ON Items.topic_id = Topic_Level_N.topic_id
+    LEFT JOIN Topic_Level_1 ON Topic_Level_N.topic_level1_id = Topic_Level_1.topic_level1_id
+    LEFT JOIN Topic_Level_N AS Parent_Topic ON Topic_Level_N.top_level_topic_id = Parent_Topic.topic_id
+WHERE
+    Course.course_id = 14;
+    --
+item>4
+    1>2>3>4
+
+    1>3>4
+
+    -- yyyyyyyyyyyyyy
+WITH RECURSIVE TopicHierarchy AS (
+    SELECT
+        Topic_Level_N.topic_id,
+        Topic_Level_N.topic_title,
+        Topic_Level_N.top_level_topic_id,
+        Topic_Level_N.topic_level1_id
+    FROM
+        Topic_Level_N
+    WHERE
+        Topic_Level_N.topic_id IN (
+            SELECT DISTINCT
+                Items.topic_id
+            FROM
+                Items
+                JOIN course ON Items.course_id = course.course_id
+            WHERE
+                course.course_id = 14
+        )
+    UNION
+    SELECT
+        T.topic_id,
+        T.topic_title,
+        T.top_level_topic_id,
+        T.topic_level1_id
+    FROM
+        Topic_Level_N T
+    JOIN TopicHierarchy TH ON T.topic_id = TH.top_level_topic_id
+)
+SELECT
+    TH.topic_level1_id,
+    TL1.topic_title AS parent_topic_title,
+    TH.top_level_topic_id AS parent_topic_id,
+    TH.topic_title AS sub_topic_title,
+    TH.topic_id AS sub_topic_id,
+    Items.item_id,
+    Items.item_title,
+    Items.item_no,
+    Items.item_type
+FROM
+    TopicHierarchy TH
+    LEFT JOIN Topic_Level_1 TL1 ON TH.topic_level1_id = TL1.topic_level1_id
+    LEFT JOIN Items ON TH.topic_id = Items.topic_id;
+    --output>>>
+     topic_level1_id | parent_topic_title | parent_topic_id | sub_topic_title | sub_topic_id | item_id |                item_title                 | item_no | item_type
+-----------------+--------------------+-----------------+-----------------+--------------+---------+-------------------------------------------+---------+-----------
+               5 | HTML               |                 | HTML Basics     |           35 |      26 | video to html basics                      |       1 |         2
+               5 | HTML               |                 | HTML Basics     |           35 |      27 | Article to html basics                    |       2 |         1
+               5 | HTML               |                 | HTML Basics     |           35 |      28 | quiz to html basics                       |       3 |         3
+               5 | HTML               |                 | HTML Basics     |           35 |      29 | video intro to Essentials                 |       1 |         2
+               5 | HTML               |                 | HTML Basics     |           35 |      30 | Article intro to Essentials               |       2 |         1
+               5 | HTML               |                 | HTML Basics     |           35 |      31 | quiz intro to Essentials                  |       3 |         3
+               5 | HTML               |                 | HTML Basics     |           35 |      32 | video to Essentials                       |       1 |         2
+               5 | HTML               |                 | HTML Basics     |           35 |      33 | Article to Essentials                     |       2 |         1
+               5 | HTML               |                 | HTML Basics     |           35 |      34 | quiz to Essentials                        |       3 |         3
+               5 | HTML               |                 | HTML Basics     |           35 |      35 | more Article about Essentials             |       1 |         1
+               5 | HTML               |                 | HTML Basics     |           35 |      36 | video intro to HTML Advanced Techniques   |       1 |         2
+               5 | HTML               |                 | HTML Basics     |           35 |      37 | Article intro to HTML Advanced Techniques |       2 |         1
+               5 | HTML               |                 | HTML Basics     |           35 |      38 | quiz intro to HTML Advanced Techniques    |       3 |         3
+               5 | HTML               |                 | HTML Basics     |           35 |      39 | video to HTML Advanced Techniques         |       1 |         2
+               5 | HTML               |                 | HTML Basics     |           35 |      40 | Article to HTML Advanced Techniques       |       2 |         1
+               5 | HTML               |                 | HTML Basics     |           35 |      41 | quiz to HTML Advanced Techniques          |       3 |         3
+               5 | HTML               |                 | HTML Basics     |           35 |      22 | video intro to html basics                |       1 |         2
+               5 | HTML               |                 | HTML Basics     |           35 |      23 | Article intro to html basics              |       2 |         1
+               5 | HTML               |                 | HTML Basics     |           35 |      24 | quiz intro to html basics                 |       3 |         3
+                 |                    |              57 | Webpack         |           62 |      61 |                                           |         |
+                 |                    |              56 | Module Bundlers |           57 |         |                                           |         |
+              14 | CSS Architecture   |                 | BEM             |           56 |         |                                           |         |
+(22 rows)
+--
+-- Assigning_Topics just TL1
+-- WITH AssignedTopics AS (
+    SELECT
+        AT.topic_level1_id,
+        TL1.topic_title AS parent_topic_title
+    FROM
+        Assigning_Topics AT
+    JOIN Topic_Level_1 TL1 ON AT.topic_level1_id = TL1.topic_level1_id
+    WHERE
+        AT.instructor_id = 1
+-- )
+-- SELECT
+--     AT.topic_level1_id,
+--     AT.parent_topic_title,
+--     TLN.topic_id,
+--     TLN.topic_title AS sub_topic_title
+-- FROM
+--     AssignedTopics AT
+-- JOIN Topic_Level_N TLN ON AT.topic_level1_id = TLN.topic_level1_id;
+
+-- new topic from front 
+
+-- Delete item >> video >> quiz >> question
+DELETE FROM items WHERE item_id=$1;
+-- delete quiz>question>option
+      DELETE FROM question, option, quiz
+      USING items
+      WHERE quiz.item_id = items.item_id
+      AND question.quiz_id = quiz.quiz_id
+      AND option.question_id = question.question_id
+      AND quiz.quiz_id = $1
+-- delete one question 
+DELETE FROM question, option
+USING quiz
+WHERE question.quiz_id = quiz.quiz_id
+  AND option.question_id = question.question_id
+  AND quiz.quiz_id = $1;
+-- I nedd to add 3 api >> 1- get video data by item Id >> 2- get Questions by item Id >> 3- get options data by Question ID
+-- 1
+SELECT * FROM video WHERE item_id = $1;
+-- 2
+    SELECT
+        question.question_id,
+        question.question_body,
+        question.question_no,
+        question.question_points
+    FROM
+        items i
+    JOIN quiz q ON i.item_id = q.item_id
+    LEFT JOIN question ON q.quiz_id = question.quiz_id
+    WHERE
+        i.item_id = $1;
+-- 3
+    SELECT * FROM option WHERE question_id = 17;
+-- Update video >> delete previous video from Upload (fs library)>> add new video >> update video_path in video table ,duration ,upload date
+UPDATE video
+SET video_path =$1 WHERE video_id=$2;
+-- Update question with options api 
+    UPDATE question
+        SET question_body = $1
+        WHERE question_id = $2
+-- map in this query(array)
+     UPDATE option
+            SET 
+              option_body = $1,
+              is_correct = $2,
+              option_no = $3
+            WHERE
+              option_id = $4
+
+-- delete question api 
+DELETE FROM question WHERE question_id=$1;
+DELETE FROM option WHERE question_id=$1;
+
+-- new question api >> add question, Options and is_correct option, option_no
+
+INSERT INTO question (question_body,question_no,question_points)
+      VALUES
+      ("I an question",1,10);
+    --   map
+INSERT INTO option (option_body,is_correct,option_no)
+      VALUES
+      ("I an optopn",true,2);
+-- ترتيب العناصر؟؟
+-- api for add new item
+
+-- 
+INSERT INTO role_permission (role_id,permission_id)
+VALUES
+  (1,18);
 
 
-
-
+-- video_duration , upload_date
+ALTER TABLE video
+ADD COLUMN video_duration integer;
+ALTER TABLE video
+ADD COLUMN upload_date date;
