@@ -15,6 +15,7 @@ import Switcher from "./interface/Switcher";
 import LoadingScreen from "./interface/loading-screen/LoadingScreen";
 import SplashScreen from "./interface/loading-screen/SplashScreen";
 import Logo from "./interface/Logo";
+import ProfileAvatar from "./interface/profile-avatar";
 // logic components
 import RequireAuth from "./logic/RequireAuth";
 import PersistLogin from "./logic/PersistLogin";
@@ -91,4 +92,5 @@ export {
   varTranEnter,
   varTranExit,
   Logo,
+  ProfileAvatar,
 };

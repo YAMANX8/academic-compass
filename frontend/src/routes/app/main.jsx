@@ -13,8 +13,8 @@ export const OthersHome = lazy(() => import("../../pages/shared/OthersHome"));
 export const Search = lazy(() => import("../../pages/shared/Search"));
 const NotFound = lazy(() => import("src/pages/shared/NotFound"));
 const NotAuthorized = lazy(() => import("../../pages/shared/NotAuthorized"));
-const Test = lazy(() => import("../../pages/Test.jsx"));
-const PageTest = lazy(() => import("../../pages/instructor/course-info/sections/Reviews.jsx"));
+// const Test = lazy(() => import("../../pages/Test.jsx"));
+// const PageTest = lazy(() => import("../../pages/instructor/course-info/sections/Reviews.jsx"));
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +49,7 @@ export const mainRoutes = [
       </MainLayout>
     ),
     children: [
-      { path: "test", element: <PageTest /> },
+      // { path: "test", element: <Test /> },
       { path: "other-users", element: <OthersHome /> },
       {
         path: "search",

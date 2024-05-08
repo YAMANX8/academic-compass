@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { paths } from "../../routes/paths";
-import { Button } from "../../components";
+import { Button, ProfileAvatar, Switcher } from "../../components";
 import { useAuthContext } from "../../auth/hooks";
 import { MdOutlineSettings as Settings } from "react-icons/md";
 
 const AuthenticatedUserSection = ({}) => {
   const { logout, user } = useAuthContext();
+  const navigate = useNavigate();
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userInfo = {
@@ -28,16 +29,15 @@ const AuthenticatedUserSection = ({}) => {
 
   return (
     <div className="flex items-center justify-between gap-4">
-      <div className="w-[1px] self-stretch rounded-full bg-dark transition-all duration-1000 ease-in-out-back dark:bg-light"></div>
       <Link
         to={user?.role_id == 2 ? paths.student.root : paths.instructor.root}
         className="flex aspect-square w-[45px] items-center justify-center overflow-clip rounded-full bg-primary text-light"
       >
-        {userInfo.imagePath ? (
-          <img src={userInfo.imagePath} alt="profile" />
-        ) : (
-          `${userInfo.firstName.charAt(0)} ${userInfo.lastName.charAt(0)}`
-        )}
+        <ProfileAvatar
+          imagePath={userInfo.imagePath}
+          firstName={userInfo.firstName}
+          lastName={userInfo.lastName}
+        />
       </Link>
       <p className="font-semibold tracking-tight text-primary transition-all duration-1000 ease-in-out-back dark:text-accent-dark">
         {userInfo.firstName} {userInfo.lastName}
@@ -104,6 +104,7 @@ const AuthenticatedUserSection = ({}) => {
           </div>
         )}
       </div>
+      <Switcher />
     </div>
   );
 };

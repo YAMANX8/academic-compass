@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { paths } from "../../routes/paths";
-const Logo = (({ disabledLink = false, className, ...other }) => {
+const Logo = ({ disabledLink = false, className, ...other }) => {
   const logo = (
     <img
       src="/logo/primary.png"
-      className={`w-12 ${className}`}
+      className={`${className}`}
       {...other}
     />
   );
@@ -18,6 +18,6 @@ const Logo = (({ disabledLink = false, className, ...other }) => {
       {logo}
     </Link>
   );
-});
+};
 
 export default Logo;

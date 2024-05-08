@@ -1,26 +1,39 @@
 import { lazy, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
-import MainLayout from "../../layout/main";
+// import MainLayout from "../../layout/main";
+import AdminLayout from "../../layout/admin";
 import { AuthGuard, RoleBasedGuard } from "../../auth/guard";
 import { roles } from "../../config-global";
 
 import { SplashScreen } from "../../components";
 // ----------------------------------------------------------------------
 
-const InstructorDashboard = lazy(() =>
-  import("../../pages/instructor/dashboard/InstructorDashboard")
+// const InstructorDashboard = lazy(
+//   () => import("../../pages/instructor/dashboard/InstructorDashboard"),
+// );
+const Overview = lazy(
+  () => import("../../pages/instructor/dashboard/overview"),
+);
+const MyStudents = lazy(
+  () => import("../../pages/instructor/dashboard/my-students"),
+);
+const InprogressCourses = lazy(
+  () => import("../../pages/instructor/dashboard/inprogress-courses"),
+);
+const CompletedCourses = lazy(
+  () => import("../../pages/instructor/dashboard/completed-courses"),
 );
 const Settings = lazy(() => import("../../pages/instructor/settings/Settings"));
-const ShowProfile = lazy(() =>
-  import("../../pages/instructor/show-profile/ShowProfile")
+const ShowProfile = lazy(
+  () => import("../../pages/instructor/show-profile/ShowProfile"),
 );
 
 // ----------------------------------------------------------------------
 
 const instructors = {
   element: (
-    <MainLayout>
+    <AdminLayout>
       <AuthGuard>
         <RoleBasedGuard roles={roles.instructor}>
           <Suspense fallback={<SplashScreen />}>
@@ -28,12 +41,24 @@ const instructors = {
           </Suspense>
         </RoleBasedGuard>
       </AuthGuard>
-    </MainLayout>
+    </AdminLayout>
   ),
   children: [
     {
-      element: <InstructorDashboard />,
+      element: <Overview />,
       index: true,
+    },
+    {
+      path: "my-students",
+      element: <MyStudents />,
+    },
+    {
+      path: "completed-courses",
+      element: <CompletedCourses />,
+    },
+    {
+      path: "inprogress-courses",
+      element: <InprogressCourses />,
     },
     {
       path: "settings",

@@ -10,7 +10,9 @@ import { roadmapsRoutes } from "./roadmap";
 import { coursesRoutes } from "./course";
 import { studentsRoutes } from "./student";
 import { instructorsRoutes } from "./instructor";
+import AdminLayout from "../../layout/admin";
 import { Home } from "../../pages";
+import Test from "../../pages/Test";
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +41,14 @@ export default function Router() {
     ...roadmapsRoutes,
     ...authRoutes,
     ...mainRoutes,
+    {
+      path: "test",
+      element: (
+        <AdminLayout>
+          <Test />
+        </AdminLayout>
+      ),
+    },
     { path: "*", element: <Navigate to="/404" replace /> },
   ]);
 }
