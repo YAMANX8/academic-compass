@@ -16,6 +16,8 @@ import LoadingScreen from "./interface/loading-screen/LoadingScreen";
 import SplashScreen from "./interface/loading-screen/SplashScreen";
 import Logo from "./interface/Logo";
 import ProfileAvatar from "./interface/profile-avatar";
+import Ratings from "./interface/ratings";
+import Card from "./interface/card";
 // logic components
 import RequireAuth from "./logic/RequireAuth";
 import PersistLogin from "./logic/PersistLogin";
@@ -93,4 +95,6 @@ export {
   varTranExit,
   Logo,
   ProfileAvatar,
+  Ratings,
+  Card,
 };

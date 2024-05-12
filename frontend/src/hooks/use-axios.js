@@ -10,25 +10,33 @@ const useAxios = () => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
-          config.headers["Authorization"] = `Bearer ${user?.accessToken || ""}`;
+          const tokenPrefix = user?.accessToken.startsWith("Bearer ")
+            ? ""
+            : "Bearer ";
+          config.headers["Authorization"] =
+            `${tokenPrefix}${user?.accessToken || ""}`;
         }
         return config;
       },
-      (error) => Promise.reject(error)
+      (error) => Promise.reject(error),
     );
 
     const responseIntercept = axiosPrivate.interceptors.response.use(
       (response) => response,
       async (error) => {
         const prevRequest = error?.config;
-        if (error?.response?.status === 401 && !prevRequest?.sent && authenticated) {
+        if (
+          error?.response?.status === 401 &&
+          !prevRequest?.sent &&
+          authenticated
+        ) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevRequest);
         }
         return Promise.reject(error);
-      }
+      },
     );
 
     return () => {

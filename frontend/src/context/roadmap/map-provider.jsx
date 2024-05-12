@@ -286,7 +286,6 @@ export function MapProvider({ children }) {
       state.roadmapName,
     ]
   );
-  console.log(memoizedValue)
   return (
     <MapContext.Provider value={memoizedValue}>{children}</MapContext.Provider>
   );

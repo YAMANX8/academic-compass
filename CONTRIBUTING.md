@@ -8,7 +8,11 @@
     - [Customizing the Button](#customizing-the-button)
       - [Examples](#examples)
   - [Styling](#styling)
-
+- [PerformanceStatus Component Documentation](#performancestatus-component-documentation)
+  - [Features](#features-1)
+  - [Usage](#usage-1)
+    - [Basic Usage](#basic-usage)
+    - [Customizing the PerformanceStatus](#customizing-the-performancestatus)
 # Button Component Documentation
 
 ## Features
@@ -85,3 +89,36 @@ The `Button` component is designed to be flexible and easily customizable throug
   Using className
 </Button>
 ```
+
+
+# PerformanceStatus Component Documentation
+
+## Features
+
+- **Customizable Number and Title**: Displays a numeric value and a corresponding title to represent a specific performance metric.
+- **Customizable Color**: Allows for the background color to be customized to match different themes or significance levels.
+- **Responsive Design**: Utilizes Tailwind CSS for a responsive and adaptable layout that fits various screen sizes and contexts.
+
+## Usage
+
+### Basic Usage
+
+To use the `PerformanceStatus` component, first import it into your component file:
+
+```javascript
+import PerformanceStatus from './path/to/PerformanceStatus';
+```
+
+Then, you can use it in your component like so:
+
+```jsx
+<PerformanceStatus number={20} title="Completed Tasks" color="#4ade80" />
+```
+
+### Customizing the PerformanceStatus
+
+The `PerformanceStatus` component accepts three props to customize its appearance:
+
+- `number`: The numeric value to display, representing the performance metric.
+- `title`: The title or label associated with the performance metric.
+- `color`: The background color of the component, specified in hexadecimal format.
