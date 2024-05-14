@@ -32,22 +32,22 @@ router.get('/overview', authorization, async (req, res) => {
       performance: [
         {
           id: 1,
-          title: 'Total Enrollments',
+          title: 'Enrollments',
           count: parseInt(myPerformance.Data.totalEnrollments),
         },
         {
           id: 2,
-          title: 'Total Reviews',
+          title: 'Reviews',
           count: parseInt(myPerformance.Data.totalReviews),
         },
         {
           id: 3,
-          title: 'Total Courses',
+          title: 'Courses',
           count: parseInt(myPerformance.Data.totalCourses),
         },
         {
           id: 4,
-          title: 'Total Students',
+          title: 'Students',
           count: parseInt(myPerformance.Data.totalStudents),
         },
       ],
