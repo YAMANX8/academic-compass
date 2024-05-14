@@ -5,7 +5,7 @@ const getMyPerformanceNumber = require('../../../Utils/dashboardInstructor/my-pe
 const getMyProfile = require('../../../Utils/dashboardInstructor/my-profile');
 const getMyTopics = require('../../../Utils/dashboardInstructor/my-topics');
 
-router.get('/overview', authorization, async (req, res) => {
+router.get('/overview', async (req, res) => {
   try {
     const Id = req.user.userId;
     const roleId = req.user.roleId;
@@ -51,10 +51,10 @@ router.get('/overview', authorization, async (req, res) => {
           count: parseInt(myPerformance.Data.totalStudents),
         },
       ],
-      topics: myTopics.Data.mytopic.map((topic) => ({
-        id: topic.topic_level1_id,
+      roadmaps: myTopics.Data.mytopic.map((topic) => ({
         roadmap_id: topic.roadmap_id,
-        title: topic.topic_title,
+        title: topic.roadmap_title,
+        image: `http://localhost:5000/image/${topic.image_path}`,
       })),
     };
 

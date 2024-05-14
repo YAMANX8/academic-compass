@@ -4,7 +4,6 @@ const pool = require('../../database/db');
 const GetMyTopics = async (instructoer_id) => {
   try {
     const value = [instructoer_id];
-
     const query = `
       SELECT DISTINCT
         Topic_Level_1.roadmap_id,
@@ -15,7 +14,7 @@ const GetMyTopics = async (instructoer_id) => {
         LEFT JOIN Topic_Level_1 ON Assigning_Topics.topic_level1_id = Topic_Level_1.topic_level1_id
         lEFT JOIN roadmap ON  Topic_Level_1.roadmap_id = roadmap.roadmap_id
       WHERE
-        Assigning_Topics.instructor_id = 1;
+        Assigning_Topics.instructor_id = $1;
     `;
     const result = await pool.query(query, value);
     return {
