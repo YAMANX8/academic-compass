@@ -5,7 +5,7 @@ const getMyPerformanceNumber = require('../../../Utils/dashboardInstructor/my-pe
 const getMyProfile = require('../../../Utils/dashboardInstructor/my-profile');
 const getMyTopics = require('../../../Utils/dashboardInstructor/my-topics');
 
-router.get('/overview', async (req, res) => {
+router.get('/overview',authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
     const roleId = req.user.roleId;
