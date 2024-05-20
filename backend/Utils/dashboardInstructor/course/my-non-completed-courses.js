@@ -29,10 +29,7 @@ const My_Non_completed_Courses = async (instructoer_id) => {
               ELSE 0
             END + CASE
               WHEN c.course_description IS NOT NULL THEN 1
-              ELSE 0
-            END + CASE
-              WHEN c.course_status = 'Active' THEN 1
-              ELSE 0
+              ELSE 0 
             END + CASE
               WHEN c.course_level IS NOT NULL THEN 1
               ELSE 0
