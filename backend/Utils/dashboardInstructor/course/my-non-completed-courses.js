@@ -9,14 +9,18 @@ const My_Non_completed_Courses = async (instructoer_id) => {
       SELECT
         course_id,
         course_title,
+        subtitle,
         course_thumnail,
+        course_status,
         progress
       FROM
         (
           SELECT
             c.course_id,
             c.course_title,
+            subtitle,
             c.course_thumnail,
+            c.course_status,
             CASE
               WHEN c.course_title IS NOT NULL THEN 1
               ELSE 0
@@ -27,7 +31,7 @@ const My_Non_completed_Courses = async (instructoer_id) => {
               WHEN c.course_description IS NOT NULL THEN 1
               ELSE 0
             END + CASE
-              WHEN c.course_status = 'true' THEN 1
+              WHEN c.course_status = 'Active' THEN 1
               ELSE 0
             END + CASE
               WHEN c.course_level IS NOT NULL THEN 1
@@ -97,7 +101,7 @@ const My_Non_completed_Courses = async (instructoer_id) => {
             c.course_title
         ) AS subquery
       WHERE
-        progress < 12;
+        progress < 11;
     `;
     const result = await pool.query(query, value);
     console.log(result);

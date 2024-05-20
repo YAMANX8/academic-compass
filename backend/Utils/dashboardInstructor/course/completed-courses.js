@@ -10,7 +10,8 @@ const Completed_Courses = async (instructoer_id) => {
         c.course_id,
         c.course_title,
         c.subtitle,
-        c.course_thumnail
+        c.course_thumnail,
+        c.course_status
       FROM
         course c
         JOIN Course_Lists cl ON c.course_id = cl.course_id
@@ -29,7 +30,6 @@ const Completed_Courses = async (instructoer_id) => {
         AND c.course_level IS NOT NULL
         AND c.course_type IS NOT NULL
         AND c.course_thumnail IS NOT NULL
-        AND c.course_status = 'true'
       GROUP BY
         c.course_id,
         c.course_title

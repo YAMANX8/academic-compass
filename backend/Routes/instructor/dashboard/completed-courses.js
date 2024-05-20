@@ -20,12 +20,14 @@ router.get('/completed-courses', authorization, async (req, res) => {
     const Completed_Courses = await get_Completed_Courses.Completed_Courses(Id);
     // Response data
     const formattedData = {
-      completed_courses: Completed_Courses.Data.Completed_Courses.map(
+      completedCourses: Completed_Courses.Data.Completed_Courses.map(
         (course) => ({
           id: course.course_id,
           title: course.course_title,
           subtitle: course.subtitle,
-          thumnail: course.course_thumnail,
+          thumbnail: course.course_thumnail,
+          courseStatus: course.course_status === 'Active' ? true : false,
+          type: true,
         }),
       ),
     };

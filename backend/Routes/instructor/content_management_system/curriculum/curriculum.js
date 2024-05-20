@@ -287,7 +287,7 @@ router.post('/curriculum/question/:quizId', authorization, async (req, res) => {
     res.status(500).json({ error: 'Server Error' });
   }
 });
-// new item
+// new item +1 for item count 
 
 // delete item note when the course is published(enroll on the course) >> Items must not be allowed to be deleted 
 router.delete('/curriculum/item/:itemId', authorization, async (req, res) => {
