@@ -25,8 +25,12 @@ router.get('/in-progress-courses', authorization, async (req, res) => {
         My_Non_completed_Courses.Data.Non_completed_Courses.map((course) => ({
           id: course.course_id,
           title: course.course_title,
-          progress: ((course.progress * 100) / 12).toFixed(1),
-          thumnail: course.course_thumnail,
+          subtitle: course.subtitle,
+          progressPercentage: ((course.progress * 100) / 11).toFixed(2),
+          progress: course.progress,
+          thumbnail: course.course_thumnail,
+          courseStatus: course.course_status === 'Active' ? true : false,
+          type: false,
         })),
     };
 
