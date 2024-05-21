@@ -8,6 +8,7 @@ router.post('/', authorization, async (req, res) => {
     const { title, levelId, typeId } = req.body;
     const instructorId = req.user.userId;
     const roleId = req.user.roleId;
+    const courseStatus = 'Inactive';
     //permission
     const hasAccess = await checkPermission(
       instructorId,
@@ -23,14 +24,15 @@ router.post('/', authorization, async (req, res) => {
           course_title,
           instructor_id,
           course_level,
-          course_type
+          course_type,
+          course_status
         )
       VALUES
-        ($1, $2, $3, $4)
+        ($1, $2, $3, $4, $5)
       RETURNING
         *
     `;
-    const value = [title, instructorId, levelId, typeId];
+    const value = [title, instructorId, levelId, typeId, courseStatus];
     const result = await pool.query(query, value);
     res.status(201).json(result.rows[0]);
   } catch (err) {

@@ -5,7 +5,7 @@ const getMyPerformanceNumber = require('../../../Utils/dashboardInstructor/my-pe
 const getMyProfile = require('../../../Utils/dashboardInstructor/my-profile');
 const getMyTopics = require('../../../Utils/dashboardInstructor/my-topics');
 
-router.get('/overview', authorization, async (req, res) => {
+router.get('/overview',authorization, async (req, res) => {
   try {
     const Id = req.user.userId;
     const roleId = req.user.roleId;
@@ -32,29 +32,29 @@ router.get('/overview', authorization, async (req, res) => {
       performance: [
         {
           id: 1,
-          title: 'Total Enrollments',
+          title: 'Enrollments',
           count: parseInt(myPerformance.Data.totalEnrollments),
         },
         {
           id: 2,
-          title: 'Total Reviews',
+          title: 'Reviews',
           count: parseInt(myPerformance.Data.totalReviews),
         },
         {
           id: 3,
-          title: 'Total Courses',
+          title: 'Courses',
           count: parseInt(myPerformance.Data.totalCourses),
         },
         {
           id: 4,
-          title: 'Total Students',
+          title: 'Students',
           count: parseInt(myPerformance.Data.totalStudents),
         },
       ],
-      topics: myTopics.Data.mytopic.map((topic) => ({
-        id: topic.topic_level1_id,
+      roadmaps: myTopics.Data.mytopic.map((topic) => ({
         roadmap_id: topic.roadmap_id,
-        title: topic.topic_title,
+        title: topic.roadmap_title,
+        image: `http://localhost:5000/image/${topic.image_path}`,
       })),
     };
 
