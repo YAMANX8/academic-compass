@@ -1,7 +1,8 @@
 import Image from "../../../../assets/images/Rectangle 63.png";
-import { Button } from "../../../../components";
+import { Button, Progress } from "../../../../components";
 import { Icon } from "@iconify/react";
 import { paths } from "../../../../routes/paths";
+
 const CourseCard = ({
   id,
   title,
@@ -44,7 +45,20 @@ const CourseCard = ({
             </div>
           </div>
         ) : (
-          <div>inprogress</div>
+          <div className="mt-4 flex items-center justify-between">
+            <div className="flex-grow">
+              <p className="mb-2">
+                Progress: <span className="text-red-500">{10}</span> of{" "}
+                <span className="text-green-500">{12}</span>
+              </p>
+              <Progress percentage={7} />
+            </div>
+            <div className="ml-4 flex-shrink-0">
+              <Button>
+                <Icon icon="mdi:eye" /> Continue Editing
+              </Button>
+            </div>
+          </div>
         )}
       </div>
     </div>

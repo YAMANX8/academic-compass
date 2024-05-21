@@ -1,6 +1,6 @@
 import CourseCard from "./components/course-card";
 import { useState } from "react";
-import { Card, TextField } from "../../../components";
+import { Card } from "../../../components";
 import { Helmet } from "react-helmet-async";
 import Image from "../../../assets/images/Rectangle 63.png";
 
@@ -57,7 +57,7 @@ const CompletedCourses = () => {
           <input
             type="text"
             placeholder="Search by course title..."
-            className="px-3 h-14 rounded-lg w-80 border border-gray-400/20 outline-none"
+            className="h-14 w-80 rounded-lg border border-gray-400/20 px-3 outline-none"
             value={searchTerm}
             onChange={handleSearchChange}
           />{" "}

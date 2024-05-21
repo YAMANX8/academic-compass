@@ -18,6 +18,7 @@ import Logo from "./interface/Logo";
 import ProfileAvatar from "./interface/profile-avatar";
 import Ratings from "./interface/ratings";
 import Card from "./interface/card";
+import Progress from "./interface/progress";
 // logic components
 import RequireAuth from "./logic/RequireAuth";
 import PersistLogin from "./logic/PersistLogin";
@@ -97,4 +98,5 @@ export {
   ProfileAvatar,
   Ratings,
   Card,
+  Progress,
 };
