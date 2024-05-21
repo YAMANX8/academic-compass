@@ -7,16 +7,6 @@ import Image from "../../../assets/images/Rectangle 63.png";
 const InprogressCourses = () => {
   const [data, setData] = useState([
     {
-      id: 15,
-      title: "Local SEO Strategies",
-      subtitle: null,
-      progressPercentage: "63.64",
-      progress: 7,
-      thumbnail: Image,
-      courseStatus: true,
-      type: false,
-    },
-    {
       id: 16,
       title: "On-Page SEO Techniques",
       subtitle: " Optimize Your Webpages for Better Rankings",
@@ -40,16 +30,6 @@ const InprogressCourses = () => {
       id: 18,
       title: "Introduction to CSS",
       subtitle: " Learn the Basics of Cascading Style Sheets",
-      progressPercentage: "54.55",
-      progress: 6,
-      thumbnail: Image,
-      courseStatus: true,
-      type: false,
-    },
-    {
-      id: 19,
-      title: "CSS Layout Fundamentals",
-      subtitle: "Learn the Basics of Creating Web Layouts",
       progressPercentage: "54.55",
       progress: 6,
       thumbnail: Image,
@@ -89,6 +69,8 @@ const InprogressCourses = () => {
               subtitle={course.subtitle}
               type={course.type}
               image={course.thumbnail}
+              percentage={course.progressPercentage}
+              progress={course.progress}
             />
           ))}
         </Card>

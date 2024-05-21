@@ -10,6 +10,8 @@ const CourseCard = ({
   image = Image,
   type,
   active = true,
+  percentage,
+  progress,
 }) => {
   return (
     <div className="flex w-full overflow-hidden rounded-lg border-2 border-dashed border-gray-300">
@@ -45,19 +47,18 @@ const CourseCard = ({
             </div>
           </div>
         ) : (
-          <div className="mt-4 flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex-grow">
               <p className="mb-2">
-                Progress: <span className="text-red-500">{10}</span> of{" "}
-                <span className="text-green-500">{12}</span>
+                Progress: <span className="text-error">{progress}</span> of{" "}
+                <span className="text-success">11</span>
               </p>
-              <Progress percentage={7} />
+              <Progress percentage={percentage} />
             </div>
-            <div className="ml-4 flex-shrink-0">
-              <Button>
-                <Icon icon="mdi:eye" /> Continue Editing
-              </Button>
-            </div>
+
+            <Button page={`${paths.course.manage.edit}/${id}`}>
+              <Icon icon="mdi:pencil" /> Continue Editing
+            </Button>
           </div>
         )}
       </div>
