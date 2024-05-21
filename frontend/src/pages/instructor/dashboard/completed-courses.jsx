@@ -1,10 +1,13 @@
 import CourseCard from "./components/course-card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "../../../components";
 import { Helmet } from "react-helmet-async";
 import Image from "../../../assets/images/Rectangle 63.png";
+import { useGetCompletedCourses } from "../../../apis/instructor";
 
 const CompletedCourses = () => {
+  const getData = useGetCompletedCourses();
+
   const [data, setData] = useState([
     {
       id: 1,
@@ -12,9 +15,9 @@ const CompletedCourses = () => {
         "yaman ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
       subtitle:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
-      image: Image,
+      thumbnail: Image,
       type: true,
-      active: true,
+      courseStatus: true,
     },
     {
       id: 2,
@@ -22,9 +25,9 @@ const CompletedCourses = () => {
         "ahmed ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
       subtitle:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
-      image: Image,
+      thumbnail: Image,
       type: true,
-      active: false,
+      courseStatus: false,
     },
     {
       id: 3,
@@ -32,9 +35,9 @@ const CompletedCourses = () => {
         "ammar ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
       subtitle:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
-      image: Image,
+      thumbnail: Image,
       type: true,
-      active: true,
+      courseStatus: true,
     },
   ]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,6 +49,21 @@ const CompletedCourses = () => {
   const filteredData = data.filter((course) =>
     course.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getData();
+        // console.log(res);
+
+        setData(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
       <Helmet>
@@ -68,8 +86,8 @@ const CompletedCourses = () => {
               title={course.title}
               subtitle={course.subtitle}
               type={course.type}
-              active={course.active}
-              image={course.image}
+              active={course.courseStatus}
+              image={course.thumbnail}
             />
           ))}
         </Card>

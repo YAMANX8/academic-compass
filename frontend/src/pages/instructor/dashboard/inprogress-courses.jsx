@@ -62,10 +62,10 @@ const InprogressCourses = () => {
   return (
     <>
       <Helmet>
-        <title>My Completed Courses</title>
+        <title>My Inprogress Courses</title>
       </Helmet>
       <div className="w-full space-y-4">
-        <h2>My Completed Courses</h2>
+        <h2>My Inprogress Courses</h2>
         <Card className="flex flex-col gap-4">
           <input
             type="text"
