@@ -53,7 +53,6 @@ export const endpoints = {
     dashboard: {
       overview: "/instructor/dashboard/overview",
       inProgressCourses: "/instructor/dashboard/in-progress-courses",
-      completedCourses: "/instructor/dashboard/completed-courses",
     },
     settings: "/instructor/setting",
     getStudent: "/instructor/studentProfile", // not used yet!

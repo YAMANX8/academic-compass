@@ -1,10 +1,11 @@
 import CourseCard from "./components/course-card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "../../../components";
 import { Helmet } from "react-helmet-async";
 import Image from "../../../assets/images/Rectangle 63.png";
-
+import { useGetInprogressCourses } from "../../../apis/instructor";
 const InprogressCourses = () => {
+  const getData = useGetInprogressCourses();
   const [data, setData] = useState([
     {
       id: 16,
@@ -46,6 +47,18 @@ const InprogressCourses = () => {
   const filteredData = data.filter((course) =>
     course.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // getData();
+        const res = await getData();
+        setData(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <>
       <Helmet>

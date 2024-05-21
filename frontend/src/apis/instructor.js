@@ -28,3 +28,22 @@ export const useGetOverview = () => {
 
   return getData;
 };
+
+export const useGetInprogressCourses = () => {
+  const axios = useAxios();
+  const getData = async () => {
+    try {
+      const response = await axios.get(
+        endpoints.instructor.dashboard.inProgressCourses,
+      );
+      // console.log(response)
+      
+      const data = response.data.inProgressCourses;
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return getData;
+};
