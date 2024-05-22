@@ -24,7 +24,7 @@ const Overview = () => {
   }, []);
 
   const [json, setJson] = useState({
-    instructor_rating: 4.5,
+    instructor_rating: 0,
     performance: [
       {
         id: 1,
@@ -50,11 +50,6 @@ const Overview = () => {
     topics: [
       {
         id: 2,
-        roadmap_id: 18,
-        title: "frontend",
-      },
-      {
-        id: 1,
         roadmap_id: 18,
         title: "frontend",
       },

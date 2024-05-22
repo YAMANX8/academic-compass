@@ -7,45 +7,21 @@ import { useGetCompletedCourses } from "../../../apis/instructor";
 
 const CompletedCourses = () => {
   const getData = useGetCompletedCourses();
-
   const [data, setData] = useState([
     {
-      id: 1,
-      title:
-        "yaman ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
-      subtitle:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
-      thumbnail: Image,
-      type: true,
-      courseStatus: true,
-    },
-    {
-      id: 2,
-      title:
-        "ahmed ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
-      subtitle:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
+      id: 0,
+      title: "[COURSE_TITLE]",
+      subtitle: "[COURSE_SUBTITLE]",
       thumbnail: Image,
       type: true,
       courseStatus: false,
     },
-    {
-      id: 3,
-      title:
-        "ammar ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
-      subtitle:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, praesentium minima a eos eligendi officiis cumque ea, magni dolores consequuntur, possimus nobis iure repellendus facere harum incidunt doloremque officia culpa.",
-      thumbnail: Image,
-      type: true,
-      courseStatus: true,
-    },
   ]);
+  
   const [searchTerm, setSearchTerm] = useState("");
-
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
   const filteredData = data.filter((course) =>
     course.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
@@ -54,8 +30,6 @@ const CompletedCourses = () => {
     const fetchData = async () => {
       try {
         const res = await getData();
-        // console.log(res);
-
         setData(res);
       } catch (error) {
         console.log(error);

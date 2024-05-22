@@ -8,49 +8,27 @@ const InprogressCourses = () => {
   const getData = useGetInprogressCourses();
   const [data, setData] = useState([
     {
-      id: 16,
-      title: "On-Page SEO Techniques",
-      subtitle: " Optimize Your Webpages for Better Rankings",
-      progressPercentage: "63.64",
-      progress: 7,
+      id: 0,
+      title: "[COURSE_TITLE]",
+      subtitle: "[COURSE_SUBTITLE]",
+      progress: 0,
       thumbnail: Image,
-      courseStatus: true,
-      type: false,
-    },
-    {
-      id: 17,
-      title: "SEO for E-commerce",
-      subtitle: " Drive Organic Traffic to Your Online Store",
-      progressPercentage: "54.55",
-      progress: 6,
-      thumbnail: Image,
-      courseStatus: true,
-      type: false,
-    },
-    {
-      id: 18,
-      title: "Introduction to CSS",
-      subtitle: " Learn the Basics of Cascading Style Sheets",
-      progressPercentage: "54.55",
-      progress: 6,
-      thumbnail: Image,
-      courseStatus: true,
+      courseStatus: false,
       type: false,
     },
   ]);
-  const [searchTerm, setSearchTerm] = useState("");
 
+  const [searchTerm, setSearchTerm] = useState("");
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
   const filteredData = data.filter((course) =>
     course.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // getData();
         const res = await getData();
         setData(res);
       } catch (error) {
@@ -59,6 +37,7 @@ const InprogressCourses = () => {
     };
     fetchData();
   }, []);
+  
   return (
     <>
       <Helmet>
@@ -82,7 +61,6 @@ const InprogressCourses = () => {
               subtitle={course.subtitle}
               type={course.type}
               image={course.thumbnail}
-              percentage={course.progressPercentage}
               progress={course.progress}
             />
           ))}

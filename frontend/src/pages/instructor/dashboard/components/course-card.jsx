@@ -10,7 +10,6 @@ const CourseCard = ({
   image = Image,
   type,
   active = true,
-  percentage,
   progress,
 }) => {
   return (
@@ -50,10 +49,21 @@ const CourseCard = ({
           <div className="flex items-center justify-between gap-2">
             <div className="flex-grow">
               <p className="mb-2">
-                Progress: <span className="text-error">{progress}</span> of{" "}
-                <span className="text-success">11</span>
+                Progress:{" "}
+                <span
+                  className={
+                    (progress / 11) * 100 <= 40
+                      ? "text-error"
+                      : (progress / 11) * 100 <= 70
+                        ? "text-warning"
+                        : "text-success"
+                  }
+                >
+                  {progress}
+                </span>{" "}
+                of <span className="text-primary">11</span>
               </p>
-              <Progress percentage={percentage} />
+              <Progress percentage={(progress / 11) * 100} />
             </div>
 
             <Button page={`${paths.course.manage.edit}/${id}`}>
