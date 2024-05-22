@@ -6,7 +6,7 @@ import { paths } from "../../routes/paths";
 const NavVertical = ({ role, option = "noOption" }) => {
   const tabsData = useTabsConfig();
   return (
-    <nav className="top-0 flex w-64 flex-shrink-0 flex-grow-0 flex-col gap-4 border-r border-dashed border-gray-300 p-4">
+    <nav className="flex top-0 w-64 flex-col gap-4 border-r border-dashed border-gray-300 p-4">
       <TabsMapper data={tabsData[role][option]} />
       <div className="flex flex-grow flex-col-reverse">
         <Button page={paths.course.manage.create}>

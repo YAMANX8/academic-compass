@@ -20,6 +20,7 @@ import Quiz from "./student/quiz/Quiz";
 // instructor pages
 import LoginInstructor from "./instructor/login/LoginInstructor";
 import RegisterInstructor from "./instructor/register/RegisterInstructor";
+import InstructorDashboard from "./instructor/dashboard/InstructorDashboard";
 import Settings from "./instructor/settings/Settings";
 import EditCourse from "./instructor/course-edit/EditCourse";
 import CreateCourse from "./instructor/course-create/CreateCourse";
@@ -54,6 +55,7 @@ export {
   Quiz,
   LoginInstructor,
   RegisterInstructor,
+  InstructorDashboard,
   OthersHome,
   Settings,
   EditCourse,

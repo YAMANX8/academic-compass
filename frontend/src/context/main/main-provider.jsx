@@ -82,6 +82,7 @@ export function MainProvider({ children }) {
     }),
     [state.status, state.popularRoadmaps, getLanding]
   );
+  console.log(memoizedValue);
   return (
     <MainContext.Provider value={memoizedValue}>
       {children}

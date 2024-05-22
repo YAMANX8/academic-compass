@@ -78,7 +78,7 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         const res = await axios.get(endpoints.student.auth.me, {
           headers: {
-            Authorization: accessToken,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
         const user = res.data.user;

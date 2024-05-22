@@ -13,7 +13,8 @@ import { Button } from "../../../components";
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+const PWD_REGEX =
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;
 
 function RegisterStudent() {
   const { studentRegister } = useAuthContext();
@@ -245,11 +246,18 @@ function RegisterStudent() {
                 pwd && pwdFocus && !validPwd ? "top-[86px]" : "-top-[2000px]"
               }`}
             >
-              Six characters at least!
+              Eight characters at least!
               <br />
-              Must include at least one letter and one number!
+              24 characters at most!
               <br />
-              Special characters are optional!
+              Must include uppercase and lowercase letters, a number and a
+              special character!
+              <br />
+              Only <span aria-label="exclamation mark">!</span>{" "}
+              <span aria-label="at symbol">@</span>{" "}
+              <span aria-label="hashtag">#</span>{" "}
+              <span aria-label="dollar sign">$</span>{" "}
+              <span aria-label="percent">%</span> are allowed!
             </p>
             <button
               type="button"

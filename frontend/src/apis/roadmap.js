@@ -5,8 +5,12 @@ import { useAuthContext } from "../auth/hooks";
 export const useGetRoadmaps = () => {
   const axios = useAxios();
   const getData = async () => {
-    const response = await axios.get(endpoints.roadmaps.getAll);
-    return response.data.roadmaps;
+    try {
+      const response = await axios.get(endpoints.roadmaps.getAll);
+      return response.data.roadmaps;
+    } catch (error) {
+      throw error;
+    }
   };
   return getData;
 };
@@ -22,10 +26,14 @@ export const useGetTopicsByLevel = (level) => {
       endpoints.roadmaps.topics?.[levelKey]?.[endpointType] ||
       endpoints.roadmaps.topics.levelN?.[endpointType];
 
-    const response = await axios.get(`${endpoint}/${id}`);
+    try {
+      const response = await axios.get(`${endpoint}/${id}`);
 
-    const { topics, progress = [], roadmap } = response.data;
-    return { topics, progress, roadmap };
+      const { topics, progress = [], roadmap } = response.data;
+      return { topics, progress, roadmap };
+    } catch (error) {
+      throw error;
+    }
   };
 
   return getData;
@@ -35,15 +43,19 @@ export const useHandleState = () => {
   const axios = useAxios();
 
   const setData = async (state, topicId, topicLevel) => {
-    const res = await axios.post(
-      endpoints.roadmaps.topics.newState,
-      JSON.stringify({
-        topic_id: topicId,
-        topic_level: topicLevel,
-        state_id: state,
-      }),
-    );
-    return res;
+    try {
+      const res = await axios.post(
+        endpoints.roadmaps.topics.newState,
+        JSON.stringify({
+          topic_id: topicId,
+          topic_level: topicLevel,
+          state_id: state,
+        })
+      );
+      return res;
+    } catch (error) {
+      throw error;
+    }
   };
 
   return setData;
@@ -53,9 +65,13 @@ export const useHandleReset = () => {
   const axios = useAxios();
 
   const deleteData = async (topicId, topicLevel) => {
-    await axios.delete(
-      `${endpoints.roadmaps.topics.resetState}/${topicId}/${topicLevel}`,
-    );
+    try {
+      await axios.delete(
+        `${endpoints.roadmaps.topics.resetState}/${topicId}/${topicLevel}`
+      );
+    } catch (error) {
+      throw error;
+    }
   };
 
   return deleteData;

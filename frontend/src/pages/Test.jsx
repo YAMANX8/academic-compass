@@ -1,8 +1,9 @@
-import CourseCard from "./instructor/dashboard/components/course-card";
+import React from "react";
 const Test = () => {
+
   return (
-    <div className="w-full">
-      <CourseCard type={true} title={"heloo aa"} subtitle={"adadad e"} />
+    <div >
+      content
     </div>
   );
 };
