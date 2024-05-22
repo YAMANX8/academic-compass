@@ -11,8 +11,8 @@ axiosInstance.interceptors.response.use(
   (res) => res,
   (error) =>
     Promise.reject(
-      (error.response && error.response.data) || "Something went wrong"
-    )
+      (error.response && error.response.data) || "Something went wrong",
+    ),
 );
 
 export const axiosPrivate = axios.create({
@@ -50,7 +50,11 @@ export const endpoints = {
       login: "/auth2/instructor/login",
       register: "/auth2/instructor/register",
     },
-    dashboard: "/instructor/dashboard",
+    dashboard: {
+      overview: "/instructor/dashboard/overview",
+      inProgressCourses: "/instructor/dashboard/in-progress-courses",
+      completedCourses: "/instructor/dashboard/completed-courses",
+    },
     settings: "/instructor/setting",
     getStudent: "/instructor/studentProfile", // not used yet!
   },

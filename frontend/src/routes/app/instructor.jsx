@@ -12,9 +12,7 @@ import { SplashScreen } from "../../components";
 // const InstructorDashboard = lazy(
 //   () => import("../../pages/instructor/dashboard/InstructorDashboard"),
 // );
-const Overview = lazy(
-  () => import("../../pages/instructor/dashboard/overview"),
-);
+const Overview = lazy(() => import("../../pages/instructor/dashboard/overview"),);
 const MyStudents = lazy(
   () => import("../../pages/instructor/dashboard/my-students"),
 );
