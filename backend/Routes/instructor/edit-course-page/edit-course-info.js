@@ -25,7 +25,6 @@ router.put(
         updateWhoFor,
         updateWhatLearn,
         updatePrerequisites,
-        isActive,
       } = req.body;
       whatLearn = JSON.parse(whatLearn);
       whoFor = JSON.parse(whoFor);
@@ -77,10 +76,9 @@ router.put(
             course_level = $3,
             course_type = $4,
             course_description = $5,
-            course_thumnail = $6,
-            course_status = $7
+            course_thumnail = $6
           WHERE
-            course_id = $8
+            course_id = $7
         `;
         const updateValue = [
           title,
@@ -89,7 +87,6 @@ router.put(
           type,
           description,
           imageFilePath,
-          isActive,
           courseId,
         ];
         // updateResult
@@ -254,8 +251,7 @@ router.put(
               l.level_name,
               course_type,
               course_description,
-              course_thumnail,
-              course_status
+              course_thumnail
             FROM
               course
               JOIN Courses_Type ct ON course.course_type = ct.type_id
@@ -310,7 +306,6 @@ router.put(
         whatLearn: [],
         prerequisites: [],
         thumbnail: '',
-        isActive: false,
       };
       // Populate JSON response based on list_type
       newData.Data.newCourseListData.forEach((row) => {
@@ -327,7 +322,6 @@ router.put(
           jsonResponse.prerequisites.push(item);
         }
       });
-      //* decode image
       // Populate the remaining fields
       if (newData.Data.newCourseData.length > 0) {
         jsonResponse.title = newData.Data.newCourseData[0].course_title;
@@ -336,8 +330,9 @@ router.put(
         jsonResponse.type = newData.Data.newCourseData[0].type_name;
         jsonResponse.description =
           newData.Data.newCourseData[0].course_description;
-        jsonResponse.thumbnail = newData.Data.newCourseData[0].course_thumnail;
-        jsonResponse.isActive = newData.Data.newCourseData[0].course_status;
+        jsonResponse.thumbnail = decodeURIComponent(
+          newData.Data.newCourseData[0].course_thumnail,
+        );
       }
 
       res.status(200).json(jsonResponse);
@@ -376,8 +371,7 @@ router.get('/:id', authorization, async (req, res) => {
         l.level_name,
         course_type,
         course_description,
-        course_thumnail,
-        course_status
+        course_thumnail
       FROM
         course
         JOIN Courses_Type ct ON course.course_type = ct.type_id
@@ -417,7 +411,6 @@ router.get('/:id', authorization, async (req, res) => {
       whatLearn: [],
       prerequisites: [],
       thumbnail: '',
-      isActive: false,
     };
 
     // Populate JSON response based on list_type
@@ -443,8 +436,9 @@ router.get('/:id', authorization, async (req, res) => {
       jsonResponse.level = courseResult.rows[0].level_name;
       jsonResponse.type = courseResult.rows[0].type_name;
       jsonResponse.description = courseResult.rows[0].course_description;
-      jsonResponse.thumbnail = courseResult.rows[0].course_thumnail;
-      jsonResponse.isActive = courseResult.rows[0].course_status;
+      jsonResponse.thumbnail = decodeURIComponent(
+        courseResult.rows[0].course_thumnail,
+      );
     }
 
     res.status(200).json(jsonResponse);
