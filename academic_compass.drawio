@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-06-20T15:08:59.671Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="lxGSY_UQUJZNBNO0AfB4" version="24.5.5" type="github">
+<mxfile host="app.diagrams.net" modified="2024-06-20T15:12:46.964Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="BSyxjuce2lc3Su45Jvsu" version="24.5.5" type="github">
   <diagram name="Page-1" id="ULvkepZrze767ZOHFqph">
-    <mxGraphModel dx="3283" dy="1362" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2987" dy="1115" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -414,7 +414,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="oZLNIOdMeCVHFcoXMiUh-21" value="Manager" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
-          <mxGeometry x="-461.5" y="5040" width="30" height="60" as="geometry" />
+          <mxGeometry x="-461.5" y="4995" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="oZLNIOdMeCVHFcoXMiUh-44" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" parent="1" source="oZLNIOdMeCVHFcoXMiUh-24" target="oZLNIOdMeCVHFcoXMiUh-20" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -443,7 +443,7 @@
         <mxCell id="oZLNIOdMeCVHFcoXMiUh-39" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" parent="1" source="oZLNIOdMeCVHFcoXMiUh-27" target="oZLNIOdMeCVHFcoXMiUh-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-40" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" parent="1" source="oZLNIOdMeCVHFcoXMiUh-27" target="oZLNIOdMeCVHFcoXMiUh-14" edge="1">
+        <mxCell id="oZLNIOdMeCVHFcoXMiUh-40" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" parent="1" source="oZLNIOdMeCVHFcoXMiUh-21" target="oZLNIOdMeCVHFcoXMiUh-14" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="oZLNIOdMeCVHFcoXMiUh-41" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" parent="1" source="oZLNIOdMeCVHFcoXMiUh-27" target="oZLNIOdMeCVHFcoXMiUh-8" edge="1">
@@ -452,41 +452,38 @@
         <mxCell id="oZLNIOdMeCVHFcoXMiUh-27" value="Super User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
           <mxGeometry x="-700" y="4680" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-51" value="" style="group" parent="1" vertex="1" connectable="0">
-          <mxGeometry x="-278" y="4490" width="165" height="440" as="geometry" />
-        </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-1" value="Monitor Roadmaps Data" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="oZLNIOdMeCVHFcoXMiUh-51" vertex="1">
-          <mxGeometry width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-2" value="Monitor Students Data" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="oZLNIOdMeCVHFcoXMiUh-51" vertex="1">
-          <mxGeometry y="90" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-3" value="Monitor Instructors Data" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="oZLNIOdMeCVHFcoXMiUh-51" vertex="1">
-          <mxGeometry x="5" y="180" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-8" value="Monitor Courses Data" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="oZLNIOdMeCVHFcoXMiUh-51" vertex="1">
-          <mxGeometry x="5" y="360" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-14" value="Monitor Organizational Structure" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="oZLNIOdMeCVHFcoXMiUh-51" vertex="1">
-          <mxGeometry x="5" y="270" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-52" value="" style="group" parent="1" vertex="1" connectable="0">
-          <mxGeometry x="-273" y="4940" width="160" height="260" as="geometry" />
-        </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-17" value="Handle Platform Registration Requests" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="oZLNIOdMeCVHFcoXMiUh-52" vertex="1">
-          <mxGeometry width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-18" value="Remove Employee" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="oZLNIOdMeCVHFcoXMiUh-52" vertex="1">
-          <mxGeometry y="90" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="oZLNIOdMeCVHFcoXMiUh-19" value="Handle Managers Requests" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="oZLNIOdMeCVHFcoXMiUh-52" vertex="1">
-          <mxGeometry y="180" width="160" height="80" as="geometry" />
-        </mxCell>
         <mxCell id="4wOQNBVU8P1z-x78E6XJ-1" value="استعراض طلبات التسجيل بالمنصة" style="whiteSpace=wrap;html=1;fontSize=22;" vertex="1" parent="1">
           <mxGeometry x="-100" y="5015" width="270" height="110" as="geometry" />
         </mxCell>
         <mxCell id="4wOQNBVU8P1z-x78E6XJ-2" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.015;entryY=0.659;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" edge="1" parent="1" source="ZqFeVGlqoxZ3mJ63dnHJ-4" target="SsyNwTXFl7cwY3cagVeU-21">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="oZLNIOdMeCVHFcoXMiUh-1" value="Monitor Roadmaps Data" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="1" vertex="1">
+          <mxGeometry x="-278" y="4490" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="oZLNIOdMeCVHFcoXMiUh-2" value="Monitor Students Data" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="1" vertex="1">
+          <mxGeometry x="-278" y="4580" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="oZLNIOdMeCVHFcoXMiUh-3" value="Monitor Instructors Data" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="1" vertex="1">
+          <mxGeometry x="-273" y="4670" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="oZLNIOdMeCVHFcoXMiUh-8" value="Monitor Courses Data" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="1" vertex="1">
+          <mxGeometry x="-273" y="4760" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="4wOQNBVU8P1z-x78E6XJ-3" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-273" y="4850" width="160" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="oZLNIOdMeCVHFcoXMiUh-14" value="Monitor Organizational Structure" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="4wOQNBVU8P1z-x78E6XJ-3" vertex="1">
+          <mxGeometry width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="oZLNIOdMeCVHFcoXMiUh-17" value="Handle Platform Registration Requests" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="4wOQNBVU8P1z-x78E6XJ-3" vertex="1">
+          <mxGeometry y="90" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="oZLNIOdMeCVHFcoXMiUh-18" value="Remove Employee" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="4wOQNBVU8P1z-x78E6XJ-3" vertex="1">
+          <mxGeometry y="180" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="oZLNIOdMeCVHFcoXMiUh-19" value="Handle Managers Requests" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;flipV=0;" parent="4wOQNBVU8P1z-x78E6XJ-3" vertex="1">
+          <mxGeometry y="270" width="160" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
