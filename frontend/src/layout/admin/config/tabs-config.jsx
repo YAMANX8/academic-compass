@@ -86,6 +86,28 @@ export const useTabsConfig = () => {
       ],
     },
   ];
+  const instructorSettingsNav = [
+    {
+      subheader: "settings",
+      items: [
+        {
+          title: "general info",
+          path: paths.instructor.settings.general,
+          icon: "mdi:information",
+        },
+        {
+          title: "security",
+          path: paths.instructor.settings.security,
+          icon: "mdi:security",
+        },
+        {
+          title: "account",
+          path: paths.instructor.settings.account,
+          icon: "mdi:account",
+        },
+      ],
+    },
+  ];
   const test = [
     {
       subheader: "test",
@@ -100,7 +122,11 @@ export const useTabsConfig = () => {
   ];
 
   return {
-    instructor: { noOption: instructorNav, courseManage: courseManageNav },
+    instructor: {
+      noOption: instructorNav,
+      courseManage: courseManageNav,
+      settings: instructorSettingsNav,
+    },
     user: { noOption: test },
   };
 };

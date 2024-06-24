@@ -1,10 +1,17 @@
-const ProfileAvatar = ({ imagePath, firstName = "John", lastName = "Doe" }) => {
+const ProfileAvatar = ({
+  imagePath,
+  firstName = "John",
+  lastName = "Doe",
+  className,
+}) => {
   const handleImageError = (e) => {
     e.target.onerror = null; // Prevents looping
     e.target.style.display = "none"; // Hides the broken image icon
   };
   return (
-    <div className="flex aspect-square h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-primary text-2xl text-light">
+    <div
+      className={`${className} flex aspect-square  w-12 items-center justify-center overflow-hidden rounded-full bg-primary text-2xl text-light`}
+    >
       {imagePath ? (
         <img
           src={imagePath}

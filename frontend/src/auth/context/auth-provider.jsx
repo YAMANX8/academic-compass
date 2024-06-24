@@ -11,7 +11,7 @@ import {
   getStorage,
 } from "../../hooks/use-local-storage";
 import { toast } from "react-toastify";
-
+import moment from "moment";
 const Types = {
   INITIAL: "INITIAL",
   LOGIN: "LOGIN",
@@ -88,6 +88,10 @@ export function AuthProvider({ children }) {
           payload: {
             user: {
               ...user,
+              birth_date: user.birth_date
+                ? moment(user.birth_date).format("YYYY-MM-DD")
+                : "",
+              picture: `http://localhost:5000/image/${user.picture}`,
               accessToken,
             },
           },

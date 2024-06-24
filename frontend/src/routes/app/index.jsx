@@ -11,7 +11,7 @@ import { coursesRoutes } from "./course";
 import { studentsRoutes } from "./student";
 import { instructorsRoutes } from "./instructor";
 import AdminLayout from "../../layout/admin";
-import { Home } from "../../pages";
+import  Home from "../../pages/shared/Home";
 import Test from "../../pages/Test";
 
 // ----------------------------------------------------------------------

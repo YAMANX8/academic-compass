@@ -49,7 +49,11 @@ export const paths = {
     myStudents: `${ROOTS.INSTRUCTOR_DASHBOARD}/my-students`,
     completedCourses: `${ROOTS.INSTRUCTOR_DASHBOARD}/completed-courses`,
     inprogressCourses: `${ROOTS.INSTRUCTOR_DASHBOARD}/inprogress-courses`,
-    settings: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings`,
+    settings: {
+      general: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings/general`,
+      security: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings/security`,
+      account: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings/account`,
+    },
     show: { student: `${ROOTS.INSTRUCTOR_DASHBOARD}/show-student` },
   },
   supervisor: {

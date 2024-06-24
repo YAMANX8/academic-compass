@@ -19,6 +19,8 @@ import ProfileAvatar from "./interface/profile-avatar";
 import Ratings from "./interface/ratings";
 import Card from "./interface/card";
 import Progress from "./interface/progress";
+import TextField from "./interface/Form/text-field";
+import Select from "./interface/Form/select"
 // logic components
 import RequireAuth from "./logic/RequireAuth";
 import PersistLogin from "./logic/PersistLogin";
@@ -99,4 +101,6 @@ export {
   Ratings,
   Card,
   Progress,
+  TextField,
+  Select,
 };

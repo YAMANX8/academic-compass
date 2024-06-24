@@ -68,7 +68,7 @@ const AuthenticatedUserSection = ({}) => {
                   navigate(
                     user?.role_id === 2
                       ? paths.student.settings
-                      : paths.instructor.settings,
+                      : paths.instructor.settings.general,
                   );
                   setIsUserMenuOpen(false);
                 }}
