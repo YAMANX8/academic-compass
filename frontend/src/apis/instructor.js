@@ -53,3 +53,27 @@ export const useGetCompletedCourses = () => {
   return getData;
 };
 // ___________________________________________________________ //
+export const useSubmitSettings = () => {
+  const axios = useAxios();
+
+  const submitSettings = async (settingsData) => {
+    const formData = new FormData();
+
+    // Append each field to the FormData object
+    for (const key in settingsData) {
+      if (settingsData.hasOwnProperty(key)) {
+        formData.append(key, settingsData[key]);
+      }
+    }
+
+    const response = await axios.put(endpoints.instructor.settings, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  };
+
+  return submitSettings;
+};

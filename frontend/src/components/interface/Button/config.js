@@ -44,12 +44,18 @@ export const variantColorClasses = {
     error: "hover:bg-error/10 bg-transparent text-error",
   },
   soft: {
-    primary: "bg-primary/10 hover:bg-primary/20 text-primary-dark",
-    secondary: "bg-secondary/10 hover:bg-secondary/20 text-secondary-dark",
-    accent: "bg-accent/10 hover:bg-accent/20 text-accent-dark",
-    success: "bg-success/10 hover:bg-success/20 text-success-dark",
-    info: "bg-info/10 hover:bg-info/20 text-info-dark",
-    warning: "bg-warning/10 hover:bg-warning/20 text-warning-dark",
-    error: "bg-error/10 hover:bg-error/20 text-error-dark",
+    primary:
+      "bg-primary/10 hover:bg-primary/20 text-primary-dark dark:!text-primary-light",
+    secondary:
+      "bg-secondary/10 hover:bg-secondary/20 text-secondary-dark dark:!text-secondary-light",
+    accent:
+      "bg-accent/10 hover:bg-accent/20 text-accent-dark dark:!text-accent-light",
+    success:
+      "bg-success/10 hover:bg-success/20 text-success-dark dark:!text-success-light",
+    info: "bg-info/10 hover:bg-info/20 text-info-dark dark:text-primary-light",
+    warning:
+      "bg-warning/10 hover:bg-warning/20 text-warning-dark dark:!text-warning-light",
+    error:
+      "bg-error/10 hover:bg-error/20 text-error-dark dark:!text-error-light",
   },
 };

@@ -7,12 +7,15 @@ import { AuthGuard, RoleBasedGuard } from "../../auth/guard";
 import { roles } from "../../config-global";
 
 import { SplashScreen } from "../../components";
+import { SettingsProvider } from "../../context/settings/settings-provider";
 // ----------------------------------------------------------------------
 
 // const InstructorDashboard = lazy(
 //   () => import("../../pages/instructor/dashboard/InstructorDashboard"),
 // );
-const Overview = lazy(() => import("../../pages/instructor/dashboard/overview"),);
+const Overview = lazy(
+  () => import("../../pages/instructor/dashboard/overview"),
+);
 const MyStudents = lazy(
   () => import("../../pages/instructor/dashboard/my-students"),
 );
@@ -22,46 +25,89 @@ const InprogressCourses = lazy(
 const CompletedCourses = lazy(
   () => import("../../pages/instructor/dashboard/completed-courses"),
 );
-const Settings = lazy(() => import("../../pages/instructor/settings/Settings"));
 const ShowProfile = lazy(
   () => import("../../pages/instructor/show-profile/ShowProfile"),
+);
+const General = lazy(
+  () => import("../../pages/instructor/settings/general"),
+);
+const Security = lazy(
+  () => import("../../pages/instructor/settings/security"),
+);
+const Account = lazy(
+  () => import("../../pages/instructor/settings/account"),
 );
 
 // ----------------------------------------------------------------------
 
 const instructors = {
   element: (
-    <AdminLayout>
-      <AuthGuard>
-        <RoleBasedGuard roles={roles.instructor}>
-          <Suspense fallback={<SplashScreen />}>
+    <AuthGuard>
+      <RoleBasedGuard roles={roles.instructor}>
+        <Suspense fallback={<SplashScreen />}>
+          <SettingsProvider>
             <Outlet />
-          </Suspense>
-        </RoleBasedGuard>
-      </AuthGuard>
-    </AdminLayout>
+          </SettingsProvider>
+        </Suspense>
+      </RoleBasedGuard>
+    </AuthGuard>
   ),
   children: [
     {
-      element: <Overview />,
+      element: (
+        <AdminLayout>
+          <Overview />
+        </AdminLayout>
+      ),
       index: true,
     },
     {
       path: "my-students",
-      element: <MyStudents />,
+      element: (
+        <AdminLayout>
+          <MyStudents />
+        </AdminLayout>
+      ),
     },
     {
       path: "completed-courses",
-      element: <CompletedCourses />,
+      element: (
+        <AdminLayout>
+          <CompletedCourses />
+        </AdminLayout>
+      ),
     },
     {
       path: "inprogress-courses",
-      element: <InprogressCourses />,
+      element: (
+        <AdminLayout>
+          <InprogressCourses />
+        </AdminLayout>
+      ),
     },
     {
       path: "settings",
-      element: <Settings />,
+      element: (
+        <AdminLayout option="settings">
+          <Outlet />
+        </AdminLayout>
+      ),
+      children: [
+        {
+          path: "general",
+          element: <General />,
+        },
+        {
+          path: "security",
+          element: <Security />,
+        },
+        {
+          path: "account",
+          element: <Account />,
+        },
+      ],
     },
+  
     {
       path: "show-student/:id",
       element: <ShowProfile />,

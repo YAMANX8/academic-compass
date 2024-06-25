@@ -1,6 +1,6 @@
-const ROOTS = {
+export const ROOTS = {
   AUTH: "/auth",
-  StUDENT_DASHBOARD: "/students",
+  STUDENT_DASHBOARD: "/students",
   INSTRUCTOR_DASHBOARD: "/instructors",
   SUPERVISOR_DASHBOARD: "/supervisors",
   MANAGER_DASHBOARD: "/managers",
@@ -41,15 +41,19 @@ export const paths = {
     },
   },
   student: {
-    root: ROOTS.StUDENT_DASHBOARD,
-    settings: `${ROOTS.StUDENT_DASHBOARD}/settings`,
+    root: ROOTS.STUDENT_DASHBOARD,
+    settings: `${ROOTS.STUDENT_DASHBOARD}/settings`,
   },
   instructor: {
     root: ROOTS.INSTRUCTOR_DASHBOARD,
     myStudents: `${ROOTS.INSTRUCTOR_DASHBOARD}/my-students`,
     completedCourses: `${ROOTS.INSTRUCTOR_DASHBOARD}/completed-courses`,
     inprogressCourses: `${ROOTS.INSTRUCTOR_DASHBOARD}/inprogress-courses`,
-    settings: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings`,
+    settings: {
+      general: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings/general`,
+      security: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings/security`,
+      account: `${ROOTS.INSTRUCTOR_DASHBOARD}/settings/account`,
+    },
     show: { student: `${ROOTS.INSTRUCTOR_DASHBOARD}/show-student` },
   },
   supervisor: {

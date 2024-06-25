@@ -5,8 +5,7 @@ const bcrypt = require('bcrypt');
 const checkPermission = require('../../../middleware/check-permissions');
 const uploadImage = require('../../../lib/multer-image');
 
-const PWD_REGEX =
-  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,24}$/;
+const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
   // eslint-disable-next-line no-useless-escape
@@ -63,7 +62,7 @@ router.put(
         );
 
         if (!validPassword) {
-          return res.status(401).json({ message: 'Invalid current password' });
+          return res.status(402).json({ message: 'Invalid current password' });
         }
         //test the incoming inputs
         const result = PWD_REGEX.test(newPassword);
@@ -71,9 +70,7 @@ router.put(
           return res.status(402).json({ message: 'New password is not valid' });
         }
         if (newPassword !== verifyNewPassword) {
-          return res
-            .status(400)
-            .json({ message: 'New passwords do not match' });
+          return res.status(402).json({ message: 'New password do not match' });
         }
         //تشفير
         const saltRound = 10;

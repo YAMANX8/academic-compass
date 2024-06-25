@@ -7,9 +7,11 @@ import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
 import { useAuthContext } from "../../../auth/hooks";
+import { useRedirectToDashboard } from "../../../hooks/use-redirect-to-dashboard";
 import { paths } from "../../../routes/paths";
 import { Button } from "../../../components";
 function LoginInstructor() {
+  const redirectToDashboard = useRedirectToDashboard();
   const { instructorLogin } = useAuthContext();
 
   const [email, setEmail] = useState("");
@@ -32,17 +34,14 @@ function LoginInstructor() {
 
     try {
       await instructorLogin(email, pwd);
+      redirectToDashboard(1);
       setEmail("");
       setPwd("");
-    } catch (err) {
-      if (!err?.response) {
+    } catch (error) {
+      if (!error) {
         toast.error("No Server Response");
-      } else if (err.response?.status === 401) {
-        toast.error("Missing Email or Password");
-      } else if (err.response?.status === 402) {
-        toast.error("Unauthorized");
-      } else {
-        toast.error("Login Failed");
+      }  else {
+        toast.error(error);
       }
     }
   };
