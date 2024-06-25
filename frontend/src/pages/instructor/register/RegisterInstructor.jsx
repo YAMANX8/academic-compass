@@ -9,6 +9,7 @@ import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
 import { paths } from "src/routes/paths";
 import { Button } from "../../../components";
+import { useRedirectToDashboard } from "../../../hooks/use-redirect-to-dashboard";
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
 const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -16,6 +17,7 @@ const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
 function RegisterInstructor() {
   const { instructorRegister } = useAuthContext();
+  const redirectToDashboard = useRedirectToDashboard();
   const nameRef = useRef();
   const errRef = useRef();
   // states
@@ -64,7 +66,7 @@ function RegisterInstructor() {
     setValidEmail(result);
   }, [email]);
 
-  //here we check the password and the confirm field togather
+  //here we check the password and the confirm field together
   useEffect(() => {
     const result = PWD_REGEX.test(pwd);
     setValidPwd(result);
@@ -83,20 +85,18 @@ function RegisterInstructor() {
       !EMAIL_REGEX.test(email) ||
       !validMatchPwd
     ) {
-      toast.error("Invalide entries");
+      toast.error("Invalid entries");
       return;
     }
     try {
       await instructorRegister(email, pwd, firstName, lastName);
+      redirectToDashboard(1);
     } catch (error) {
-      if (!error?.response) {
+      if (!error) {
         toast.error("No Server Response");
-      } else if (error.response?.status === 401) {
-        toast.error("User already exists");
-      } else {
-        toast.error("Registration Failed");
+      }  else {
+        toast.error(error);
       }
-
       //and this line for screen readers
       errRef.current.focus();
     }

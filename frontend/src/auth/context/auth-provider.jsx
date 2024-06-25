@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useReducer, useCallback } from "react";
 
 import axios, { endpoints } from "../../utils/axios";
-
+import { useRouter } from "../../routes/hooks/use-router";
 import { AuthContext } from "./auth-context";
 import { isValidToken } from "./utils";
 import { useRefreshToken } from "../hooks/use-refresh";
@@ -66,6 +66,7 @@ const reducer = (state, action) => {
 const STORAGE_KEY = "in";
 
 export function AuthProvider({ children }) {
+  const router = useRouter();
   const [state, dispatch] = useReducer(reducer, initialState);
   const loggedIn = getStorage(STORAGE_KEY);
   const refresh = useRefreshToken();
@@ -170,8 +171,6 @@ export function AuthProvider({ children }) {
         },
       },
     });
-
-    toast.success("Login successfully");
   }, []);
 
   // REGISTER
@@ -244,6 +243,7 @@ export function AuthProvider({ children }) {
     dispatch({
       type: Types.LOGOUT,
     });
+    router.replace("/");
     toast("Logout Successfully");
   }, []);
 

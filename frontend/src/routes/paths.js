@@ -1,6 +1,6 @@
-const ROOTS = {
+export const ROOTS = {
   AUTH: "/auth",
-  StUDENT_DASHBOARD: "/students",
+  STUDENT_DASHBOARD: "/students",
   INSTRUCTOR_DASHBOARD: "/instructors",
   SUPERVISOR_DASHBOARD: "/supervisors",
   MANAGER_DASHBOARD: "/managers",
@@ -41,8 +41,8 @@ export const paths = {
     },
   },
   student: {
-    root: ROOTS.StUDENT_DASHBOARD,
-    settings: `${ROOTS.StUDENT_DASHBOARD}/settings`,
+    root: ROOTS.STUDENT_DASHBOARD,
+    settings: `${ROOTS.STUDENT_DASHBOARD}/settings`,
   },
   instructor: {
     root: ROOTS.INSTRUCTOR_DASHBOARD,
