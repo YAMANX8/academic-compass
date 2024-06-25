@@ -6,7 +6,7 @@ const fs = require('fs');
 const { getVideoDurationInSeconds } = require('get-video-duration');
 const uploadVideo = require('../../../../lib/multer-video');
 
-// get Assigning_Topics just TL1 
+// get Assigning_Topics just TL1 : change title in this api(json)
 router.get('/curriculum/assigning-topics', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
@@ -43,12 +43,14 @@ router.get('/curriculum/assigning-topics', authorization, async (req, res) => {
     res.status(500).json({ error: 'Server Error' });
   }
 });
-// get info about TL1 name ,items info 
+
+// get info about TL1 name ,items info :Here we want to display only the topics in which the item was created
 router.get('/curriculum/:courseId', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
     const roleId = req.user.roleId;
     const courseId = req.params.courseId;
+
     // permission
     const hasAccess = await checkPermission(
       instructorId,
@@ -61,60 +63,112 @@ router.get('/curriculum/:courseId', authorization, async (req, res) => {
 
     const getInfoForCurriculumPage = `
 WITH RECURSIVE TopicHierarchy AS (
-    SELECT
-        Topic_Level_N.topic_id,
-        Topic_Level_N.topic_title,
-        Topic_Level_N.top_level_topic_id,
-        Topic_Level_N.topic_level1_id
-    FROM
-        Topic_Level_N
-    WHERE
-        Topic_Level_N.topic_id IN (
-            SELECT DISTINCT
-                Items.topic_id
-            FROM
-                Items
-                JOIN course ON Items.course_id = course.course_id
-            WHERE
-                course.course_id = $1
-        )
-    UNION
-    SELECT
-        T.topic_id,
-        T.topic_title,
-        T.top_level_topic_id,
-        T.topic_level1_id
-    FROM
-        Topic_Level_N T
-    JOIN TopicHierarchy TH ON T.topic_id = TH.top_level_topic_id
+  SELECT
+    T.topic_id,
+    T.topic_title,
+    T.top_level_topic_id,
+    T.topic_level1_id,
+    ARRAY[T.topic_title]::text[] AS topics_sequence
+  FROM
+    topic_level_n T
+  WHERE
+    T.topic_id IN (
+      SELECT DISTINCT
+        I.topic_id
+      FROM
+        items I
+      JOIN course C ON I.course_id = C.course_id
+      WHERE
+        C.course_id = $1
+    )
+  UNION ALL
+  SELECT
+    T.topic_id,
+    T.topic_title,
+    T.top_level_topic_id,
+    T.topic_level1_id,
+    TH.topics_sequence || T.topic_title
+  FROM
+    topic_level_n T
+  JOIN TopicHierarchy TH ON T.topic_id = TH.top_level_topic_id
+),
+FinalTopics AS (
+  SELECT
+    TH.topic_id,
+    array_to_string(MAX(TH.topics_sequence), ' > ') AS topics_sequence,
+    COALESCE(TH.topic_level1_id, TL1.topic_level1_id) AS topic_level1_id
+  FROM
+    TopicHierarchy TH
+  LEFT JOIN topic_level_n TL1 ON TH.top_level_topic_id = TL1.topic_id
+  GROUP BY
+    TH.topic_id, TH.topic_level1_id, TL1.topic_level1_id
+),
+ItemDetails AS (
+  SELECT
+    I.item_id,
+    I.item_title,
+    I.item_no,
+    CASE I.item_type
+      WHEN 1 THEN 'article'
+      WHEN 2 THEN 'video'
+      WHEN 3 THEN 'quiz'
+    END AS item_type,
+    I.topic_id
+  FROM
+    items I
+  WHERE
+    I.course_id = $1
 )
 SELECT
-    TH.topic_level1_id,
-    TL1.topic_title AS parent_topic_title,
-    TH.top_level_topic_id AS parent_topic_id,
-    TH.topic_title AS sub_topic_title,
-    TH.topic_id AS sub_topic_id,
-    Items.item_id,
-    Items.item_title,
-    Items.item_no,
-    Items.item_type
+  ID.item_id,
+  ID.item_title,
+  ID.item_no,
+  ID.item_type,
+  FT.topics_sequence,
+  FT.topic_level1_id,
+  TL1.topic_title AS topic_level1_name
 FROM
-    TopicHierarchy TH
-    LEFT JOIN Topic_Level_1 TL1 ON TH.topic_level1_id = TL1.topic_level1_id
-    LEFT JOIN Items ON TH.topic_id = Items.topic_id;
+  ItemDetails ID
+JOIN
+  FinalTopics FT ON ID.topic_id = FT.topic_id
+LEFT JOIN
+  topic_level_1 TL1 ON FT.topic_level1_id = TL1.topic_level1_id
+ORDER BY
+  ID.item_id;
     `;
     const getInfoForCurriculumPageValue = [courseId];
     const result = await pool.query(
       getInfoForCurriculumPage,
       getInfoForCurriculumPageValue,
     );
-    res.status(200).json(result.rows);
-    // respone
+
+    // Transform the results into the desired JSON structure
+    const transformedData = result.rows.reduce((acc, row) => {
+      const { topic_level1_id, topic_level1_name, ...lesson } = row;
+
+      const topic = acc.find((t) => t.topic_level1_id === topic_level1_id);
+      if (topic) {
+        topic.lessons.push(lesson);
+      } else {
+        acc.push({
+          topic_level1_id,
+          parent_topic_title: topic_level1_name,
+          lessons: [lesson],
+        });
+      }
+
+      return acc;
+    }, []);
+
+    res.status(200).json(transformedData);
   } catch (err) {
     console.error('Error retrieving curriculum information:', err);
     res.status(500).json({ error: 'Server Error' });
   }
 });
+
+
+
 // get video data by item Id 
 router.get('/curriculum/video/:itemId', authorization, async (req, res) => {
   try {
@@ -143,6 +197,7 @@ router.get('/curriculum/video/:itemId', authorization, async (req, res) => {
     res.status(500).json({ error: 'Server Error' });
   }
 });
+
 // get questions by item Id 
 router.get(
   '/curriculum/questions/:item_id',
@@ -189,6 +244,7 @@ router.get(
     }
   },
 );
+
 // get options data by question ID 
 router.get(
   '/curriculum/options/:questionId',
@@ -287,6 +343,7 @@ router.post('/curriculum/question/:quizId', authorization, async (req, res) => {
     res.status(500).json({ error: 'Server Error' });
   }
 });
+
 // new item +1 for item count 
 
 // delete item note when the course is published(enroll on the course) >> Items must not be allowed to be deleted 
@@ -471,6 +528,7 @@ router.put(
     }
   },
 );
+
 // udate question with options *
 router.put(
   '/curriculum/question/:questionId',
@@ -532,6 +590,7 @@ router.put(
     }
   },
 );
+
 // update article
 router.put('/curriculum/article/:itemId', authorization, async (req, res) => {
   try {
