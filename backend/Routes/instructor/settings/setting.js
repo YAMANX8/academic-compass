@@ -4,6 +4,7 @@ const authorization = require('../../../middleware/authorization');
 const bcrypt = require('bcrypt');
 const checkPermission = require('../../../middleware/check-permissions');
 const uploadImage = require('../../../lib/multer-image');
+const fs = require('fs');
 
 const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{2,23}$/;
@@ -12,7 +13,7 @@ const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
-//todo // فك ترميز اسم الملف قبل استخدامه لتجنب مشاكل تحويل اللغة
+//todo //Decode the file name before using it to avoid language conversion problems
 //* const decodedImagePath = decodeURIComponent(result.rows[0].image_path);
 // Change instructor information
 
@@ -160,6 +161,50 @@ router.get('/', authorization, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
+  }
+});
+
+// remove image 
+router.delete('/remove-image', authorization, async (req, res) => {
+  try {
+    const instructorId = req.user.userId;
+    const roleId = req.user.roleId;
+    // permission
+    const hasAccess = await checkPermission(
+      instructorId,
+      'instructor_content_management',
+      roleId,
+    );
+    if (!hasAccess) {
+      return res.status(403).json('Access denied');
+    }
+    // 1- get image path from database by instructor id
+     const result = await pool.query(
+       'SELECT picture FROM users WHERE user_id = $1',
+       [instructorId],
+     );
+
+     if (result.rows.length === 0) {
+       return res.status(404).json({ message: 'User not found' });
+     }
+
+     const imagePath = `Upload/Images/${result.rows[0].picture}`;
+     
+    // 2- Verify that the path exists (if)
+     if (!fs.existsSync(imagePath)) {
+       return res.status(404).json({ message: 'File not found' });
+     }
+    // 3- Delete the image from file system
+        fs.unlinkSync(imagePath);
+    // 4- delete the image from database
+        pool.query('UPDATE users SET picture = NULL WHERE user_id = $1', [
+          instructorId,
+        ]);
+    // 5- send message success or error to frontend
+    res.status(200).json({ message: 'Image deleted successfully' });
+  } catch (err) {
+    console.error('Error when deleting Image :', err);
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 

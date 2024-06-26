@@ -6,7 +6,7 @@ const fs = require('fs');
 const { getVideoDurationInSeconds } = require('get-video-duration');
 const uploadVideo = require('../../../../lib/multer-video');
 
-// get Assigning_Topics just TL1 : change title in this api(json)
+// get Assigning_Topics just TL1
 router.get('/curriculum/assigning-topics', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
@@ -24,7 +24,7 @@ router.get('/curriculum/assigning-topics', authorization, async (req, res) => {
     const getInfoAboutAssigningTopics = `
     SELECT
         AT.topic_level1_id,
-        TL1.topic_title AS parent_topic_title
+        TL1.topic_title
     FROM
         Assigning_Topics AT
     JOIN Topic_Level_1 TL1 ON AT.topic_level1_id = TL1.topic_level1_id
@@ -166,8 +166,6 @@ ORDER BY
     res.status(500).json({ error: 'Server Error' });
   }
 });
-
-
 
 // get video data by item Id 
 router.get('/curriculum/video/:itemId', authorization, async (req, res) => {
@@ -345,7 +343,7 @@ router.post('/curriculum/question/:quizId', authorization, async (req, res) => {
 });
 
 // new item +1 for item count 
-
+// **** ?? delete in enroll to the course
 // delete item note when the course is published(enroll on the course) >> Items must not be allowed to be deleted 
 router.delete('/curriculum/item/:itemId', authorization, async (req, res) => {
   try {
