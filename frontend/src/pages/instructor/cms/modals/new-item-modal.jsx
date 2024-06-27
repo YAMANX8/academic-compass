@@ -156,11 +156,13 @@ const LessonType = ({ i, type, onClick, isSelected }) => {
       className="flex cursor-pointer flex-col items-center gap-2"
       onClick={onClick}
     >
-      <div className={`rounded-lg shadow-lg ${isSelected ? "bg-accent" : ""}`}>
+      <div
+        className={`rounded-lg shadow-lg transition-all duration-300 ease-in-out ${isSelected ? "bg-accent" : ""}`}
+      >
         <Icon
           icon={i}
           fontSize={128}
-          className={`${isSelected ? "text-white" : "text-accent"}`}
+          className={`${isSelected ? "text-white" : "text-accent"} transition-all duration-1000 ease-in-out`}
         />
       </div>
       <span className="text-xl font-medium text-accent">{type}</span>
