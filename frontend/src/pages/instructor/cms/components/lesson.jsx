@@ -15,7 +15,7 @@ const Lesson = ({ lesson, onDelete, getIconForLesson }) => {
         <button className="flex items-center justify-center rounded border border-secondary bg-light p-1 text-accent-dark">
           <Icon icon={getIconForLesson(lesson.item_type)} className="h-[24px] w-[24px]" />
         </button>
-        <button className="flex items-center justify-center rounded border border-2 border-error p-1 text-error" onClick={onDelete}>
+        <button className="flex items-center justify-center rounded border-2 border-error p-1 text-error" onClick={onDelete}>
           <Icon icon="mdi:delete" className="h-[20px] w-[20px]" />
         </button>
         <button className="flex items-center justify-center gap-2 rounded border border-primary bg-primary p-1 text-white">

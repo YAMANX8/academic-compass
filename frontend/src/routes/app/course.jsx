@@ -25,10 +25,8 @@ const Status = lazy(() => import("../../pages/instructor/course-info/status"));
 const CreateCourse = lazy(
   () => import("../../pages/instructor/course-create/CreateCourse"),
 );
-const EditCourse = lazy(
-  () => import("../../pages/instructor/course-edit/EditCourse"),
-);
-
+const Curriculum = lazy(() => import("../../pages/instructor/cms/curriculum"));
+const Details = lazy(() => import("../../pages/instructor/cms/details"));
 // ----------------------------------------------------------------------
 
 const courseDetails = {
@@ -81,12 +79,22 @@ const courseManagement = {
   ),
   children: [
     {
-      path: "edit/:id",
+      path: ":id/manage",
       element: (
-        <MainLayout>
-          <EditCourse />
-        </MainLayout>
+        <AdminLayout option="courseManage">
+          <Outlet />
+        </AdminLayout>
       ),
+      children: [
+        {
+          path: "curriculum",
+          element: <Curriculum />,
+        },
+        {
+          path: "details",
+          element: <Details />,
+        },
+      ],
     },
     {
       path: ":id/monitor",
