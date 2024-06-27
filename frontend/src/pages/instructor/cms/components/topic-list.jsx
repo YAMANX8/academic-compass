@@ -36,7 +36,12 @@ const TopicList = ({ id, title, lessons }) => {
               topicSequence={lesson.topics_sequence}
             />
           ))}
-          <Button size="md" variant="outlined" className="self-start">
+          <Button
+            size="md"
+            variant="outlined"
+            className="self-start"
+            color="accent"
+          >
             <Icon icon="mdi:plus" />
             New item
           </Button>

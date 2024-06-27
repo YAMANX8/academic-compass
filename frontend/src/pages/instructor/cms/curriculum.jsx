@@ -88,6 +88,10 @@ const Curriculum = () => {
               </Button>
             </div>
           )}
+          <Button size="md" variant="outlined" className="self-start">
+            <Icon icon="mdi:plus" />
+            New topic
+          </Button>
         </Card>
       </div>
     </>
