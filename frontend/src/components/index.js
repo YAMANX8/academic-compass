@@ -22,6 +22,7 @@ import Card from "./interface/card";
 import Progress from "./interface/progress";
 import TextField from "./interface/Form/text-field";
 import Select from "./interface/Form/select";
+import Modal2 from "./interface/modal2"
 // logic components
 import RequireAuth from "./logic/RequireAuth";
 import PersistLogin from "./logic/PersistLogin";
@@ -105,4 +106,5 @@ export {
   TextField,
   Select,
   Chip,
+  Modal2,
 };
