@@ -20,7 +20,8 @@ router.get('/curriculum/assigning-topics', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
-
+    
+    // array of objects
     const getInfoAboutAssigningTopics = `
     SELECT
         AT.topic_level1_id,
