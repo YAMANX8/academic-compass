@@ -9,6 +9,7 @@ import CourseCard from "./dashboard/CourseCard";
 import PerformanceCard from "./dashboard/PerformanceCard";
 // interface components
 import Button from "./interface/Button";
+import Chip from "./interface/chip";
 import Preloader from "./interface/Preloader";
 import Modal from "./interface/Modal";
 import Switcher from "./interface/Switcher";
@@ -20,7 +21,7 @@ import Ratings from "./interface/ratings";
 import Card from "./interface/card";
 import Progress from "./interface/progress";
 import TextField from "./interface/Form/text-field";
-import Select from "./interface/Form/select"
+import Select from "./interface/Form/select";
 // logic components
 import RequireAuth from "./logic/RequireAuth";
 import PersistLogin from "./logic/PersistLogin";
@@ -103,4 +104,5 @@ export {
   Progress,
   TextField,
   Select,
+  Chip,
 };
