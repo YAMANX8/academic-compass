@@ -3,7 +3,7 @@ const pool = require('../database/db');
 const checkPermission = async (userId, permissionName, roleid) => {
   let userRoleQuery = '';
   //instructor
-  if (roleid === 1) {
+  if (roleid === 1 || roleid === 3) {
     userRoleQuery = `
       SELECT
         role_id

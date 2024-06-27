@@ -2860,3 +2860,37 @@ ALTER TABLE video
 ADD COLUMN video_duration integer;
 ALTER TABLE video
 ADD COLUMN upload_date date;
+
+-- add new supervisor
+INSERT INTO users (first_name, last_name, email, password, role_id) 
+VALUES ('Ahmed', 'Omer', 'Ahmed@gmail.com', '123456780ammar', 3);
+
+ UPDATE users 
+SET manager_id = 11 
+WHERE user_id = 1;
+
+INSERT INTO Managing_Roadmaps (roadmap_id, employee_id) VALUES (17, 11);
+INSERT INTO Managing_Roadmaps (roadmap_id, employee_id) VALUES (18, 15);
+
+SELECT 
+    r.roadmap_title AS "ROADMAP_NAME",
+    r.image_path AS "IMAGE_PATH",
+    ARRAY_AGG(u.first_name || ' ' || u.last_name) AS "ASSIGNED_SUPERVISORS"
+FROM 
+    roadmap r
+JOIN 
+    Managing_Roadmaps mr ON r.roadmap_id = mr.roadmap_id
+JOIN 
+    users u ON mr.employee_id = u.user_id
+WHERE 
+    u.role_id = 3  
+    AND u.user_id = $1
+GROUP BY 
+    r.roadmap_title, r.image_path;
+
+ ROADMAP_NAME |            IMAGE_PATH             | ASSIGNED_SUPERVISORS
+--------------+-----------------------------------+----------------------
+ AI           | image-1693320536873-867317159.svg | {"Ammar Alesrawi"}
+ frontend     | image-1693320607231-230196050.svg | {"Ammar Alesrawi"}
+(2 rows)
+
