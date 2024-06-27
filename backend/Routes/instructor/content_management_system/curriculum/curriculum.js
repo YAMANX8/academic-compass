@@ -44,6 +44,7 @@ router.get('/curriculum/assigning-topics', authorization, async (req, res) => {
   }
 });
 
+// add course name to this api
 // get info about TL1 name ,items info :Here we want to display only the topics in which the item was created
 router.get('/curriculum/:courseId', authorization, async (req, res) => {
   try {
@@ -113,7 +114,8 @@ ItemDetails AS (
       WHEN 2 THEN 'video'
       WHEN 3 THEN 'quiz'
     END AS item_type,
-    I.topic_id
+    I.topic_id,
+    I.course_id
   FROM
     items I
   WHERE
@@ -126,13 +128,16 @@ SELECT
   ID.item_type,
   FT.topics_sequence,
   FT.topic_level1_id,
-  TL1.topic_title AS topic_level1_name
+  TL1.topic_title AS topic_level1_name,
+  C.course_title
 FROM
   ItemDetails ID
 JOIN
   FinalTopics FT ON ID.topic_id = FT.topic_id
 LEFT JOIN
   topic_level_1 TL1 ON FT.topic_level1_id = TL1.topic_level1_id
+JOIN
+  course C ON ID.course_id = C.course_id
 ORDER BY
   ID.item_id;
     `;
@@ -141,6 +146,10 @@ ORDER BY
       getInfoForCurriculumPage,
       getInfoForCurriculumPageValue,
     );
+
+    // Extract the course title from the first row (all rows have the same course title)
+    const courseTitle =
+      result.rows.length > 0 ? result.rows[0].course_title : '';
 
     // Transform the results into the desired JSON structure
     const transformedData = result.rows.reduce((acc, row) => {
@@ -160,14 +169,21 @@ ORDER BY
       return acc;
     }, []);
 
-    res.status(200).json(transformedData);
+    // Add the course title to the transformed data
+    const responseData = {
+      course_title: courseTitle,
+      topics: transformedData,
+    };
+
+    res.status(200).json(responseData);
   } catch (err) {
     console.error('Error retrieving curriculum information:', err);
     res.status(500).json({ error: 'Server Error' });
   }
 });
 
-// get video data by item Id 
+
+// get video data by item Id
 router.get('/curriculum/video/:itemId', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
@@ -196,7 +212,7 @@ router.get('/curriculum/video/:itemId', authorization, async (req, res) => {
   }
 });
 
-// get questions by item Id 
+// get questions by item Id
 router.get(
   '/curriculum/questions/:item_id',
   authorization,
@@ -243,7 +259,7 @@ router.get(
   },
 );
 
-// get options data by question ID 
+// get options data by question ID
 router.get(
   '/curriculum/options/:questionId',
   authorization,
@@ -280,7 +296,7 @@ router.get(
 );
 
 // insert
-// new question 
+// new question
 router.post('/curriculum/question/:quizId', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
@@ -342,9 +358,143 @@ router.post('/curriculum/question/:quizId', authorization, async (req, res) => {
   }
 });
 
-// new item +1 for item count 
+// new items
+// get topic_level_2 by TL1 id
+router.get(
+  '/curriculum/new-item/TL2/:topicId',
+  authorization,
+  async (req, res) => {
+    try {
+      const instructorId = req.user.userId;
+      const roleId = req.user.roleId;
+      const topicId = req.params.topicId;
+      // permission
+      const hasAccess = await checkPermission(
+        instructorId,
+        'instructor_content_management',
+        roleId,
+      );
+      if (!hasAccess) {
+        return res.status(403).json('Access denied');
+      }
+
+      const getInfoAboutTopicLevel2 = `
+    SELECT
+        TLN.topic_id,
+        TLN.topic_title
+    FROM
+        topic_level_n TLN
+    WHERE
+        TLN.topic_level1_id = $1 AND topic_level=2
+    `;
+      const getInfoAboutTopicLevel2Value = [topicId];
+      const result = await pool.query(
+        getInfoAboutTopicLevel2,
+        getInfoAboutTopicLevel2Value,
+      );
+      // respone
+      res.status(200).json(result.rows);
+    } catch (err) {
+      console.error('Error retrieving Topic Level Two information:', err);
+      res.status(500).json({ error: 'Server Error' });
+    }
+  },
+);
+
+// get topic_level_3 by Tl2 id
+router.get(
+  '/curriculum/new-item/TL3/:topicId',
+  authorization,
+  async (req, res) => {
+    try {
+      const instructorId = req.user.userId;
+      const roleId = req.user.roleId;
+      const topicId = req.params.topicId;
+      // permission
+      const hasAccess = await checkPermission(
+        instructorId,
+        'instructor_content_management',
+        roleId,
+      );
+      if (!hasAccess) {
+        return res.status(403).json('Access denied');
+      }
+
+      const getInfoAboutTopicLevel2 = `
+    SELECT
+        TLN.topic_id,
+        TLN.topic_title
+    FROM
+        topic_level_n TLN
+    WHERE
+        TLN.top_level_topic_id = $1 AND topic_level=3
+    `;
+      const getInfoAboutTopicLevel2Value = [topicId];
+      const result = await pool.query(
+        getInfoAboutTopicLevel2,
+        getInfoAboutTopicLevel2Value,
+      );
+      // respone
+      res.status(200).json(result.rows);
+    } catch (err) {
+      console.error('Error retrieving Topic Level Two information:', err);
+      res.status(500).json({ error: 'Server Error' });
+    }
+  },
+);
+
+// post api save [tl2,tl3]  the last item in the array
+router.post('/curriculum/new-item/:courseId', authorization, async (req, res) => {
+  try {
+    const instructorId = req.user.userId;
+    const roleId = req.user.roleId;
+    const courseId = req.params.courseId;
+    // item_type =>  1 article | 2 video | 3 quiz
+    const { itemTitle, topics, item_type } = req.body; // topics are array of topicsID
+    // permission
+    const hasAccess = await checkPermission(
+      instructorId,
+      'instructor_content_management',
+      roleId,
+    );
+    if (!hasAccess) {
+      return res.status(403).json('Access denied');
+    }
+    // Get the last topic_id from the topics array
+    const lastTopicId = topics[topics.length - 1];
+
+    // Get the maximum item_no for the course and add 1
+    const getMaxItemNoQuery = `
+      SELECT COALESCE(MAX(item_no), 0) + 1 AS new_item_no
+      FROM items
+      WHERE course_id = $1
+    `;
+    const { rows } = await pool.query(getMaxItemNoQuery, [courseId]);
+    const newItemNo = rows[0].new_item_no;
+    // Add the new item with the calculated item_no and the last topic_id
+    const addNewItemQuery = `
+      INSERT INTO items (item_title, item_no, course_id, topic_id, item_type)
+      VALUES ($1, $2, $3, $4, $5)
+    `;
+    const addNewItemValues = [
+      itemTitle,
+      newItemNo,
+      courseId,
+      lastTopicId,
+      item_type,
+    ];
+    await pool.query(addNewItemQuery, addNewItemValues);
+
+    res.status(200).json({ message: 'Item is added successfully' });
+    // respone
+  } catch (err) {
+    console.error('Error adding Item information:', err);
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
+
 // **** ?? delete in enroll to the course
-// delete item note when the course is published(enroll on the course) >> Items must not be allowed to be deleted 
+// delete item note when the course is published(enroll on the course) >> Items must not be allowed to be deleted
 router.delete('/curriculum/item/:itemId', authorization, async (req, res) => {
   try {
     const instructorId = req.user.userId;
@@ -474,7 +624,7 @@ router.delete(
 );
 
 // update
-// update video 
+// update video
 router.put(
   '/curriculum/video/:itemId',
   authorization,
@@ -527,7 +677,7 @@ router.put(
   },
 );
 
-// udate question with options *
+// udate question with options
 router.put(
   '/curriculum/question/:questionId',
   authorization,
