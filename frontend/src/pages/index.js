@@ -22,14 +22,10 @@ import LoginInstructor from "./instructor/login/LoginInstructor";
 import RegisterInstructor from "./instructor/register/RegisterInstructor";
 import EditCourse from "./instructor/course-edit/EditCourse";
 import CreateCourse from "./instructor/course-create/CreateCourse";
-import CourseInfo from "./instructor/course-info/CourseInfo";
 import ShowProfile from "./instructor/show-profile/ShowProfile";
 // instructor custom pages
 import Content from "./instructor/course-edit/sections/Content";
 import Info from "./instructor/course-edit/sections/Info";
-import Enrollments from "./instructor/course-info/sections/Enrollments";
-import Reviews from "./instructor/course-info/sections/Reviews";
-import Status from "./instructor/course-info/sections/Status";
 import FirstStep from "./instructor/course-create/sections/FirstStep";
 import SecondStep from "./instructor/course-create/sections/SecondStep";
 import ThirdStep from "./instructor/course-create/sections/ThirdStep";
@@ -56,13 +52,9 @@ export {
   OthersHome,
   EditCourse,
   CreateCourse,
-  CourseInfo,
   ShowProfile,
   Content,
   Info,
-  Enrollments,
-  Reviews,
-  Status,
   FirstStep,
   SecondStep,
   ThirdStep,

@@ -2,26 +2,31 @@ import { lazy, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
 import MainLayout from "src/layout/main";
+import AdminLayout from "../../layout/admin";
 import { AuthGuard, RoleBasedGuard } from "../../auth/guard";
 import { roles } from "../../config-global";
 
 import { SplashScreen } from "src/components";
 // ----------------------------------------------------------------------
 
-const CourseDetails = lazy(() =>
-  import("../../pages/student/course-details/CourseDetails")
+const CourseDetails = lazy(
+  () => import("../../pages/student/course-details/CourseDetails"),
 );
 const Video = lazy(() => import("../../pages/student/video/Video"));
 const Article = lazy(() => import("../../pages/student/article/Article"));
 const Quiz = lazy(() => import("../../pages/student/quiz/Quiz"));
-const CourseInfo = lazy(() =>
-  import("../../pages/instructor/course-info/CourseInfo")
+const Enrollments = lazy(
+  () => import("../../pages/instructor/course-info/enrollments"),
 );
-const CreateCourse = lazy(() =>
-  import("../../pages/instructor/course-create/CreateCourse")
+const Reviews = lazy(
+  () => import("../../pages/instructor/course-info/reviews"),
 );
-const EditCourse = lazy(() =>
-  import("../../pages/instructor/course-edit/EditCourse")
+const Status = lazy(() => import("../../pages/instructor/course-info/status"));
+const CreateCourse = lazy(
+  () => import("../../pages/instructor/course-create/CreateCourse"),
+);
+const EditCourse = lazy(
+  () => import("../../pages/instructor/course-edit/EditCourse"),
 );
 
 // ----------------------------------------------------------------------
@@ -66,28 +71,52 @@ const courseDetails = {
 
 const courseManagement = {
   element: (
-    <MainLayout>
-      <AuthGuard>
-        <RoleBasedGuard roles={roles.instructor}>
-          <Suspense fallback={<SplashScreen />}>
-            <Outlet />
-          </Suspense>
-        </RoleBasedGuard>
-      </AuthGuard>
-    </MainLayout>
+    <AuthGuard>
+      <RoleBasedGuard roles={roles.instructor}>
+        <Suspense fallback={<SplashScreen />}>
+          <Outlet />
+        </Suspense>
+      </RoleBasedGuard>
+    </AuthGuard>
   ),
   children: [
     {
       path: "edit/:id",
-      element: <EditCourse />,
+      element: (
+        <MainLayout>
+          <EditCourse />
+        </MainLayout>
+      ),
     },
     {
-      path: "monitor/:id",
-      element: <CourseInfo />,
+      path: ":id/monitor",
+      element: (
+        <AdminLayout option="courseMonitor">
+          <Outlet />
+        </AdminLayout>
+      ),
+      children: [
+        {
+          path: "status",
+          element: <Status />,
+        },
+        {
+          path: "enrollments",
+          element: <Enrollments />,
+        },
+        {
+          path: "reviews",
+          element: <Reviews />,
+        },
+      ],
     },
     {
       path: "create",
-      element: <CreateCourse />,
+      element: (
+        <MainLayout>
+          <CreateCourse />
+        </MainLayout>
+      ),
     },
   ],
 };
