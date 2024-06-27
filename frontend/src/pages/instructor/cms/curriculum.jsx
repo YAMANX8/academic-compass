@@ -1,9 +1,10 @@
 import { Fragment } from "react";
 import { useState, useEffect } from "react";
-import { Card, Button } from "../../../components";
+import { Card, Button, Modal2 as Modal } from "../../../components";
 import { Helmet } from "react-helmet-async";
 import { Icon } from "@iconify/react";
 import TopicList from "./components/topic-list";
+import NewTopicModal from "./modals/new-topic-modal";
 const Curriculum = () => {
   const [data, setData] = useState([]);
   const json = [
@@ -56,6 +57,16 @@ const Curriculum = () => {
     setData(sortedData);
   }, []);
 
+  // Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  // New Topic Modal
+  const toggleNewTopicModal = () => {
+    toggleModal();
+    setModalContent(<NewTopicModal />);
+  };
+  // ______________________________________________________________________
   return (
     <>
       <Helmet>
@@ -71,6 +82,8 @@ const Curriculum = () => {
                   id={topic.topic_level1_id}
                   title={topic.parent_topic_title}
                   lessons={topic.lessons}
+                  setModalContent={setModalContent}
+                  toggleModal={toggleModal}
                 />
                 {index < data.length - 1 && (
                   <hr key={index} className="bg-gray-500" />
@@ -88,12 +101,20 @@ const Curriculum = () => {
               </Button>
             </div>
           )}
-          <Button size="md" variant="outlined" className="self-start">
+          <Button
+            size="md"
+            variant="outlined"
+            className="self-start"
+            onClick={toggleNewTopicModal}
+          >
             <Icon icon="mdi:plus" />
             New topic
           </Button>
         </Card>
       </div>
+      <Modal title="test" isOpen={isModalOpen} onClose={toggleModal}>
+        {modalContent}
+      </Modal>
     </>
   );
 };

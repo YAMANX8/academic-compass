@@ -2,17 +2,16 @@ import { useState } from "react";
 import ListItem from "./list-item";
 import { Button } from "../../../../components";
 import { Icon } from "@iconify/react";
+import NewItemModal from "../modals/new-item-modal";
 
-const TopicList = ({ id, title, lessons }) => {
+const TopicList = ({ id, title, lessons, setModalContent, toggleModal }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  /**
-   *  item_id: 36,
-          item_title: "video intro to HTML Advanced Techniques",
-          item_no: 1,
-          item_type: "video",
-          topics_sequence: "HTML Basics",
-   */
+  // New Item Modal
+  const toggleNewItemModal = () => {
+    toggleModal();
+    setModalContent(<NewItemModal id={id} />);
+  };
+  //_________________________________________________
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between p-2">
@@ -41,6 +40,7 @@ const TopicList = ({ id, title, lessons }) => {
             variant="outlined"
             className="self-start"
             color="accent"
+            onClick={toggleNewItemModal}
           >
             <Icon icon="mdi:plus" />
             New item
