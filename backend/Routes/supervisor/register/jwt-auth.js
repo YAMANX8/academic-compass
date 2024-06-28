@@ -53,6 +53,62 @@ router.post('/supervisor/register', validInfo, async (req, res) => {
   }
 });
 
+
+router.post('/supervisor/login', validInfo, async (req, res) => {
+  try {
+    // 1. destructure req.body
+    const { email, password } = req.body;
+    // 2. check supervisor doesn't exist (if not then throw error)
+    const supervisor = await pool.query(
+      `
+        SELECT
+          *
+        FROM
+          Users
+        WHERE
+          email = $1
+      `,
+      [email],
+    );
+
+    if (supervisor.rows.length == 0) {
+      return res.status(401).json('Password or Email is incorrect');
+    }
+
+    // 3.Check if the supervisor is banned
+    if (supervisor.rows[0].role_id === 4) {
+      return res.status(403).json('This account is banned.');
+    }
+    // 4. check if incoming password is the same the database password
+    const validPassword = await bcrypt.compare(
+      password,
+      supervisor.rows[0].password,
+    ); //true or false
+    if (!validPassword) {
+      return res.status(401).json('Password or Email is incorrect');
+    }
+
+    // 5. give them the jwt token
+    else if (validPassword) {
+      const { token, refreshToken } = jwtGenerator(
+        supervisor.rows[0].user_id,
+        supervisor.rows[0].role_id,
+      );
+
+      res.cookie('jwt', refreshToken, {
+        httpOnly: true,
+        // sameSite: 'None',
+        // secure: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+      return res.status(200).json({ token, user: supervisor.rows[0] });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
 //  correct token
 router.get('/me', authorization, async (req, res) => {
   try {

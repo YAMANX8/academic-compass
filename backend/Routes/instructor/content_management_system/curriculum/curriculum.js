@@ -53,7 +53,7 @@ router.get('/curriculum/:courseId', authorization, async (req, res) => {
     const roleId = req.user.roleId;
     const courseId = req.params.courseId;
 
-    // permission
+    // Permission check
     const hasAccess = await checkPermission(
       instructorId,
       'instructor_content_management',
@@ -63,6 +63,21 @@ router.get('/curriculum/:courseId', authorization, async (req, res) => {
       return res.status(403).json('Access denied');
     }
 
+    // Query to get course title
+    const courseTitleQuery = `
+      SELECT course_title
+      FROM course
+      WHERE course_id = $1;
+    `;
+    const courseTitleResult = await pool.query(courseTitleQuery, [courseId]);
+
+    if (courseTitleResult.rows.length === 0) {
+      return res.status(404).json('Course not found');
+    }
+
+    const courseTitle = courseTitleResult.rows[0].course_title;
+
+    // Query to get curriculum details
     const getInfoForCurriculumPage = `
 WITH RECURSIVE TopicHierarchy AS (
   SELECT
@@ -129,28 +144,17 @@ SELECT
   ID.item_type,
   FT.topics_sequence,
   FT.topic_level1_id,
-  TL1.topic_title AS topic_level1_name,
-  C.course_title
+  TL1.topic_title AS topic_level1_name
 FROM
   ItemDetails ID
 JOIN
   FinalTopics FT ON ID.topic_id = FT.topic_id
 LEFT JOIN
   topic_level_1 TL1 ON FT.topic_level1_id = TL1.topic_level1_id
-JOIN
-  course C ON ID.course_id = C.course_id
 ORDER BY
   ID.item_id;
     `;
-    const getInfoForCurriculumPageValue = [courseId];
-    const result = await pool.query(
-      getInfoForCurriculumPage,
-      getInfoForCurriculumPageValue,
-    );
-
-    // Extract the course title from the first row (all rows have the same course title)
-    const courseTitle =
-      result.rows.length > 0 ? result.rows[0].course_title : '';
+    const result = await pool.query(getInfoForCurriculumPage, [courseId]);
 
     // Transform the results into the desired JSON structure
     const transformedData = result.rows.reduce((acc, row) => {
@@ -182,6 +186,7 @@ ORDER BY
     res.status(500).json({ error: 'Server Error' });
   }
 });
+
 
 
 // get video data by item Id
