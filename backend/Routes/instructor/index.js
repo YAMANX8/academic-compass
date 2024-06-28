@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const coresContent = require('./course-content/course-content');
 const courseStatus = require('./course-info-page/course-stauts');
 const courseEnrollment = require('./course-info-page/enrollment');
 const ShowReview = require('./course-info-page/show-review');
@@ -14,8 +13,6 @@ const showStudentProfile = require('./showing-student-profile/student-profile');
 const showCurriculumInfo = require('./content_management_system/curriculum/curriculum');
 
 /*Instructor*/
-// Course Content
-router.use('/AcademicCompass/instructor/Course_Content', coresContent);
 
 // Course Info page: courseStatus
 router.use('/AcademicCompass/CourseInfo/CourseStatus', courseStatus);
