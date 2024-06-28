@@ -25,7 +25,7 @@ const TopicList = ({ id, title, lessons, setModalContent, toggleModal }) => {
         </Button>
       </div>
       {isOpen && (
-        <div className="flex flex-col gap-2 rounded bg-secondary/20 p-2">
+        <div className="flex flex-col gap-1 rounded bg-secondary/20 p-2">
           {lessons.map((lesson) => (
             <ListItem
               key={lesson.item_id}

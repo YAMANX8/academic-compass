@@ -25,4 +25,7 @@ export default defineConfig({
       'react-router-dom', // إذا كنت تستخدمها
     ],
   },
+  define: {
+    'global': {}
+  }
 });

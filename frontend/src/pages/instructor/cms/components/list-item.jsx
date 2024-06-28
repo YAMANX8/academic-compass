@@ -3,29 +3,7 @@ import { useState } from "react";
 import { Button, Chip } from "../../../../components";
 import { Icon } from "@iconify/react";
 
-/*
- item_id: 36,
-          item_title: "video intro to HTML Advanced Techniques",
-          item_no: 1,
-          item_type: "video",
-          topics_sequence: "HTML Basics",
-          <Button size="md" variant="outlined" className="self-start">
-            <Icon icon="mdi:plus" />
-            New item
-          </Button>
-
-          mdi:file-document-outline
-          mdi:file-code-outline
-          mdi:file-question-outline
-          mdi:file-video-outline
-*/
 const ListItem = ({ id, title, type, topicSequence }) => {
-  /* mdi:file-document-outline
-     mdi:file-code-outline
-     mdi:file-question-outline
-     mdi:file-video-outline
-     make a state to change the icon based on the type of the item
-     */
   const [icon, setIcon] = useState("mdi:file-document-outline");
   useEffect(() => {
     switch (type) {
