@@ -1,10 +1,11 @@
-import CourseCard from "./instructor/dashboard/components/course-card";
+import { Modal2 } from "../components";
+import React, { useState } from "react";
+import Video from "./instructor/cms/components/item-types/video";
+import Quiz from "./instructor/cms/components/item-types/quiz";
+import Article from "./instructor/cms/components/item-types/article";
 const Test = () => {
-  return (
-    <div className="w-full">
-      <CourseCard type={true} title={"heloo aa"} subtitle={"adadad e"} />
-    </div>
-  );
+
+  return <Quiz />;
 };
 
 export default Test;

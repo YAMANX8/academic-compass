@@ -37,8 +37,8 @@ export const paths = {
     },
     manage: {
       create: "/course/create",
-      edit: "/course/edit",
-      monitor: "/course/monitor",
+      curriculum: "manage/curriculum",
+      details: "manage/details",
     },
     monitor: {
       status: "monitor/status",

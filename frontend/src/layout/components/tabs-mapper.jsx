@@ -19,7 +19,7 @@ const TabsMapper = ({ data }) => {
                 className={`!w-full capitalize ${location.pathname === i.path ? "!text-primary-dark" : "!text-dark"}`}
                 page={i.path}
               >
-                <Icon icon={i.icon} />
+                <Icon icon={i.icon} fontSize={20} />
                 <span className="w-full">{i.title}</span>
               </Button>
             </li>

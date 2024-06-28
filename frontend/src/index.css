@@ -65,6 +65,9 @@
   h3 {
     @apply text-2xl font-semibold;
   }
+  h4 {
+    @apply text-xl font-semibold;
+  }
   ::-webkit-scrollbar {
     height: 10px;
     width: 10px;

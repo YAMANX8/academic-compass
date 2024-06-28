@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
+
 // import MainLayout from "../../layout/main";
 import AdminLayout from "../../layout/admin";
 import { AuthGuard, RoleBasedGuard } from "../../auth/guard";
@@ -8,6 +9,7 @@ import { roles } from "../../config-global";
 
 import { SplashScreen } from "../../components";
 import { SettingsProvider } from "../../context/settings/settings-provider";
+
 // ----------------------------------------------------------------------
 
 // const InstructorDashboard = lazy(
@@ -37,7 +39,9 @@ const Security = lazy(
 const Account = lazy(
   () => import("../../pages/instructor/settings/account"),
 );
-
+const Curriculum = lazy(
+  () => import("../../pages/instructor/cms/curriculum"),
+);
 // ----------------------------------------------------------------------
 
 const instructors = {
@@ -105,6 +109,24 @@ const instructors = {
           path: "account",
           element: <Account />,
         },
+      ],
+    },
+    {
+      path: "course-manage",
+      element: (
+        <AdminLayout option="courseManage">
+          <Outlet />
+        </AdminLayout>
+      ),
+      children: [
+        {
+          path: "curriculum",
+          element: <Curriculum />,
+        },
+        // {
+        //   path: "details",
+        //   element: <Security />,
+        // },
       ],
     },
   

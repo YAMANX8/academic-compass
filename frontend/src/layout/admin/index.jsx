@@ -8,7 +8,7 @@ const AdminLayout = ({ children, option }) => {
     <div className="flex h-screen max-h-screen w-full flex-col overflow-hidden bg-light text-dark ">
       <Header />
       <div className="flex flex-grow">
-        <NavVertical role={role} option={option} />
+        {option !== "noNav" && <NavVertical role={role} option={option} />}
         <Main>{children}</Main>
       </div>
     </div>

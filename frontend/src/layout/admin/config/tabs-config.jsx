@@ -40,12 +40,12 @@ export const useTabsConfig = () => {
       items: [
         {
           title: "curriculum",
-          path: paths.instructor.root,
+          path: `${paths.course.root}/${id}/${paths.course.manage.curriculum}`,
           icon: "mdi:book-open",
         },
         {
           title: "details",
-          path: paths.instructor.root,
+          path: `${paths.course.root}/${id}/${paths.course.manage.details}`,
           icon: "mdi:information",
         },
       ],
