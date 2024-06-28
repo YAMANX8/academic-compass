@@ -48,7 +48,7 @@ router.post('/instructor/register', validInfo, async (req, res) => {
 
     // 5.generating our jwt token
     const { token, refreshToken } = jwtGenerator(
-      newInstructor.rows[0].student_id,
+      newInstructor.rows[0].user_id,
       newInstructor.rows[0].role_id,
     );
     res.cookie('jwt', refreshToken, {
@@ -69,10 +69,8 @@ router.post('/instructor/register', validInfo, async (req, res) => {
 router.post('/instructor/login', validInfo, async (req, res) => {
   try {
     // 1. destructure req.body
-
     const { email, password } = req.body;
-    // const role_id = 1;
-    // 2. check student doesn't exist (if not then throw error)
+    // 2. check instructor doesn't exist (if not then throw error)
     const instructor = await pool.query(
       `
         SELECT
@@ -88,7 +86,12 @@ router.post('/instructor/login', validInfo, async (req, res) => {
     if (instructor.rows.length == 0) {
       return res.status(401).json('Password or Email is incorrect');
     }
-    // 3. check if incoming password is the same the database password
+
+    // 3.Check if the instructor is banned
+    if (instructor.rows[0].role_id === 4) {
+      return res.status(403).json('This account is banned.');
+    }
+    // 4. check if incoming password is the same the database password
     const validPassword = await bcrypt.compare(
       password,
       instructor.rows[0].password,
@@ -97,7 +100,7 @@ router.post('/instructor/login', validInfo, async (req, res) => {
       return res.status(401).json('Password or Email is incorrect');
     }
 
-    // 4. give them the jwt token
+    // 5. give them the jwt token
     else if (validPassword) {
       const { token, refreshToken } = jwtGenerator(
         instructor.rows[0].user_id,
