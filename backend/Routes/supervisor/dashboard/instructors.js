@@ -23,15 +23,17 @@ router.get('/', authorization, async (req, res) => {
     // Query to get instructors
     const instructorsQuery = `
       SELECT 
+        u.user_id,
         u.first_name || ' ' || u.last_name AS full_name,
         u.birth_date AS joining_date,
         u.country,
-        u.picture
+        u.picture,
+        u.role_id
       FROM 
         users u
       WHERE 
         u.manager_id = $1
-        AND u.role_id = 1;
+        AND (u.role_id = 1 OR u.role_id = 4);
     `;
     const instructorsResult = await pool.query(instructorsQuery, [
       supervisorId,
@@ -39,10 +41,12 @@ router.get('/', authorization, async (req, res) => {
 
     // Create JSON response
     const responseJSON = instructorsResult.rows.map((row) => ({
+      userId:row.user_id,
       fullName: row.full_name,
       joiningDate: row.joining_date,
       country: row.country,
       picture: `http://localhost:5000/image/${row.picture}`,
+      status: row.role_id === 1 ? 'Active' : 'Blocked',
     }));
 
     res.status(200).json(responseJSON);
