@@ -42,7 +42,13 @@ const TextField = ({
           onClick={handleTogglePassword}
         />
       )}
-      {helperText && <p className={`mt-1 text-xs`}>{helperText}</p>}
+      {helperText && (
+        <p
+          className={`flex items-center gap-1 pl-3 pt-2 text-xs font-normal text-gray-500`}
+        >
+          {helperText}
+        </p>
+      )}
     </div>
   );
 };

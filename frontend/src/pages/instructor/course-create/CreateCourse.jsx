@@ -4,12 +4,14 @@ import { toast } from "react-toastify";
 import FirstStep from "./sections/FirstStep";
 import SecondStep from "./sections/SecondStep";
 import ThirdStep from "./sections/ThirdStep";
-import axios from "src/apis/axios";
+// import axios from "src/apis/axios";
 import { useAuthContext } from "src/auth/hooks";
 import { Helmet } from "react-helmet-async";
-import { Button } from "../../../components";
-
+import { Button, Card, Progress } from "../../../components";
+import useAxios from "../../../hooks/use-axios";
+import { paths } from "../../../routes/paths";
 function CreateCourse() {
+  const axios = useAxios();
   const navigate = useNavigate();
   const { user } = useAuthContext();
   const [currentStep, setCurrentStep] = useState(1);
@@ -23,6 +25,7 @@ function CreateCourse() {
     courseType: "",
     courseLevel: "",
   });
+  console.log(courseData);
   // the static lists came from the database like levels and courses type
   const [list, setList] = useState({
     levels: [],
@@ -71,22 +74,17 @@ function CreateCourse() {
         throw new Error(
           "Your course title should not exceed 60 characters in length",
         );
-      const res = await axios.post(
-        `/instructor/createCourse`,
-        {
-          title: courseData.title,
-          levelId: courseData.courseType,
-          typeId: courseData.courseLevel,
-        },
-        {
-          headers: {
-            token: user?.accessToken,
-          },
-        },
-      );
-      toast.success("Course created successfully");
-      navigate(`/instructor/dashboard`);
+      if (!courseData.courseType) throw new Error("Course type is required!");
+      if (!courseData.courseLevel) throw new Error("Course level is required!");
+      const res = await axios.post(`/instructor/createCourse`, {
+        title: courseData.title,
+        levelId: courseData.courseType,
+        typeId: courseData.courseLevel,
+      });
+      toast.success("Course Created Successfully");
+      navigate(paths.instructor.inprogressCourses);
     } catch (error) {
+      console.log(error);
       toast.error(error.message);
     }
   };
@@ -113,20 +111,15 @@ function CreateCourse() {
       <Helmet>
         <title>Create new course</title>
       </Helmet>
-      <form
-        className="flex min-h-[75vh] w-[1200px] flex-col justify-between"
-        onSubmit={handleSubmit}
-      >
-        <div>
-          <div className="flex flex-col gap-12">
-            <div>
-              <h1 className="py-4 text-[24px]">Step{currentStep}</h1>
-              <div className="relative m-auto h-[10px] w-full max-w-screen-xl rounded-[10px] bg-gray-300">
-                <div
-                  className="h-full rounded-[10px] bg-blue-800 transition-all duration-500 ease-in-out-back"
-                  style={{ width: `${(currentStep / 3) * 100}%` }}
-                ></div>
-              </div>
+      <form onSubmit={handleSubmit}>
+        <Card className="m-auto flex min-h-[512px] max-w-5xl flex-col justify-between">
+          <div className="flex flex-col gap-8">
+            <div className="space-y-4">
+              <h3>Step{currentStep}</h3>
+              <Progress
+                percentage={(currentStep / 3) * 100}
+                className="transition-all duration-500 ease-in-out-back"
+              />
             </div>
             {currentStep === 1 && (
               <FirstStep courseData={courseData} handleChange={handleChange} />
@@ -146,16 +139,21 @@ function CreateCourse() {
               />
             )}
           </div>
-        </div>
-        <div className="relative flex justify-between py-4">
-          <hr className="absolute -left-40 -right-40 -top-[1px] h-[2px] bg-dark/50" />
-          <Button size="lg" variant="outlined" type="button" onClick={handleBackClick}>
-            {backBtn}
-          </Button>
-          <Button size="lg" type={btn.type} onClick={handleContinueClick}>
-            {btn.title}
-          </Button>
-        </div>
+
+          <div className="flex justify-between p-2">
+            <Button
+              size="lg"
+              variant="outlined"
+              type="button"
+              onClick={handleBackClick}
+            >
+              {backBtn}
+            </Button>
+            <Button size="lg" type={btn.type} onClick={handleContinueClick}>
+              {btn.title}
+            </Button>
+          </div>
+        </Card>
       </form>
     </>
   );

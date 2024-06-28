@@ -39,7 +39,9 @@ const CourseCard = ({
                 <Icon icon="mdi:eye" />
                 View Details
               </Button>
-              <Button page={`${paths.course.manage.edit}/${id}`}>
+              <Button
+                page={`${paths.course.root}/${id}/${paths.course.manage.curriculum}`}
+              >
                 <Icon icon="mdi:pencil" />
                 Course Management
               </Button>
@@ -66,7 +68,9 @@ const CourseCard = ({
               <Progress percentage={(progress / 11) * 100} />
             </div>
 
-            <Button page={`${paths.course.manage.edit}/${id}`}>
+            <Button
+              page={`${paths.course.root}/${id}/${paths.course.manage.curriculum}`}
+            >
               <Icon icon="mdi:pencil" /> Continue Editing
             </Button>
           </div>
