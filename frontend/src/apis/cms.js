@@ -4,8 +4,10 @@ import { endpoints } from "../utils/axios";
 export const useGetCurriculum = () => {
   const axios = useAxios();
 
-  const getData = async () => {
-    const response = await axios.get(endpoints.course.manage.curriculum);
+  const getData = async (id) => {
+    const response = await axios.get(
+      `${endpoints.course.manage.curriculum}/${id}`,
+    );
     const data = response.data;
 
     return data;
@@ -13,3 +15,19 @@ export const useGetCurriculum = () => {
 
   return getData;
 };
+// ___________________________________________________
+
+// export const useGetTopicsFromL1 = () => {
+//   const axios = useAxios();
+
+//   const getData = async (id) => {
+//     const response = await axios.get(
+//       `${endpoints.course.manage.curriculum}/${id}`,
+//     );
+//     const data = response.data;
+
+//     return data;
+//   };
+
+//   return getData;
+// };

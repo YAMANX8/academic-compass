@@ -1,14 +1,18 @@
 import { useMemo, useEffect, useReducer, useCallback } from "react";
 
 import { CmsContext } from "./cms-context";
-
+import { useGetCurriculum } from "../../apis/cms";
+import { useParams } from "../../routes/hooks/use-params";
 // ----------------------------------------------------------------------
 const Types = {
   INITIAL: "INITIAL",
 };
 
 const initialState = {
-  curriculum: {},
+  curriculum: {
+    courseTitle: "",
+    topics: [],
+  },
   details: {},
 };
 
@@ -17,6 +21,7 @@ const reducer = (state, action) => {
     case "INITIAL": {
       return {
         ...state,
+        curriculum: action.payload.curriculum,
       };
     }
 
@@ -30,12 +35,23 @@ const reducer = (state, action) => {
 export function CmsProvider({ children }) {
   // TODO: states
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { id } = useParams();
+  const getCurriculum = useGetCurriculum();
   // TODO: initialize
   const initialize = useCallback(async () => {
     try {
+      const data = await getCurriculum(id);
+
+      console.log(data);
       dispatch({
         type: Types.INITIAL,
-        payload: { curriculum: {}, details: {} },
+        payload: {
+          curriculum: {
+            courseTitle: data.course_title,
+            topics: data.topics,
+          },
+          details: {},
+        },
       });
     } catch (error) {
       console.error(error);
@@ -50,13 +66,16 @@ export function CmsProvider({ children }) {
     initialize();
   }, [initialize]);
 
+  // const handleNewTopic = () => {
+
+  // };
   // TODO: returned variable
   const memoizedValue = useMemo(
     () => ({
       ...state,
       // Methods.
     }),
-    [],
+    [state],
   );
   console.log(memoizedValue);
   return (
