@@ -121,9 +121,9 @@ const courseManagement = {
     {
       path: "create",
       element: (
-        <MainLayout>
+        <AdminLayout option="noNav">
           <CreateCourse />
-        </MainLayout>
+        </AdminLayout>
       ),
     },
   ],
