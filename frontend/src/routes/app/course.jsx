@@ -5,6 +5,7 @@ import MainLayout from "src/layout/main";
 import AdminLayout from "../../layout/admin";
 import { AuthGuard, RoleBasedGuard } from "../../auth/guard";
 import { roles } from "../../config-global";
+import { CmsProvider } from "../../context/cms/cms-provider";
 
 import { SplashScreen } from "src/components";
 // ----------------------------------------------------------------------
@@ -82,7 +83,9 @@ const courseManagement = {
       path: ":id/manage",
       element: (
         <AdminLayout option="courseManage">
-          <Outlet />
+          <CmsProvider>
+            <Outlet />
+          </CmsProvider>
         </AdminLayout>
       ),
       children: [

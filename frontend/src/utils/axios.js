@@ -76,10 +76,10 @@ export const endpoints = {
     },
     // This endpoint has get and post methods.
     create: "/instructor/createCourse",
-    edit: {
+    manage: {
       // This endpoint has get and put methods.
       info: "/instructor/editeCourseInfo",
-      curriculum: "", // not used yet!
+      curriculum: "/instructor/content_management_system/curriculum", // This endpoint needs /:courseId
     },
   },
   roadmaps: {
