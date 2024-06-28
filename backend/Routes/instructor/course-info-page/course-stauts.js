@@ -19,6 +19,19 @@ router.get('/:courseId', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
+    // Query to get course title
+    const courseTitleQuery = `
+      SELECT course_title
+      FROM course
+      WHERE course_id = $1;
+    `;
+    const courseTitleResult = await pool.query(courseTitleQuery, [courseId]);
+
+    if (courseTitleResult.rows.length === 0) {
+      return res.status(404).json('Course not found');
+    }
+
+    const courseTitle = courseTitleResult.rows[0].course_title;
 
     // First query: Total item count for a specific course
     const itemQuery = `
@@ -76,6 +89,7 @@ router.get('/:courseId', authorization, async (req, res) => {
 
     // Create JSON response
     const responseJSON = {
+      course_title: courseTitle,
       items: totalItemCount,
       enrollments: totalEnrollments,
       reviews: totalReviews,
