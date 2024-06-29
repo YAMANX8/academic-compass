@@ -71,5 +71,44 @@ router.get('/:instructorId', authorization, async (req, res) => {
     res.status(500).json('Server Error');
   }
 });
+router.put('/change-status/:instructorId', authorization, async (req, res) => {
+  try {
+    const supervisorId = req.user.userId;
+    const roleId = req.user.roleId;
+    const instructorId = req.params.instructorId;
+    const { status } = req.body;
+
+    // Permission check
+    const hasAccess = await checkPermission(
+      supervisorId,
+      'showAssigningRoadmaps',
+      roleId,
+    );
+
+    if (!hasAccess) {
+      return res.status(403).json('Access denied');
+    }
+
+    let role_id;
+    if (status === true) {
+      role_id = 1;
+    } else {
+      role_id = 4;
+    }
+
+    const instructorStatusQuery = `
+      UPDATE users
+      SET role_id = $1
+      WHERE user_id = $2;
+    `;
+    await pool.query(instructorStatusQuery, [role_id, instructorId]);
+
+    // Prepare the JSON response
+    res.status(200).json({ message: 'Instructor status updated successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json('Server Error');
+  }
+});
 
 module.exports = router;
