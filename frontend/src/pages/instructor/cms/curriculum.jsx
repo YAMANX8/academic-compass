@@ -11,11 +11,11 @@ const Curriculum = () => {
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const toggleModal = () => setIsModalOpen((prev) => !prev);
   // New Topic Modal
   const toggleNewTopicModal = () => {
     toggleModal();
-    setModalContent(<NewTopicModal />);
+    setModalContent(<NewTopicModal toggleModal={toggleModal} />);
   };
   // ______________________________________________________________________
   return (
@@ -27,29 +27,31 @@ const Curriculum = () => {
         <h2>{curriculum.courseTitle}</h2>
         <Card className="flex flex-col gap-2 !py-4">
           {curriculum.topics.length !== 0 ? (
-            curriculum.topics.map((topic, index) => (
-              <Fragment key={topic.topic_level1_id}>
-                <TopicList
-                  id={topic.topic_level1_id}
-                  title={topic.parent_topic_title}
-                  lessons={topic.lessons}
-                  setModalContent={setModalContent}
-                  toggleModal={toggleModal}
-                />
-                {index < curriculum.topics.length - 1 && (
-                  <hr key={index} className="bg-gray-500" />
-                )}
-                <Button
-                  size="md"
-                  variant="outlined"
-                  className="self-start"
-                  onClick={toggleNewTopicModal}
-                >
-                  <Icon icon="mdi:plus" />
-                  New topic
-                </Button>
-              </Fragment>
-            ))
+            <>
+              {curriculum.topics.map((topic, index) => (
+                <Fragment key={topic.id}>
+                  <TopicList
+                    id={topic.id}
+                    title={topic.title}
+                    lessons={topic.lessons}
+                    setModalContent={setModalContent}
+                    toggleModal={toggleModal}
+                  />
+                  {index < curriculum.topics.length - 1 && (
+                    <hr key={index} className="bg-gray-500" />
+                  )}
+                </Fragment>
+              ))}
+              <Button
+                size="md"
+                variant="outlined"
+                className="self-start"
+                onClick={toggleNewTopicModal}
+              >
+                <Icon icon="mdi:plus" />
+                New topic
+              </Button>
+            </>
           ) : (
             <div className="space-y-2 py-40 text-center">
               <p className="text-gray-600">

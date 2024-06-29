@@ -6,7 +6,7 @@ export const useGetCurriculum = () => {
 
   const getData = async (id) => {
     const response = await axios.get(
-      `${endpoints.course.manage.curriculum}/${id}`,
+      `${endpoints.course.manage.curriculum.index}/${id}`,
     );
     const data = response.data;
 
@@ -17,17 +17,17 @@ export const useGetCurriculum = () => {
 };
 // ___________________________________________________
 
-// export const useGetTopicsFromL1 = () => {
-//   const axios = useAxios();
+export const useGetTopicsFromL1 = () => {
+  const axios = useAxios();
 
-//   const getData = async (id) => {
-//     const response = await axios.get(
-//       `${endpoints.course.manage.curriculum}/${id}`,
-//     );
-//     const data = response.data;
+  const getData = async (id) => {
+    const response = await axios.get(
+      endpoints.course.manage.curriculum.getTopics,
+    );
+    const data = response.data;
 
-//     return data;
-//   };
+    return data;
+  };
 
-//   return getData;
-// };
+  return getData;
+};

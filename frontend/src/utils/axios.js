@@ -79,7 +79,11 @@ export const endpoints = {
     manage: {
       // This endpoint has get and put methods.
       info: "/instructor/editeCourseInfo",
-      curriculum: "/instructor/content_management_system/curriculum", // This endpoint needs /:courseId
+      curriculum: {
+        index: "/instructor/content_management_system/curriculum",// This endpoint needs /:courseId
+        getTopics:
+          "/instructor/content_management_system/curriculum/assigning-topics",
+      }, 
     },
   },
   roadmaps: {
