@@ -29,10 +29,10 @@ const Curriculum = () => {
           {curriculum.topics.length !== 0 ? (
             <>
               {curriculum.topics.map((topic, index) => (
-                <Fragment key={topic.id}>
+                <Fragment key={topic.topic_level1_id}>
                   <TopicList
-                    id={topic.id}
-                    title={topic.title}
+                    id={topic.topic_level1_id}
+                    title={topic.parent_topic_title}
                     lessons={topic.lessons}
                     setModalContent={setModalContent}
                     toggleModal={toggleModal}

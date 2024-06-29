@@ -3,13 +3,16 @@ import ListItem from "./list-item";
 import { Button } from "../../../../components";
 import { Icon } from "@iconify/react";
 import NewItemModal from "../modals/new-item-modal";
+import { useCmsContext } from "../../../../context/hooks/use-cms-context";
 
 const TopicList = ({ id, title, lessons, setModalContent, toggleModal }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { clear } = useCmsContext();
   // New Item Modal
   const toggleNewItemModal = () => {
+    clear();
     toggleModal();
-    setModalContent(<NewItemModal id={id} />);
+    setModalContent(<NewItemModal id={id} toggleModal={toggleModal} />);
   };
   //_________________________________________________
   return (

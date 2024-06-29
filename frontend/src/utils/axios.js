@@ -80,10 +80,15 @@ export const endpoints = {
       // This endpoint has get and put methods.
       info: "/instructor/editeCourseInfo",
       curriculum: {
-        index: "/instructor/content_management_system/curriculum",// This endpoint needs /:courseId
-        getTopics:
+        index: "/instructor/content_management_system/curriculum", // This endpoint needs /:courseId
+        getTopicsL1:
           "/instructor/content_management_system/curriculum/assigning-topics",
-      }, 
+        getTopicsL2:
+          "/instructor/content_management_system/curriculum/new-item/TL2", // This endpoint needs /:topicId
+        getTopicsLn:
+          "/instructor/content_management_system/curriculum/new-item/TL3", // This endpoint needs /:topicId
+          newItem: "/instructor/content_management_system/curriculum/new-item", // This endpoint needs /:courseId
+      },
     },
   },
   roadmaps: {
