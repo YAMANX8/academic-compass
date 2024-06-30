@@ -3,50 +3,36 @@ import { useDropzone } from "react-dropzone";
 import { Icon } from "@iconify/react";
 import { Button } from "../../../../../components";
 import { useUploadVideo } from "../../../../../apis/cms";
-const Video = ({ id, video, setVideo }) => {
-  const handleUploadVideo = useUploadVideo();
-  // const [video, setVideo] = useState(null);
-
+import { useCmsContext } from "../../../../../context/hooks/use-cms-context";
+const Video = ({ id }) => {
+  const { video, handleUploadVideo, handleReplaceVideo } = useCmsContext();
   const onDrop = async (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    setVideo(file);
-
-    const formData = new FormData();
-    formData.append("video", file);
-    console.log(file);
-    // TODO: here I will call the api
-    try {
-      const res = await handleUploadVideo(id, formData);
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
+    await handleUploadVideo(id, acceptedFiles[0]);
   };
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    disabled: !!video.length > 0,
+    disabled: !!video,
   });
 
   return (
     <div {...getRootProps()} className="w-full">
       <input {...getInputProps()} />
-      {video.length > 0 ? (
+      {video ? (
         <div className="flex gap-4 p-2">
-          <video
-            className="aspect-video w-64"
-            controls
-            src={typeof video == "file" ? URL.createObjectURL(video) : video}
-          />
+          <video className="aspect-video w-64" controls src={video} />
           <div className="flex flex-1 flex-col gap-2">
             <p className="text-sm font-normal text-dark">
-              Video Name: {video.name}
+              Video Name: [VIDEO_NAME]
             </p>
-            <p className="text-sm font-normal text-dark">Duration: [NUMBER]</p>
-            <p className="text-sm font-normal text-dark">Upload Date: [TIME]</p>
+            <p className="text-sm font-normal text-dark">
+              Duration: [VIDEO_DURATION]
+            </p>
+            <p className="text-sm font-normal text-dark">
+              Upload Date: [VIDEO_UPLOAD_DATE]
+            </p>
           </div>
           <div className="mt-auto">
-            <Button variant="soft" size="sm" onClick={() => setVideo(null)}>
+            <Button variant="soft" size="sm" onClick={handleReplaceVideo}>
               <Icon icon="mdi:file-replace-outline" />
               Replace
             </Button>

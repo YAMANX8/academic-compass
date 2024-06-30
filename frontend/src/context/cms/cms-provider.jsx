@@ -7,6 +7,8 @@ import {
   useGetTopicsFromLn,
   usePostNewItem,
   useDeleteItem,
+  useGetVideo,
+  useUploadVideo,
 } from "../../apis/cms";
 import { useParams } from "../../routes/hooks/use-params";
 import { toast } from "react-toastify";
@@ -19,6 +21,8 @@ const Types = {
   INSERT_NEW_ITEM_LN: "INSERT_NEW_ITEM_LN",
   HANDLE_CHANGE_NEW_ITEM: "HANDLE_CHANGE_NEW_ITEM",
   CLEAR_NEW_ITEM: "CLEAR_NEW_ITEM",
+  GET_UPLOAD_REPLACE_VIDEO: "GET_UPLOAD_REPLACE_VIDEO",
+  CREATE_QUESTION: "CREATE_QUESTION",
 };
 
 const initialState = {
@@ -50,6 +54,17 @@ const initialState = {
     ],
   },
   details: {},
+  video: null,
+  newQuestion: {
+    question_body: "",
+    options: [
+      {
+        option_body: "",
+        is_correct: false,
+        option_no: "",
+      },
+    ],
+  },
 };
 
 const reducer = (state, action) => {
@@ -127,6 +142,12 @@ const reducer = (state, action) => {
         topicsLn: [],
       };
     }
+    case "GET_UPLOAD_REPLACE_VIDEO": {
+      return {
+        ...state,
+        video: action.payload.video,
+      };
+    }
     default: {
       throw Error("Unknown action: " + action.type);
     }
@@ -144,6 +165,8 @@ export function CmsProvider({ children }) {
   const getTopicsLn = useGetTopicsFromLn();
   const postNewItem = usePostNewItem();
   const deleteItem = useDeleteItem();
+  const getVideo = useGetVideo();
+  const uploadVideo = useUploadVideo();
   // TODO: initialize
   const initialize = useCallback(async () => {
     try {
@@ -298,6 +321,39 @@ export function CmsProvider({ children }) {
       console.log(error);
     }
   };
+  const handleGetVideo = async (id) => {
+    const res = await getVideo(id);
+    dispatch({
+      type: Types.GET_UPLOAD_REPLACE_VIDEO,
+      payload: {
+        video: "",
+      },
+    });
+  };
+  const handleUploadVideo = async (id, acceptedFile) => {
+    const file = acceptedFile;
+    dispatch({
+      type: Types.GET_UPLOAD_REPLACE_VIDEO,
+      payload: { video: URL.createObjectURL(file) },
+    });
+    const formData = new FormData();
+    formData.append("video", file);
+    console.log(file);
+    // TODO: here I will call the api
+    try {
+      const res = await uploadVideo(id, formData);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleReplaceVideo = async () => {
+    dispatch({
+      type: Types.GET_UPLOAD_REPLACE_VIDEO,
+      payload: { video: null },
+    });
+  };
+
   // TODO: returned variable
   const memoizedValue = useMemo(
     () => ({
@@ -311,10 +367,12 @@ export function CmsProvider({ children }) {
       handleChangeForNewItem,
       handlePostNewItem,
       handleDeleteItem,
+      handleGetVideo,
+      handleUploadVideo,
+      handleReplaceVideo,
     }),
     [state],
   );
-  console.log(memoizedValue);
   return (
     <CmsContext.Provider value={memoizedValue}>{children}</CmsContext.Provider>
   );
