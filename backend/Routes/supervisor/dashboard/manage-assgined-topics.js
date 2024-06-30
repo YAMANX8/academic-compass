@@ -109,8 +109,8 @@ router.get('/:instructorId', authorization, async (req, res) => {
 });
 
 // Add assigning topics => instructor_id,topic_level1_id
+// * You can use this info Yaman 
 // * here I'm returning new topic_level1_id after inserting 
-// * You can use this Yaman 
 router.post('/:instructorId', authorization, async (req, res) => {
   try {
     const supervisorId = req.user.userId;

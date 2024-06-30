@@ -3,6 +3,7 @@ const assigningRoadmaps = require('./dashboard/assigning-roadmap');
 const instructors = require('./dashboard/instructors');
 const instructorProfile = require('./dashboard/instructor-profile');
 const manageAssignedTopics = require('./dashboard/manage-assgined-topics');
+const manageRoadmap = require('./dashboard/manage-roadmap');
 const register = require('./register/jwt-auth');
 
 
@@ -22,6 +23,9 @@ router.use(
   '/AcademicCompass/dashboard/manage-assigned-topics',
   manageAssignedTopics,
 );
+
+// dashboard: manage-roadmap
+router.use('/AcademicCompass/dashboard/manage-roadmap', manageRoadmap);
 
 
 // register
