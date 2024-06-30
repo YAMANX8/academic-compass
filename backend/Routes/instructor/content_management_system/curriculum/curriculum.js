@@ -586,8 +586,8 @@ router.delete('/curriculum/item/:itemId', authorization, async (req, res) => {
     const checkEnrollmentResult = await pool.query(checkEnrollmentQuery, [
       courseId,
     ]);
-
-    if (checkEnrollmentResult.rows > 0) {
+    console.log(checkEnrollmentResult.rows);
+    if (checkEnrollmentResult.rows.length === 0) {
       // Delete related data first based on item type
       let deleteRelatedQuery;
       switch (type) {
