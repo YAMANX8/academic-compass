@@ -13,6 +13,7 @@ router.post('/instructor/register', validInfo, async (req, res) => {
 
     const { first_name, last_name, email, password } = req.body;
     const role_id = 1;
+    const joining_date = new Date().toISOString().split('T')[0]; 
     // 2. check if instructor exist (if instructor exist then throw error)
     const instructor = await pool.query(
       `
@@ -37,13 +38,13 @@ router.post('/instructor/register', validInfo, async (req, res) => {
     const newInstructor = await pool.query(
       `
         INSERT INTO
-          Users (first_name, last_name, email, password, role_id)
+          Users (first_name, last_name, email, password, role_id, joining_date)
         VALUES
-          ($1, $2, $3, $4, $5)
+          ($1, $2, $3, $4, $5, $6)
         RETURNING
           *
       `,
-      [first_name, last_name, email, bcryptPassword, role_id],
+      [first_name, last_name, email, bcryptPassword, role_id, joining_date],
     );
 
     // 5.generating our jwt token

@@ -2894,3 +2894,46 @@ GROUP BY
  frontend     | image-1693320607231-230196050.svg | {"Ammar Alesrawi"}
 (2 rows)
 
+[
+    {
+    "topic_level1_id":1,    
+    "topic_level_1 title": "Html",
+    "topic_level_2":[
+        {
+            "topic_id":1,
+            "topic_level_2 title": "Html2",
+            "topic_level":2,
+            "topic_level_3":[
+                {
+                    "topic_id":2,
+                    "topic_level_3 title": "Html2",
+                    "topic_level":3,
+                }
+            ]
+        },
+    ]
+    },
+    {
+    "topic_level1_id":2,  
+    "topic_level_1 title": "css",
+    "topic_level_2":[
+        {
+            "topic_id":3,
+            "topic_level_2 title": "css2",
+            "topic_level":2,
+            "topic_level_3":[
+                {
+                    "topic_id":4,
+                    "topic_level_3 title": "css3",
+                    "topic_level":3,
+                },
+                {
+                    "topic_id":5,
+                    "topic_level_3 title": "java3",
+                    "topic_level":3,     
+                }
+            ]
+        },
+    ]
+    }, 
+]
