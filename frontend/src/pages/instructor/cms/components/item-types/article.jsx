@@ -8,7 +8,7 @@ const Article = () => {
     <ReactQuill
       value={value}
       onChange={setValue}
-      className="rounded-lg bg-white"
+      className="bg-white dark:bg-black"
     />
     /* <div className="mt-5 rounded border bg-white p-4">
         <h2 className="mb-2 text-lg font-bold">Preview:</h2>

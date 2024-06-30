@@ -36,6 +36,8 @@ const TopicList = ({ id, title, lessons, setModalContent, toggleModal }) => {
               title={lesson.item_title}
               type={lesson.item_type}
               topicSequence={lesson.topics_sequence}
+              toggleModal={toggleModal}
+              setModalContent={setModalContent}
             />
           ))}
           <Button

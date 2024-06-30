@@ -91,6 +91,13 @@ export const endpoints = {
         deleteItem: "/instructor/content_management_system/curriculum/item", // This endpoint needs /:itemId
         uploadVideo: "/instructor/content_management_system/curriculum/video", // This endpoint needs /:itemId
         getVideo: "/instructor/content_management_system/curriculum/video", // This endpoint needs /:itemId
+        getQuestions:
+          "/instructor/content_management_system/curriculum/questions", // This endpoint needs /:itemId
+        postQuestion:
+          "/instructor/content_management_system/curriculum/question", // This endpoint needs /:quizId
+        deleteQuestion:
+          "/instructor/content_management_system/curriculum/question", // This endpoint needs /:questionId
+        getQuestion: "/instructor/content_management_system/curriculum/options", // This endpoint needs /:questionId
       },
     },
   },

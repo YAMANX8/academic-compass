@@ -122,3 +122,60 @@ export const useGetVideo = () => {
   };
   return getData;
 };
+// ___________________________________________________
+
+export const useGetQuestions = () => {
+  const axios = useAxios();
+
+  const getData = async (id) => {
+    const response = await axios.get(
+      `${endpoints.course.manage.curriculum.getQuestions}/${id}`,
+    );
+    return response.data;
+  };
+
+  return getData;
+};
+// ___________________________________________________
+
+export const usePostQuestion = () => {
+  const axios = useAxios();
+
+  const postData = async (id, question) => {
+    const response = await axios.post(
+      `${endpoints.course.manage.curriculum.postQuestion}/${id}`,
+      question,
+    );
+    return response.data;
+  };
+
+  return postData;
+};
+// ___________________________________________________
+
+export const useDeleteQuestion = () => {
+  const axios = useAxios();
+
+  const deleteData = async (id) => {
+    const response = await axios.delete(
+      `${endpoints.course.manage.curriculum.deleteQuestion}/${id}`,
+    );
+    return response.data;
+  };
+
+  return deleteData;
+};
+// ___________________________________________________
+
+export const useGetQuestion = () => {
+  const axios = useAxios();
+
+  const getData = async (id) => {
+    const response = await axios.get(
+      `${endpoints.course.manage.curriculum.getQuestion}/${id}`,
+    );
+    return response.data;
+  };
+
+  return getData;
+};

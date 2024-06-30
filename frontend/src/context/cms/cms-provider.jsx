@@ -9,6 +9,10 @@ import {
   useDeleteItem,
   useGetVideo,
   useUploadVideo,
+  useGetQuestions,
+  usePostQuestion,
+  useDeleteQuestion,
+  useGetQuestion,
 } from "../../apis/cms";
 import { useParams } from "../../routes/hooks/use-params";
 import { toast } from "react-toastify";
@@ -23,6 +27,9 @@ const Types = {
   CLEAR_NEW_ITEM: "CLEAR_NEW_ITEM",
   GET_UPLOAD_REPLACE_VIDEO: "GET_UPLOAD_REPLACE_VIDEO",
   CREATE_QUESTION: "CREATE_QUESTION",
+  HANDLE_CHANGE_NEW_QUESTION: "HANDLE_CHANGE_NEW_QUESTION",
+  GET_QUIZ: "GET_QUIZ",
+  GET_QUESTION: "GET_QUESTION",
 };
 
 const initialState = {
@@ -57,14 +64,32 @@ const initialState = {
   video: null,
   newQuestion: {
     question_body: "",
+    question_points: 0,
+    question_no: 1,
     options: [
       {
         option_body: "",
+        is_correct: true,
+        option_no: 1,
+      },
+      {
+        option_body: "",
         is_correct: false,
-        option_no: "",
+        option_no: 2,
+      },
+      {
+        option_body: "",
+        is_correct: false,
+        option_no: 3,
+      },
+      {
+        option_body: "",
+        is_correct: false,
+        option_no: 4,
       },
     ],
   },
+  quiz: [],
 };
 
 const reducer = (state, action) => {
@@ -148,6 +173,68 @@ const reducer = (state, action) => {
         video: action.payload.video,
       };
     }
+    case "HANDLE_CHANGE_NEW_QUESTION": {
+      const { name, value, index } = action.payload;
+      if (name === "question_body") {
+        return {
+          ...state,
+          newQuestion: {
+            ...state.newQuestion,
+            question_body: value,
+          },
+        };
+      } else if (name === "is_correct") {
+        const updatedOptions = state.newQuestion.options.map((option, i) => ({
+          ...option,
+          is_correct: i === index,
+        }));
+        return {
+          ...state,
+          newQuestion: {
+            ...state.newQuestion,
+            options: updatedOptions,
+          },
+        };
+      } else if (name === "question_points") {
+        return {
+          ...state,
+          newQuestion: {
+            ...state.newQuestion,
+            question_points: value,
+          },
+        };
+      } else {
+        const updatedOptions = state.newQuestion.options.map((option, i) =>
+          i === index ? { ...option, [name]: value } : option,
+        );
+        return {
+          ...state,
+          newQuestion: {
+            ...state.newQuestion,
+            options: updatedOptions,
+          },
+        };
+      }
+    }
+    case "GET_QUIZ": {
+      return {
+        ...state,
+        quiz: action.payload.questions,
+        newQuestion: {
+          ...state.newQuestion,
+          question_no: action.payload.orderOfNewQuestion,
+        },
+      };
+    }
+    case "GET_QUESTION": {
+      return {
+        ...state,
+        newQuestion: {
+          ...state.newQuestion,
+          options: action.payload.values,
+        },
+      };
+    }
     default: {
       throw Error("Unknown action: " + action.type);
     }
@@ -167,6 +254,10 @@ export function CmsProvider({ children }) {
   const deleteItem = useDeleteItem();
   const getVideo = useGetVideo();
   const uploadVideo = useUploadVideo();
+  const getQuestions = useGetQuestions();
+  const postQuestion = usePostQuestion();
+  const deleteQuestion = useDeleteQuestion();
+  const getQuestion = useGetQuestion();
   // TODO: initialize
   const initialize = useCallback(async () => {
     try {
@@ -353,6 +444,71 @@ export function CmsProvider({ children }) {
       payload: { video: null },
     });
   };
+  const handleChangeNewQuestion = (value, name, index = null) => {
+    dispatch({
+      type: Types.HANDLE_CHANGE_NEW_QUESTION,
+      payload: { name, value, index },
+    });
+  };
+  const handleGetQuiz = async (id) => {
+    try {
+      const res = await getQuestions(id);
+      const sortedData = res.sort(
+        (a, b) => a.question_order - b.question_order,
+      );
+      dispatch({
+        type: Types.GET_QUIZ,
+        payload: {
+          questions: sortedData,
+          orderOfNewQuestion: sortedData.length + 1,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handlePostQuestion = async (id, itemId) => {
+    try {
+      if (!state.newQuestion.question_body)
+        throw new Error("Question Body Required!");
+      else if (state.newQuestion.question_points <= 0)
+        throw new Error("Please Put Correct Marks!");
+      state.newQuestion.options.map((option) => {
+        if (!option.option_body) throw new Error("All Options Are Required!");
+      });
+      const res = await postQuestion(id, state.newQuestion);
+      await handleGetQuiz(itemId);
+      toast.success("Question Created Successfully");
+      console.log(res);
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
+  const handleDeleteQuestion = async (id, itemId) => {
+    try {
+      const res = await deleteQuestion(id);
+      await handleGetQuiz(itemId);
+      toast.warning("Question Deleted Successfully!");
+    } catch (error) {
+      toast.error("Something Went Wrong!");
+      console.log(error);
+    }
+  };
+  const handleGetQuestion = async (id) => {
+    try {
+      const res = await getQuestion(id);
+      dispatch({
+        type: Types.GET_QUESTION,
+        payload: {
+          values: res,
+        },
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // TODO: returned variable
   const memoizedValue = useMemo(
@@ -370,9 +526,15 @@ export function CmsProvider({ children }) {
       handleGetVideo,
       handleUploadVideo,
       handleReplaceVideo,
+      handleChangeNewQuestion,
+      handleGetQuiz,
+      handlePostQuestion,
+      handleDeleteQuestion,
+      handleGetQuestion,
     }),
     [state],
   );
+  console.log(memoizedValue);
   return (
     <CmsContext.Provider value={memoizedValue}>{children}</CmsContext.Provider>
   );

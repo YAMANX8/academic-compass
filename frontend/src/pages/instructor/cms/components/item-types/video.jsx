@@ -39,11 +39,11 @@ const Video = ({ id }) => {
           </div>
         </div>
       ) : (
-        <div className="m-auto flex h-[320px] w-[512px] cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-accent-lighter bg-white transition-colors duration-300 hover:border-primary">
+        <div className="m-auto flex h-[320px] w-[512px] cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-accent-lighter bg-white transition-colors duration-300 hover:border-primary dark:border-accent-light dark:bg-black">
           <Icon
             icon="mdi:video"
             fontSize={160}
-            className="text-accent-lighter"
+            className="text-accent-lighter dark:text-accent-light"
           />
           <p className={`text-center text-sm font-normal text-gray-400`}>
             Drop your video here, or browse from your computer
