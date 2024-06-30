@@ -294,6 +294,7 @@ export function CmsProvider({ children }) {
       initialize();
       toast.warning("Lesson Deleted Successfully!");
     } catch (error) {
+      toast.error(error.response.data.message);
       console.log(error);
     }
   };

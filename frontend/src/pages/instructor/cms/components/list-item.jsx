@@ -6,11 +6,17 @@ import Video from "../components/item-types/video";
 import Article from "../components/item-types/article";
 import Quiz from "../components/item-types/quiz";
 import { useCmsContext } from "../../../../context/hooks/use-cms-context";
+import { useGetVideo } from "../../../../apis/cms";
 const ListItem = ({ id, title, type, topicSequence }) => {
   // TODO: states
   const { handleDeleteItem } = useCmsContext();
+  const getVideo = useGetVideo();
+
   const [icon, setIcon] = useState("mdi:file-document-outline");
   const [isEditing, setIsEditing] = useState(false);
+  // this wrong I know
+  const [video, setVideo] = useState(null);
+
   // TODO: functions
   useEffect(() => {
     switch (type) {
@@ -30,7 +36,17 @@ const ListItem = ({ id, title, type, topicSequence }) => {
         break;
     }
   }, [type]);
-  const handleEditClick = () => {
+  const handleEditClick = async () => {
+    switch (type) {
+      case "video":
+        const res = await getVideo(id);
+        setVideo(res);
+        console.log(res);
+        break;
+
+      default:
+        break;
+    }
     setIsEditing(true);
   };
 
@@ -45,7 +61,7 @@ const ListItem = ({ id, title, type, topicSequence }) => {
       case "quiz":
         return <Quiz />;
       case "video":
-        return <Video />;
+        return <Video id={id} video={video} setVideo={setVideo} />;
       default:
         return null;
     }

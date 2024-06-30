@@ -90,3 +90,35 @@ export const useDeleteItem = () => {
   };
   return deleteData;
 };
+// ___________________________________________________
+
+export const useUploadVideo = () => {
+  const axios = useAxios();
+  const putData = async (id, formData) => {
+    // console.log(formData, id);
+    const response = await axios.put(
+      `${endpoints.course.manage.curriculum.uploadVideo}/${id}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return response;
+  };
+  return putData;
+};
+// ___________________________________________________
+
+export const useGetVideo = () => {
+  const axios = useAxios();
+  const getData = async (id) => {
+    // console.log(formData, id);
+    const response = await axios.get(
+      `${endpoints.course.manage.curriculum.getVideo}/${id}`,
+    );
+    return response;
+  };
+  return getData;
+};

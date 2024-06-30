@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Icon } from "@iconify/react";
 import { Button } from "../../../../../components";
-const Video = () => {
-  const [video, setVideo] = useState(null);
+import { useUploadVideo } from "../../../../../apis/cms";
+const Video = ({ id, video, setVideo }) => {
+  const handleUploadVideo = useUploadVideo();
+  // const [video, setVideo] = useState(null);
 
-  const onDrop = (acceptedFiles) => {
+  const onDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
     setVideo(file);
 
@@ -13,22 +15,28 @@ const Video = () => {
     formData.append("video", file);
     console.log(file);
     // TODO: here I will call the api
+    try {
+      const res = await handleUploadVideo(id, formData);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    disabled: !!video,
+    disabled: !!video.length > 0,
   });
 
   return (
     <div {...getRootProps()} className="w-full">
       <input {...getInputProps()} />
-      {video ? (
+      {video.length > 0 ? (
         <div className="flex gap-4 p-2">
           <video
             className="aspect-video w-64"
             controls
-            src={URL.createObjectURL(video)}
+            src={typeof video == "file" ? URL.createObjectURL(video) : video}
           />
           <div className="flex flex-1 flex-col gap-2">
             <p className="text-sm font-normal text-dark">

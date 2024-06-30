@@ -89,6 +89,8 @@ export const endpoints = {
           "/instructor/content_management_system/curriculum/new-item/TL3", // This endpoint needs /:topicId
         newItem: "/instructor/content_management_system/curriculum/new-item", // This endpoint needs /:courseId
         deleteItem: "/instructor/content_management_system/curriculum/item", // This endpoint needs /:itemId
+        uploadVideo: "/instructor/content_management_system/curriculum/video", // This endpoint needs /:itemId
+        getVideo: "/instructor/content_management_system/curriculum/video", // This endpoint needs /:itemId
       },
     },
   },
