@@ -78,3 +78,15 @@ export const usePostNewItem = () => {
 
   return postData;
 };
+// ___________________________________________________
+
+export const useDeleteItem = () => {
+  const axios = useAxios();
+  const deleteData = async (id) => {
+    const response = await axios.delete(
+      `${endpoints.course.manage.curriculum.deleteItem}/${id}`,
+    );
+    return response;
+  };
+  return deleteData;
+};

@@ -6,6 +6,7 @@ import {
   useGetTopicsFromL2,
   useGetTopicsFromLn,
   usePostNewItem,
+  useDeleteItem,
 } from "../../apis/cms";
 import { useParams } from "../../routes/hooks/use-params";
 import { toast } from "react-toastify";
@@ -142,6 +143,7 @@ export function CmsProvider({ children }) {
   const getTopicsL2 = useGetTopicsFromL2();
   const getTopicsLn = useGetTopicsFromLn();
   const postNewItem = usePostNewItem();
+  const deleteItem = useDeleteItem();
   // TODO: initialize
   const initialize = useCallback(async () => {
     try {
@@ -286,6 +288,15 @@ export function CmsProvider({ children }) {
       console.log(error);
     }
   };
+  const handleDeleteItem = async (id) => {
+    try {
+      const res = await deleteItem(id);
+      initialize();
+      toast.warning("Lesson Deleted Successfully!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // TODO: returned variable
   const memoizedValue = useMemo(
     () => ({
@@ -298,6 +309,7 @@ export function CmsProvider({ children }) {
       insertNewItemTopicLn,
       handleChangeForNewItem,
       handlePostNewItem,
+      handleDeleteItem,
     }),
     [state],
   );

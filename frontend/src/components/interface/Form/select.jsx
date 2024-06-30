@@ -20,7 +20,7 @@ const Select = ({ label, size = "md", className = "", children, ...props }) => {
       </label>
       <div className="relative">
         <select
-          className={`w-full appearance-none rounded-lg border border-gray-400 bg-white px-3 text-sm placeholder:text-gray-400 hover:border-dark disabled:hover:border-gray-300 dark:bg-black ${sizeClasses[size]} focus:outline-none focus:ring-2 focus:ring-primary disabled:border-gray-300 disabled:text-gray-300`}
+          className={`w-full appearance-none rounded-lg border border-gray-400 bg-white px-3 text-sm text-dark placeholder:text-gray-400 hover:border-dark disabled:hover:border-gray-300 dark:bg-black ${sizeClasses[size]} focus:outline-none focus:ring-2 focus:ring-primary disabled:border-gray-300 disabled:text-gray-300`}
           onClick={handleToggle}
           {...props}
         >
@@ -28,7 +28,7 @@ const Select = ({ label, size = "md", className = "", children, ...props }) => {
         </select>
         <Icon
           icon={isOpen ? "mdi:chevron-up" : "mdi:chevron-down"}
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform"
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-dark"
           fontSize={24}
         />
       </div>

@@ -5,9 +5,10 @@ import { Icon } from "@iconify/react";
 import Video from "../components/item-types/video";
 import Article from "../components/item-types/article";
 import Quiz from "../components/item-types/quiz";
-
+import { useCmsContext } from "../../../../context/hooks/use-cms-context";
 const ListItem = ({ id, title, type, topicSequence }) => {
   // TODO: states
+  const { handleDeleteItem } = useCmsContext();
   const [icon, setIcon] = useState("mdi:file-document-outline");
   const [isEditing, setIsEditing] = useState(false);
   // TODO: functions
@@ -58,7 +59,13 @@ const ListItem = ({ id, title, type, topicSequence }) => {
       <Chip size="sm" variant="soft" color="accent">
         <Icon icon={icon} fontSize={24} />
       </Chip>
-      <Button size="sm" variant="outlined" color="error" className="self-start">
+      <Button
+        size="sm"
+        variant="outlined"
+        color="error"
+        className="self-start"
+        onClick={() => handleDeleteItem(id)}
+      >
         <Icon icon="mdi:trash-can-outline" />
       </Button>
       <Button
