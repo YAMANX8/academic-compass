@@ -254,7 +254,7 @@ router.get('/curriculum/article/:item_id', authorization, async (req, res) => {
         items i
     JOIN article a ON i.item_id = a.item_id
     WHERE
-        i.item_id = $1;
+        i.item_id = 40;
     `;
     const getInfoAboutArticleValue = [itemId];
     const result = await pool.query(
