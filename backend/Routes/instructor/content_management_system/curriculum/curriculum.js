@@ -20,7 +20,7 @@ router.get('/curriculum/assigning-topics', authorization, async (req, res) => {
     if (!hasAccess) {
       return res.status(403).json('Access denied');
     }
-    
+
     // array of objects
     const getInfoAboutAssigningTopics = `
     SELECT
@@ -45,7 +45,6 @@ router.get('/curriculum/assigning-topics', authorization, async (req, res) => {
   }
 });
 
-// add course name to this api
 // get info about TL1 name ,items info :Here we want to display only the topics in which the item was created
 router.get('/curriculum/:courseId', authorization, async (req, res) => {
   try {
@@ -187,8 +186,6 @@ ORDER BY
   }
 });
 
-
-
 // get video data by item Id
 router.get('/curriculum/video/:itemId', authorization, async (req, res) => {
   try {
@@ -210,10 +207,64 @@ router.get('/curriculum/video/:itemId', authorization, async (req, res) => {
     `;
     const getInfoAboutVideoValue = [itemId];
     const result = await pool.query(getInfoAboutVideo, getInfoAboutVideoValue);
+    // Decode the video path and replace backslashes with forward slashes
+    const response = result.rows.map((row) => {
+      const decodedPath = decodeURIComponent(row.video_path).replace(
+        /\\/g,
+        '/',
+      );
+      return {
+        id: row.video_id,
+        upload_date: row.upload_date,
+        item_id: row.item_id,
+        video_duration: row.video_duration,
+        video_path: `http://localhost:5000/video/${decodedPath}`,
+      };
+    });
+
+    res.status(200).json(response);
+  } catch (err) {
+    console.error('Error retrieving video information:', err);
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
+
+// get article by item Id
+router.get('/curriculum/article/:item_id', authorization, async (req, res) => {
+  try {
+    const instructorId = req.user.userId;
+    const roleId = req.user.roleId;
+    const itemId = req.params.item_id;
+    // permission
+    const hasAccess = await checkPermission(
+      instructorId,
+      'instructor_content_management',
+      roleId,
+    );
+    if (!hasAccess) {
+      return res.status(403).json('Access denied');
+    }
+
+    const getInfoAboutArticle = `
+    SELECT
+        a.article_id,
+        a.article_body,
+        a.item_id
+    FROM
+        items i
+    JOIN article a ON i.item_id = a.item_id
+    WHERE
+        i.item_id = 40;
+    `;
+    const getInfoAboutArticleValue = [itemId];
+    const result = await pool.query(
+      getInfoAboutArticle,
+      getInfoAboutArticleValue,
+    );
     // respone
     res.status(200).json(result.rows);
   } catch (err) {
-    console.error('Error retrieving video information:', err);
+    console.error('Error retrieving article information:', err);
     res.status(500).json({ error: 'Server Error' });
   }
 });
@@ -450,54 +501,58 @@ router.get(
 );
 
 // post api save [tl2,tl3]  the last item in the array
-router.post('/curriculum/new-item/:courseId', authorization, async (req, res) => {
-  try {
-    const instructorId = req.user.userId;
-    const roleId = req.user.roleId;
-    const courseId = req.params.courseId;
-    // item_type =>  1 article | 2 video | 3 quiz
-    const { itemTitle, topics, item_type } = req.body; // topics are array of topicsID
-    // permission
-    const hasAccess = await checkPermission(
-      instructorId,
-      'instructor_content_management',
-      roleId,
-    );
-    if (!hasAccess) {
-      return res.status(403).json('Access denied');
-    }
-    // Get the last topic_id from the topics array
-    const lastTopicId = topics[topics.length - 1];
+router.post(
+  '/curriculum/new-item/:courseId',
+  authorization,
+  async (req, res) => {
+    try {
+      const instructorId = req.user.userId;
+      const roleId = req.user.roleId;
+      const courseId = req.params.courseId;
+      // item_type =>  1 article | 2 video | 3 quiz
+      const { itemTitle, topics, item_type } = req.body; // topics are array of topicsID
+      // permission
+      const hasAccess = await checkPermission(
+        instructorId,
+        'instructor_content_management',
+        roleId,
+      );
+      if (!hasAccess) {
+        return res.status(403).json('Access denied');
+      }
+      // Get the last topic_id from the topics array
+      const lastTopicId = topics[topics.length - 1];
 
-    // Get the maximum item_no for the course and add 1
-    const getMaxItemNoQuery = `
+      // Get the maximum item_no for the course and add 1
+      const getMaxItemNoQuery = `
       SELECT COALESCE(MAX(item_no), 0) + 1 AS new_item_no
       FROM items
       WHERE course_id = $1
     `;
-    const { rows } = await pool.query(getMaxItemNoQuery, [courseId]);
-    const newItemNo = rows[0].new_item_no;
-    // Add the new item with the calculated item_no and the last topic_id
-    const addNewItemQuery = `
+      const { rows } = await pool.query(getMaxItemNoQuery, [courseId]);
+      const newItemNo = rows[0].new_item_no;
+      // Add the new item with the calculated item_no and the last topic_id
+      const addNewItemQuery = `
       INSERT INTO items (item_title, item_no, course_id, topic_id, item_type)
       VALUES ($1, $2, $3, $4, $5)
     `;
-    const addNewItemValues = [
-      itemTitle,
-      newItemNo,
-      courseId,
-      lastTopicId,
-      item_type,
-    ];
-    await pool.query(addNewItemQuery, addNewItemValues);
+      const addNewItemValues = [
+        itemTitle,
+        newItemNo,
+        courseId,
+        lastTopicId,
+        item_type,
+      ];
+      await pool.query(addNewItemQuery, addNewItemValues);
 
-    res.status(200).json({ message: 'Item is added successfully' });
-    // respone
-  } catch (err) {
-    console.error('Error adding Item information:', err);
-    res.status(500).json({ error: 'Server Error' });
-  }
-});
+      res.status(200).json({ message: 'Item is added successfully' });
+      // respone
+    } catch (err) {
+      console.error('Error adding Item information:', err);
+      res.status(500).json({ error: 'Server Error' });
+    }
+  },
+);
 
 // **** ?? delete in enroll to the course
 // delete item note when the course is published(enroll on the course) >> Items must not be allowed to be deleted
@@ -531,8 +586,8 @@ router.delete('/curriculum/item/:itemId', authorization, async (req, res) => {
     const checkEnrollmentResult = await pool.query(checkEnrollmentQuery, [
       courseId,
     ]);
-
-    if (checkEnrollmentResult.rows > 0) {
+    console.log(checkEnrollmentResult.rows);
+    if (checkEnrollmentResult.rows.length === 0) {
       // Delete related data first based on item type
       let deleteRelatedQuery;
       switch (type) {
@@ -660,24 +715,41 @@ router.put(
           // delete file if exist
           fs.unlinkSync(oldVideoPath);
         }
-      }
-      // Update video data in the database
-      const updateVideoQuery = `
+        const videoFileName = req.file.filename;
+        // Update video data in the database
+        const updateVideoQuery = `
         UPDATE video
         SET video_path = $1, video_duration = $2
         WHERE item_id = $3
-      `;
-      const encodeFielPath = encodeURIComponent(videoFilePath);
-      const updateVideoValues = [
-        encodeFielPath,
-        videoDurationInMinutes,
-        itemId,
-      ];
-      await pool.query(updateVideoQuery, updateVideoValues);
-
-      res.status(200).json({ message: 'Video updated successfully' });
+       `;
+        const encodeFielPath = encodeURIComponent(videoFileName);
+        const updateVideoValues = [
+          encodeFielPath,
+          videoDurationInMinutes,
+          itemId,
+        ];
+        await pool.query(updateVideoQuery, updateVideoValues);
+        res.status(200).json({ message: 'Video updated successfully' });
+      } else {
+        // insert video data in the database
+        const insertVideoQuery = `
+        INSERT INTO video (video_path,item_id,video_duration,upload_date)
+        VALUES
+        ($1,$2,$3,$4);
+       `;
+        const encodeFielPath = encodeURIComponent(videoFilePath);
+        const upload_date = new Date().toISOString().split('T')[0];
+        const insertVideoValues = [
+          encodeFielPath,
+          itemId,
+          videoDurationInMinutes,
+          upload_date,
+        ];
+        await pool.query(insertVideoQuery, insertVideoValues);
+        res.status(200).json({ message: 'Video inserted successfully' });
+      }
     } catch (err) {
-      console.error('Error updating video:', err);
+      console.error('Error when updating or inserting video:', err);
       res.status(500).json({ error: 'Server Error' });
     }
   },
