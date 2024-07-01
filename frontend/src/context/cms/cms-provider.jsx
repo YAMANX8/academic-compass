@@ -414,24 +414,55 @@ export function CmsProvider({ children }) {
   };
   const handleGetVideo = async (id) => {
     const res = await getVideo(id);
+    console.log(res);
     dispatch({
       type: Types.GET_UPLOAD_REPLACE_VIDEO,
       payload: {
-        video: "",
+        video: res,
       },
     });
   };
   const handleUploadVideo = async (id, acceptedFile) => {
     const file = acceptedFile;
-    dispatch({
-      type: Types.GET_UPLOAD_REPLACE_VIDEO,
-      payload: { video: URL.createObjectURL(file) },
-    });
-    const formData = new FormData();
-    formData.append("video", file);
-    console.log(file);
-    // TODO: here I will call the api
+
+    const getVideoDuration = (file) => {
+      return new Promise((resolve, reject) => {
+        const videoElement = document.createElement("video");
+        videoElement.preload = "metadata";
+
+        videoElement.onloadedmetadata = () => {
+          resolve(videoElement.duration);
+        };
+
+        videoElement.onerror = (error) => {
+          reject(error);
+        };
+
+        videoElement.src = URL.createObjectURL(file);
+      });
+    };
+
     try {
+      const duration = await getVideoDuration(file);
+      const uploadDate = new Date().toISOString();
+      const videoPath = URL.createObjectURL(file);
+
+      const videoDetails = {
+        upload_date: uploadDate,
+        video_duration: duration,
+        video_path: videoPath,
+      };
+
+      dispatch({
+        type: Types.GET_UPLOAD_REPLACE_VIDEO,
+        payload: { video: videoDetails },
+      });
+
+      console.log(videoDetails);
+
+      const formData = new FormData();
+      formData.append("video", file);
+
       const res = await uploadVideo(id, formData);
       console.log(res);
     } catch (error) {

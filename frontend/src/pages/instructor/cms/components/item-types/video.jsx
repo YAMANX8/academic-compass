@@ -4,6 +4,8 @@ import { Icon } from "@iconify/react";
 import { Button } from "../../../../../components";
 import { useUploadVideo } from "../../../../../apis/cms";
 import { useCmsContext } from "../../../../../context/hooks/use-cms-context";
+import moment from "moment";
+
 const Video = ({ id }) => {
   const { video, handleUploadVideo, handleReplaceVideo } = useCmsContext();
   const onDrop = async (acceptedFiles) => {
@@ -19,16 +21,17 @@ const Video = ({ id }) => {
       <input {...getInputProps()} />
       {video ? (
         <div className="flex gap-4 p-2">
-          <video className="aspect-video w-64" controls src={video} />
+          <video
+            className="aspect-video w-64"
+            controls
+            src={video.video_path}
+          />
           <div className="flex flex-1 flex-col gap-2">
             <p className="text-sm font-normal text-dark">
-              Video Name: [VIDEO_NAME]
+              Duration: {video.video_duration}
             </p>
             <p className="text-sm font-normal text-dark">
-              Duration: [VIDEO_DURATION]
-            </p>
-            <p className="text-sm font-normal text-dark">
-              Upload Date: [VIDEO_UPLOAD_DATE]
+              Upload Date: {moment(video.upload_date).format("YYYY-MM-DD")}
             </p>
           </div>
           <div className="mt-auto">

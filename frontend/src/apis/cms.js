@@ -118,7 +118,8 @@ export const useGetVideo = () => {
     const response = await axios.get(
       `${endpoints.course.manage.curriculum.getVideo}/${id}`,
     );
-    return response;
+    if (response.data.length == 0) return null;
+    return response.data[0];
   };
   return getData;
 };
