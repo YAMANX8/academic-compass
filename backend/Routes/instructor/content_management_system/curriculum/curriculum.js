@@ -731,13 +731,15 @@ router.put(
         await pool.query(updateVideoQuery, updateVideoValues);
         res.status(200).json({ message: 'Video updated successfully' });
       } else {
+        const videoFileName = req.file.filename;
+
         // insert video data in the database
         const insertVideoQuery = `
         INSERT INTO video (video_path,item_id,video_duration,upload_date)
         VALUES
         ($1,$2,$3,$4);
        `;
-        const encodeFielPath = encodeURIComponent(videoFilePath);
+        const encodeFielPath = encodeURIComponent(videoFileName);
         const upload_date = new Date().toISOString().split('T')[0];
         const insertVideoValues = [
           encodeFielPath,

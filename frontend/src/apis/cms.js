@@ -180,3 +180,17 @@ export const useGetQuestion = () => {
 
   return getData;
 };
+// ___________________________________________________
+
+export const useGetArticle = () => {
+  const axios = useAxios();
+
+  const getData = async (id) => {
+    const response = await axios.get(
+      `${endpoints.course.manage.curriculum.getArticle}/${id}`,
+    );
+    return response.data;
+  };
+
+  return getData;
+};

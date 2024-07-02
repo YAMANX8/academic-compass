@@ -6,9 +6,18 @@ import Video from "../components/item-types/video";
 import Article from "../components/item-types/article";
 import Quiz from "../components/item-types/quiz";
 import { useCmsContext } from "../../../../context/hooks/use-cms-context";
-const ListItem = ({ id, title, type, topicSequence, setModalContent, toggleModal }) => {
+import { useGetArticle } from "../../../../apis/cms";
+const ListItem = ({
+  id,
+  title,
+  type,
+  topicSequence,
+  setModalContent,
+  toggleModal,
+}) => {
   // TODO: states
   const { handleDeleteItem, handleGetVideo, handleGetQuiz } = useCmsContext();
+  const getArticle = useGetArticle();
   const [icon, setIcon] = useState("mdi:file-document-outline");
   const [isEditing, setIsEditing] = useState(false);
   // TODO: functions
@@ -38,7 +47,10 @@ const ListItem = ({ id, title, type, topicSequence, setModalContent, toggleModal
       case "quiz":
         await handleGetQuiz(id);
         break;
-
+      case "article":
+        const res = await getArticle(id);
+        console.log(res);
+        break;
       default:
         break;
     }
@@ -54,7 +66,13 @@ const ListItem = ({ id, title, type, topicSequence, setModalContent, toggleModal
       case "article":
         return <Article />;
       case "quiz":
-        return <Quiz toggleModal={toggleModal} setModalContent={setModalContent} itemId={id} />;
+        return (
+          <Quiz
+            toggleModal={toggleModal}
+            setModalContent={setModalContent}
+            itemId={id}
+          />
+        );
       case "video":
         return <Video id={id} />;
       default:
