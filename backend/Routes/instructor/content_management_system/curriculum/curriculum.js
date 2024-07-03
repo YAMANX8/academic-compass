@@ -5,6 +5,7 @@ const checkPermission = require('../../../../middleware/check-permissions');
 const fs = require('fs');
 const { getVideoDurationInSeconds } = require('get-video-duration');
 const uploadVideo = require('../../../../lib/multer-video');
+const uploadAudio = require('../../../../lib/multer-audio');
 
 // get Assigning_Topics just TL1
 router.get('/curriculum/assigning-topics', authorization, async (req, res) => {
@@ -209,10 +210,7 @@ router.get('/curriculum/video/:itemId', authorization, async (req, res) => {
     const result = await pool.query(getInfoAboutVideo, getInfoAboutVideoValue);
     // Decode the video path and replace backslashes with forward slashes
     const response = result.rows.map((row) => {
-      const decodedPath = decodeURIComponent(row.video_path).replace(
-        /\\/g,
-        '/',
-      );
+      const decodedPath = decodeURIComponent(row.video_path);
       return {
         id: row.video_id,
         upload_date: row.upload_date,
@@ -380,7 +378,6 @@ router.get(
     }
   },
 );
-
 
 // insert
 // new question
@@ -584,7 +581,125 @@ router.post(
   },
 );
 
-// **** ?? delete in enroll to the course
+// new code_session
+router.put(
+  '/curriculum/code-session/:item_id',
+  authorization,
+  uploadAudio.single('audio'),
+  async (req, res) => {
+    try {
+      const instructorId = req.user.userId;
+      const roleId = req.user.roleId;
+      const { key_presses } = req.body;
+      const itemId = req.params.item_id;
+      // permission
+      const hasAccess = await checkPermission(
+        instructorId,
+        'instructor_content_management',
+        roleId,
+      );
+      if (!hasAccess) {
+        return res.status(403).json('Access denied');
+      }
+      // Delete old audio from the Upload/Audios folder
+      const oldAudioPathQuery = `
+        SELECT audio_path FROM code_session WHERE item_id = $1
+      `;
+      const oldAudioPathValues = [itemId];
+      const oldAudioResult = await pool.query(
+        oldAudioPathQuery,
+        oldAudioPathValues,
+      );
+      if (oldAudioResult.rows.length > 0) {
+        const oldAudioPath = decodeURIComponent(
+          oldAudioResult.rows[0].audio_path,
+        );
+        console.log(oldAudioPath);
+        if (fs.existsSync(`Upload/Audios/${oldAudioPath}`)) {
+          console.log('yessssssssss');
+          // delete file if exist
+          fs.unlinkSync(`Upload/Audios/${oldAudioPath}`);
+        }
+        const AudioFileName = req.file.filename;
+        const keyPresses = JSON.parse(key_presses);
+        console.log(keyPresses);
+        // Update video data in the database
+        const updateAudioQuery = `
+        UPDATE code_session
+        SET audio_path = $1, key_presses = $2
+        WHERE item_id = $3
+       `;
+        const encodeFielPath = encodeURIComponent(AudioFileName);
+        const updateAudioValues = [encodeFielPath, keyPresses, itemId];
+        await pool.query(updateAudioQuery, updateAudioValues);
+        res.status(200).json({ message: 'code_session updated successfully' });
+      } else {
+        // audio_path
+        const audioFileName = req.file.filename;
+        const encodeFielPath = encodeURIComponent(audioFileName);
+        const keyPresses = JSON.parse(req.body.key_presses);
+        const addNewSession = `
+         INSERT INTO code_session (audio_path,key_presses,item_id)
+         VALUES
+         ($1,$2,$3)
+        `;
+        const addNewSessionValue = [encodeFielPath, keyPresses, itemId];
+        const result = await pool.query(addNewSession, addNewSessionValue);
+        console.log(result);
+        // respone
+        res.status(200).json({ message: 'code_session added successfully' });
+      }
+    } catch (err) {
+      console.error('Error adding code_session information:', err);
+      res.status(500).json({ error: 'Server Error' });
+    }
+  },
+);
+
+// get code_session
+router.get('/curriculum/code-session/:itemId', authorization, async (req, res) => {
+  try {
+    const instructorId = req.user.userId;
+    const roleId = req.user.roleId;
+    const itemId = req.params.itemId;
+    // permission
+    const hasAccess = await checkPermission(
+      instructorId,
+      'instructor_content_management',
+      roleId,
+    );
+    if (!hasAccess) {
+      return res.status(403).json('Access denied');
+    }
+
+    const getInfoAboutSession = `
+        SELECT * FROM code_session WHERE item_id = $1;
+    `;
+    const getInfoAboutSessionValue = [itemId];
+    const result = await pool.query(
+      getInfoAboutSession,
+      getInfoAboutSessionValue,
+    );
+    // Map and transform the data to the required format
+    const response = result.rows.map((row) => {
+      const decodedPath = decodeURIComponent(row.audio_path);
+      const keylogs = row.key_presses.map((press) => JSON.parse(press));
+
+      return {
+        session_id: row.session_id,
+        audioPath: `http://localhost:5000/audio/${decodedPath}`,
+        keylogs: keylogs,
+      };
+    });
+
+    res.status(200).json(response);
+  } catch (err) {
+    console.error('Error retrieving video information:', err);
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
+
+// here we need to add code-session
 // delete item note when the course is published(enroll on the course) >> Items must not be allowed to be deleted
 router.delete('/curriculum/item/:itemId', authorization, async (req, res) => {
   try {
@@ -649,6 +764,9 @@ router.delete('/curriculum/item/:itemId', authorization, async (req, res) => {
         `,
             [itemId],
           );
+          break;
+        case 4:
+          deleteRelatedQuery = `DELETE FROM code_session WHERE item_id=$1`;
           break;
         default:
           break;
