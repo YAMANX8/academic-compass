@@ -17,6 +17,7 @@ app.use(morgan('dev'));
 // Serve uploaded images && video
 app.use('/image', express.static('Upload/Images'));
 app.use('/video', express.static('Upload/Videos'));
+app.use('/audio', express.static('Upload/Audios'));
 
 // middleware for cookies
 app.use(cookieParser());
