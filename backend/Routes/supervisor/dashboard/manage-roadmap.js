@@ -97,13 +97,167 @@ router.get('/:roadmapId', authorization, async (req, res) => {
 
 // post new topic
 // topic_level +1 from previous topic_level
-// new topic_level_n = data are topic_title,topic_description,topic_status
+// new topic_level_n = data are topic_title,topic_description,topic_status,topic_level,top_level_topic_id,topic_order
 // topic_order?
 // top_level_topic_id => from top_level_topic_id we can get topic_level1_id
+router.post(
+  'newtopicLevelN/:previousTopic/:topicLevel',
+  authorization,
+  async (req, res) => {
+    try {
+      const supervisorId = req.user.userId;
+      const roleId = req.user.roleId;
+      const previousTopic = req.params.previousTopic;
+      const topicLevel = parseInt(req.params.topicLevel);
+      const { topic_title, topic_description, topic_status } = req.body;
 
+      // Permission check
+      const hasAccess = await checkPermission(
+        supervisorId,
+        'showAssigningRoadmaps',
+        roleId,
+      );
+
+      if (!hasAccess) {
+        return res.status(403).json('Access denied');
+      }
+
+      // Increment the topic level by 1 for the new topic
+      const newTopicLevel = topicLevel + 1;
+
+      // Get the next topic order automatically within the same topic level and previous topic
+      let getOrderQuery;
+      let getOrderValues;
+
+      if (topicLevel === 1) {
+        getOrderQuery = `
+        SELECT COALESCE(MAX(topic_order), 0) + 1 AS next_order
+        FROM topic_level_n
+        WHERE topic_level1_id = $1
+      `;
+        getOrderValues = [previousTopic];
+      } else {
+        getOrderQuery = `
+        SELECT COALESCE(MAX(topic_order), 0) + 1 AS next_order
+        FROM topic_level_n
+        WHERE top_level_topic_id = $1
+      `;
+        getOrderValues = [previousTopic];
+      }
+
+      const orderResult = await pool.query(getOrderQuery, getOrderValues);
+      const nextOrder = orderResult.rows[0].next_order;
+
+      // Insert new topic
+      let addTopicQuery;
+      let addTopicValues;
+
+      if (topicLevel === 1) {
+        addTopicQuery = `
+        INSERT INTO topic_level_n (topic_title, topic_description, topic_status, topic_level, topic_level1_id, topic_order)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *
+      `;
+        addTopicValues = [
+          topic_title,
+          topic_description,
+          topic_status,
+          newTopicLevel,
+          previousTopic,
+          nextOrder,
+        ];
+      } else {
+        addTopicQuery = `
+        INSERT INTO topic_level_n (topic_title, topic_description, topic_status, topic_level, top_level_topic_id, topic_order)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *
+      `;
+        addTopicValues = [
+          topic_title,
+          topic_description,
+          topic_status,
+          newTopicLevel,
+          previousTopic,
+          nextOrder,
+        ];
+      }
+
+      const addTopicResult = await pool.query(addTopicQuery, addTopicValues);
+
+      // Response
+      res.status(201).json({
+        message: 'Topic added successfully',
+        topic: addTopicResult.rows[0],
+      });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json('Server Error');
+    }
+  },
+);
 
 // topic_level_1 = data are topic_title,topic_description,topic_status
 // topic_order?
 // and her we need roadmap_id, category_id
+router.post(
+  '/newtopicLevel1/:roadmap_id/:topicLevel1Id',
+  authorization,
+  async (req, res) => {
+    try {
+      const supervisorId = req.user.userId;
+      const roleId = req.user.roleId;
+      const roadmap_id = req.params.roadmap_id;
+      const topicLevel1Id = req.params.topicLevel1Id;
+      const { topic_title, topic_description, topic_status, category_id } =
+        req.body;
+
+      // Permission check
+      const hasAccess = await checkPermission(
+        supervisorId,
+        'showAssigningRoadmaps',
+        roleId,
+      );
+
+      if (!hasAccess) {
+        return res.status(403).json('Access denied');
+      }
+
+      // Get the next topic order automatically for the given roadmap and category
+      const getOrderQuery = `
+        SELECT COALESCE(MAX(topic_order), 0) + 1 AS next_order
+        FROM topic_level_1
+        WHERE roadmap_id = $1 
+      `;
+      const orderResult = await pool.query(getOrderQuery, [roadmap_id]);
+      const nextOrder = orderResult.rows[0].next_order;
+
+      // Insert new topic
+      const addTopicQuery = `
+        INSERT INTO topic_level_1 (topic_title, topic_description, topic_status, roadmap_id, topic_order, category_id)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *
+      `;
+      const addTopicValues = [
+        topic_title,
+        topic_description,
+        topic_status,
+        roadmap_id,
+        nextOrder,
+        category_id,
+      ];
+
+      const addTopicResult = await pool.query(addTopicQuery, addTopicValues);
+
+      // Response
+      res.status(201).json({
+        message: 'Topic added successfully',
+        topic: addTopicResult.rows[0],
+      });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json('Server Error');
+    }
+  },
+);
 
 module.exports = router;
