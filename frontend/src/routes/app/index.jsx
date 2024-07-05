@@ -2,7 +2,6 @@ import { lazy } from "react";
 import { Navigate, useRoutes } from "react-router-dom";
 
 import MainLayout from "../../layout/main";
-
 // import { PATH_AFTER_LOGIN } from 'src/config-global';
 import { authRoutes } from "./auth";
 import { mainRoutes } from "./main";
@@ -11,7 +10,7 @@ import { coursesRoutes } from "./course";
 import { studentsRoutes } from "./student";
 import { instructorsRoutes } from "./instructor";
 import AdminLayout from "../../layout/admin";
-import  Home from "../../pages/shared/Home";
+import Home from "../../pages/shared/Home";
 import Test from "../../pages/Test";
 
 // ----------------------------------------------------------------------
@@ -44,7 +43,7 @@ export default function Router() {
     {
       path: "test",
       element: (
-        <AdminLayout>
+        <AdminLayout option="noNav">
           <Test />
         </AdminLayout>
       ),

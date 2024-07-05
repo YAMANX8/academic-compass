@@ -82,20 +82,34 @@ const courseManagement = {
     {
       path: ":id/manage",
       element: (
-        <AdminLayout option="courseManage">
           <CmsProvider>
             <Outlet />
           </CmsProvider>
-        </AdminLayout>
       ),
       children: [
         {
           path: "curriculum",
-          element: <Curriculum />,
+          element: (
+            <AdminLayout option="courseManage">
+              <Curriculum />
+            </AdminLayout>
+          ),
         },
         {
           path: "details",
-          element: <Details />,
+          element: (
+            <AdminLayout option="courseManage">
+              <Details />
+            </AdminLayout>
+          ),
+        },
+        {
+          path: "code-session",
+          element: (
+            <AdminLayout option="noNav">
+              <Details />
+            </AdminLayout>
+          ),
         },
       ],
     },

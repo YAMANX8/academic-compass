@@ -7,6 +7,8 @@ import Article from "../components/item-types/article";
 import Quiz from "../components/item-types/quiz";
 import { useCmsContext } from "../../../../context/hooks/use-cms-context";
 import { useGetArticle } from "../../../../apis/cms";
+import { paths } from "../../../../routes/paths";
+import { useRouter } from "../../../../routes/hooks";
 const ListItem = ({
   id,
   title,
@@ -16,6 +18,7 @@ const ListItem = ({
   toggleModal,
 }) => {
   // TODO: states
+  const router = useRouter();
   const { handleDeleteItem, handleGetVideo, handleGetQuiz } = useCmsContext();
   const getArticle = useGetArticle();
   const [icon, setIcon] = useState("mdi:file-document-outline");
@@ -26,7 +29,7 @@ const ListItem = ({
       case "article":
         setIcon("mdi:file-document-outline");
         break;
-      case "code":
+      case "Code_Session":
         setIcon("mdi:file-code-outline");
         break;
       case "quiz":
@@ -51,6 +54,9 @@ const ListItem = ({
         const res = await getArticle(id);
         console.log(res);
         break;
+      case "Code_Session":
+        router.push(`${paths.course.root}/${paths.course.manage.codeSession}`);
+        console.log("code");
       default:
         break;
     }
