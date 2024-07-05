@@ -1,6 +1,7 @@
 import { paths } from "../../../routes/paths";
-
+import { useParams } from "../../../routes/hooks";
 export const useTabsConfig = () => {
+  const { id } = useParams();
   const instructorNav = [
     {
       subheader: "dashboard",
@@ -39,13 +40,35 @@ export const useTabsConfig = () => {
       items: [
         {
           title: "curriculum",
-          path: paths.instructor.root,
+          path: `${paths.course.root}/${id}/${paths.course.manage.curriculum}`,
           icon: "mdi:book-open",
         },
         {
           title: "details",
-          path: paths.instructor.root,
+          path: `${paths.course.root}/${id}/${paths.course.manage.details}`,
           icon: "mdi:information",
+        },
+      ],
+    },
+  ];
+  const courseMonitorNav = [
+    {
+      subheader: "course monitor",
+      items: [
+        {
+          title: "course status",
+          path: `${paths.course.root}/${id}/${paths.course.monitor.status}`,
+          icon: "mdi:information",
+        },
+        {
+          title: "enrollments",
+          path: `${paths.course.root}/${id}/${paths.course.monitor.enrollments}`,
+          icon: "mdi:account-group-outline",
+        },
+        {
+          title: "reviews",
+          path: `${paths.course.root}/${id}/${paths.course.monitor.reviews}`,
+          icon: "mdi:comment-multiple-outline",
         },
       ],
     },
@@ -125,6 +148,7 @@ export const useTabsConfig = () => {
     instructor: {
       noOption: instructorNav,
       courseManage: courseManageNav,
+      courseMonitor: courseMonitorNav,
       settings: instructorSettingsNav,
     },
     user: { noOption: test },

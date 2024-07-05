@@ -65,6 +65,9 @@
   h3 {
     @apply text-2xl font-semibold;
   }
+  h4 {
+    @apply text-xl font-semibold;
+  }
   ::-webkit-scrollbar {
     height: 10px;
     width: 10px;
@@ -113,4 +116,19 @@ details > summary::before {
 
 details > summary {
   list-style: none;
+}
+.Toastify__toast {
+  font-family: "Fira Code", monospace;
+  @apply bg-white text-sm font-semibold text-dark dark:bg-black;
+}
+
+.Toastify__close-button {
+  font-family: "Fira Code", monospace;
+  color: var(--color-dark); /* Customize the color */
+  opacity: 1; /* Ensure the button is fully opaque */
+}
+
+.Toastify__close-button:hover,
+.Toastify__close-button:focus {
+  color: var(--color-accent-main); /* Change color on hover/focus */
 }

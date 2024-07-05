@@ -1,9 +1,13 @@
-import CourseCard from "./instructor/dashboard/components/course-card";
+import { Modal2, Button } from "../components";
+import React, { useState, useRef, useEffect } from "react";
+import CodeEditor from "./instructor/code";
+
 const Test = () => {
+
   return (
-    <div className="w-full">
-      <CourseCard type={true} title={"heloo aa"} subtitle={"adadad e"} />
-    </div>
+ 
+      <CodeEditor />
+    
   );
 };
 

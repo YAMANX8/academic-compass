@@ -28,6 +28,7 @@ export const paths = {
     },
   },
   course: {
+    root: "/course",
     details: "/course",
     content: {
       video: "content/video",
@@ -36,8 +37,14 @@ export const paths = {
     },
     manage: {
       create: "/course/create",
-      edit: "/course/edit",
-      monitor: "/course/monitor",
+      curriculum: "manage/curriculum",
+      codeSession: "manage/code-session",
+      details: "manage/details",
+    },
+    monitor: {
+      status: "monitor/status",
+      enrollments: "monitor/enrollments",
+      reviews: "monitor/reviews",
     },
   },
   student: {

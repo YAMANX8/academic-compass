@@ -129,6 +129,7 @@ ItemDetails AS (
       WHEN 1 THEN 'article'
       WHEN 2 THEN 'video'
       WHEN 3 THEN 'quiz'
+      WHEN 4 THEN 'Code_Session'
     END AS item_type,
     I.topic_id,
     I.course_id
@@ -252,21 +253,20 @@ router.get('/curriculum/article/:item_id', authorization, async (req, res) => {
         items i
     JOIN article a ON i.item_id = a.item_id
     WHERE
-        i.item_id = 40;
+        i.item_id = $1;
     `;
     const getInfoAboutArticleValue = [itemId];
     const result = await pool.query(
       getInfoAboutArticle,
       getInfoAboutArticleValue,
     );
-    // respone
+    // response
     res.status(200).json(result.rows);
   } catch (err) {
     console.error('Error retrieving article information:', err);
     res.status(500).json({ error: 'Server Error' });
   }
 });
-
 // get questions by item Id
 router.get(
   '/curriculum/questions/:item_id',
@@ -890,8 +890,8 @@ router.put(
         await pool.query(updateVideoQuery, updateVideoValues);
         res.status(200).json({ message: 'Video updated successfully' });
       } else {
-        const videoFileName = req.file.filename;
         // insert video data in the database
+        const videoFileName = req.file.filename;
         const insertVideoQuery = `
         INSERT INTO video (video_path,item_id,video_duration,upload_date)
         VALUES

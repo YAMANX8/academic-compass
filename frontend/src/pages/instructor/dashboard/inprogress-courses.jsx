@@ -1,6 +1,6 @@
 import CourseCard from "./components/course-card";
 import { useState, useEffect } from "react";
-import { Card } from "../../../components";
+import { Card, TextField } from "../../../components";
 import { Helmet } from "react-helmet-async";
 import Image from "../../../assets/images/Rectangle 63.png";
 import { useGetInprogressCourses } from "../../../apis/instructor";
@@ -37,7 +37,7 @@ const InprogressCourses = () => {
     };
     fetchData();
   }, []);
-  
+
   return (
     <>
       <Helmet>
@@ -46,13 +46,14 @@ const InprogressCourses = () => {
       <div className="w-full space-y-4">
         <h2>My Inprogress Courses</h2>
         <Card className="flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Search by course title..."
-            className="h-14 w-80 rounded-lg border border-gray-400/20 px-3 outline-none"
+          <TextField
+            label="search"
+            className="w-80"
+            size="sm"
+            placeholder="Your course title"
             value={searchTerm}
             onChange={handleSearchChange}
-          />{" "}
+          />
           {filteredData.map((course) => (
             <CourseCard
               key={course.id}
