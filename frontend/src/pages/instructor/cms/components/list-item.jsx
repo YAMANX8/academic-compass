@@ -19,7 +19,13 @@ const ListItem = ({
 }) => {
   // TODO: states
   const router = useRouter();
-  const { handleDeleteItem, handleGetVideo, handleGetQuiz } = useCmsContext();
+  const {
+    handleDeleteItem,
+    handleGetVideo,
+    handleGetQuiz,
+    handleGetArticle,
+    handlePutArticle,
+  } = useCmsContext();
   const getArticle = useGetArticle();
   const [icon, setIcon] = useState("mdi:file-document-outline");
   const [isEditing, setIsEditing] = useState(false);
@@ -51,8 +57,8 @@ const ListItem = ({
         await handleGetQuiz(id);
         break;
       case "article":
-        const res = await getArticle(id);
-        console.log(res);
+        await handleGetArticle(id);
+        console.log(id);
         break;
       case "Code_Session":
         router.push(`${paths.course.root}/${paths.course.manage.codeSession}`);
@@ -128,7 +134,12 @@ const ListItem = ({
         <Icon icon="mdi:cancel" />
         Cancel
       </Button>
-      <Button size="sm" variant="soft" color="success">
+      <Button
+        size="sm"
+        variant="soft"
+        color="success"
+        onClick={() => handlePutArticle(id)}
+      >
         <Icon icon="mdi:content-save-outline" />
         Save
       </Button>

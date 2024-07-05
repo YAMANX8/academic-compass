@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useCmsContext } from "../../../../../context/hooks/use-cms-context";
+
 const Article = () => {
-  const [value, setValue] = useState("");
+  const { article, handleChangeArticle } = useCmsContext();
+  const [value, setValue] = useState(article);
+
+ 
+  const handleChange = (newValue) => {
+    setValue(newValue);
+    handleChangeArticle(newValue);
+  };
+
   return (
-    // <div className="container mx-auto mt-10">
     <ReactQuill
       value={value}
-      onChange={setValue}
+      onChange={handleChange}
       className="bg-white dark:bg-black"
     />
-    /* <div className="mt-5 rounded border bg-white p-4">
-        <h2 className="mb-2 text-lg font-bold">Preview:</h2>
-        <div dangerouslySetInnerHTML={{ __html: value }} />
-      </div> */
-    // </div>
   );
 };
 
