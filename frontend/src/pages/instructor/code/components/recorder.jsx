@@ -4,7 +4,7 @@ import Editor from "@monaco-editor/react";
 
 import { Button } from "../../../../components";
 import { Icon } from "@iconify/react";
-const Recorder = ({ keyLogs, setKeyLogs, isRecording, setIsRecording }) => {
+const Recorder = ({ keyLogs, setKeyLogs, isRecording, setIsRecording, handleSaveSession }) => {
   const [startTime, setStartTime] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const mediaRecorderRef = useRef(null);
@@ -76,33 +76,44 @@ const Recorder = ({ keyLogs, setKeyLogs, isRecording, setIsRecording }) => {
   }
   return (
     <div className="flex w-full flex-col gap-4 p-4">
-      <div className="flex w-full justify-end">
-        {isRecording ? (
-          <Button
-            className="!rounded-full"
-            onClick={handleStopRecording}
-            variant="outlined"
-            color="error"
-            size="sm"
-          >
-            <Icon icon="mdi:record-rec" fontSize={32} />
-            Stop Recording
-          </Button>
-        ) : (
-          <Button
-            variant="outlined"
-            className="!rounded-full"
-            size="sm"
-            onClick={handleStartRecording}
-          >
-            <Icon icon="mdi:record" fontSize={32} />
-            Start Recording
-          </Button>
-        )}
+      <div className="flex w-full justify-between">
+        <h3>Code Session</h3>
+        <div className="flex gap-4">
+          {!isRecording && keyLogs.length > 0 && (
+            <div
+              className="cursor-pointer self-center !rounded-full bg-success/10 p-2 text-success-dark transition duration-300 ease-in-out hover:bg-success/20 dark:!text-success-light"
+              onClick={handleSaveSession}
+            >
+              <Icon icon="mdi:content-save-outline" fontSize={32} />
+            </div>
+          )}
+          {isRecording ? (
+            <Button
+              className="!rounded-full"
+              onClick={handleStopRecording}
+              variant="outlined"
+              color="error"
+              size="lg"
+            >
+              <Icon icon="mdi:record-rec" fontSize={32} />
+              Stop Recording
+            </Button>
+          ) : (
+            <Button
+              variant="outlined"
+              className="!rounded-full"
+              size="lg"
+              onClick={handleStartRecording}
+            >
+              <Icon icon="mdi:record" fontSize={32} />
+              Start Recording
+            </Button>
+          )}
+        </div>
       </div>
       <div>
         <Editor
-          height="55vh"
+          height="70vh"
           defaultLanguage="javascript"
           theme="vs-dark"
           // value={displayText}
@@ -112,20 +123,13 @@ const Recorder = ({ keyLogs, setKeyLogs, isRecording, setIsRecording }) => {
           }}
         />
       </div>
-      {!isRecording && keyLogs.length > 0 && (
-        <div
-          className="cursor-pointer self-center !rounded-full bg-primary/10 p-4 text-primary-dark transition duration-300 ease-in-out hover:bg-primary/20 dark:!text-primary-light"
-          // onClick={handlePostRecord}
-        >
-          <Icon icon="mdi:content-save-outline" fontSize={48} />
-        </div>
-      )}
-      {audioUrl && (
+
+      {/* {audioUrl && (
         <div className="mt-4">
           <h2 className="mb-2 text-xl font-bold">Audio Recording</h2>
           <audio controls src={audioUrl} className="w-full" />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

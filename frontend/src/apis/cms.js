@@ -209,3 +209,32 @@ export const usePutArticle = () => {
 
   return putData;
 };
+export const useRecordCodeSession = () => {
+  const axios = useAxios();
+  const putData = async (id, formData) => {
+    // console.log(formData, id);
+    const response = await axios.put(
+      `${endpoints.course.manage.curriculum.putCodeSession}/${id}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return response;
+  };
+  return putData;
+};
+export const useGetCodeSession = () => {
+  const axios = useAxios();
+
+  const getData = async (id) => {
+    const response = await axios.get(
+      `${endpoints.course.manage.curriculum.putCodeSession}/${id}`,
+    );
+    return response.data;
+  };
+
+  return getData;
+};

@@ -100,6 +100,7 @@ export const endpoints = {
         getQuestion: "/instructor/content_management_system/curriculum/options", // This endpoint needs /:questionId
         getArticle: "/instructor/content_management_system/curriculum/article", // This endpoint needs /:item_id
         putArticle: "/instructor/content_management_system/curriculum/article", // This endpoint needs /:item_id
+        putCodeSession: "/instructor/content_management_system/curriculum/code-session", // This endpoint needs /:item_id
       },
     },
   },

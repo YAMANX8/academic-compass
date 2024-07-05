@@ -32,7 +32,7 @@ const TopicList = ({ id, title, lessons, setModalContent, toggleModal }) => {
           {lessons.map((lesson) => (
             <ListItem
               key={lesson.item_id}
-              id={lesson.item_id}
+              itemId={lesson.item_id}
               title={lesson.item_title}
               type={lesson.item_type}
               topicSequence={lesson.topics_sequence}

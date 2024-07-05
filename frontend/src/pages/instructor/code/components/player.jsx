@@ -63,6 +63,7 @@ function Player({ keyLogs }) {
   // console.log(displayText);
   return (
     <div className="flex w-full flex-col gap-4 p-4">
+      <h3>Preview</h3>
       <Editor
         height="55vh"
         defaultLanguage="javascript"

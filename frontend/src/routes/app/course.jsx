@@ -28,6 +28,7 @@ const CreateCourse = lazy(
 );
 const Curriculum = lazy(() => import("../../pages/instructor/cms/curriculum"));
 const Details = lazy(() => import("../../pages/instructor/cms/details"));
+const CodeSession = lazy(() => import("../../pages/instructor/code"));
 // ----------------------------------------------------------------------
 
 const courseDetails = {
@@ -107,7 +108,7 @@ const courseManagement = {
           path: "code-session",
           element: (
             <AdminLayout option="noNav">
-              <Details />
+              <CodeSession />
             </AdminLayout>
           ),
         },

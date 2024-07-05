@@ -6,11 +6,10 @@ import Video from "../components/item-types/video";
 import Article from "../components/item-types/article";
 import Quiz from "../components/item-types/quiz";
 import { useCmsContext } from "../../../../context/hooks/use-cms-context";
-import { useGetArticle } from "../../../../apis/cms";
 import { paths } from "../../../../routes/paths";
-import { useRouter } from "../../../../routes/hooks";
+import { useRouter, useParams } from "../../../../routes/hooks";
 const ListItem = ({
-  id,
+  itemId,
   title,
   type,
   topicSequence,
@@ -26,9 +25,9 @@ const ListItem = ({
     handleGetArticle,
     handlePutArticle,
   } = useCmsContext();
-  const getArticle = useGetArticle();
   const [icon, setIcon] = useState("mdi:file-document-outline");
   const [isEditing, setIsEditing] = useState(false);
+  const {id} = useParams()
   // TODO: functions
   useEffect(() => {
     switch (type) {
@@ -51,18 +50,17 @@ const ListItem = ({
   const handleEditClick = async () => {
     switch (type) {
       case "video":
-        await handleGetVideo(id);
+        await handleGetVideo(itemId);
         break;
       case "quiz":
-        await handleGetQuiz(id);
+        await handleGetQuiz(itemId);
         break;
       case "article":
-        await handleGetArticle(id);
-        console.log(id);
+        await handleGetArticle(itemId);
+        console.log(itemId);
         break;
       case "Code_Session":
-        router.push(`${paths.course.root}/${paths.course.manage.codeSession}`);
-        console.log("code");
+        router.push(`${paths.course.root}/${id}/${paths.course.manage.codeSession}`);
       default:
         break;
     }
@@ -82,11 +80,11 @@ const ListItem = ({
           <Quiz
             toggleModal={toggleModal}
             setModalContent={setModalContent}
-            itemId={id}
+            itemId={itemId}
           />
         );
       case "video":
-        return <Video id={id} />;
+        return <Video id={itemId} />;
       default:
         return null;
     }
@@ -105,7 +103,7 @@ const ListItem = ({
         variant="outlined"
         color="error"
         className="self-start"
-        onClick={() => handleDeleteItem(id)}
+        onClick={() => handleDeleteItem(itemId)}
       >
         <Icon icon="mdi:trash-can-outline" />
       </Button>
@@ -138,7 +136,7 @@ const ListItem = ({
         size="sm"
         variant="soft"
         color="success"
-        onClick={() => handlePutArticle(id)}
+        onClick={() => handlePutArticle(itemId)}
       >
         <Icon icon="mdi:content-save-outline" />
         Save
