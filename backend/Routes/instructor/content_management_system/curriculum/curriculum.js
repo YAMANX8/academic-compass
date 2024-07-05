@@ -537,7 +537,7 @@ router.post(
       const roleId = req.user.roleId;
       const courseId = req.params.courseId;
       // item_type =>  1 article | 2 video | 3 quiz
-      const { itemTitle, topics, item_type } = req.body; // topics are array of topicsID
+      const { itemTitle, topics, item_type, quiz_points } = req.body; // topics are array of topicsID
       // permission
       const hasAccess = await checkPermission(
         instructorId,
@@ -562,6 +562,8 @@ router.post(
       const addNewItemQuery = `
       INSERT INTO items (item_title, item_no, course_id, topic_id, item_type)
       VALUES ($1, $2, $3, $4, $5)
+      RETURNING
+      item_id
     `;
       const addNewItemValues = [
         itemTitle,
@@ -570,8 +572,17 @@ router.post(
         lastTopicId,
         item_type,
       ];
-      await pool.query(addNewItemQuery, addNewItemValues);
+      const result=await pool.query(addNewItemQuery, addNewItemValues);
 
+    if (item_type === 3){
+      const newItemId = result.rows[0].item_id;
+      const addNewQuiz = `
+      INSERT INTO quiz (quiz_points, item_id)
+      VALUES ($1, $2)
+    `;
+      const addNewQuizValues = [quiz_points, newItemId];
+      await pool.query(addNewQuiz, addNewQuizValues);
+    }
       res.status(200).json({ message: 'Item is added successfully' });
       // respone
     } catch (err) {
