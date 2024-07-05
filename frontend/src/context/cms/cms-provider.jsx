@@ -13,6 +13,8 @@ import {
   usePostQuestion,
   useDeleteQuestion,
   useGetQuestion,
+  useGetArticle,
+  usePutArticle,
 } from "../../apis/cms";
 import { useParams } from "../../routes/hooks/use-params";
 import { toast } from "react-toastify";
@@ -30,6 +32,7 @@ const Types = {
   HANDLE_CHANGE_NEW_QUESTION: "HANDLE_CHANGE_NEW_QUESTION",
   GET_QUIZ: "GET_QUIZ",
   GET_QUESTION: "GET_QUESTION",
+  GET_ARTICLE: "GET_ARTICLE",
 };
 
 const initialState = {
@@ -90,6 +93,7 @@ const initialState = {
     ],
   },
   quiz: [],
+  article: "",
 };
 
 const reducer = (state, action) => {
@@ -235,6 +239,12 @@ const reducer = (state, action) => {
         },
       };
     }
+    case "GET_ARTICLE": {
+      return {
+        ...state,
+        article: action.payload.article,
+      };
+    }
     default: {
       throw Error("Unknown action: " + action.type);
     }
@@ -258,6 +268,8 @@ export function CmsProvider({ children }) {
   const postQuestion = usePostQuestion();
   const deleteQuestion = useDeleteQuestion();
   const getQuestion = useGetQuestion();
+  const getArticle = useGetArticle();
+  const putArticle = usePutArticle();
   // TODO: initialize
   const initialize = useCallback(async () => {
     try {
@@ -540,7 +552,36 @@ export function CmsProvider({ children }) {
       console.log(error);
     }
   };
-
+  const handlePutArticle = async (id) => {
+    try {
+      await putArticle(id, {article_body: state.article});
+      toast.success("Article updated successfully");
+    } catch (error) {
+      toast.error("Failed to update article");
+      console.error("Error updating article:", error);
+    }
+  };
+  const handleGetArticle = async (articleId) => {
+    try {
+      const res = await getArticle(articleId);
+      dispatch({
+        type: Types.GET_ARTICLE,
+        payload: {
+          article: res,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching article:", error);
+    }
+  };
+  const handleChangeArticle = (newArticleContent) => {
+    dispatch({
+      type: Types.GET_ARTICLE,
+      payload: {
+        article: newArticleContent,
+      },
+    });
+  };
   // TODO: returned variable
   const memoizedValue = useMemo(
     () => ({
@@ -562,6 +603,9 @@ export function CmsProvider({ children }) {
       handlePostQuestion,
       handleDeleteQuestion,
       handleGetQuestion,
+      handleGetArticle,
+      handleChangeArticle,
+      handlePutArticle,
     }),
     [state],
   );

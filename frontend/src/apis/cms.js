@@ -194,3 +194,18 @@ export const useGetArticle = () => {
 
   return getData;
 };
+// ___________________________________________________
+
+export const usePutArticle = () => {
+  const axios = useAxios();
+
+  const putData = async (id, data) => {
+    const response = await axios.put(
+      `${endpoints.course.manage.curriculum.putArticle}/${id}`,
+      data,
+    );
+    return response.data;
+  };
+
+  return putData;
+};
