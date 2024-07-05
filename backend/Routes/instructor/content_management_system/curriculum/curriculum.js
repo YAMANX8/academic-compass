@@ -129,6 +129,7 @@ ItemDetails AS (
       WHEN 1 THEN 'article'
       WHEN 2 THEN 'video'
       WHEN 3 THEN 'quiz'
+      WHEN 4 THEN 'Code_Session'
     END AS item_type,
     I.topic_id,
     I.course_id
