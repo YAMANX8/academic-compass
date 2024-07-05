@@ -6,11 +6,16 @@ const authorization = require('../../middleware/authorization');
 
 router.get('/:courseId', async (req, res) => {
   try {
-    // const studentId = req.params.studentId;
     const courseId = req.params.courseId;
-    const jwtToken = req.header('Authorization').split(' ')[1];
+    const authHeader = req.header('Authorization');
+    let jwtToken = null;
     let Course_info;
     let values = [];
+
+    if (authHeader) {
+      jwtToken = authHeader.split(' ')[1];
+    }
+
     if (!jwtToken) {
       Course_info = `
         SELECT
@@ -37,28 +42,15 @@ router.get('/:courseId', async (req, res) => {
           LEFT JOIN (
             SELECT
               course_id,
-              COUNT(
-                CASE
-                  WHEN item_type = 1 THEN 1
-                END
-              ) AS article_count,
-              COUNT(
-                CASE
-                  WHEN item_type = 2 THEN 1
-                END
-              ) AS video_count,
-              COUNT(
-                CASE
-                  WHEN item_type = 3 THEN 1
-                END
-              ) AS quiz_count
+              COUNT(CASE WHEN item_type = 1 THEN 1 END) AS article_count,
+              COUNT(CASE WHEN item_type = 2 THEN 1 END) AS video_count,
+              COUNT(CASE WHEN item_type = 3 THEN 1 END) AS quiz_count
             FROM
               items
             GROUP BY
               course_id
           ) AS item_counts ON course.course_id = item_counts.course_id
         WHERE
-          -- enrollment_id = 12
           course.course_id = $1
         GROUP BY
           course.course_thumnail,
@@ -75,16 +67,11 @@ router.get('/:courseId', async (req, res) => {
           item_counts.quiz_count;
       `;
       values = [courseId];
-    }
-    // إذا مسجل دخول
-    else {
-      // Extract student ID from the token and proceed with your logic
-      // eslint-disable-next-line no-undef
+    } else {
       const payload = jwt.verify(jwtToken, process.env.JWT_SECRET);
       const studentId = payload.userId;
       const roleId = payload.roleId;
       try {
-        //permission
         const hasAccess = await checkPermission(
           studentId,
           'show_course',
@@ -122,21 +109,9 @@ router.get('/:courseId', async (req, res) => {
           LEFT JOIN (
             SELECT
               course_id,
-              COUNT(
-                CASE
-                  WHEN item_type = 1 THEN 1
-                END
-              ) AS article_count,
-              COUNT(
-                CASE
-                  WHEN item_type = 2 THEN 1
-                END
-              ) AS video_count,
-              COUNT(
-                CASE
-                  WHEN item_type = 3 THEN 1
-                END
-              ) AS quiz_count
+              COUNT(CASE WHEN item_type = 1 THEN 1 END) AS article_count,
+              COUNT(CASE WHEN item_type = 2 THEN 1 END) AS video_count,
+              COUNT(CASE WHEN item_type = 3 THEN 1 END) AS quiz_count
             FROM
               items
             GROUP BY
@@ -145,20 +120,13 @@ router.get('/:courseId', async (req, res) => {
           LEFT JOIN (
             SELECT
               course_id,
-              -- * student_id = 9
-              MAX(
-                CASE
-                  WHEN student_id = $1 THEN 1
-                  ELSE 0
-                END
-              ) AS is_enrolled
+              MAX(CASE WHEN student_id = $1 THEN 1 ELSE 0 END) AS is_enrolled
             FROM
               Enrollment
             GROUP BY
               course_id
           ) AS IS_ENROLLED ON course.course_id = IS_ENROLLED.course_id
         WHERE
-          -- enrollment_id = 12
           course.course_id = $2
         GROUP BY
           course.course_thumnail,
@@ -177,25 +145,25 @@ router.get('/:courseId', async (req, res) => {
       `;
       values = [studentId, courseId];
     }
+
     const Get_Course_info = `${Course_info}`;
     const Get_Topic_content = `
       SELECT
-        Topic_Level_1.topic_level1_id,
-        Topic_Level_1.topic_title AS tl1,
-        Topic_Level_n.topic_id,
-        Topic_Level_n.topic_title AS tln,
         Items.item_id,
         Items.item_title,
         Items.item_no,
-        Items_Types.type_name
+        Items_Types.type_name,
+        Topic_Level_n.topic_title,
+        Items.topic_id AS topic_level1_id,
+        Topic_Level_n.topic_title AS tl1
       FROM
-        course
-        JOIN items ON course.course_id = items.course_id
+        items
         JOIN Items_Types ON Items.item_type = Items_Types.type_id
-        join Topic_Level_N ON items.topic_id = Topic_Level_N.topic_id
-        join Topic_Level_1 ON Topic_Level_N.topic_level1_id = Topic_Level_1.topic_level1_id
+        JOIN Topic_Level_n ON Items.topic_id = Topic_Level_n.topic_id
       WHERE
-        course.course_id = $1
+        items.course_id = $1
+      ORDER BY
+        Items.topic_id, Items.item_no
     `;
     const Part_2From_Course_info = `
       SELECT
@@ -225,7 +193,6 @@ router.get('/:courseId', async (req, res) => {
       WHERE
         course.course_id = $1
     `;
-    // const values = [studentId, courseId];
 
     const Get_Course_info_result = await pool.query(Get_Course_info, values);
     const Get_Topic_content_result = await pool.query(Get_Topic_content, [
@@ -237,7 +204,6 @@ router.get('/:courseId', async (req, res) => {
     );
     const Get_Review_result = await pool.query(Get_Review, [courseId]);
 
-    //for learn..
     const learnItems = [];
     const forWhoItems = [];
     const requirementsItems = [];
@@ -251,47 +217,22 @@ router.get('/:courseId', async (req, res) => {
       }
     });
 
-    // Process the course content data
     const courseContent = [];
-
-    // Set لتتبع العناصر التي تم استخدامها بالفعل بناءً على topic_id
     const usedTopicIds = new Set();
-
     Get_Topic_content_result.rows.forEach((row) => {
       const topicId = row.topic_level1_id;
-      const subTopicId = row.topic_id;
 
-      // التحقق مما إذا كان topic_id تم استخدامه بالفعل
       if (!usedTopicIds.has(topicId)) {
         courseContent.push({
           id: topicId,
           topicTitle: row.tl1,
-          subTopics: [],
+          items: [],
         });
-        // إضافة topic_id إلى مجموعة العناصر المستخدمة بالفعل
         usedTopicIds.add(topicId);
       }
 
-      // البحث عن الموضوع الحالي في courseContent
       const currentTopic = courseContent.find((topic) => topic.id === topicId);
-
-      // التحقق مما إذا كان subTopicId تم استخدامه بالفعل
-      if (
-        !currentTopic.subTopics.find((subTopic) => subTopic.id === subTopicId)
-      ) {
-        currentTopic.subTopics.push({
-          id: subTopicId,
-          title: row.tln,
-          items: [],
-        });
-      }
-
-      // البحث عن الموضوع الفرعي الحالي في subTopics
-      const currentSubTopic = currentTopic.subTopics.find(
-        (subTopic) => subTopic.id === subTopicId,
-      );
-
-      currentSubTopic.items.push({
+      currentTopic.items.push({
         id: row.item_id,
         title: row.item_title,
         order: row.item_no,
@@ -299,7 +240,6 @@ router.get('/:courseId', async (req, res) => {
       });
     });
 
-    // Process the reviews data
     const reviews = Get_Review_result.rows.map((row) => ({
       id: row.rating_id,
       fname: row.first_name,
@@ -308,6 +248,7 @@ router.get('/:courseId', async (req, res) => {
       stars: row.stars_number,
       comment: row.review,
     }));
+
     const frontEndJson = {
       course_thumnail: `http://localhost:5000/image/${Get_Course_info_result.rows[0].course_thumnail}`,
       course_title: Get_Course_info_result.rows[0].course_title,
@@ -326,8 +267,8 @@ router.get('/:courseId', async (req, res) => {
       learn: learnItems,
       forWho: forWhoItems,
       requirements: requirementsItems,
-      courseContent: courseContent, // Add the course content data
-      reviews: reviews, // Add the reviews data
+      courseContent: courseContent,
+      reviews: reviews,
     };
 
     res.json(frontEndJson);
@@ -336,6 +277,7 @@ router.get('/:courseId', async (req, res) => {
     res.status(500).json({ error: 'Server Error' });
   }
 });
+
 
 router.post('/enroll', authorization, async (req, res) => {
   try {
