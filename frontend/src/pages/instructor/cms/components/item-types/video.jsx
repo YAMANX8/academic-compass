@@ -2,19 +2,15 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Icon } from "@iconify/react";
 import { Button } from "../../../../../components";
-const Video = () => {
-  const [video, setVideo] = useState(null);
+import { useUploadVideo } from "../../../../../apis/cms";
+import { useCmsContext } from "../../../../../context/hooks/use-cms-context";
+import moment from "moment";
 
-  const onDrop = (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    setVideo(file);
-
-    const formData = new FormData();
-    formData.append("video", file);
-    console.log(file);
-    // TODO: here I will call the api
+const Video = ({ id }) => {
+  const { video, handleUploadVideo, handleReplaceVideo } = useCmsContext();
+  const onDrop = async (acceptedFiles) => {
+    await handleUploadVideo(id, acceptedFiles[0]);
   };
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     disabled: !!video,
@@ -28,28 +24,29 @@ const Video = () => {
           <video
             className="aspect-video w-64"
             controls
-            src={URL.createObjectURL(video)}
+            src={video.video_path}
           />
           <div className="flex flex-1 flex-col gap-2">
             <p className="text-sm font-normal text-dark">
-              Video Name: {video.name}
+              Duration: {video.video_duration}
             </p>
-            <p className="text-sm font-normal text-dark">Duration: [NUMBER]</p>
-            <p className="text-sm font-normal text-dark">Upload Date: [TIME]</p>
+            <p className="text-sm font-normal text-dark">
+              Upload Date: {moment(video.upload_date).format("YYYY-MM-DD")}
+            </p>
           </div>
           <div className="mt-auto">
-            <Button variant="soft" size="sm" onClick={() => setVideo(null)}>
+            <Button variant="soft" size="sm" onClick={handleReplaceVideo}>
               <Icon icon="mdi:file-replace-outline" />
               Replace
             </Button>
           </div>
         </div>
       ) : (
-        <div className="m-auto flex h-[320px] w-[512px] cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-accent-lighter bg-white transition-colors duration-300 hover:border-primary">
+        <div className="m-auto flex h-[320px] w-[512px] cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-accent-lighter bg-white transition-colors duration-300 hover:border-primary dark:border-accent-light dark:bg-black">
           <Icon
             icon="mdi:video"
             fontSize={160}
-            className="text-accent-lighter"
+            className="text-accent-lighter dark:text-accent-light"
           />
           <p className={`text-center text-sm font-normal text-gray-400`}>
             Drop your video here, or browse from your computer

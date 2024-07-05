@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Select, TextField, Button } from "../../../../components";
 import { Icon } from "@iconify/react";
-
+import { useCmsContext } from "../../../../context/hooks/use-cms-context";
 const types = [
   {
-    id: 1,
+    id: 2,
     type: "video",
     icon: "mdi:file-video-outline",
   },
   {
-    id: 2,
+    id: 1,
     type: "article",
     icon: "mdi:file-document-outline",
   },
@@ -25,24 +25,20 @@ const types = [
   },
 ];
 
-const NewItemModal = ({ id }) => {
+const NewItemModal = ({ id, toggleModal }) => {
   // TODO: states
+  const {
+    getTopicsFromL2,
+    topicsL2,
+    topicsLn,
+    insertNewItemTopicL2,
+    selectedTopics,
+    newItem,
+    handleChangeForNewItem,
+    insertNewItemTopicLn,
+    handlePostNewItem,
+  } = useCmsContext();
   const [step, setStep] = useState(1);
-  const [data, setData] = useState({
-    title: "",
-    type: "",
-    topicL2: [
-      { id: 0, title: "HTML Basics" },
-      { id: 1, title: "HTML tags" },
-    ],
-    topicLn: [
-      { id: 0, title: "test1" },
-      { id: 1, title: "test2" },
-    ],
-    selectedTopicL2: "",
-    selectedTopicLn: "",
-  });
-  console.table(data);
   // ------------------------------
   // TODO: functions
 
@@ -56,8 +52,8 @@ const NewItemModal = ({ id }) => {
             key={type.id}
             i={type.icon}
             type={type.type}
-            onClick={() => setData({ ...data, type: type.type })}
-            isSelected={data.type === type.type}
+            onClick={() => handleChangeForNewItem(type.id, 1)}
+            isSelected={newItem.item_type === type.id}
           />
         ))}
       </div>
@@ -66,7 +62,7 @@ const NewItemModal = ({ id }) => {
         size="sm"
         type="button"
         onClick={() => setStep(2)}
-        disabled={!data.type}
+        disabled={!newItem.item_type}
       >
         Next
         <Icon icon="mdi:chevron-right" fontSize={18} />
@@ -81,42 +77,35 @@ const NewItemModal = ({ id }) => {
         <TextField
           label="lesson title"
           name="title"
-          value={data.title}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
+          value={newItem.itemTitle}
+          onChange={(e) => handleChangeForNewItem(e.target.value, 2)}
           placeholder="Enter your lesson title"
         />
         <Select
           label="topic level 2"
           name="selectedTopicL1"
-          value={data.selectedTopicL2}
-          onChange={(e) =>
-            setData({
-              ...data,
-              selectedTopicL2: e.target.value,
-              selectedTopicLn: "",
-            })
-          }
+          value={selectedTopics.L2}
+          onClick={() => getTopicsFromL2(id)}
+          onChange={(e) => insertNewItemTopicL2(e.target.value)}
         >
           <option value="">-- Select Topic --</option>
-          {data.topicL2.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.title}
+          {topicsL2.map((item) => (
+            <option key={item.topic_id} value={item.topic_id}>
+              {item.topic_title}
             </option>
           ))}
         </Select>
-        {data.selectedTopicL2 && (
+        {topicsLn.length > 0 && (
           <Select
             label="topic level 3"
             name="selectedTopicLn"
-            value={data.selectedTopicLn}
-            onChange={(e) =>
-              setData({ ...data, selectedTopicLn: e.target.value })
-            }
+            value={selectedTopics.L3}
+            onChange={(e) => insertNewItemTopicLn(e.target.value)}
           >
             <option value="">-- Select Topic --</option>
-            {data.topicLn.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.title}
+            {topicsLn.map((item) => (
+              <option key={item.topic_id} value={item.topic_id}>
+                {item.topic_title}
               </option>
             ))}
           </Select>
@@ -142,7 +131,12 @@ const NewItemModal = ({ id }) => {
   );
 
   return (
-    <form className="flex flex-col gap-4">
+    <form
+      className="flex flex-col gap-4"
+      onSubmit={(e) => {
+        handlePostNewItem(e, toggleModal);
+      }}
+    >
       {step === 1 ? renderFirstStep : renderSecondStep}
     </form>
   );

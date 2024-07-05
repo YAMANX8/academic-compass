@@ -31,7 +31,7 @@ const TextField = ({
         name={name}
         type={showPassword && showPasswordToggle ? "text" : type}
         value={type === "number" && value === 0 ? "" : value}
-        className={`w-full rounded-lg border border-gray-400 bg-white px-3 text-sm placeholder:text-gray-400 hover:border-dark disabled:hover:border-gray-300 dark:bg-black ${sizeClasses[size]} focus:outline-none focus:ring-2 focus:ring-primary disabled:border-gray-300 disabled:text-gray-300`}
+        className={`w-full rounded-lg border border-gray-400 bg-white px-3 text-sm text-dark placeholder:text-gray-400 hover:border-dark disabled:hover:border-gray-300 dark:bg-black ${sizeClasses[size]} focus:outline-none focus:ring-2 focus:ring-primary disabled:border-gray-300 disabled:text-gray-300`}
         {...props}
       />
       {type === "password" && showPasswordToggle && (

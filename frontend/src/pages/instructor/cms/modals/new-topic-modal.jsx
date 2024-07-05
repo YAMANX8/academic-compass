@@ -1,32 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Select, Button } from "../../../../components";
 import { Icon } from "@iconify/react";
-
-const NewTopicModal = () => {
+import { useCmsContext } from "../../../../context/hooks/use-cms-context";
+const NewTopicModal = ({ toggleModal }) => {
   // TODO: states
-  const [topics, setTopics] = useState([
-    { topic_level1_id: 0, topic_title: "" },
-  ]);
+  const { assigningTopics, handleNewTopic } = useCmsContext();
   const [selectedTopic, setSelectedTopic] = useState("");
-  const data = [
-    {
-      topic_level1_id: 1,
-      topic_title: "HTML",
-    },
-    {
-      topic_level1_id: 2,
-      topic_title: "CSS",
-    },
-    {
-      topic_level1_id: 3,
-      topic_title: "JavaScript",
-    },
-  ];
-
   // TODO: functions
-  useEffect(() => {
-    setTopics(data);
-  }, []);
   const handleSelectChange = (event) => {
     setSelectedTopic(event.target.value);
   };
@@ -36,7 +16,8 @@ const NewTopicModal = () => {
       className="flex flex-col gap-4"
       onSubmit={(e) => {
         e.preventDefault();
-        console.log(selectedTopic);
+        handleNewTopic(selectedTopic);
+        toggleModal();
       }}
     >
       <div className="w-96 rounded bg-white p-4 dark:bg-black">
@@ -46,8 +27,8 @@ const NewTopicModal = () => {
           onChange={handleSelectChange}
         >
           <option value="">-- Select Level --</option>
-          {topics.map((topic) => (
-            <option key={topic.topic_level1_id} value={topic.topic_level1_id}>
+          {assigningTopics.map((topic) => (
+            <option key={topic.topic_level1_id} value={JSON.stringify(topic)}>
               {topic.topic_title}
             </option>
           ))}

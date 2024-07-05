@@ -879,8 +879,8 @@ router.put(
         await pool.query(updateVideoQuery, updateVideoValues);
         res.status(200).json({ message: 'Video updated successfully' });
       } else {
-        const videoFileName = req.file.filename;
         // insert video data in the database
+        const videoFileName = req.file.filename;
         const insertVideoQuery = `
         INSERT INTO video (video_path,item_id,video_duration,upload_date)
         VALUES
