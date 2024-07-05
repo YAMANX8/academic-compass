@@ -880,6 +880,7 @@ router.put(
         res.status(200).json({ message: 'Video updated successfully' });
       } else {
         // insert video data in the database
+        const videoFileName = req.file.filename;
         const insertVideoQuery = `
         INSERT INTO video (video_path,item_id,video_duration,upload_date)
         VALUES
