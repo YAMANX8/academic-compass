@@ -238,3 +238,38 @@ export const useGetCodeSession = () => {
 
   return getData;
 };
+export const useGetDetails1 = () => {
+  const axios = useAxios();
+
+  const getData = async () => {
+    const res = await axios.get(`/instructor/createCourse`);
+
+    return res;
+  };
+
+  return getData;
+};
+// _________________________________
+export const useGetDetails2 = () => {
+  const axios = useAxios();
+
+  const getData = async (id) => {
+    const res2 = await axios.get(`/instructor/editeCourseInfo/${id}`);
+
+    return res2;
+  };
+
+  return getData;
+};
+// _________________________________
+export const useGetDetails3 = () => {
+  const axios = useAxios();
+
+  const getData = async (id, formdata) => {
+    const res = await axios.put(`/instructor/editeCourseInfo/${id}`, formdata);
+    return res;
+  };
+
+  return getData;
+};
+// _________________________________
