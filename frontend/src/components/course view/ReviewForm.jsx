@@ -4,12 +4,22 @@ import { toast } from "react-toastify";
 import axios from "../../apis/axios";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "src/auth/hooks";
+import {
+  usePostReview,
+  useDeleteReview,
+  useGetReview,
+} from "../../apis/course";
 import { Button } from "../index";
+
 const ReviewForm = ({ setIsOpen }) => {
   const [data, setData] = useState({
     rating: 0,
     review: "",
   });
+
+  const postReview = usePostReview();
+  const deleteReview = useDeleteReview();
+  const getReview = useGetReview();
   const { user } = useAuthContext();
   const { id } = useParams();
   const [hover, setHover] = useState(0);
@@ -18,49 +28,44 @@ const ReviewForm = ({ setIsOpen }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `/review/edit_review/${id}`,
-        { stars_number: data.rating, review: data.review },
-        {
-          headers: { token: user?.accessToken },
-        },
-      );
-      toast.success(`your rating: ${data.rating}, your review: ${data.review}`);
+      await postReview(id, data.rating, data.review);
+      toast.success(`Your rating: ${data.rating}, your review: ${data.review}`);
       setIsOpen(false);
     } catch (error) {
       console.error(error);
     }
   };
+
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.delete(`/review/delete_review/${id}`, {
-        headers: { token: user?.accessToken },
-      });
-      toast.success(`Your review is deleted successfully!`);
+      await deleteReview(id);
+      toast.warning(`Your review is deleted successfully!`);
       setIsOpen(false);
     } catch (error) {
       console.error(error);
     }
   };
+
   useEffect(() => {
-    const getReview = async () => {
+    const fetchReview = async () => {
       try {
-        const res = await axios.get(`/review/show_review/${id}`, {
-          headers: { token: user?.accessToken },
-        });
+        const res = await getReview(id);
         if (res.data.rating != null) setHasReviewed(true);
-        const starsNumber = (await res?.data?.rating) || 0;
-        const reviewBody = (await res?.data?.review) || "";
-        setData((prev) => {
-          return { ...prev, rating: starsNumber, review: reviewBody };
-        });
+        const starsNumber = res?.data?.rating || 0;
+        const reviewBody = res?.data?.review || "";
+        setData((prev) => ({
+          ...prev,
+          rating: starsNumber,
+          review: reviewBody,
+        }));
       } catch (error) {
         console.error(error);
       }
     };
-    getReview();
-  }, []);
+    fetchReview();
+  }, [id, getReview]);
+
   return (
     <form className="flex max-h-[70vh] flex-col gap-8" onSubmit={handleSubmit}>
       <div>
@@ -102,7 +107,7 @@ const ReviewForm = ({ setIsOpen }) => {
         <label>
           <textarea
             name="review"
-            cols="35"
+            cols="30"
             rows="2"
             value={data.review}
             onChange={(e) =>
@@ -120,7 +125,9 @@ const ReviewForm = ({ setIsOpen }) => {
             <Button color="error" type="button" onClick={handleDelete}>
               Delete
             </Button>
-            <Button color="info">Update</Button>
+            <Button color="info" onClick={handleSubmit}>
+              Update
+            </Button>
           </>
         )}
       </div>
