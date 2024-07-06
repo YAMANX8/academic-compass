@@ -8,7 +8,8 @@ import {
   BsQuestionCircle as Quiz,
   BsBook as Articles,
 } from "react-icons/bs";
-
+import { useGetCourseDetails, usePostEnroll } from "../../../apis/course";
+import { paths } from "../../../routes/paths";
 import Card from "src/assets/images/Rectangle 63.png";
 import Profile from "src/assets/images/profile.png";
 
@@ -34,6 +35,8 @@ const SectionWrapper = ({ title, children }) => {
 };
 
 const CourseDetails = () => {
+  const getCourseDetails = useGetCourseDetails();
+  const postEnroll = usePostEnroll();
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -253,12 +256,7 @@ const CourseDetails = () => {
   useEffect(() => {
     const getCourse = async () => {
       try {
-        const res = await axios.get(`/course/${id}`, {
-          headers: {
-            token: user?.accessToken,
-            "Content-Type": "application/json",
-          },
-        });
+        const res = await getCourseDetails(id);
         setCourse(res.data);
       } catch (error) {
         console.log(error);
@@ -268,26 +266,15 @@ const CourseDetails = () => {
   }, []);
   const handleEnroll = async () => {
     try {
-      const res = await axios.post(
-        `/course/enroll`,
-        JSON.stringify({
-          courseId: id,
-        }),
-        {
-          headers: {
-            token: user?.accessToken,
-            "Content-Type": "application/json",
-          },
-        },
-      );
+      const res = await postEnroll(id);
       toast.success("You enrolled successfully!");
-      navigate("/student/dashboard");
+      navigate(paths.student.root);
     } catch (error) {
       if (error.response?.status === 401)
         toast.error(error.response.data.message);
       else {
-        navigate("/student/login", { state: { from: location } });
-        toast.error("You are not logged in.\nPlease login first!");
+        // navigate("/student/login", { state: { from: location } });
+        toast.error("Authentication Required!");
       }
     }
   };
@@ -440,7 +427,7 @@ const CourseDetails = () => {
 
         {/* Course Content */}
         <SectionWrapper title="Course Content">
-          <CourseContent courseContent={course.courseContent} />
+          {/* <CourseContent courseContent={course.courseContent} /> */}
         </SectionWrapper>
 
         {/* Reviews */}
