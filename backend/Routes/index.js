@@ -5,7 +5,7 @@ const router = express.Router();
 const courseRouter = require('./course/index');
 const instructorRouter = require('./instructor/index');
 const refreshTokenRouter = require('./refresh-token/index');
-const roadmapRouter = require('./roadmap/index');
+const roadmapRouter = require('./Roadmap/index');
 const studentsRouter = require('./Students/index');
 const supervisordRouter = require('./supervisor/idex');
 
