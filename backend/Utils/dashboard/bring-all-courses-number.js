@@ -1,4 +1,4 @@
-const pool = require('../../database/db');
+const pool = require('../../Database/db');
 
 // Bring All Courses Number For Studnet
 const Get_All_Courses_Number = async (student_id) => {

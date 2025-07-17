@@ -1,4 +1,4 @@
-const pool = require('../../../database/db');
+const pool = require('../../../Database/db');
 
 // Check if a Course is Completed.
 const checkCourseCompletion = async (courseId) => {

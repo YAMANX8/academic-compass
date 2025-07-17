@@ -1,4 +1,4 @@
-const pool = require('../../database/db');
+const pool = require('../../Database/db');
 
 // Bring Info & Rating's Instructoer.
 const GetMyTopics = async (instructoer_id) => {

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../../database/db');
+const pool = require('../../../Database/db');
 const authorization = require('../../../middleware/authorization');
 const count = require('../../../Utils/dashboard/count-dashboards');
 const inprogresInfo = require('../../../Utils/dashboard/courses-inprogres-info');

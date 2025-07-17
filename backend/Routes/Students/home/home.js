@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../../database/db');
+const pool = require('../../../Database/db');
 const popularRoadmaps = require('../../../Utils/dashboard/popular-roadmaps');
 
 router.get('/', async (req, res) => {

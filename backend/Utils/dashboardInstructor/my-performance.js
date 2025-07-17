@@ -1,4 +1,4 @@
-const pool = require('../../database/db');
+const pool = require('../../Database/db');
 
 // Bring All Performance Number
 const GetALlPerformanceNumber = async (instructoer_id) => {

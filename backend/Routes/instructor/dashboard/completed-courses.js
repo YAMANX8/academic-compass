@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../../database/db');
+const pool = require('../../../Database/db');
 const authorization = require('../../../middleware/authorization');
 const checkPermission = require('../../../middleware/check-permissions');
 const get_Completed_Courses = require('../../../Utils/dashboardInstructor/course/completed-courses');

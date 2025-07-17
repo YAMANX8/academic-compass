@@ -1,4 +1,4 @@
-const pool = require('../../database/db');
+const pool = require('../../Database/db');
 
 // * Get all roadmap for student
 const MyRoadmapsInfo = async (student_id) => {

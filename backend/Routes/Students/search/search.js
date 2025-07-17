@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../../database/db');
+const pool = require('../../../Database/db');
 
 // todo Here we used dynamic query
 router.post('/course', async (req, res) => {

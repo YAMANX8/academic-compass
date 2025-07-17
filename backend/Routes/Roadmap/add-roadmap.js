@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../database/db');
+const pool = require('../../Database/db');
 const uploadImage = require('../../lib/multer-image');
 
 router.post('/', uploadImage.single('image'), async (req, res) => {

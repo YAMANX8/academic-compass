@@ -1,4 +1,4 @@
-const pool = require('../../database/db');
+const pool = require('../../Database/db');
 
 // Bring (quiz video and artical) numbers Fro Studnet
 const qva = async (student_id) => {

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../../database/db.js');
+const pool = require('../../Database/db.js');
 const jwt = require('jsonwebtoken');
 const checkPermission = require('../../middleware/check-permissions.js');
 const authorization = require('../../middleware/authorization.js');
