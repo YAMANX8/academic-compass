@@ -9,7 +9,7 @@ const createUploadDirectory = require('./middleware/create-upload-directory');
 const app = express();
 
 // midleware
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 // app.use(helmet()); // Disable tracking
 app.use(express.json());
 app.use(morgan('dev'));
