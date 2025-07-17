@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const article = require('./article');
+const article = require('./Article');
 const course = require('./course');
 const review = require('./review');
 const video = require('./video');
