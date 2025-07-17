@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoIosInformationCircleOutline as InformationIcon } from "react-icons/io";
 import { MdOutlineSecurity as SecurityIcon } from "react-icons/md";
 import { BsPerson as Person } from "react-icons/bs";
-
+import useAxios from "../../../hooks/use-axios";
 import { General, Security, Account, Button } from "../../../components";
 import { LiaSaveSolid as Solid } from "react-icons/lia";
-import axios from "src/apis/axios";
+// import axios from "src/apis/axios";
 import { useAuthContext } from "src/auth/hooks";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
@@ -14,6 +14,7 @@ import { Helmet } from "react-helmet-async";
 const SETTINGS_URL = "/student/setting";
 
 function StudentSettings() {
+  const axios = useAxios();
   const navigate = useNavigate();
   const { user } = useAuthContext();
   const [selectedLink, setSelectedLink] = useState("general");
@@ -30,22 +31,22 @@ function StudentSettings() {
     newPassword: "",
     verifyNewPassword: "",
   });
-  const [image, setImage] = useState("");
+  const [picture, setImage] = useState("");
 
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
-      first_name: user.firstName == null ? "" : user.firstName,
-      last_name: user.lastName == null ? "" : user.lastName,
+      first_name: user.first_name == null ? "" : user.first_name,
+      last_name: user.last_name == null ? "" : user.last_name,
       education: user.education == null ? "" : user.education,
       email: user.email == null ? "" : user.email,
       bio: user.bio == null ? "" : user.bio,
-      birth_date: user.birthDate == null ? "" : user.birthDate,
+      birth_date: user.birth_date == null ? "" : user.birth_date,
       country: user.country == null ? "" : user.country,
       city: user.city == null ? "" : user.city,
     }));
     setImage(
-      user.image == "http://localhost:5000/image/null" ? "" : user.image,
+      user.picture == "http://localhost:5000/image/null" ? "" : user.picture,
     );
   }, []);
 
@@ -62,7 +63,7 @@ function StudentSettings() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formdata = new FormData();
-    formdata.append("image", image);
+    formdata.append("image", picture);
     for (const key in formData) formdata.append(key, formData[key]);
     try {
       const response = await axios.put(SETTINGS_URL, formdata, {
@@ -138,7 +139,7 @@ function StudentSettings() {
               <General
                 country={formData.country}
                 city={formData.city}
-                image={image}
+                image={picture}
                 firstName={formData.first_name}
                 lastName={formData.last_name}
                 handleChange={handleChange}
