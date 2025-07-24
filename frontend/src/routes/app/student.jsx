@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 import MainLayout from "../../layout/main";
 import { AuthGuard, RoleBasedGuard } from "../../auth/guard";
-import { roles } from "../../config-global";
+import { roles } from "../../assets/static.js";
 
 import { SplashScreen } from "../../components";
 // ----------------------------------------------------------------------

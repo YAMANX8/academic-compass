@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import MainLayout from "src/layout/main";
 import AdminLayout from "../../layout/admin";
 import { AuthGuard, RoleBasedGuard } from "../../auth/guard";
-import { roles } from "../../config-global";
+import { roles } from "../../assets/static.js";
 import { CmsProvider } from "../../context/cms/cms-provider";
 
 import { SplashScreen } from "src/components";

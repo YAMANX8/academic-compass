@@ -28,7 +28,7 @@ function Home() {
             </p>
             <Button
               // to={paths.roadmaps}
-              page="/test"
+              page="/roadmaps"
               size="lg"
             >
               <Map className="text-[25px]" />

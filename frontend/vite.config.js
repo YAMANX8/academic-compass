@@ -22,10 +22,7 @@ export default defineConfig({
     include: [
       'react',
       'react-dom',
-      'react-router-dom', // إذا كنت تستخدمها
+      'react-router-dom', 
     ],
-  },
-  define: {
-    'global': {}
   }
 });

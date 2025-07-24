@@ -1,6 +1,7 @@
 import { useRouter } from "../routes/hooks/use-router";
 import { paths } from "../routes/paths.js";
-import { roles } from "../config-global.js";
+import { roles } from "../assets/static.js";
+
 export const useRedirectToDashboard = () => {
   const router = useRouter();
   const redirectToDashboard = (role) => {
